@@ -2,44 +2,38 @@ import { defineStore } from 'pinia';
 import { ref, computed, shallowRef } from 'vue';
 
 /**
- * 历史记录 Store
- * 实现撤回/重做功能
+ * English comment.
  */
 export const useHistoryStore = defineStore('history', () => {
-    // ==================== 状态 ====================
+    // English comment.
 
-    // 历史记录栈（存储已执行的命令）——用 shallowRef 避免对命令闭包深层代理
+    // English comment.
     const undoStack = shallowRef([]);
 
-    // 重做栈（存储已撤销的命令）——同上
+    // English comment.
     const redoStack = shallowRef([]);
 
-    // 最大历史记录数量
+    // English comment.
     const maxHistorySize = ref(50);
 
-    // 是否正在执行命令（防止递归记录）
+    // English comment.
     const isExecuting = ref(false);
 
-    // ==================== 计算属性 ====================
+    // English comment.
 
-    // 是否可以撤回
+    // English comment.
     const canUndo = computed(() => undoStack.value.length > 0);
 
-    // 是否可以重做
+    // English comment.
     const canRedo = computed(() => redoStack.value.length > 0);
 
-    // 历史记录数量
+    // English comment.
     const historyCount = computed(() => undoStack.value.length);
 
-    // ==================== 方法 ====================
+    // English comment.
 
     /**
-     * 执行命令并记录到历史
-     * @param {Object} command - 命令对象
-     * @param {Function} command.execute - 执行函数
-     * @param {Function} command.undo - 撤销函数
-     * @param {String} command.name - 命令名称
-     * @param {Object} command.data - 命令数据
+     * English comment.
      */
     const executeCommand = async (command) => {
         if (isExecuting.value) return;
@@ -47,18 +41,18 @@ export const useHistoryStore = defineStore('history', () => {
         try {
             isExecuting.value = true;
 
-            // 执行命令
+            // English comment.
             await command.execute();
 
-            // 添加到撤回栈（不可变操作，触发 shallowRef 更新）
+            // English comment.
             undoStack.value = [...undoStack.value, command];
 
-            // 限制历史记录数量
+            // English comment.
             if (undoStack.value.length > maxHistorySize.value) {
                 undoStack.value = undoStack.value.slice(1);
             }
 
-            // 清空重做栈
+            // English comment.
             redoStack.value = [];
 
         } catch (error) {
@@ -70,7 +64,7 @@ export const useHistoryStore = defineStore('history', () => {
     };
 
     /**
-     * 撤回上一个操作
+     * English comment.
      */
     const undo = async () => {
         if (!canUndo.value || isExecuting.value) return;
@@ -78,14 +72,14 @@ export const useHistoryStore = defineStore('history', () => {
         try {
             isExecuting.value = true;
 
-            // 从撤回栈中取出最后一个命令（不可变操作）
+            // English comment.
             const command = undoStack.value[undoStack.value.length - 1];
             undoStack.value = undoStack.value.slice(0, -1);
 
-            // 执行撤销
+            // English comment.
             await command.undo();
 
-            // 添加到重做栈
+            // English comment.
             redoStack.value = [...redoStack.value, command];
 
         } catch (error) {
@@ -97,7 +91,7 @@ export const useHistoryStore = defineStore('history', () => {
     };
 
     /**
-     * 重做上一个撤销的操作
+     * English comment.
      */
     const redo = async () => {
         if (!canRedo.value || isExecuting.value) return;
@@ -105,14 +99,14 @@ export const useHistoryStore = defineStore('history', () => {
         try {
             isExecuting.value = true;
 
-            // 从重做栈中取出最后一个命令（不可变操作）
+            // English comment.
             const command = redoStack.value[redoStack.value.length - 1];
             redoStack.value = redoStack.value.slice(0, -1);
 
-            // 重新执行
+            // English comment.
             await command.execute();
 
-            // 添加回撤回栈
+            // English comment.
             undoStack.value = [...undoStack.value, command];
 
         } catch (error) {
@@ -124,7 +118,7 @@ export const useHistoryStore = defineStore('history', () => {
     };
 
     /**
-     * 清空历史记录
+     * English comment.
      */
     const clear = () => {
         undoStack.value = [];
@@ -132,7 +126,7 @@ export const useHistoryStore = defineStore('history', () => {
     };
 
     /**
-     * 获取历史记录列表（用于调试）
+     * English comment.
      */
     const getHistory = () => {
         return {
@@ -141,21 +135,21 @@ export const useHistoryStore = defineStore('history', () => {
         };
     };
 
-    // ==================== 返回 ====================
+    // English comment.
 
     return {
-        // 状态
+        // English comment.
         undoStack,
         redoStack,
         maxHistorySize,
         isExecuting,
 
-        // 计算属性
+        // English comment.
         canUndo,
         canRedo,
         historyCount,
 
-        // 方法
+        // English comment.
         executeCommand,
         undo,
         redo,

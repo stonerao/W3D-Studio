@@ -2,11 +2,7 @@ import { Component } from '@w3d/core';
 import { Tween } from '@w3d/core';
 
 /**
- * CameraAnimation 相机动画组件
- *
- * @class CameraAnimation
- * @extends Component
- * @description 相机移动和旋转动画
+ * English comment.
  */
 export class CameraAnimation extends Component {
     static defaultConfig = {

@@ -1,7 +1,9 @@
 import { createRouter, createWebHistory } from 'vue-router';
+import { t } from '../i18n';
 
 const EditorPage = () => import('../views/EditorPage.vue');
 const PreviewPage = () => import('../views/PreviewPage.vue');
+const APP_NAME = 'W3D Studio';
 
 const routes = [
     {
@@ -13,7 +15,7 @@ const routes = [
         name: 'Editor',
         component: EditorPage,
         meta: {
-            title: '三维编辑器'
+            titleKey: 'routes.editorTitle'
         }
     },
     {
@@ -21,7 +23,7 @@ const routes = [
         name: 'Preview',
         component: PreviewPage,
         meta: {
-            title: '预览'
+            titleKey: 'routes.previewTitle'
         }
     },
     {
@@ -35,10 +37,21 @@ const router = createRouter({
     routes
 });
 
-router.beforeEach((to) => {
-    if (to.meta.title) {
-        document.title = `${to.meta.title} - W3D Editor`;
+const updateDocumentTitle = (route) => {
+    const titleKey = route?.meta?.titleKey;
+    if (titleKey) {
+        document.title = `${t(titleKey)} - ${APP_NAME}`;
     }
+};
+
+router.beforeEach((to) => {
+    updateDocumentTitle(to);
 });
+
+if (typeof window !== 'undefined') {
+    window.addEventListener('w3d:locale-change', () => {
+        updateDocumentTitle(router.currentRoute.value);
+    });
+}
 
 export default router;

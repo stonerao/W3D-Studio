@@ -1,33 +1,26 @@
 /**
- * CacheManager 缓存管理器
- *
- * @class CacheManager
- * @description 资源缓存管理
+ * English comment.
  */
 export class CacheManager {
     /**
-     * 创建缓存管理器实例
+     * English comment.
      */
     constructor() {
-        // 缓存存储
+        // English comment.
         this.cache = new Map();
 
-        // 缓存大小限制（MB）
+        // English comment.
         this.maxSize = 100;
 
-        // 当前缓存大小
+        // English comment.
         this.currentSize = 0;
     }
 
     /**
-     * 设置缓存
-     *
-     * @param {string} key - 缓存键
-     * @param {*} value - 缓存值
-     * @param {number} size - 大小（字节）
+     * English comment.
      */
     set(key, value, size = 0) {
-        // 检查缓存大小
+        // English comment.
         if (this.currentSize + size > this.maxSize * 1024 * 1024) {
             this.evict();
         }
@@ -42,16 +35,13 @@ export class CacheManager {
     }
 
     /**
-     * 获取缓存
-     *
-     * @param {string} key - 缓存键
-     * @returns {*} 缓存值
+     * English comment.
      */
     get(key) {
         const item = this.cache.get(key);
 
         if (item) {
-            // 更新访问时间
+            // English comment.
             item.timestamp = Date.now();
             return item.value;
         }
@@ -60,19 +50,14 @@ export class CacheManager {
     }
 
     /**
-     * 检查缓存是否存在
-     *
-     * @param {string} key - 缓存键
-     * @returns {boolean} 是否存在
+     * English comment.
      */
     has(key) {
         return this.cache.has(key);
     }
 
     /**
-     * 删除缓存
-     *
-     * @param {string} key - 缓存键
+     * English comment.
      */
     delete(key) {
         const item = this.cache.get(key);
@@ -84,7 +69,7 @@ export class CacheManager {
     }
 
     /**
-     * 清空缓存
+     * English comment.
      */
     clear() {
         this.cache.clear();
@@ -92,10 +77,10 @@ export class CacheManager {
     }
 
     /**
-     * 驱逐缓存（LRU 策略）
+     * English comment.
      */
     evict() {
-        // 找到最旧的缓存项
+        // English comment.
         let oldestKey = null;
         let oldestTime = Infinity;
 
@@ -106,16 +91,14 @@ export class CacheManager {
             }
         });
 
-        // 删除最旧的缓存项
+        // English comment.
         if (oldestKey) {
             this.delete(oldestKey);
         }
     }
 
     /**
-     * 获取缓存统计
-     *
-     * @returns {Object} 统计信息
+     * English comment.
      */
     getStats() {
         return {

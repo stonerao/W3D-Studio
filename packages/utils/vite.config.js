@@ -13,7 +13,7 @@ export default defineConfig({
             fileName: (format) => `w3d-utils.${format}.js`
         },
         rollupOptions: {
-            external: [], // 无外部依赖
+            external: [], // English comment.
             output: {
                 exports: 'named'
             }

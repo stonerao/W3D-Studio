@@ -13,10 +13,10 @@ export default defineConfig({
             fileName: (format) => `w3d-core.${format}.js`
         },
         rollupOptions: {
-            // 外部化 Three.js，不打包进库
+            // English comment.
             external: ['three', /^three\//, '@w3d/utils'],
             output: {
-                // 全局变量名
+                // English comment.
                 globals: {
                     three: 'THREE',
                     '@w3d/utils': 'W3DUtils',
@@ -24,13 +24,13 @@ export default defineConfig({
                     'three/examples/jsm/loaders/GLTFLoader.js': 'THREE.GLTFLoader',
                     'three/examples/jsm/loaders/DRACOLoader.js': 'THREE.DRACOLoader'
                 },
-                // 导出方式
+                // English comment.
                 exports: 'named',
-                // 代码分割
+                // English comment.
                 manualChunks: undefined
             }
         },
-        // 压缩配置
+        // English comment.
         minify: 'terser',
         terserOptions: {
             compress: {
@@ -40,17 +40,17 @@ export default defineConfig({
         },
         // sourcemap
         sourcemap: true,
-        // 目标环境
+        // English comment.
         target: 'es2015',
-        // 清空输出目录
+        // English comment.
         emptyOutDir: true
     },
-    // 开发服务器
+    // English comment.
     server: {
         port: 3000,
         open: true
     },
-    // 路径别名
+    // English comment.
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'src'),

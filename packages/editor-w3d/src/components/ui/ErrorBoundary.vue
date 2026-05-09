@@ -29,7 +29,7 @@ const hasError = ref(false);
 const errorMessage = ref('');
 const errorStack = ref('');
 
-// 捕获子组件错误
+// English comment.
 onErrorCaptured((err, instance, info) => {
     hasError.value = true;
     errorMessage.value = err.message || '未知错误';
@@ -41,18 +41,18 @@ onErrorCaptured((err, instance, info) => {
 
     toast.error(`组件错误: ${err.message}`);
 
-    // 返回 false 阻止错误继续向上传播
+    // English comment.
     return false;
 });
 
-// 重试
+// English comment.
 const retry = () => {
     hasError.value = false;
     errorMessage.value = '';
     errorStack.value = '';
 };
 
-// 重置（刷新页面）
+// English comment.
 const reset = async () => {
     const confirmed = await showConfirm('确定要重置编辑器吗？未保存的更改将丢失。', {
         title: '重置编辑器',

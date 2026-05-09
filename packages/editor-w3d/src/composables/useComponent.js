@@ -7,9 +7,10 @@ import { useEventSystem } from './useEventSystem';
 import { tagInstanceForPicking } from '../utils/picking';
 import { executeRuntimeDataSource } from '../services/dataSourceRuntime';
 import { applyDataSourceTransform } from '../services/visualDataTransform';
+import { translateDisplayText } from '../i18n';
 
 /**
- * 组件操作组合式函数
+ * English comment.
  */
 export function useComponent() {
     const sceneStore = useSceneStore();
@@ -25,14 +26,14 @@ export function useComponent() {
         'CameraTour'
     ]);
 
-    // 仅开发模式输出日志，生产构建直接消除
+    // English comment.
     const devLog = (...args) => { if (import.meta?.env?.DEV) console.log(...args); };
 
     const generateUniqueName = (baseName) => {
         const existingNames = new Set((componentStore.components || []).map((c) => c.name));
         if (!existingNames.has(baseName)) return baseName;
 
-        // 如果基础名称已存在，则添加数字后缀
+        // English comment.
         let index = 1;
         let newName = `${baseName}${index}`;
         while (existingNames.has(newName)) {
@@ -221,8 +222,8 @@ export function useComponent() {
         const root = instance?.componentScene || instance?.group || instance?.object3d || instance?.mesh;
         if (!root) return;
 
-        // 使用 SDK BoundingBoxHelper（组件内部封装 three BoxHelper）
-        // fire-and-forget：不阻塞 UI
+        // English comment.
+        // English comment.
         scene
             .add('BoundingBoxHelper', {
                 name: HIGHLIGHT_KEY,
@@ -283,10 +284,7 @@ export function useComponent() {
     };
 
     /**
-     * 添加组件到场景
-     * @param {string} type - 组件类型
-     * @param {Object} config - 组件配置
-     * @returns {Promise<Object>} 组件数据
+     * English comment.
      */
     const addComponent = async (type, config = {}) => {
         devLog('[useComponent] addComponent 被调用，type:', type, 'config:', config);
@@ -300,7 +298,7 @@ export function useComponent() {
         devLog('[useComponent] 场景实例存在，scene:', scene);
 
         try {
-            // 获取组件信息
+            // English comment.
             const componentInfo = getComponent(type);
             if (!componentInfo) {
                 console.error('[useComponent] 组件类型未找到:', type);
@@ -309,12 +307,12 @@ export function useComponent() {
 
             devLog('[useComponent] 组件信息:', componentInfo);
 
-            // 使用中文 displayName 生成唯一名称
-            const displayName = componentInfo.metadata?.displayName || type;
+            // English comment.
+            const displayName = translateDisplayText(componentInfo.metadata?.displayName || type);
             const baseName = config.name || displayName;
             const name = generateUniqueName(baseName);
 
-            // 合并默认配置
+            // English comment.
             const finalConfig = {
                 ...componentInfo.metadata.defaultConfig,
                 ...config,
@@ -323,12 +321,12 @@ export function useComponent() {
 
             devLog('[useComponent] 最终配置:', finalConfig);
 
-            // 添加到场景
+            // English comment.
             devLog('[useComponent] 调用 scene.add...');
             const instance = await scene.add(type, finalConfig);
             devLog('[useComponent] scene.add 完成，instance:', instance);
 
-            // 保存到组件 store
+            // English comment.
             const componentData = componentStore.addComponent({
                 name,
                 type,
@@ -336,7 +334,7 @@ export function useComponent() {
                 instance
             });
 
-            // 将 store id 传播到场景实例的 config 中，使 executeCommandOnScene 可按 id 匹配
+            // English comment.
             if (instance && componentData.id) {
                 if (!instance.config) instance.config = {};
                 instance.config.id = componentData.id;
@@ -357,7 +355,7 @@ export function useComponent() {
                 await enforceExclusiveCameraComponents(componentData.id);
             }
 
-            // 自动选中新添加的组件（并高亮）
+            // English comment.
             selectComponent(componentData.id);
 
             devLog(`[useComponent] ✅ 组件添加成功: ${type}`, componentData);
@@ -370,9 +368,7 @@ export function useComponent() {
     };
 
     /**
-     * 重命名组件（会同步更新 config.name，并在运行时重建实例以确保 Scene 内部 key 一致）
-     * @param {string} componentId - 组件 ID
-     * @param {string} newName - 新名称
+     * English comment.
      */
     const renameComponent = async (componentId, newName) => {
         const scene = sceneStore.sceneInstance;
@@ -392,7 +388,7 @@ export function useComponent() {
         const uniqueName = generateUniqueName(trimmed);
         if (uniqueName === oldName) return component;
 
-        // 先移除旧实例（按旧 name 移除），再用新 name 重建
+        // English comment.
         if (component.instance) {
             try {
                 scene.remove(oldName);
@@ -423,7 +419,7 @@ export function useComponent() {
         syncRuntimeVisibility(instance, component.visible);
 
         eventSystem.attachExistingEventsToInstance(componentId);
-        // 若当前就是选中项，更新高亮
+        // English comment.
         if (componentStore.selectedComponent?.id === componentId) {
             highlightComponent(componentId);
         }
@@ -431,9 +427,7 @@ export function useComponent() {
     };
 
     /**
-     * 复制组件（克隆 config / visible / locked / events，并创建新的运行时实例）
-     * @param {string} componentId - 组件 ID
-     * @returns {Promise<Object>} 新组件数据
+     * English comment.
      */
     const duplicateComponent = async (componentId) => {
         const scene = sceneStore.sceneInstance;
@@ -479,7 +473,7 @@ export function useComponent() {
         });
         tagInstanceForPicking(created.id, instance);
 
-        // 复制可见性/锁定状态
+        // English comment.
         componentStore.updateComponent(created.id, {
             visible: !!source.visible,
             previewVisible: source.previewVisible !== false,
@@ -488,7 +482,7 @@ export function useComponent() {
         });
         syncRuntimeVisibility(instance, !!source.visible);
 
-        // 复制事件：为避免 ID 冲突，生成新的 eventId
+        // English comment.
         const sourceEvents = Array.isArray(source.events) ? source.events : [];
         const sourceReferenceIds = [
             source.id,
@@ -528,8 +522,7 @@ export function useComponent() {
     };
 
     /**
-     * 删除组件
-     * @param {string} componentId - 组件 ID
+     * English comment.
      */
     const removeComponent = (componentId) => {
         const scene = sceneStore.sceneInstance;
@@ -547,10 +540,10 @@ export function useComponent() {
                 throw new Error(`Component is locked: ${component.name}`);
             }
 
-            // 从场景中移除；Scene.remove 内部会统一执行 component.dispose()
+            // English comment.
             scene.remove(component.name);
 
-            // 从 store 中移除
+            // English comment.
             componentStore.removeComponent(componentId);
 
             if (wasSelected) {
@@ -566,12 +559,10 @@ export function useComponent() {
     };
 
     /**
-     * 更新组件配置
-     * @param {string} componentId - 组件 ID
-     * @param {Object} config - 新配置
+     * English comment.
      */
     /**
-     * 深合并：递归合并 source 到 target，数组直接覆盖（不追加）
+     * English comment.
      */
     const deepMergeConfig = (target, source) => {
         const result = { ...target };
@@ -632,16 +623,16 @@ export function useComponent() {
 
         repairStaleSelfEventReferences(component);
 
-        // 深合并新配置到现有配置（确保嵌套字段如 emitter.range 不被整体覆盖）
+        // English comment.
         const newConfig = deepMergeConfig(component.config || {}, config || {});
-        // 运行时以 component.name 为准，避免 Scene remove/add 失配
+        // English comment.
         newConfig.name = component.name;
         newConfig.id = component.id;
 
-        // ★ 先更新 store（编辑器 UI 数据源），保证 UI 立即可见变更
+        // English comment.
         componentStore.updateComponent(componentId, { config: newConfig });
 
-        // 再同步运行时实例（best-effort，不阻断编辑器）
+        // English comment.
         if (component.instance) {
             try {
                 if (component.instance.config) {
@@ -661,7 +652,7 @@ export function useComponent() {
                     await rebuildComponentInstance(componentId, newConfig);
                 }
             } catch (error) {
-                // 运行时同步失败只打告警，不抛出——编辑器 store 已是最新
+                // English comment.
                 console.warn(`[Component] Runtime instance sync failed (non-fatal): ${component.name}`, error);
             }
         }
@@ -679,8 +670,7 @@ export function useComponent() {
     };
 
     /**
-     * 选中组件
-     * @param {string} componentId - 组件 ID
+     * English comment.
      */
     const selectComponent = (componentId) => {
         componentStore.selectComponent(componentId);
@@ -693,7 +683,7 @@ export function useComponent() {
     };
 
     /**
-     * 取消选中组件
+     * English comment.
      */
     const deselectComponent = () => {
         componentStore.deselectComponent();
@@ -701,8 +691,7 @@ export function useComponent() {
     };
 
     /**
-     * 切换组件可见性
-     * @param {string} componentId - 组件 ID
+     * English comment.
      */
     const toggleComponentVisibility = (componentId) => {
         const component = componentStore.toggleComponentVisibility(componentId);
@@ -883,23 +872,21 @@ export function useComponent() {
     };
 
     /**
-     * 获取组件列表
-     * @returns {Array} 组件列表
+     * English comment.
      */
     const getComponents = () => {
         return componentStore.components;
     };
 
     /**
-     * 获取选中的组件
-     * @returns {Object|null} 选中的组件
+     * English comment.
      */
     const getSelectedComponent = () => {
         return componentStore.selectedComponent;
     };
 
     /**
-     * 清空所有组件
+     * English comment.
      */
     const clearAllComponents = () => {
         const scene = sceneStore.sceneInstance;
@@ -923,14 +910,10 @@ export function useComponent() {
         }
     };
 
-    // ========== 数据绑定方法 ==========
+    // English comment.
 
     /**
-     * 执行组件的数据绑定请求
-     * @param {string} componentId - 组件 ID
-     * @param {string} sourceId - 数据源 ID（可选，不传则执行所有数据源）
-     * @param {string} apiBaseUrl - API 基础 URL
-     * @returns {Promise<Object>} 请求结果
+     * English comment.
      */
     const executeMethodBinding = async (component, source, finalValue) => {
         const instance = component?.instance;
@@ -1038,10 +1021,7 @@ export function useComponent() {
     };
 
     /**
-     * 发起数据源请求
-     * @param {Object} source - 数据源配置
-     * @param {string} apiBaseUrl - API 基础 URL
-     * @returns {Promise<Object>} 请求结果
+     * English comment.
      */
     const fetchDataSource = async (source, apiBaseUrl = '', componentId = '', onData) => {
         try {
@@ -1065,11 +1045,7 @@ export function useComponent() {
     };
 
     /**
-     * 设置嵌套对象的值
-     * @param {Object} obj - 对象
-     * @param {string} path - 路径，如 'globalConfig.color'
-     * @param {*} value - 值
-     * @returns {Object} 更新后的对象
+     * English comment.
      */
     const setNestedValue = (obj, path, value) => {
         const result = { ...obj };
@@ -1087,11 +1063,11 @@ export function useComponent() {
     };
 
     return {
-        // 状态
+        // English comment.
         components: componentStore.components,
         selectedComponent: componentStore.selectedComponent,
 
-        // 方法
+        // English comment.
         addComponent,
         removeComponent,
         updateComponentConfig,
@@ -1109,7 +1085,7 @@ export function useComponent() {
         getSelectedComponent,
         clearAllComponents,
 
-        // 数据绑定方法
+        // English comment.
         executeDataBinding,
         fetchDataSource
     };

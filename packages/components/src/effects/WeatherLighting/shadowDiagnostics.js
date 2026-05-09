@@ -1,13 +1,9 @@
 /**
- * WeatherLighting 阴影诊断工具
- * 用于快速排查阴影不显示的问题
+ * English comment.
  */
 
 /**
- * 诊断场景中的阴影配置
- * @param {Scene} scene - W3D场景实例
- * @param {WeatherLighting} weatherLighting - WeatherLighting组件实例
- * @returns {Object} 诊断报告
+ * English comment.
  */
 export function diagnoseShadows(scene, weatherLighting) {
     const report = {
@@ -18,7 +14,7 @@ export function diagnoseShadows(scene, weatherLighting) {
         recommendations: []
     };
 
-    // 1. 检查 Renderer 阴影设置
+    // English comment.
     const renderer = scene?.renderer?.instance;
     if (!renderer) {
         report.issues.push('❌ 无法访问 WebGLRenderer 实例');
@@ -33,7 +29,7 @@ export function diagnoseShadows(scene, weatherLighting) {
         report.info.push(`   shadowMap.type = ${renderer.shadowMap.type}`);
     }
 
-    // 2. 检查 WeatherLighting 组件配置
+    // English comment.
     if (!weatherLighting) {
         report.warnings.push('⚠️  未提供 WeatherLighting 组件实例');
         return report;
@@ -41,7 +37,7 @@ export function diagnoseShadows(scene, weatherLighting) {
 
     const debugInfo = weatherLighting.getShadowDebugInfo();
     
-    // 检查时间窗口
+    // English comment.
     if (!debugInfo.dayWindow.inDayWindow) {
         report.issues.push(`❌ 当前时段为夜间（${debugInfo.localHour.toFixed(1)}小时），太阳光已自动关闭`);
         report.recommendations.push(`💡 将 timeHour 设置为 5-20 之间（白天时段）以查看阴影效果`);
@@ -50,7 +46,7 @@ export function diagnoseShadows(scene, weatherLighting) {
         report.info.push(`✅ 当前时段为白天（${debugInfo.localHour.toFixed(1)}小时）`);
     }
 
-    // 检查太阳光配置
+    // English comment.
     if (!debugInfo.sun.castShadowConfig) {
         report.issues.push('❌ lighting.castShadow = false（配置中未启用阴影）');
         report.recommendations.push('💡 设置 lighting.castShadow = true');
@@ -76,7 +72,7 @@ export function diagnoseShadows(scene, weatherLighting) {
         report.info.push(`✅ 太阳光强度 = ${debugInfo.sun.intensity.toFixed(2)}`);
     }
 
-    // 检查阴影相机
+    // English comment.
     if (debugInfo.shadowCamera) {
         const cam = debugInfo.shadowCamera;
         const width = cam.right - cam.left;
@@ -91,7 +87,7 @@ export function diagnoseShadows(scene, weatherLighting) {
         }
     }
 
-    // 3. 检查场景中的 Mesh
+    // English comment.
     let meshCount = 0;
     let castShadowCount = 0;
     let receiveShadowCount = 0;
@@ -122,7 +118,7 @@ export function diagnoseShadows(scene, weatherLighting) {
         }
     }
 
-    // 4. 检查 shadowGround
+    // English comment.
     const sgConfig = weatherLighting.config?.lighting?.shadowGround;
     if (sgConfig?.enabled) {
         report.info.push('✅ shadowGround（阴影接收地面）已启用');
@@ -135,8 +131,7 @@ export function diagnoseShadows(scene, weatherLighting) {
 }
 
 /**
- * 打印诊断报告到控制台
- * @param {Object} report - 诊断报告
+ * English comment.
  */
 export function printDiagnosticReport(report) {
     console.group('🔍 WeatherLighting 阴影诊断报告');

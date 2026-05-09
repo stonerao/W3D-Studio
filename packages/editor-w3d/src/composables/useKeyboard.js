@@ -1,31 +1,27 @@
 import { onMounted, onUnmounted } from 'vue';
 
 /**
- * 快捷键系统组合式函数
+ * English comment.
  */
 export function useKeyboard() {
-    // 快捷键注册表
+    // English comment.
     const shortcuts = new Map();
 
     /**
-     * 注册快捷键
-     * @param {String} key - 快捷键（如 'ctrl+z', 'ctrl+shift+s'）
-     * @param {Function} handler - 处理函数
-     * @param {Object} options - 选项
+     * English comment.
      */
     const register = (key, handler, options = {}) => {
         const normalizedKey = normalizeKey(key);
         shortcuts.set(normalizedKey, {
             handler,
             description: options.description || '',
-            preventDefault: options.preventDefault !== false // 默认阻止默认行为
+            preventDefault: options.preventDefault !== false // English comment.
         });
         console.log(`[Keyboard] Registered shortcut: ${normalizedKey}`);
     };
 
     /**
-     * 注销快捷键
-     * @param {String} key - 快捷键
+     * English comment.
      */
     const unregister = (key) => {
         const normalizedKey = normalizeKey(key);
@@ -34,7 +30,7 @@ export function useKeyboard() {
     };
 
     /**
-     * 注销所有快捷键
+     * English comment.
      */
     const unregisterAll = () => {
         shortcuts.clear();
@@ -42,9 +38,7 @@ export function useKeyboard() {
     };
 
     /**
-     * 标准化快捷键字符串
-     * @param {String} key - 快捷键
-     * @returns {String} 标准化后的快捷键
+     * English comment.
      */
     const normalizeKey = (key) => {
         return key
@@ -56,9 +50,7 @@ export function useKeyboard() {
     };
 
     /**
-     * 从键盘事件生成快捷键字符串
-     * @param {KeyboardEvent} event - 键盘事件
-     * @returns {String} 快捷键字符串
+     * English comment.
      */
     const getKeyFromEvent = (event) => {
         const keys = [];
@@ -67,7 +59,7 @@ export function useKeyboard() {
         if (event.shiftKey) keys.push('shift');
         if (event.altKey) keys.push('alt');
 
-        // 获取主键
+        // English comment.
         const mainKey = event.key.toLowerCase();
         if (mainKey !== 'control' && mainKey !== 'shift' && mainKey !== 'alt' && mainKey !== 'meta') {
             keys.push(mainKey);
@@ -77,18 +69,17 @@ export function useKeyboard() {
     };
 
     /**
-     * 键盘事件处理器
-     * @param {KeyboardEvent} event - 键盘事件
+     * English comment.
      */
     const handleKeyDown = (event) => {
-        // 忽略在输入框中的快捷键
+        // English comment.
         const target = event.target;
         if (
             target.tagName === 'INPUT' ||
             target.tagName === 'TEXTAREA' ||
             target.isContentEditable
         ) {
-            // 只允许 Ctrl+S 在输入框中工作
+            // English comment.
             const key = getKeyFromEvent(event);
             if (key !== 'ctrl+s') {
                 return;
@@ -107,7 +98,7 @@ export function useKeyboard() {
     };
 
     /**
-     * 启动快捷键监听
+     * English comment.
      */
     const start = () => {
         window.addEventListener('keydown', handleKeyDown);
@@ -115,7 +106,7 @@ export function useKeyboard() {
     };
 
     /**
-     * 停止快捷键监听
+     * English comment.
      */
     const stop = () => {
         window.removeEventListener('keydown', handleKeyDown);
@@ -123,8 +114,7 @@ export function useKeyboard() {
     };
 
     /**
-     * 获取所有已注册的快捷键
-     * @returns {Array} 快捷键列表
+     * English comment.
      */
     const getShortcuts = () => {
         return Array.from(shortcuts.entries()).map(([key, value]) => ({
@@ -133,7 +123,7 @@ export function useKeyboard() {
         }));
     };
 
-    // 自动启动和停止
+    // English comment.
     onMounted(() => {
         start();
     });
@@ -153,7 +143,7 @@ export function useKeyboard() {
 }
 
 /**
- * 预定义的快捷键常量
+ * English comment.
  */
 export const SHORTCUTS = {
     UNDO: 'ctrl+z',

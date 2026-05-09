@@ -6,23 +6,23 @@
             :style="{ paddingLeft: `${level * 16}px` }"
             @click="handleClick"
         >
-            <!-- 展开/折叠图标 -->
+            <!-- English comment. -->
             <span v-if="hasChildren" class="tree-node-icon" @click.stop="handleToggle">
                 {{ expanded ? '▼' : '▶' }}
             </span>
             <span v-else class="tree-node-icon-placeholder"></span>
 
-            <!-- 节点图标 -->
+            <!-- English comment. -->
             <!-- <span class="tree-node-type-icon">{{ icon }}</span> -->
 
-            <!-- 节点标签 -->
+            <!-- English comment. -->
             <span class="tree-node-label">{{ label }}</span>
 
-            <!-- 自定义操作插槽 -->
+            <!-- English comment. -->
             <slot name="actions"></slot>
         </div>
 
-        <!-- 子节点 -->
+        <!-- English comment. -->
         <div v-if="hasChildren && expanded" class="tree-node-children">
             <TreeNode
                 v-for="child in children"

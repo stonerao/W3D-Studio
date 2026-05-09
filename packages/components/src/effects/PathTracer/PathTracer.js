@@ -2,91 +2,77 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * PathTracer GPU 路径追踪渲染组件
- *
- * @class PathTracer
- * @extends Component
- * @description 使用 GPU 路径追踪技术实现照片级真实感渲染效果
- *
- * @example
- * const pathTracer = await scene.add('PathTracer', {
- *     name: 'pathtracer',
- *     model: modelMesh,
- *     environment: hdrTexture,
- *     samples: 100,
- *     tiles: 3,
- *     resolutionScale: 1.0
- * });
+ * English comment.
  */
 export class PathTracer extends Component {
     /**
-     * 默认配置
+     * English comment.
      */
     static defaultConfig = {
-        // 渲染设置
-        enable: true, // 启用路径追踪
-        pause: false, // 暂停渲染
-        samples: 100, // 目标采样数
-        minSamples: 3, // 最小采样数
-        tiles: 3, // 分块渲染 (tiles x tiles)
-        resolutionScale: 1.0, // 分辨率缩放 (0.1 - 1.0)
+        // English comment.
+        enable: true, // English comment.
+        pause: false, // English comment.
+        samples: 100, // English comment.
+        minSamples: 3, // English comment.
+        tiles: 3, // English comment.
+        resolutionScale: 1.0, // English comment.
 
-        // 场景设置
-        model: null, // 要渲染的模型 (THREE.Object3D)
-        environment: null, // 环境贴图 (THREE.Texture)
-        background: null, // 背景 (THREE.Texture 或 THREE.Color)
+        // English comment.
+        model: null, // English comment.
+        environment: null, // English comment.
+        background: null, // English comment.
 
-        // 环境贴图设置
-        envMapIntensity: 1.0, // 环境贴图强度
-        envMapBlur: 0.0, // 环境贴图模糊度 (0-1)
+        // English comment.
+        envMapIntensity: 1.0, // English comment.
+        envMapBlur: 0.0, // English comment.
 
-        // 材质调整
-        adjustMaterials: true, // 自动调整材质
+        // English comment.
+        adjustMaterials: true, // English comment.
         materialConfig: {
-            roughnessScale: 0.25, // 粗糙度缩放
-            enableTransmission: true, // 启用透射效果
-            transmissionIOR: 1.4 // 透射折射率
+            roughnessScale: 0.25, // English comment.
+            enableTransmission: true, // English comment.
+            transmissionIOR: 1.4 // English comment.
         },
 
-        // 地板设置
+        // English comment.
         floor: {
-            enabled: false, // 启用地板
-            size: 2500, // 地板大小
-            roughness: 0.15, // 粗糙度
-            metalness: 0.9, // 金属度
-            color: '#ffffff', // 颜色
-            generateTexture: true // 生成径向渐变纹理
+            enabled: false, // English comment.
+            size: 2500, // English comment.
+            roughness: 0.15, // English comment.
+            metalness: 0.9, // English comment.
+            color: '#ffffff', // English comment.
+            generateTexture: true // English comment.
         },
 
-        // 渲染质量
-        filterGlossyFactor: 1, // 光泽过滤因子
+        // English comment.
+        filterGlossyFactor: 1, // English comment.
 
-        // 色调映射
-        toneMapping: true, // 启用色调映射
-        toneMappingType: 'ACESFilmic', // 色调映射类型
+        // English comment.
+        toneMapping: true, // English comment.
+        toneMappingType: 'ACESFilmic', // English comment.
 
-        // 透明背景
+        // English comment.
         transparentBackground: false,
 
-        // 自动开始
+        // English comment.
         autoStart: true,
 
-        // 进度回调
+        // English comment.
         onProgress: null, // (progress) => {}
         onComplete: null // () => {}
     };
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 检查是否有模型
+        // English comment.
         if (!this.config.model) {
             console.warn('PathTracer: No model provided');
             return;
         }
 
-        // 动态导入 three-gpu-pathtracer
+        // English comment.
         try {
             const module = await import('three-gpu-pathtracer');
             this.WebGLPathTracer = module.WebGLPathTracer;
@@ -98,36 +84,36 @@ export class PathTracer extends Component {
             return;
         }
 
-        // 初始化路径追踪器
+        // English comment.
         this.initializePathTracer();
 
-        // 设置环境
+        // English comment.
         this.setupEnvironment();
 
-        // 调整材质
+        // English comment.
         if (this.config.adjustMaterials && this.config.model) {
             this.adjustModelMaterials(this.config.model);
         }
 
-        // 添加地板
+        // English comment.
         if (this.config.floor.enabled) {
             this.createFloor();
         }
 
-        // 添加模型到主场景 (不是 componentScene)
-        // PathTracer 需要直接访问主场景中的对象
+        // English comment.
+        // English comment.
         if (this.config.model) {
             this.scene.scene.add(this.config.model);
-            this.addedModel = this.config.model; // 记录以便清理
+            this.addedModel = this.config.model; // English comment.
         }
 
-        // 设置场景到路径追踪器
+        // English comment.
         await this.updateScene();
 
-        // 设置相机控制器监听
+        // English comment.
         this.setupCameraControls();
 
-        // 自动开始渲染
+        // English comment.
         if (this.config.autoStart) {
             this.start();
         }
@@ -136,22 +122,22 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 初始化路径追踪器
+     * English comment.
      */
     initializePathTracer() {
         const renderer = this.scene.renderer.instance;
 
-        // 创建路径追踪器
+        // English comment.
         this.pathTracer = new this.WebGLPathTracer(renderer);
         this.pathTracer.filterGlossyFactor = this.config.filterGlossyFactor;
         this.pathTracer.minSamples = this.config.minSamples;
         this.pathTracer.renderScale = this.config.resolutionScale;
         this.pathTracer.tiles.set(this.config.tiles, this.config.tiles);
 
-        // 保存原始渲染器设置
+        // English comment.
         this.originalToneMapping = renderer.toneMapping;
 
-        // 设置色调映射
+        // English comment.
         if (this.config.toneMapping) {
             const toneMappingTypes = {
                 Linear: THREE.LinearToneMapping,
@@ -164,14 +150,14 @@ export class PathTracer extends Component {
                 toneMappingTypes[this.config.toneMappingType] || THREE.ACESFilmicToneMapping;
         }
 
-        // 禁用 W3D Scene 的默认渲染,让 PathTracer 完全接管
-        // 保存原始渲染函数
+        // English comment.
+        // English comment.
         this.originalSceneRender = this.scene.renderer.render.bind(this.scene.renderer);
 
-        // 替换为空函数,阻止默认渲染覆盖 PathTracer 的输出
+        // English comment.
         this.scene.renderer.render = () => {
-            // PathTracer 在 onUpdate 中已经调用了 renderSample()
-            // 这里不需要再调用 renderer.render(),否则会覆盖 PathTracer 的渲染结果
+            // English comment.
+            // English comment.
         };
 
         this.isInitialized = true;
@@ -179,10 +165,10 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 设置环境
+     * English comment.
      */
     setupEnvironment() {
-        // 设置背景
+        // English comment.
         if (this.config.transparentBackground) {
             this.scene.scene.background = null;
         } else if (this.config.background) {
@@ -192,7 +178,7 @@ export class PathTracer extends Component {
                 this.scene.scene.background = this.config.background;
             }
         } else {
-            // 创建默认渐变背景
+            // English comment.
             const gradientMap = new this.GradientEquirectTexture();
             gradientMap.topColor.set(0xeeeeee);
             gradientMap.bottomColor.set(0xeaeaea);
@@ -203,7 +189,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 调整模型材质
+     * English comment.
      */
     adjustModelMaterials(model) {
         const { roughnessScale, enableTransmission, transmissionIOR } = this.config.materialConfig;
@@ -212,12 +198,12 @@ export class PathTracer extends Component {
             if (child.isMesh && child.material) {
                 const material = child.material;
 
-                // 调整粗糙度
+                // English comment.
                 if (material.roughness !== undefined) {
                     material.roughness *= roughnessScale;
                 }
 
-                // 处理透明材质 - 转换为透射材质
+                // English comment.
                 if (enableTransmission && material.opacity < 1.0) {
                     const oldMaterial = material;
                     const newMaterial = new THREE.MeshPhysicalMaterial();
@@ -229,7 +215,7 @@ export class PathTracer extends Component {
                     newMaterial.roughness = oldMaterial.roughness || 0.1;
                     newMaterial.metalness = 0.0;
 
-                    // 调整颜色亮度
+                    // English comment.
                     const hsl = {};
                     oldMaterial.color.getHSL(hsl);
                     hsl.l = Math.max(hsl.l, 0.35);
@@ -237,14 +223,14 @@ export class PathTracer extends Component {
 
                     child.material = newMaterial;
 
-                    // 清理旧材质
+                    // English comment.
                     if (oldMaterial.dispose) {
                         oldMaterial.dispose();
                     }
                 }
             }
 
-            // 隐藏线段
+            // English comment.
             if (child.isLineSegments) {
                 child.visible = false;
             }
@@ -252,7 +238,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 创建地板
+     * English comment.
      */
     createFloor() {
         const floorConfig = this.config.floor;
@@ -266,7 +252,7 @@ export class PathTracer extends Component {
             transparent: true
         });
 
-        // 生成径向渐变纹理
+        // English comment.
         if (floorConfig.generateTexture) {
             material.map = this.generateRadialFloorTexture(1024);
         }
@@ -275,18 +261,18 @@ export class PathTracer extends Component {
         this.floor.scale.setScalar(floorConfig.size);
         this.floor.rotation.x = -Math.PI / 2;
 
-        // 将地板放置在模型下方
+        // English comment.
         if (this.config.model) {
             const bbox = new THREE.Box3().setFromObject(this.config.model);
             this.floor.position.y = bbox.min.y;
         }
 
-        // 添加到主场景,不是 componentScene
+        // English comment.
         this.scene.scene.add(this.floor);
     }
 
     /**
-     * 生成径向渐变地板纹理
+     * English comment.
      */
     generateRadialFloorTexture(dim) {
         const data = new Uint8Array(dim * dim * 4);
@@ -323,48 +309,48 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 更新场景到路径追踪器
+     * English comment.
      */
     async updateScene() {
         if (!this.pathTracer) return;
 
-        // 设置场景和相机
+        // English comment.
         await this.pathTracer.setScene(this.scene.scene, this.scene.camera.instance);
 
         this.emit('sceneUpdated');
     }
 
     /**
-     * 设置相机控制器监听
+     * English comment.
      */
     setupCameraControls() {
-        // 获取 W3D Scene 的 OrbitControls 实例
+        // English comment.
         const controls = this.scene.controls?.instance;
 
         if (!controls) {
             return;
         }
 
-        // 创建相机变化处理函数
+        // English comment.
         this.cameraChangeHandler = () => {
             if (this.pathTracer && this.isInitialized) {
-                // 更新 PathTracer 的相机状态
+                // English comment.
                 this.pathTracer.updateCamera();
 
-                // 重置采样计数,因为相机改变后需要重新渲染
+                // English comment.
                 this.pathTracer.reset();
 
-                // 触发相机变化事件
+                // English comment.
                 this.emit('cameraChanged');
             }
         };
 
-        // 添加事件监听器
+        // English comment.
         controls.addEventListener('change', this.cameraChangeHandler);
     }
 
     /**
-     * 开始渲染
+     * English comment.
      */
     start() {
         this.config.enable = true;
@@ -374,7 +360,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 暂停渲染
+     * English comment.
      */
     pause() {
         this.config.pause = true;
@@ -382,7 +368,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 恢复渲染
+     * English comment.
      */
     resume() {
         this.config.pause = false;
@@ -390,7 +376,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 停止渲染
+     * English comment.
      */
     stop() {
         this.config.enable = false;
@@ -399,7 +385,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 重置渲染
+     * English comment.
      */
     reset() {
         if (this.pathTracer) {
@@ -410,7 +396,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 更新相机
+     * English comment.
      */
     updateCamera() {
         if (this.pathTracer) {
@@ -420,7 +406,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 更新材质
+     * English comment.
      */
     updateMaterials() {
         if (this.pathTracer) {
@@ -430,7 +416,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 更新环境
+     * English comment.
      */
     updateEnvironment() {
         if (this.pathTracer) {
@@ -440,7 +426,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 设置分辨率缩放
+     * English comment.
      */
     setResolutionScale(scale) {
         this.config.resolutionScale = Math.max(0.1, Math.min(1.0, scale));
@@ -451,7 +437,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 设置分块数
+     * English comment.
      */
     setTiles(tiles) {
         this.config.tiles = Math.max(1, Math.min(6, tiles));
@@ -461,14 +447,14 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 获取当前采样数
+     * English comment.
      */
     getSamples() {
         return this.pathTracer ? Math.floor(this.pathTracer.samples) : 0;
     }
 
     /**
-     * 获取渲染状态
+     * English comment.
      */
     getStatus() {
         return {
@@ -482,7 +468,7 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 下载渲染结果
+     * English comment.
      */
     download(filename = 'pathtraced-render.png') {
         const renderer = this.scene.renderer.instance;
@@ -494,34 +480,34 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 每帧更新
+     * English comment.
      */
     onUpdate(_deltaTime) {
         if (!this.pathTracer || !this.isInitialized) return;
 
-        // 更新路径追踪器状态
+        // English comment.
         this.pathTracer.enablePathTracing = this.config.enable;
         this.pathTracer.pausePathTracing = this.config.pause;
 
-        // 渲染一个采样
+        // English comment.
         if (this.config.enable && !this.config.pause) {
             this.pathTracer.renderSample();
 
             const samples = this.getSamples();
 
-            // 触发进度回调
+            // English comment.
             if (this.config.onProgress) {
                 this.config.onProgress(samples / this.config.samples);
             }
 
-            // 触发进度事件
+            // English comment.
             this.emit('progress', {
                 samples,
                 targetSamples: this.config.samples,
                 progress: samples / this.config.samples
             });
 
-            // 检查是否完成
+            // English comment.
             if (samples >= this.config.samples && this.currentSamples < this.config.samples) {
                 this.currentSamples = samples;
 
@@ -535,34 +521,34 @@ export class PathTracer extends Component {
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 停止渲染
+        // English comment.
         this.stop();
 
-        // 移除相机控制器监听
+        // English comment.
         if (this.scene.controls?.instance && this.cameraChangeHandler) {
             this.scene.controls.instance.removeEventListener('change', this.cameraChangeHandler);
             this.cameraChangeHandler = null;
         }
 
-        // 恢复原始渲染函数
+        // English comment.
         if (this.originalSceneRender) {
             this.scene.renderer.render = this.originalSceneRender;
         }
 
-        // 恢复原始渲染器设置
+        // English comment.
         if (this.originalToneMapping !== undefined) {
             this.scene.renderer.instance.toneMapping = this.originalToneMapping;
         }
 
-        // 从主场景移除模型
+        // English comment.
         if (this.addedModel) {
             this.scene.scene.remove(this.addedModel);
         }
 
-        // 清理地板
+        // English comment.
         if (this.floor) {
             this.scene.scene.remove(this.floor);
             this.floor.geometry.dispose();
@@ -576,7 +562,7 @@ export class PathTracer extends Component {
             this.gradientMap.dispose();
         }
 
-        // 清理路径追踪器
+        // English comment.
         if (this.pathTracer) {
             this.pathTracer.reset();
             this.pathTracer = null;

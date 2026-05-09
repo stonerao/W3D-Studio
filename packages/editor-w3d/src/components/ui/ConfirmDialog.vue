@@ -3,20 +3,20 @@
         <Transition name="confirm-dialog">
             <div v-if="visible" class="confirm-overlay" @click="handleOverlayClick">
                 <div class="confirm-dialog" :class="[`confirm-dialog--${dialogState.variant}`]" @click.stop>
-                    <!-- 图标 -->
+                    <!-- English comment. -->
                     <div class="confirm-icon" :class="[`confirm-icon--${dialogState.variant}`]">
                         <span v-if="dialogState.variant === 'danger'">⚠</span>
                         <span v-else-if="dialogState.variant === 'warning'">⚡</span>
                         <span v-else>❓</span>
                     </div>
 
-                    <!-- 标题 -->
+                    <!-- English comment. -->
                     <h3 class="confirm-title">{{ dialogState.title }}</h3>
 
-                    <!-- 消息内容 -->
+                    <!-- English comment. -->
                     <p class="confirm-message">{{ dialogState.message }}</p>
 
-                    <!-- 按钮 -->
+                    <!-- English comment. -->
                     <div class="confirm-actions">
                         <button
                             v-if="dialogState.type === 'confirm'"
@@ -44,7 +44,7 @@ import { useConfirm } from '../../composables/useConfirm';
 
 const { visible, dialogState, handleConfirm, handleCancel } = useConfirm();
 
-// 点击遮罩层处理
+// English comment.
 const handleOverlayClick = () => {
     if (dialogState.type === 'confirm') {
         handleCancel();
@@ -181,7 +181,7 @@ const handleOverlayClick = () => {
     box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
 }
 
-/* 过渡动画 */
+/* English comment. */
 .confirm-dialog-enter-active {
     transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }

@@ -58,4 +58,5 @@ test_vue
 /packages/vfd/vite.config.ts
 /scripts/replace_go_to_vfd.py
 *.md
+!README.md
 !document/zh/lowcode-json-reduction/*.md

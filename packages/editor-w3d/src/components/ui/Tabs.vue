@@ -21,7 +21,7 @@
                 type="button"
                 class="tabs-scroll-btn tabs-scroll-btn--start"
                 :disabled="!canScrollPrev"
-                aria-label="向前滚动"
+                :aria-label="t('tabs.scrollPrev')"
                 @click="scrollTabs('prev')"
             >
                 ‹
@@ -52,7 +52,7 @@
                 type="button"
                 class="tabs-scroll-btn tabs-scroll-btn--end"
                 :disabled="!canScrollNext"
-                aria-label="向后滚动"
+                :aria-label="t('tabs.scrollNext')"
                 @click="scrollTabs('next')"
             >
                 ›
@@ -64,6 +64,7 @@
 <script setup>
 import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import '../../styles/icon/iconfont.css';
+import { useEditorI18n } from '../../i18n';
 
 const props = defineProps({
     modelValue: {
@@ -81,6 +82,7 @@ const props = defineProps({
 });
 
 const emit = defineEmits(['update:modelValue']);
+const { t } = useEditorI18n();
 const tabsHeaderRef = ref(null);
 const canScrollPrev = ref(false);
 const canScrollNext = ref(false);
@@ -336,7 +338,7 @@ watch(() => props.orientation, syncScrollStateSoon);
     font-size: 0.625rem;
 }
 
-/* 下划线动画指示器 */
+/* English comment. */
 .tab-item::after {
     content: '';
     position: absolute;

@@ -3,79 +3,61 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 
 /**
- * DeviceFocusController 设备聚焦控制器组件
- *
- * @class DeviceFocusController
- * @extends Component
- * @description 用于实现设备视角跳转和高亮功能，支持相机动画、楼层控制、材质高亮等
- *
- * @example
- * const deviceFocusController = await scene.add('DeviceFocusController', {
- *     animationDuration: 1500,
- *     highlightColor: 0xFF0000,
- *     cameraDistance: 5
- * });
- *
- * // 聚焦设备
- * const deviceObject = scene.scene.getObjectByName("设备2");
- * await deviceFocusController.focusDevice(deviceObject);
- *
- * // 恢复视角
- * await deviceFocusController.resetView();
+ * English comment.
  */
 export class DeviceFocusController extends Component {
     /**
-     * 默认配置
+     * English comment.
      */
     static defaultConfig = {
-        animationDuration: 1500,        // 相机移动动画时长（毫秒）
-        cameraDistance: 5,               // 相机距离设备的距离
-        highlightColor: 0xFF0000,        // 高亮颜色（默认红色）
-        colorTransitionDuration: 800,    // 颜色过渡时长（毫秒）
-        autoHideOtherFloors: true,       // 是否自动隐藏其他楼层
-        floorMap: {},                    // 楼层对照表，格式：{ 1: '1F', 2: '2F', ... }
-        easing: TWEEN.Easing.Quadratic.Out  // 缓动函数
+        animationDuration: 1500,        // English comment.
+        cameraDistance: 5,               // English comment.
+        highlightColor: 0xFF0000,        // English comment.
+        colorTransitionDuration: 800,    // English comment.
+        autoHideOtherFloors: true,       // English comment.
+        floorMap: {},                    // English comment.
+        easing: TWEEN.Easing.Quadratic.Out  // English comment.
     };
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     onMounted() {
-        // 当前聚焦的设备对象
+        // English comment.
         this.currentDevice = null;
 
-        // 设备原始材质
+        // English comment.
         this.originalMaterials = new Map();
 
-        // 初始相机位置
+        // English comment.
         this.initialCameraPosition = null;
 
-        // 初始 OrbitControls target
+        // English comment.
         this.initialControlsTarget = null;
 
-        // 楼层对象映射表
+        // English comment.
         this.floors = new Map();
 
-        // 楼层原始可见性状态
+        // English comment.
         this.originalFloorVisibility = new Map();
 
-        // 动画组
+        // English comment.
         this.tweenGroup = new TWEEN.Group();
 
-        // 是否处于聚焦状态
+        // English comment.
         this.isFocusing = false;
 
-        // 保存初始相机状态
+        // English comment.
         this.saveInitialCameraState();
 
-        // 初始化楼层对象
+        // English comment.
         this.initializeFloors();
 
         console.log('[DeviceFocusController] 组件初始化完成');
     }
 
     /**
-     * 保存初始相机状态
+     * English comment.
      */
     saveInitialCameraState() {
         if (!this.scene || !this.scene.camera.instance) {
@@ -83,10 +65,10 @@ export class DeviceFocusController extends Component {
             return;
         }
 
-        // 保存初始相机位置
+        // English comment.
         this.initialCameraPosition = this.scene.camera.instance.clone();
 
-        // 保存初始 OrbitControls target
+        // English comment.
         console.log(this.scene.controls );
         if (this.scene.controls && this.scene.controls.instance.target) {
             this.initialControlsTarget = this.scene.controls.instance.target.clone();
@@ -99,8 +81,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 初始化楼层对象
-     * 根据 floorMap 查找场景中的楼层模型
+     * English comment.
      */
     initializeFloors() {
         const { floorMap } = this.config;
@@ -110,17 +91,17 @@ export class DeviceFocusController extends Component {
             return;
         }
 
-        // 遍历 floorMap，查找对应的楼层对象
+        // English comment.
         Object.entries(floorMap).forEach(([index, floorName]) => {
             const floorIndex = parseInt(index);
 
-            // 在场景中查找楼层对象
+            // English comment.
             const floorObject = this.scene.scene.getObjectByName(floorName);
 
             if (floorObject) {
                 this.floors.set(floorIndex, floorObject);
 
-                // 保存楼层原始可见性状态
+                // English comment.
                 this.originalFloorVisibility.set(floorIndex, floorObject.visible);
 
                 console.log(`[DeviceFocusController] 找到楼层 ${floorIndex}: ${floorName}`);
@@ -133,10 +114,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 聚焦设备
-     * @param {THREE.Object3D} deviceObject - 要聚焦的设备 3D 对象
-     * @param {Object} options - 可选配置
-     * @returns {Promise<void>}
+     * English comment.
      */
     async focusDevice(deviceObject, options = {}) {
         if (!deviceObject) {
@@ -144,7 +122,7 @@ export class DeviceFocusController extends Component {
             return;
         }
 
-        // 如果已经在聚焦其他设备，先重置
+        // English comment.
         if (this.isFocusing && this.currentDevice !== deviceObject) {
             await this.resetView();
         }
@@ -152,51 +130,49 @@ export class DeviceFocusController extends Component {
         this.currentDevice = deviceObject;
         this.isFocusing = true;
 
-        // 合并配置
+        // English comment.
         const config = { ...this.config, ...options };
 
-        // 1. 读取设备所在楼层信息
+        // English comment.
         const deviceFloor = this.getDeviceFloor(deviceObject);
         console.log('[DeviceFocusController] 设备所在楼层:', deviceFloor);
 
-        // 2. 隐藏其他楼层（如果启用）
+        // English comment.
         if (config.autoHideOtherFloors && deviceFloor !== null) {
             this.hideOtherFloors(deviceFloor);
         }
 
-        // 3. 计算设备包围盒中心点
+        // English comment.
         const deviceCenter = this.getDeviceCenter(deviceObject);
         console.log('[DeviceFocusController] 设备中心点:', deviceCenter);
 
-        // 4. 高亮设备
+        // English comment.
         this.highlightDevice(deviceObject);
 
-        // 5. 相机移动到设备位置
+        // English comment.
         await this.moveCameraToDevice(deviceCenter, config);
 
-        // 触发聚焦完成事件
+        // English comment.
         this.emit('focusComplete', { device: deviceObject, center: deviceCenter });
     }
 
     /**
-     * 获取设备所在楼层
-     * @param {THREE.Object3D} deviceObject - 设备对象
-     * @returns {number|null} 楼层索引
+     * English comment.
      */
     getDeviceFloor(deviceObject) {
-        // 1. 从设备对象的 userData.floor 读取
+        // English comment.
         if (deviceObject.userData && deviceObject.userData.floor !== undefined) {
             return deviceObject.userData.floor;
         }
 
-        // 2. 从父级对象查找
+        // English comment.
         let parent = deviceObject.parent;
         while (parent) {
             if (parent.userData && parent.userData.floor !== undefined) {
                 return parent.userData.floor;
             }
 
-            // 检查父级对象名称是否在 floorMap 中
+            // English comment.
             for (const [floorIndex, floorName] of Object.entries(this.config.floorMap)) {
                 if (parent.name === floorName) {
                     return parseInt(floorIndex);
@@ -211,9 +187,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 计算设备包围盒中心点
-     * @param {THREE.Object3D} deviceObject - 设备对象
-     * @returns {THREE.Vector3} 中心点
+     * English comment.
      */
     getDeviceCenter(deviceObject) {
         const box = new THREE.Box3().setFromObject(deviceObject);
@@ -223,8 +197,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 隐藏其他楼层
-     * @param {number} targetFloor - 目标楼层索引
+     * English comment.
      */
     hideOtherFloors(targetFloor) {
         this.floors.forEach((floorObject, floorIndex) => {
@@ -239,16 +212,15 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 高亮设备
-     * @param {THREE.Object3D} deviceObject - 设备对象
+     * English comment.
      */
     highlightDevice(deviceObject) {
         const { highlightColor, colorTransitionDuration } = this.config;
 
-        // 遍历设备对象及其子对象，保存原始材质并应用高亮
+        // English comment.
         deviceObject.traverse((child) => {
             if (child.isMesh && child.material) {
-                // 保存原始材质
+                // English comment.
                 if (!this.originalMaterials.has(child.uuid)) {
                     if (Array.isArray(child.material)) {
                         this.originalMaterials.set(child.uuid, child.material.map(mat => mat.clone()));
@@ -257,7 +229,7 @@ export class DeviceFocusController extends Component {
                     }
                 }
 
-                // 应用高亮颜色（使用 Tween 实现颜色渐变）
+                // English comment.
                 this.applyHighlightColor(child, highlightColor, colorTransitionDuration);
             }
         });
@@ -266,10 +238,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 应用高亮颜色（带渐变动画）
-     * @param {THREE.Mesh} mesh - 网格对象
-     * @param {number} targetColor - 目标颜色
-     * @param {number} duration - 动画时长
+     * English comment.
      */
     applyHighlightColor(mesh, targetColor, duration) {
         const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
@@ -291,10 +260,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 相机移动到设备位置
-     * @param {THREE.Vector3} targetPosition - 目标位置
-     * @param {Object} config - 配置
-     * @returns {Promise<void>}
+     * English comment.
      */
     moveCameraToDevice(targetPosition, config) {
         return new Promise((resolve) => {
@@ -307,14 +273,14 @@ export class DeviceFocusController extends Component {
             const camera = this.scene.camera.instance;
             const controls = this.scene.controls.instance;
 
-            // 计算相机目标位置（在设备前方一定距离）
+            // English comment.
             const cameraTargetPosition = new THREE.Vector3(
                 targetPosition.x,
                 targetPosition.y + config.cameraDistance * 0.5,
                 targetPosition.z + config.cameraDistance
             );
 
-            // 相机位置动画
+            // English comment.
             const cameraTween = new TWEEN.Tween(
                 { x: camera.position.x, y: camera.position.y, z: camera.position.z },
                 this.tweenGroup
@@ -333,7 +299,7 @@ export class DeviceFocusController extends Component {
                 })
                 .start();
 
-            // OrbitControls target 动画
+            // English comment.
             if (controls && controls.target) {
                 const controlsTween = new TWEEN.Tween(
                     { x: controls.target.x, y: controls.target.y, z: controls.target.z },
@@ -354,8 +320,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 重置视图
-     * @returns {Promise<void>}
+     * English comment.
      */
     async resetView() {
         if (!this.isFocusing) {
@@ -365,29 +330,29 @@ export class DeviceFocusController extends Component {
 
         console.log('[DeviceFocusController] 开始重置视图');
 
-        // 1. 恢复楼层可见性
+        // English comment.
         this.restoreFloorVisibility();
 
-        // 2. 取消设备高亮
+        // English comment.
         if (this.currentDevice) {
             this.removeHighlight(this.currentDevice);
         }
 
-        // 3. 相机移动回初始位置
+        // English comment.
         await this.moveCameraToInitialPosition();
 
-        // 4. 清空当前设备
+        // English comment.
         this.currentDevice = null;
         this.isFocusing = false;
 
-        // 触发重置完成事件
+        // English comment.
         this.emit('resetComplete');
 
         console.log('[DeviceFocusController] 视图重置完成');
     }
 
     /**
-     * 恢复楼层可见性
+     * English comment.
      */
     restoreFloorVisibility() {
         this.floors.forEach((floorObject, floorIndex) => {
@@ -401,8 +366,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 移除设备高亮
-     * @param {THREE.Object3D} deviceObject - 设备对象
+     * English comment.
      */
     removeHighlight(deviceObject) {
         const { colorTransitionDuration } = this.config;
@@ -412,7 +376,7 @@ export class DeviceFocusController extends Component {
                 const originalMaterial = this.originalMaterials.get(child.uuid);
 
                 if (originalMaterial) {
-                    // 使用 Tween 实现颜色渐变恢复
+                    // English comment.
                     this.restoreOriginalColor(child, originalMaterial, colorTransitionDuration);
                 }
             }
@@ -422,10 +386,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 恢复原始颜色（带渐变动画）
-     * @param {THREE.Mesh} mesh - 网格对象
-     * @param {THREE.Material|THREE.Material[]} originalMaterial - 原始材质
-     * @param {number} duration - 动画时长
+     * English comment.
      */
     restoreOriginalColor(mesh, originalMaterial, duration) {
         const currentMaterials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
@@ -451,8 +412,7 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 相机移动回初始位置
-     * @returns {Promise<void>}
+     * English comment.
      */
     moveCameraToInitialPosition() {
         return new Promise((resolve) => {
@@ -465,7 +425,7 @@ export class DeviceFocusController extends Component {
             const camera = this.scene.camera.instance;
             const controls = this.scene.controls.instance;
 
-            // 相机位置动画
+            // English comment.
             const cameraTween = new TWEEN.Tween(
                 { x: camera.position.x, y: camera.position.y, z: camera.position.z },
                 this.tweenGroup
@@ -484,7 +444,7 @@ export class DeviceFocusController extends Component {
                 })
                 .start();
 
-            // OrbitControls target 动画
+            // English comment.
             if (controls && controls.target && this.initialControlsTarget) {
                 const controlsTween = new TWEEN.Tween(
                     { x: controls.target.x, y: controls.target.y, z: controls.target.z },
@@ -505,25 +465,24 @@ export class DeviceFocusController extends Component {
     }
 
     /**
-     * 更新方法（每帧调用）
-     * @param {number} delta - 时间增量
+     * English comment.
      */
     onUpdate(delta) {
-        // 更新 Tween 动画
+        // English comment.
         this.tweenGroup.update();
     }
 
     /**
-     * 销毁组件
+     * English comment.
      */
     onDispose() {
-        // 停止所有动画
+        // English comment.
         this.tweenGroup.removeAll();
 
-        // 清空材质缓存
+        // English comment.
         this.originalMaterials.clear();
 
-        // 清空楼层映射
+        // English comment.
         this.floors.clear();
         this.originalFloorVisibility.clear();
 

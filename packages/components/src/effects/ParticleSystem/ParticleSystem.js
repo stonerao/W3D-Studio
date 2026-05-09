@@ -2,42 +2,21 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * ParticleSystem 粒子系统组件
- *
- * @class ParticleSystem
- * @extends Component
- * @description 高级粒子系统，支持动态发射、物理效果、多种发射器形状
- *
- * @example
- * const particles = await scene.add('ParticleSystem', {
- *     name: 'fire',
- *     count: 1000,
- *     size: 1.5,
- *     color: '#ff4500',
- *     emitter: {
- *         shape: 'point',
- *         position: [0, 0, 0],
- *         rate: 100
- *     },
- *     physics: {
- *         gravity: -9.8,
- *         velocity: { min: 2, max: 8 }
- *     }
- * });
+ * English comment.
  */
 export class ParticleSystem extends Component {
     /**
-     * 默认配置
+     * English comment.
      */
     static defaultConfig = {
-        // ── 快速预设 ───────────────────────────────────────────
-        // 可选值：'fire' | 'smoke' | 'rain' | 'snow' | 'explosion' |
+        // English comment.
+        // English comment.
         //        'stars' | 'fountain' | 'waterfall' | 'splash' |
         //        'campfire' | 'lava' | 'raindrops' | 'snowflakes' |
         //        'leaves' | 'cloud' | 'steam' | 'starfield' | 'nebula'
         preset: '',
 
-        // ── 粒子基础设置 ────────────────────────────────────────
+        // English comment.
         count: 1000,
         size: 1.0,
         color: '#ffffff',
@@ -45,46 +24,46 @@ export class ParticleSystem extends Component {
         lifetime: 5.0,
         speedCoefficient: 1.0,
 
-        // ── 生命周期渐变（Over Lifetime） ─────────────────────
-        colorEnd: '',          // 结束颜色，为空则不渐变
-        sizeEnd: 0,            // 结束大小（0 = 逐渐消失）
-        opacityEnd: 0,         // 结束透明度
+        // English comment.
+        colorEnd: '',          // English comment.
+        sizeEnd: 0,            // English comment.
+        opacityEnd: 0,         // English comment.
 
-        // ── 发射器设置 ──────────────────────────────────────────
+        // English comment.
         emitter: {
             shape: 'point',        // 'point' | 'sphere' | 'box' | 'cone'
             position: [0, 0, 0],
-            range: 1.0,            // 球体/锥形发射半径
-            // 盒子发射器专用三维范围（null 时回退到 range*2）
-            width: null,           // X 轴宽度
-            height: null,          // Y 轴高度
-            depth: null,           // Z 轴深度
+            range: 1.0,            // English comment.
+            // English comment.
+            width: null,           // English comment.
+            height: null,          // English comment.
+            depth: null,           // English comment.
             rate: 100,
             autoStart: true,
-            // 方向控制
-            direction: [0, 1, 0],  // 主发射方向（归一化向量）
-            spread: 90             // 扩散半角（度），0=单向 180=全向球
+            // English comment.
+            direction: [0, 1, 0],  // English comment.
+            spread: 90             // English comment.
         },
 
-        // ── 物理设置 ─────────────────────────────────────────────
+        // English comment.
         physics: {
             gravity: -9.8,
             damping: 0.98,
             velocity: { min: 2, max: 8 },
-            rotationSpeed: { min: 0, max: 0 } // 粒子自转速度（度/秒）
+            rotationSpeed: { min: 0, max: 0 } // English comment.
         },
 
-        // ── 渲染设置 ─────────────────────────────────────────────
+        // English comment.
         blending: 'additive',  // 'normal' | 'additive' | 'multiply' | 'screen'
         transparent: true,
         sizeAttenuation: true,
 
-        // ── 纹理设置 ─────────────────────────────────────────────
+        // English comment.
         texture: null,
         textureRepeat: [1, 1],
         textureOffset: [0, 0],
 
-        // ── 自定义 Shader 设置 ──────────────────────────────────
+        // English comment.
         useCustomShader: false,
         shaderType: 'glow',    // 'glow' | 'sparkle' | 'fire' | 'smoke'
         depthWrite: false,
@@ -98,59 +77,59 @@ export class ParticleSystem extends Component {
     };
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     onMounted() {
-        // 纹理加载器
+        // English comment.
         this.textureLoader = new THREE.TextureLoader();
         this.loadedTexture = null;
         this.isTextureLoading = false;
 
-        // 预设切换防抖：使用定时器 ID 和时间戳
+        // English comment.
         this._presetChangeTimer = null;
         this._lastPresetChangeTime = 0;
-        this._presetChangeDebounceDelay = 100; // 100ms 防抖延迟
+        this._presetChangeDebounceDelay = 100; // English comment.
 
-        // 初始化粒子系统
+        // English comment.
         this.initializeParticleSystem();
 
-        // 创建时钟
+        // English comment.
         this.clock = new THREE.Clock();
 
-        // 发射状态
+        // English comment.
         this.isEmitting = this.config.emitter.autoStart;
 
-        // 统计信息
+        // English comment.
         this.stats = {
             activeParticles: 0,
             totalEmitted: 0
         };
 
-        // 加载纹理（如果配置了）
+        // English comment.
         if (this.config.texture) {
             this.loadTexture(this.config.texture);
         }
     }
 
     /**
-     * 初始化粒子系统
+     * English comment.
      */
     initializeParticleSystem() {
         const count = this.config.count;
 
-        // 创建粒子数据
+        // English comment.
         this.particles = [];
         this.emissionAccumulator = 0;
 
-        // 创建几何体
+        // English comment.
         this.geometry = new THREE.BufferGeometry();
 
-        // 创建属性数组
+        // English comment.
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
         const sizes = new Float32Array(count);
 
-        // 初始化粒子对象
+        // English comment.
         for (let i = 0; i < count; i++) {
             const particle = {
                 position: new THREE.Vector3(),
@@ -162,7 +141,7 @@ export class ParticleSystem extends Component {
             };
             this.particles.push(particle);
 
-            // 初始化属性数组
+            // English comment.
             const i3 = i * 3;
             positions[i3] = 0;
             positions[i3 + 1] = 0;
@@ -176,15 +155,15 @@ export class ParticleSystem extends Component {
             sizes[i] = particle.size;
         }
 
-        // 设置几何体属性
+        // English comment.
         this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         this.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
         this.geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-        // 创建材质
+        // English comment.
         this.createMaterial();
 
-        // 创建粒子系统
+        // English comment.
         this.particlePoints = new THREE.Points(this.geometry, this.material);
         this.componentScene.add(this.particlePoints);
 
@@ -192,7 +171,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 获取混合模式
+     * English comment.
      */
     getBlendingMode(mode) {
         switch (mode) {
@@ -208,7 +187,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 创建材质
+     * English comment.
      */
     createMaterial() {
         if (this.config.useCustomShader) {
@@ -219,7 +198,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 创建标准点材质
+     * English comment.
      */
     createPointsMaterial() {
         const materialConfig = {
@@ -233,7 +212,7 @@ export class ParticleSystem extends Component {
             depthWrite: this.config.depthWrite
         };
 
-        // 添加纹理（如果已加载）
+        // English comment.
         if (this.loadedTexture) {
             materialConfig.map = this.loadedTexture;
             materialConfig.alphaMap = this.loadedTexture;
@@ -243,12 +222,12 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 创建自定义 Shader 材质
+     * English comment.
      */
     createShaderMaterial() {
         const shaderConfig = this.getShaderConfig(this.config.shaderType);
 
-        // 基础 uniforms
+        // English comment.
         const uniforms = {
             uTime: { value: this.config.shaderUniforms.uTime },
             uTexture: { value: this.loadedTexture },
@@ -270,7 +249,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 获取 Shader 配置
+     * English comment.
      */
     getShaderConfig(shaderType) {
         const configs = {
@@ -308,7 +287,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 加载纹理
+     * English comment.
      */
     loadTexture(texturePath) {
         if (this.isTextureLoading) return;
@@ -318,7 +297,7 @@ export class ParticleSystem extends Component {
 
         this.textureLoader.load(
             texturePath,
-            // 加载成功
+            // English comment.
             (texture) => {
                 this.loadedTexture = texture;
                 this.loadedTexture.wrapS = THREE.RepeatWrapping;
@@ -326,20 +305,20 @@ export class ParticleSystem extends Component {
                 this.loadedTexture.repeat.set(...this.config.textureRepeat);
                 this.loadedTexture.offset.set(...this.config.textureOffset);
 
-                // 重新创建材质以应用纹理
+                // English comment.
                 this.updateMaterialTexture();
 
                 this.isTextureLoading = false;
                 this.emit('textureLoaded', { texture: this.loadedTexture, path: texturePath });
             },
-            // 加载进度
+            // English comment.
             (progress) => {
                 this.emit('textureLoadProgress', {
                     progress: (progress.loaded / progress.total) * 100,
                     path: texturePath
                 });
             },
-            // 加载失败
+            // English comment.
             (error) => {
                 console.error('纹理加载失败:', error);
                 this.isTextureLoading = false;
@@ -349,16 +328,16 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 更新材质纹理
+     * English comment.
      */
     updateMaterialTexture() {
         if (!this.material) return;
 
         if (this.material.isShaderMaterial) {
-            // Shader 材质
+            // English comment.
             this.material.uniforms.uTexture.value = this.loadedTexture;
         } else {
-            // Points 材质
+            // English comment.
             this.material.map = this.loadedTexture;
             this.material.alphaMap = this.loadedTexture;
             this.material.needsUpdate = true;
@@ -382,11 +361,11 @@ export class ParticleSystem extends Component {
             void main() {
                 vColor = color;
 
-                // 基于生命周期的透明度变化
+                // English comment.
                 float life = 1.0 - (uTime * 0.1);
                 vAlpha = smoothstep(0.0, 0.3, life) * smoothstep(1.0, 0.7, life);
 
-                // 计算粒子大小
+                // English comment.
                 vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
                 gl_PointSize = size * uSize * (300.0 / -mvPosition.z);
 
@@ -409,21 +388,21 @@ export class ParticleSystem extends Component {
             varying float vAlpha;
 
             void main() {
-                // 计算距离中心的距离
+                // English comment.
                 vec2 center = gl_PointCoord - vec2(0.5);
                 float dist = length(center);
 
-                // 创建发光效果
+                // English comment.
                 float glow = 1.0 - smoothstep(0.0, 0.5, dist);
                 glow = pow(glow, 2.0) * uGlowIntensity;
 
-                // 纹理采样
+                // English comment.
                 vec4 texColor = vec4(1.0);
                 if (uTexture != null) {
                     texColor = texture2D(uTexture, gl_PointCoord);
                 }
 
-                // 最终颜色
+                // English comment.
                 vec3 finalColor = vColor * uColor * glow;
                 float finalAlpha = vAlpha * uOpacity * texColor.a * glow;
 
@@ -451,12 +430,12 @@ export class ParticleSystem extends Component {
             void main() {
                 vColor = color;
 
-                // 闪烁效果
+                // English comment.
                 float sparkle = sin(uTime * uSparkleFrequency + position.x * 10.0) * 0.5 + 0.5;
                 vSparkle = sparkle;
                 vAlpha = sparkle;
 
-                // 计算粒子大小
+                // English comment.
                 vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
                 gl_PointSize = size * uSize * (300.0 / -mvPosition.z) * (0.5 + sparkle * 0.5);
 
@@ -482,12 +461,12 @@ export class ParticleSystem extends Component {
                 vec2 center = gl_PointCoord - vec2(0.5);
                 float dist = length(center);
 
-                // 星形闪烁效果
+                // English comment.
                 float angle = atan(center.y, center.x);
                 float star = abs(sin(angle * 4.0)) * 0.5 + 0.5;
                 float sparkle = (1.0 - smoothstep(0.0, 0.4, dist)) * star * vSparkle;
 
-                // 纹理采样
+                // English comment.
                 vec4 texColor = vec4(1.0);
                 if (uTexture != null) {
                     texColor = texture2D(uTexture, gl_PointCoord);
@@ -517,7 +496,7 @@ export class ParticleSystem extends Component {
             varying float vAlpha;
             varying vec2 vUv;
 
-            // 简单噪声函数
+            // English comment.
             float noise(vec2 p) {
                 return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
             }
@@ -526,13 +505,13 @@ export class ParticleSystem extends Component {
                 vColor = color;
                 vUv = uv;
 
-                // 火焰向上飘动效果
+                // English comment.
                 vec3 pos = position;
                 float n = noise(pos.xz * uNoiseScale + uTime * 0.5);
                 pos.x += sin(uTime * 2.0 + n * 10.0) * 0.5;
                 pos.y += uTime * 2.0;
 
-                // 基于高度的透明度
+                // English comment.
                 float heightFade = 1.0 - smoothstep(0.0, 10.0, pos.y);
                 vAlpha = heightFade;
 
@@ -561,15 +540,15 @@ export class ParticleSystem extends Component {
                 vec2 center = gl_PointCoord - vec2(0.5);
                 float dist = length(center);
 
-                // 火焰形状
+                // English comment.
                 float flame = 1.0 - smoothstep(0.0, 0.5, dist);
                 flame *= (sin(uTime * 5.0) * 0.1 + 0.9);
 
-                // 火焰颜色渐变（红->橙->黄）
+                // English comment.
                 vec3 fireColor = mix(vec3(1.0, 0.0, 0.0), vec3(1.0, 1.0, 0.0), flame);
                 fireColor = mix(fireColor, vColor, 0.5);
 
-                // 纹理采样
+                // English comment.
                 vec4 texColor = vec4(1.0);
                 if (uTexture != null) {
                     texColor = texture2D(uTexture, gl_PointCoord);
@@ -605,7 +584,7 @@ export class ParticleSystem extends Component {
             void main() {
                 vColor = color;
 
-                // 烟雾飘散效果
+                // English comment.
                 vec3 pos = position;
                 float n1 = noise(pos.xz * uNoiseScale + uTime * 0.3);
                 float n2 = noise(pos.xz * uNoiseScale * 2.0 + uTime * 0.2);
@@ -614,7 +593,7 @@ export class ParticleSystem extends Component {
                 pos.z += (n2 - 0.5) * 2.0;
                 pos.y += uTime * 1.0;
 
-                // 基于高度的透明度衰减
+                // English comment.
                 float heightFade = 1.0 - smoothstep(0.0, 15.0, pos.y);
                 vAlpha = heightFade * 0.6;
 
@@ -642,15 +621,15 @@ export class ParticleSystem extends Component {
                 vec2 center = gl_PointCoord - vec2(0.5);
                 float dist = length(center);
 
-                // 柔和的烟雾形状
+                // English comment.
                 float smoke = 1.0 - smoothstep(0.0, 0.5, dist);
                 smoke = pow(smoke, 0.5);
 
-                // 烟雾颜色（灰色调）
+                // English comment.
                 vec3 smokeColor = mix(vec3(0.3, 0.3, 0.3), vec3(0.8, 0.8, 0.8), smoke);
                 smokeColor = mix(smokeColor, vColor, 0.3);
 
-                // 纹理采样
+                // English comment.
                 vec4 texColor = vec4(1.0);
                 if (uTexture != null) {
                     texColor = texture2D(uTexture, gl_PointCoord);
@@ -665,30 +644,30 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 更新循环
+     * English comment.
      */
     onUpdate(deltaTime) {
         if (!this.particles || !this.geometry) return;
 
-        // 更新 Shader uniforms（如果使用自定义 Shader）
+        // English comment.
         if (this.material && this.material.isShaderMaterial) {
             this.material.uniforms.uTime.value += deltaTime;
         }
 
-        // 更新粒子
+        // English comment.
         this.updateParticles(deltaTime);
 
-        // 发射新粒子
+        // English comment.
         if (this.isEmitting) {
             this.emitParticles(deltaTime);
         }
 
-        // 更新几何体属性
+        // English comment.
         this.updateGeometry();
     }
 
     /**
-     * 更新粒子
+     * English comment.
      */
     updateParticles(deltaTime) {
         let activeCount = 0;
@@ -697,7 +676,7 @@ export class ParticleSystem extends Component {
 
             if (!particle.active) continue;
 
-            // 更新生命周期
+            // English comment.
             particle.life += deltaTime;
 
             if (particle.life >= particle.maxLife) {
@@ -707,13 +686,13 @@ export class ParticleSystem extends Component {
 
             activeCount++;
 
-            // 更新位置
+            // English comment.
             particle.position.add(particle.velocity.clone().multiplyScalar(deltaTime));
 
-            // 应用重力
+            // English comment.
             particle.velocity.y += this.config.physics.gravity * deltaTime;
 
-            // 应用阻力
+            // English comment.
             particle.velocity.multiplyScalar(this.config.physics.damping);
         }
 
@@ -721,13 +700,13 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 发射粒子
+     * English comment.
      */
     emitParticles(deltaTime) {
-        // 累积发射数量
+        // English comment.
         this.emissionAccumulator += this.config.emitter.rate * deltaTime;
 
-        // 发射整数个粒子
+        // English comment.
         const emitCount = Math.floor(this.emissionAccumulator);
         this.emissionAccumulator -= emitCount;
 
@@ -737,32 +716,32 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 发射单个粒子
+     * English comment.
      */
     emitSingleParticle() {
-        // 找到未激活的粒子
+        // English comment.
         const particle = this.particles.find((p) => !p.active);
         if (!particle) return;
 
-        // 激活粒子
+        // English comment.
         particle.active = true;
         particle.life = 0;
         particle.maxLife = this.config.lifetime * (0.8 + Math.random() * 0.4);
 
-        // 设置初始位置
+        // English comment.
         this.setParticlePosition(particle);
 
-        // 设置初始速度
+        // English comment.
         this.setParticleVelocity(particle);
 
-        // 设置大小
+        // English comment.
         particle.size = this.config.size * (0.5 + Math.random() * 0.5);
 
         this.stats.totalEmitted++;
     }
 
     /**
-     * 设置粒子位置
+     * English comment.
      */
     setParticlePosition(particle) {
         const emitter = this.config.emitter;
@@ -810,7 +789,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 设置粒子速度（支持方向向量 + 扩散角）
+     * English comment.
      */
     setParticleVelocity(particle) {
         const velocity = this.config.physics.velocity;
@@ -821,19 +800,19 @@ export class ParticleSystem extends Component {
         const spreadDeg = this.config.emitter?.spread ?? 90;
         const spreadRad = Math.min(spreadDeg, 180) * Math.PI / 180;
 
-        // 主方向向量
+        // English comment.
         const baseDir = new THREE.Vector3(dir[0], dir[1], dir[2]);
         if (baseDir.lengthSq() < 1e-6) baseDir.set(0, 1, 0);
         baseDir.normalize();
 
-        // 构建与 baseDir 垂直的正交基
+        // English comment.
         const up = Math.abs(baseDir.y) < 0.99
             ? new THREE.Vector3(0, 1, 0)
             : new THREE.Vector3(1, 0, 0);
         const perpX = new THREE.Vector3().crossVectors(baseDir, up).normalize();
         const perpZ = new THREE.Vector3().crossVectors(baseDir, perpX).normalize();
 
-        // 在扩散锥内随机采样（均匀分布）
+        // English comment.
         const cosMax = Math.cos(spreadRad);
         const cosAngle = cosMax + Math.random() * (1 - cosMax);
         const sinAngle = Math.sqrt(1 - cosAngle * cosAngle);
@@ -846,7 +825,7 @@ export class ParticleSystem extends Component {
             .normalize()
             .multiplyScalar(speed);
 
-        // 粒子自转速度
+        // English comment.
         const rot = this.config.physics?.rotationSpeed;
         if (rot && (rot.min !== 0 || rot.max !== 0)) {
             particle.rotationSpeed = rot.min + Math.random() * (rot.max - rot.min);
@@ -856,7 +835,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 更新几何体属性
+     * English comment.
      */
     updateGeometry() {
         const positions = this.geometry.attributes.position.array;
@@ -868,25 +847,25 @@ export class ParticleSystem extends Component {
             const i3 = i * 3;
 
             if (particle.active) {
-                // 更新位置
+                // English comment.
                 positions[i3] = particle.position.x;
                 positions[i3 + 1] = particle.position.y;
                 positions[i3 + 2] = particle.position.z;
 
                 const lifeRatio = particle.life / particle.maxLife;
 
-                // ── 大小 over lifetime ────────────────────────────
+                // English comment.
                 const sizeStart = particle.size;
                 const sizeEnd   = this.config.sizeEnd ?? 0;
                 const curSize   = sizeStart + (sizeEnd - sizeStart) * lifeRatio;
                 sizes[i] = Math.max(0, curSize);
 
-                // ── 透明度 over lifetime ───────────────────────────
+                // English comment.
                 const opStart = this.config.opacity   ?? 0.8;
                 const opEnd   = this.config.opacityEnd ?? 0;
                 const alpha   = opStart + (opEnd - opStart) * lifeRatio;
 
-                // ── 颜色 over lifetime ────────────────────────────
+                // English comment.
                 const startColor = new THREE.Color(this.config.color);
                 const endColor   = this.config.colorEnd
                     ? new THREE.Color(this.config.colorEnd)
@@ -899,7 +878,7 @@ export class ParticleSystem extends Component {
                 colors[i3 + 1] = lerpedColor.g * alpha;
                 colors[i3 + 2] = lerpedColor.b * alpha;
             } else {
-                // 隐藏未激活的粒子
+                // English comment.
                 sizes[i] = 0;
                 colors[i3] = 0;
                 colors[i3 + 1] = 0;
@@ -907,27 +886,27 @@ export class ParticleSystem extends Component {
             }
         }
 
-        // 标记属性需要更新
+        // English comment.
         this.geometry.attributes.position.needsUpdate = true;
         this.geometry.attributes.color.needsUpdate = true;
         this.geometry.attributes.size.needsUpdate = true;
     }
     /**
-     * 开始发射粒子
+     * English comment.
      */
     startEmission() {
         this.isEmitting = true;
     }
 
     /**
-     * 停止发射粒子
+     * English comment.
      */
     stopEmission() {
         this.isEmitting = false;
     }
 
     /**
-     * 切换发射状态
+     * English comment.
      */
     toggleEmission() {
         this.isEmitting = !this.isEmitting;
@@ -935,7 +914,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 清除所有粒子
+     * English comment.
      */
     clearParticles() {
         if (!this.particles) return;
@@ -949,7 +928,7 @@ export class ParticleSystem extends Component {
         this.stats.activeParticles = 0;
         this.stats.totalEmitted = 0;
 
-        // 立即更新几何体以清除视觉残留
+        // English comment.
         if (this.geometry) {
             const positions = this.geometry.attributes.position.array;
             const colors = this.geometry.attributes.color.array;
@@ -969,7 +948,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 重置粒子系统
+     * English comment.
      */
     reset() {
         this.clearParticles();
@@ -979,17 +958,10 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 更新配置（实时生效）
-     *
-     * 处理策略：
-     *  - 预设切换   → setPreset()，直接返回
-     *  - count 变化 → 重建粒子池 + 几何体
-     *  - 材质相关   → 销毁旧材质，重建
-     *  - 纹理       → 先比较再合并（避免已合并后永远相等的 bug）
-     *  - 其余字段   → 合并到 this.config 即可（下一帧自动读取）
+     * English comment.
      */
     updateConfig(newConfig) {
-        // ── 1. 预设切换：优先处理，触发后直接返回 ───────────────
+        // English comment.
         if (
             newConfig.preset !== undefined &&
             newConfig.preset !== '' &&
@@ -1003,12 +975,12 @@ export class ParticleSystem extends Component {
             return;
         }
 
-        // ── 2. 在合并 config 之前，记录需要比较的旧值 ───────────
+        // English comment.
         const oldCount   = this.config.count;
         const oldTexture = this.config.texture;
 
-        // 从 newConfig 中提取各层实际变更的叶子字段，方便后续判断
-        // 支持直接传 { count: 200 } 或嵌套 patch { emitter: { rate: 80 } }
+        // English comment.
+        // English comment.
         const flattenKeys = (obj, prefix = '') => {
             const keys = {};
             for (const k in obj) {
@@ -1023,25 +995,25 @@ export class ParticleSystem extends Component {
         };
         const flat = flattenKeys(newConfig);
 
-        // ── 3. 合并配置 ──────────────────────────────────────────
+        // English comment.
         this.config = this.mergeConfig(this.config, newConfig);
 
-        // ── 4. 粒子数量变化 → 重建粒子池和几何体 ────────────────
+        // English comment.
         const newCount = this.config.count;
         if (newCount !== oldCount && newCount > 0) {
             const wasEmitting = this.isEmitting;
             this.isEmitting = false;
 
-            // 移除旧的 Points 对象
+            // English comment.
             if (this.particlePoints) {
                 this.componentScene.remove(this.particlePoints);
                 this.particlePoints = null;
             }
-            // 销毁旧资源
+            // English comment.
             if (this.geometry) { this.geometry.dispose(); this.geometry = null; }
             if (this.material) { this.material.dispose(); this.material = null; }
 
-            // 保留已加载的纹理，重建后重新绑定
+            // English comment.
             this.particles = [];
             this.emissionAccumulator = 0;
             this.stats.activeParticles = 0;
@@ -1049,10 +1021,10 @@ export class ParticleSystem extends Component {
 
             this.initializeParticleSystem();
             this.isEmitting = wasEmitting;
-            return; // initializeParticleSystem 内已创建完整材质，无需再走下面分支
+            return; // English comment.
         }
 
-        // ── 5. 材质相关参数变化 → 重建材质 ──────────────────────
+        // English comment.
         const materialDirtyKeys = [
             'useCustomShader', 'shaderType', 'blending',
             'color', 'opacity', 'size',
@@ -1070,7 +1042,7 @@ export class ParticleSystem extends Component {
                 this.particlePoints.material = this.material;
             }
         } else if (this.material) {
-            // 轻量更新：直接修改材质属性，无需重建
+            // English comment.
             if (this.material.isShaderMaterial) {
                 if ('color' in flat)   this.material.uniforms.uColor?.value?.setStyle?.(this.config.color);
                 if ('opacity' in flat) this.material.uniforms.uOpacity && (this.material.uniforms.uOpacity.value = this.config.opacity);
@@ -1088,7 +1060,7 @@ export class ParticleSystem extends Component {
             this.material.needsUpdate = true;
         }
 
-        // ── 6. 纹理更新（在合并前用 oldTexture 比较，避免永远相等）
+        // English comment.
         if ('texture' in flat) {
             const nextTexture = this.config.texture;
             if (nextTexture && nextTexture !== oldTexture) {
@@ -1100,18 +1072,18 @@ export class ParticleSystem extends Component {
             }
         }
 
-        // 纹理重复/偏移
+        // English comment.
         if (this.loadedTexture) {
             if (newConfig.textureRepeat) this.loadedTexture.repeat.set(...this.config.textureRepeat);
             if (newConfig.textureOffset) this.loadedTexture.offset.set(...this.config.textureOffset);
         }
 
-        // ── 7. emitter.position 同步到 componentScene 位置 ──────
-        // （其余 emitter/physics/lifetime 字段均从 this.config 实时读取，无需额外处理）
+        // English comment.
+        // English comment.
     }
 
     /**
-     * 获取统计信息
+     * English comment.
      */
     getStats() {
         return {
@@ -1122,19 +1094,19 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 设置预设效果
+     * English comment.
      */
     setPreset(presetName) {
-        // 防抖处理：清除之前的定时器
+        // English comment.
         if (this._presetChangeTimer) {
             clearTimeout(this._presetChangeTimer);
             this._presetChangeTimer = null;
         }
 
-        // 时间戳检查：防止过快切换
+        // English comment.
         const now = Date.now();
         if (now - this._lastPresetChangeTime < this._presetChangeDebounceDelay) {
-            // 延迟执行
+            // English comment.
             this._presetChangeTimer = setTimeout(() => {
                 this.setPreset(presetName);
             }, this._presetChangeDebounceDelay);
@@ -1233,7 +1205,7 @@ export class ParticleSystem extends Component {
                 },
                 blending: 'additive'
             },
-            // 水系效果
+            // English comment.
             fountain: {
                 color: '#00bfff',
                 size: 0.8,
@@ -1286,7 +1258,7 @@ export class ParticleSystem extends Component {
                 blending: 'normal',
                 opacity: 0.8
             },
-            // 火系效果
+            // English comment.
             campfire: {
                 color: '#ff6347',
                 size: 1.2,
@@ -1322,7 +1294,7 @@ export class ParticleSystem extends Component {
                 blending: 'additive',
                 opacity: 1.0
             },
-            // 天气效果
+            // English comment.
             raindrops: {
                 color: '#4682b4',
                 size: 0.4,
@@ -1377,7 +1349,7 @@ export class ParticleSystem extends Component {
                 blending: 'normal',
                 opacity: 0.85
             },
-            // 气体效果
+            // English comment.
             cloud: {
                 color: '#d3d3d3',
                 size: 3.0,
@@ -1414,7 +1386,7 @@ export class ParticleSystem extends Component {
                 blending: 'normal',
                 opacity: 0.6
             },
-            // 天体效果
+            // English comment.
             starfield: {
                 color: '#fffacd',
                 size: 1.5,
@@ -1455,52 +1427,52 @@ export class ParticleSystem extends Component {
 
         const preset = presets[presetName];
         if (preset) {
-            // 1. 停止发射（防止在切换期间继续发射粒子）
+            // English comment.
             this.isEmitting = false;
 
-            // 2. 清除所有现有粒子
+            // English comment.
             this.clearParticles();
 
-            // 3. 重置发射累加器和统计信息
+            // English comment.
             this.emissionAccumulator = 0;
             this.stats.activeParticles = 0;
             this.stats.totalEmitted = 0;
 
-            // 4. 重置时钟（避免时间累积导致的问题）
+            // English comment.
             if (this.clock) {
                 this.clock = new THREE.Clock();
             }
 
-            // 5. 如果使用 Shader，重置时间 uniform
+            // English comment.
             if (this.material && this.material.isShaderMaterial && this.material.uniforms.uTime) {
                 this.material.uniforms.uTime.value = 0;
             }
 
-            // 6. 销毁旧材质资源（在 updateConfig 重建之前）
+            // English comment.
             if (this.material) {
                 this.material.dispose();
                 this.material = null;
             }
 
-            // 7. 更新配置（会重新创建材质）
+            // English comment.
             this.updateConfig(preset);
 
-            // 8. 确保 Points 对象使用新材质
+            // English comment.
             if (this.particlePoints && this.material) {
                 this.particlePoints.material = this.material;
             }
 
-            // 9. 强制更新几何体属性
+            // English comment.
             if (this.geometry) {
                 this.geometry.attributes.position.needsUpdate = true;
                 this.geometry.attributes.color.needsUpdate = true;
                 this.geometry.attributes.size.needsUpdate = true;
             }
 
-            // 10. 确保发射器状态正确
+            // English comment.
             this.isEmitting = this.config.emitter.autoStart !== false;
 
-            // 11. 特殊处理爆炸效果
+            // English comment.
             if (presetName === 'explosion') {
                 this.isEmitting = true;
                 setTimeout(() => {
@@ -1513,7 +1485,7 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 深度合并配置对象
+     * English comment.
      */
     mergeConfig(target, source) {
         const result = { ...target };
@@ -1530,36 +1502,36 @@ export class ParticleSystem extends Component {
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 清除防抖定时器
+        // English comment.
         if (this._presetChangeTimer) {
             clearTimeout(this._presetChangeTimer);
             this._presetChangeTimer = null;
         }
 
-        // 清理几何体
+        // English comment.
         if (this.geometry) {
             this.geometry.dispose();
         }
 
-        // 清理材质
+        // English comment.
         if (this.material) {
             this.material.dispose();
         }
 
-        // 移除粒子对象
+        // English comment.
         if (this.particlePoints) {
             this.componentScene.remove(this.particlePoints);
         }
 
-        // 清理纹理资源
+        // English comment.
         if (this.loadedTexture) {
             this.loadedTexture.dispose();
         }
 
-        // 清空引用
+        // English comment.
         this.particles = null;
         this.geometry = null;
         this.material = null;

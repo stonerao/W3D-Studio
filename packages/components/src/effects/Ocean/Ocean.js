@@ -4,101 +4,72 @@ import { Water } from 'three/examples/jsm/objects/Water.js';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 /**
- * Ocean 海洋组件
- *
- * @class Ocean
- * @extends Component
- * @description 基于 Three.js Water 的海洋效果组件，支持从模型加载几何体
- *
- * @example
- * // 创建 Ocean 组件
- * const ocean = await scene.add('Ocean', {
- *     name: 'ocean',
- *     position: [0, 0, 0],
- *     rotation: [0, 0, 0],
- *     scale: [1, 1, 1],
- *     waterColor: '#001e0f',
- *     sunColor: '#ffffff',
- *     distortionScale: 3.7,
- *     size: 1.0
- * });
- *
- * // 从模型加载几何体
- * ocean.loadGeometryFromModel('/models/water.glb', 'waterGeometry');
- *
- * // 更新位置
- * ocean.updatePosition(0, 5, 0);
- *
- * // 更新海洋参数
- * ocean.updateWaterParams({
- *     waterColor: '#006994',
- *     distortionScale: 5.0
- * });
+ * English comment.
  */
 export class Ocean extends Component {
     static defaultConfig = {
-        // Transform 属性
+        // English comment.
         position: [0, 0, 0],
-        rotation: [-Math.PI / 2, 0, 0], // 默认水平放置
+        rotation: [-Math.PI / 2, 0, 0], // English comment.
         scale: [1, 1, 1],
 
-        // 几何体配置
+        // English comment.
         geometryType: 'plane', // 'plane' | 'model'
         geometryWidth: 10000,
         geometryHeight: 10000,
-        modelPath: null, // 模型文件路径
-        geometryName: null, // 从模型中提取的几何体名称
+        modelPath: null, // English comment.
+        geometryName: null, // English comment.
 
-        // Water 材质配置
+        // English comment.
         textureWidth: 512,
         textureHeight: 512,
-        waterNormalsUrl: '/textures/waternormals.jpg', // 水面法线贴图
-        waterColor: '#001e0f', // 水面颜色
-        sunColor: '#ffffff', // 太阳光颜色
-        sunDirection: [0, 1, 0], // 太阳光方向
-        distortionScale: 3.7, // 扭曲强度
-        size: 1.0, // 波浪大小
-        alpha: 1.0, // 透明度
-        time: 0, // 时间（用于动画）
-        waterSpeed: 1.0 // 水面动画速度
+        waterNormalsUrl: '/textures/waternormals.jpg', // English comment.
+        waterColor: '#001e0f', // English comment.
+        sunColor: '#ffffff', // English comment.
+        sunDirection: [0, 1, 0], // English comment.
+        distortionScale: 3.7, // English comment.
+        size: 1.0, // English comment.
+        alpha: 1.0, // English comment.
+        time: 0, // English comment.
+        waterSpeed: 1.0 // English comment.
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // Water 实例
+        // English comment.
         this.water = null;
 
-        // 几何体
+        // English comment.
         this.geometry = null;
 
-        // 法线贴图
+        // English comment.
         this.waterNormals = null;
 
-        // 是否已加载
+        // English comment.
         this.isLoaded = false;
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
         try {
-            // 加载水面法线贴图
+            // English comment.
             await this.loadWaterNormals();
 
-            // 创建几何体
+            // English comment.
             await this.createGeometry();
 
-            // 创建 Water 对象
+            // English comment.
             this.createWater();
 
-            // 应用 Transform 属性
+            // English comment.
             this.applyTransform();
 
             this.isLoaded = true;
 
-            // 触发加载完成事件
+            // English comment.
             this.emit('loaded', {
                 water: this.water,
                 geometry: this.geometry
@@ -110,7 +81,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 加载水面法线贴图
+     * English comment.
      */
     async loadWaterNormals() {
         return new Promise((resolve, reject) => {
@@ -125,7 +96,7 @@ export class Ocean extends Component {
                 undefined,
                 (error) => {
                     console.warn('[Ocean] 法线贴图加载失败，使用默认配置:', error);
-                    // 即使加载失败也继续，Water 可以没有法线贴图
+                    // English comment.
                     resolve(null);
                 }
             );
@@ -133,26 +104,23 @@ export class Ocean extends Component {
     }
 
     /**
-     * 创建几何体
+     * English comment.
      */
     async createGeometry() {
         const { geometryType, geometryWidth, geometryHeight, modelPath, geometryName } =
             this.config;
 
         if (geometryType === 'model' && modelPath) {
-            // 从模型加载几何体
+            // English comment.
             await this.loadGeometryFromModel(modelPath, geometryName);
         } else {
-            // 使用默认平面几何体
+            // English comment.
             this.geometry = new THREE.PlaneGeometry(geometryWidth, geometryHeight);
         }
     }
 
     /**
-     * 从模型加载几何体
-     *
-     * @param {string} modelPath - 模型文件路径
-     * @param {string} geometryName - 几何体名称（可选）
+     * English comment.
      */
     async loadGeometryFromModel(modelPath, geometryName = null) {
         return new Promise((resolve, reject) => {
@@ -162,7 +130,7 @@ export class Ocean extends Component {
                 (gltf) => {
                     let targetMesh = null;
 
-                    // 查找指定名称的几何体
+                    // English comment.
                     if (geometryName) {
                         gltf.scene.traverse((child) => {
                             if (child.isMesh && child.name === geometryName) {
@@ -171,7 +139,7 @@ export class Ocean extends Component {
                         });
                     }
 
-                    // 如果没有找到指定名称的几何体，使用第一个 Mesh
+                    // English comment.
                     if (!targetMesh) {
                         gltf.scene.traverse((child) => {
                             if (child.isMesh && !targetMesh) {
@@ -183,7 +151,7 @@ export class Ocean extends Component {
                     if (targetMesh) {
                         this.geometry = targetMesh.geometry.clone();
 
-                        // 提取 Transform 属性
+                        // English comment.
                         if (this.config.position[0] === 0 && this.config.position[1] === 0 && this.config.position[2] === 0) {
                             this.config.position = [
                                 targetMesh.position.x,
@@ -228,7 +196,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 创建 Water 对象
+     * English comment.
      */
     createWater() {
         if (!this.geometry) {
@@ -248,22 +216,22 @@ export class Ocean extends Component {
             fog: this.scene.scene.fog !== undefined
         };
 
-        // 如果法线贴图加载成功，添加到配置中
+        // English comment.
         if (this.waterNormals) {
             waterConfig.waterNormals = this.waterNormals;
         }
 
-        // 创建 Water 实例
+        // English comment.
         this.water = new Water(this.geometry, waterConfig);
 
-        // 添加到组件场景
+        // English comment.
         this.componentScene.add(this.water);
 
         this.emit('waterCreated', { water: this.water });
     }
 
     /**
-     * 应用 Transform 属性
+     * English comment.
      */
     applyTransform() {
         if (!this.water) return;
@@ -276,11 +244,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 更新位置
-     *
-     * @param {number} x - X 坐标
-     * @param {number} y - Y 坐标
-     * @param {number} z - Z 坐标
+     * English comment.
      */
     updatePosition(x, y, z) {
         this.config.position = [x, y, z];
@@ -291,9 +255,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 设置位置（对象形式）
-     *
-     * @param {Object} position - 位置对象 {x, y, z}
+     * English comment.
      */
     setPosition(position) {
         const { x = 0, y = 0, z = 0 } = position;
@@ -301,11 +263,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 更新旋转
-     *
-     * @param {number} x - X 轴旋转（弧度）
-     * @param {number} y - Y 轴旋转（弧度）
-     * @param {number} z - Z 轴旋转（弧度）
+     * English comment.
      */
     updateRotation(x, y, z) {
         this.config.rotation = [x, y, z];
@@ -316,9 +274,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 设置旋转（对象形式）
-     *
-     * @param {Object} rotation - 旋转对象 {x, y, z}
+     * English comment.
      */
     setRotation(rotation) {
         const { x = 0, y = 0, z = 0 } = rotation;
@@ -326,11 +282,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 更新缩放
-     *
-     * @param {number} x - X 轴缩放
-     * @param {number} y - Y 轴缩放
-     * @param {number} z - Z 轴缩放
+     * English comment.
      */
     updateScale(x, y, z) {
         this.config.scale = [x, y, z];
@@ -341,9 +293,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 设置缩放（对象形式）
-     *
-     * @param {Object} scale - 缩放对象 {x, y, z}
+     * English comment.
      */
     setScale(scale) {
         const { x = 1, y = 1, z = 1 } = scale;
@@ -351,15 +301,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 更新海洋参数
-     *
-     * @param {Object} params - 海洋参数
-     * @param {string} params.waterColor - 水面颜色
-     * @param {string} params.sunColor - 太阳光颜色
-     * @param {number} params.distortionScale - 扭曲强度
-     * @param {number} params.size - 波浪大小
-     * @param {number} params.alpha - 透明度
-     * @param {number} params.waterSpeed - 水面动画速度
+     * English comment.
      */
     updateWaterParams(params) {
         if (!this.water || !this.water.material) {
@@ -369,37 +311,37 @@ export class Ocean extends Component {
 
         const uniforms = this.water.material.uniforms;
 
-        // 更新水面颜色
+        // English comment.
         if (params.waterColor !== undefined) {
             this.config.waterColor = params.waterColor;
             uniforms.waterColor.value = new THREE.Color(params.waterColor);
         }
 
-        // 更新太阳光颜色
+        // English comment.
         if (params.sunColor !== undefined) {
             this.config.sunColor = params.sunColor;
             uniforms.sunColor.value = new THREE.Color(params.sunColor);
         }
 
-        // 更新扭曲强度
+        // English comment.
         if (params.distortionScale !== undefined) {
             this.config.distortionScale = params.distortionScale;
             uniforms.distortionScale.value = params.distortionScale;
         }
 
-        // 更新波浪大小
+        // English comment.
         if (params.size !== undefined) {
             this.config.size = params.size;
             uniforms.size.value = params.size;
         }
 
-        // 更新透明度
+        // English comment.
         if (params.alpha !== undefined) {
             this.config.alpha = params.alpha;
             uniforms.alpha.value = params.alpha;
         }
 
-        // 更新水面动画速度
+        // English comment.
         if (params.waterSpeed !== undefined) {
             this.config.waterSpeed = params.waterSpeed;
         }
@@ -408,11 +350,7 @@ export class Ocean extends Component {
     }
 
     /**
-     * 更新太阳光方向
-     *
-     * @param {number} x - X 方向
-     * @param {number} y - Y 方向
-     * @param {number} z - Z 方向
+     * English comment.
      */
     updateSunDirection(x, y, z) {
         this.config.sunDirection = [x, y, z];
@@ -423,14 +361,12 @@ export class Ocean extends Component {
     }
 
     /**
-     * 更新配置（批量更新）
-     *
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     updateConfig(newConfig) {
         super.updateConfig(newConfig);
 
-        // 更新 Transform 属性
+        // English comment.
         if (newConfig.position) {
             this.updatePosition(...newConfig.position);
         }
@@ -441,7 +377,7 @@ export class Ocean extends Component {
             this.updateScale(...newConfig.scale);
         }
 
-        // 更新海洋参数
+        // English comment.
         const waterParams = {};
         if (newConfig.waterColor) waterParams.waterColor = newConfig.waterColor;
         if (newConfig.sunColor) waterParams.sunColor = newConfig.sunColor;
@@ -455,47 +391,41 @@ export class Ocean extends Component {
             this.updateWaterParams(waterParams);
         }
 
-        // 更新太阳光方向
+        // English comment.
         if (newConfig.sunDirection) {
             this.updateSunDirection(...newConfig.sunDirection);
         }
     }
 
     /**
-     * 每帧更新
-     *
-     * @param {number} delta - 时间增量
+     * English comment.
      */
     onUpdate(delta) {
         if (!this.water || !this.water.material) return;
 
-        // 更新水面动画时间
+        // English comment.
         this.water.material.uniforms.time.value += delta * this.config.waterSpeed;
     }
 
     /**
-     * 获取 Water 实例
-     *
-     * @returns {Water} Water 实例
+     * English comment.
      */
     getWater() {
         return this.water;
     }
 
     /**
-     * 获取几何体
-     *
-     * @returns {THREE.BufferGeometry} 几何体
+     * English comment.
      */
     getGeometry() {
         return this.geometry;
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 销毁 Water
+        // English comment.
         if (this.water) {
             if (this.water.geometry) {
                 this.water.geometry.dispose();
@@ -507,13 +437,13 @@ export class Ocean extends Component {
             this.water = null;
         }
 
-        // 销毁几何体
+        // English comment.
         if (this.geometry) {
             this.geometry.dispose();
             this.geometry = null;
         }
 
-        // 销毁法线贴图
+        // English comment.
         if (this.waterNormals) {
             this.waterNormals.dispose();
             this.waterNormals = null;

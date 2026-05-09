@@ -10,7 +10,7 @@ const activeTab = ref('quick')
         <p>W3D SDK 基于 Three.js 封装，目标是让业务团队用最短路径把三维能力接进项目里——不用自己处理渲染循环、资源管理和事件拾取这些底层工作。</p>
     </section>
 
-    <!-- 快速上手 / 进阶 -->
+    <!-- English comment. -->
     <section class="section">
         <h2>用法</h2>
         <div class="tabs">
@@ -20,7 +20,7 @@ const activeTab = ref('quick')
             <button class="tab-btn" :class="{ active: activeTab === 'anim' }" @click="activeTab = 'anim'">动画</button>
         </div>
 
-        <!-- 快速上手 -->
+        <!-- English comment. -->
         <div v-show="activeTab === 'quick'">
             <div class="code-block">
                 <pre><span class="kw">import</span> { <span class="fn">Scene</span> } <span class="kw">from</span> <span class="str">'@w3d/core'</span>
@@ -32,26 +32,26 @@ const activeTab = ref('quick')
 })
 scene.<span class="fn">init</span>()
 
-<span class="cm">// 灯光</span>
+<span class="cm">// English comment.
 scene.light.<span class="fn">addAmbient</span>({ intensity: <span class="num">0.8</span> })
 scene.light.<span class="fn">addDirectional</span>({
     position: [<span class="num">100</span>, <span class="num">100</span>, <span class="num">100</span>],
     castShadow: <span class="kw">true</span>
 })
 
-<span class="cm">// 模型</span>
+<span class="cm">// English comment.
 <span class="kw">const</span> model = <span class="kw">await</span> scene.<span class="fn">add</span>(<span class="str">'ModelLoader'</span>, {
     name: <span class="str">'robot'</span>,
     url:  <span class="str">'/models/robot.glb'</span>,
     scale: <span class="num">2</span>
 })
 
-<span class="cm">// 点击</span>
+<span class="cm">// English comment.
 model.<span class="fn">on</span>(<span class="str">'click'</span>, (e) => console.log(<span class="str">'hit'</span>, e.object))</pre>
             </div>
         </div>
 
-        <!-- 自定义组件 -->
+        <!-- English comment. -->
         <div v-show="activeTab === 'component'">
             <p>所有 3D 对象都继承 <code>Component</code>（本身是 THREE.Group），拥有统一的生命周期：</p>
             <p><code>onCreate → onBeforeMount → onMounted → onUpdate(delta) → onBeforeDispose → onDispose</code></p>
@@ -84,37 +84,37 @@ scene.<span class="fn">registerComponent</span>(<span class="str">'RotatingBox'<
             </div>
         </div>
 
-        <!-- 事件与交互 -->
+        <!-- English comment. -->
         <div v-show="activeTab === 'event'">
             <p>组件实现 <code>getInteractiveObjects()</code> 后即可接收鼠标事件，无需手动做射线检测。</p>
             <div class="code-block">
-                <pre><span class="cm">// 组件级事件</span>
+                <pre><span class="cm">// English comment.
 model.<span class="fn">on</span>(<span class="str">'click'</span>,      (e) => { <span class="cm">/* e.object, e.point */</span> })
 model.<span class="fn">on</span>(<span class="str">'mouseenter'</span>, (e) => { e.object.material.emissive.<span class="fn">set</span>(<span class="str">'#ffff00'</span>) })
 model.<span class="fn">on</span>(<span class="str">'mouseleave'</span>, (e) => { e.object.material.emissive.<span class="fn">set</span>(<span class="str">'#000000'</span>) })
 
-<span class="cm">// 全局事件</span>
+<span class="cm">// English comment.
 scene.eventSystem.<span class="fn">on</span>(<span class="str">'click'</span>, (e) => console.log(e.point))
 
-<span class="cm">// 自定义事件</span>
+<span class="cm">// English comment.
 component.<span class="fn">emit</span>(<span class="str">'alarm'</span>, { level: <span class="str">'critical'</span> })
 component.<span class="fn">on</span>(<span class="str">'alarm'</span>, (data) => { <span class="cm">/* ... */</span> })</pre>
             </div>
         </div>
 
-        <!-- 动画 -->
+        <!-- English comment. -->
         <div v-show="activeTab === 'anim'">
             <p>两种方式：模型自带动画走 AnimationManager，代码驱动走 Tween。</p>
             <div class="code-block">
                 <pre><span class="kw">import</span> { <span class="fn">Tween</span> } <span class="kw">from</span> <span class="str">'@w3d/core'</span>
 
-<span class="cm">// 补间动画</span>
+<span class="cm">// English comment.
 <span class="fn">Tween</span>.<span class="fn">to</span>(model.position, { y: <span class="num">10</span> }, <span class="num">2000</span>, {
     easing: <span class="str">'easeInOutQuad'</span>,
     onComplete: () => console.log(<span class="str">'done'</span>)
 })
 
-<span class="cm">// GLTF 动画</span>
+<span class="cm">// English comment.
 scene.animationManager.<span class="fn">play</span>(gltf.scene, gltf.animations[<span class="num">0</span>], {
     loop: THREE.LoopRepeat,
     timeScale: <span class="num">1.0</span>
@@ -123,7 +123,7 @@ scene.animationManager.<span class="fn">play</span>(gltf.scene, gltf.animations[
         </div>
     </section>
 
-    <!-- 核心模块 -->
+    <!-- English comment. -->
     <section class="section">
         <h2>核心模块</h2>
         <table class="api-table">
@@ -138,7 +138,7 @@ scene.animationManager.<span class="fn">play</span>(gltf.scene, gltf.animations[
         </table>
     </section>
 
-    <!-- 场景配置速查 -->
+    <!-- English comment. -->
     <section class="section">
         <h2>Scene 配置速查</h2>
         <table class="api-table">
@@ -157,7 +157,7 @@ scene.animationManager.<span class="fn">play</span>(gltf.scene, gltf.animations[
         </table>
     </section>
 
-    <!-- 最佳实践 -->
+    <!-- English comment. -->
     <section class="section">
         <h2>最佳实践</h2>
         <ul class="feature-list">

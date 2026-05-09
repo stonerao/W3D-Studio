@@ -1,8 +1,4 @@
-/*
- * @Description: 路径流光组件shader文件
- * @Author:
- * @Date: 2021-12-31 09:40:06
- */
+/* English comment. */
 const PATH_SHADER = {
     vertexShader: `
         // uniform vec4 uColor;
@@ -28,7 +24,7 @@ const PATH_SHADER = {
             gl_Position = projectionMatrix * modelViewMatrix * vec4(pos, 1.0);
         }
     `,
-    // 路径流光 占比
+    // English comment.
     fragmentShader1: `
     uniform float uTime;
     uniform sampler2D uTxue;
@@ -58,12 +54,12 @@ const PATH_SHADER = {
                 lColor.w = 0.;
             }
 
-            // 背景
+            // English comment.
             if(uIsBgTxue){
                 bgColor *= texture2D(uBgTxue , vUv * uBgRepeat);
             }
 
-            // 首尾透明
+            // English comment.
             if(uIsFade && vUv.x <=0.1){
                 lColor.w *= vUv.x * 10.;
             }else if(uIsFade && vUv.x >=0.9){
@@ -75,7 +71,7 @@ const PATH_SHADER = {
             gl_FragColor.w *= uOpacity;
         }
     `,
-    // 路径填充效果
+    // English comment.
     fragmentShader2: `
         uniform float uTime;
         uniform sampler2D uTxue;
@@ -100,7 +96,7 @@ const PATH_SHADER = {
             vec4 lColor = uColor;
             vec4 bgColor = uBgColor;
 
-            // 是否循环
+            // English comment.
             if(uLoop){
                 if (uTime > 1.){
                     lColor.w *= (1. + uRadio - uTime) / uRadio;
@@ -119,19 +115,19 @@ const PATH_SHADER = {
             }
 
             if(uIsTxue && !uLoop && uTime == 1.){
-                // 外部不循环就做内部循环
+                // English comment.
                 lColor *= texture2D(uTxue, vec2(( vUv.x - num - uTime) * uRepeat.x, vUv.y * uRepeat.y));
             }else if(uIsTxue){
                 lColor *= texture2D(uTxue, vec2((vUv.x - uTime) * uRepeat.x, vUv.y * uRepeat.y));
             }
 
-            // 背景
+            // English comment.
             if(uIsBgTxue){
                 // bgColor *= texture2D(uBgTxue , vUv * uBgRepeat);
                 bgColor *= texture2D(uBgTxue , vec2((1. - uTime + vUv.x) * uBgRepeat.x, vUv.y * uBgRepeat.y));
             }
 
-            // 首尾透明
+            // English comment.
             if(uIsFade && vUv.x <=0.1){
                 lColor.w *= vUv.x * 10.;
             }else if(uIsFade && vUv.x >=0.9){

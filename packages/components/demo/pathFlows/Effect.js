@@ -1,8 +1,4 @@
-/*
- * @Description: 路径生成工具，包含路径样式，沿路径运动
- * @Author:
- * @Date: 2021-12-23 16:30:04
-  */
+/* English comment. */
 
 import glUtil from '@glUtil';
 import { EffectBase } from '@glMain';
@@ -16,40 +12,40 @@ class PathFlows extends EffectBase {
     constructor(render) {
         super(render);
         this.cameraScale = this.getCameraScale();
-        // 动画部分
+        // English comment.
         this.animate = (dt) => {
             if (!this.config.isAnimate) return; // eslint-disable-line
             this.pathIns.animate(dt);
         };
     }
 
-    // 添加默认参数 用于默认业务参数，公共参数继承
+    // English comment.
     setDefaultConfig(dfConfig) {
         glUtil.copy(dfConfig, {
-            isCompEvents: false, // 开启事件
-            mtlConfig: { // 路径材质
+            isCompEvents: false, // English comment.
+            mtlConfig: { // English comment.
                 transparent: true
             },
-            geoStyle: 'plane', // 路径样式,平面 plane || 垂直侧面 side
-            size: 1, // 在平面的宽度或侧面的高度
-            isCurve: true, // 是否曲线
-            autoPlay: true, // 自动播放
-            bgColor: 'rgba(255,255,255,0)', // 路径颜色
-            bgTxueId: '', // 路径纹理id,
-            bgRepeat: { x: 1, y: 1 }, // 路径纹理重复,
-            style: 'fill', // 跑光样式 1:填充效果 2.跑光效果 fill flow
-            aniTime: 10, // 动画时间 s
-            speed: 0, // 动画速度  速度大于0是用速度
-            color: 'rgba(255,255,255,1)', // 跑光颜色,
-            txueId: '', // 跑光纹理id
-            repeat: { x: 1, y: 1 }, // 跑光纹理重复,
-            radio: 0.001, // 跑光效果下 长度占比
-            loop: true, // 动画循环
-            isSyn: false, // 背景是否和跑光同步显示
-            sizeAttenuation: true, // //是否跟随相机缩放
-            dpi: 10, // 点位密度
-            isRadius: true, // 直线拐点是否圆角处理
-            isFade: false, // 是否首尾透明
+            geoStyle: 'plane', // English comment.
+            size: 1, // English comment.
+            isCurve: true, // English comment.
+            autoPlay: true, // English comment.
+            bgColor: 'rgba(255,255,255,0)', // English comment.
+            bgTxueId: '', // English comment.
+            bgRepeat: { x: 1, y: 1 }, // English comment.
+            style: 'fill', // English comment.
+            aniTime: 10, // English comment.
+            speed: 0, // English comment.
+            color: 'rgba(255,255,255,1)', // English comment.
+            txueId: '', // English comment.
+            repeat: { x: 1, y: 1 }, // English comment.
+            radio: 0.001, // English comment.
+            loop: true, // English comment.
+            isSyn: false, // English comment.
+            sizeAttenuation: true, // English comment.
+            dpi: 10, // English comment.
+            isRadius: true, // English comment.
+            isFade: false, // English comment.
             data: [
                 // {
                 //     id: 'path1',
@@ -73,43 +69,41 @@ class PathFlows extends EffectBase {
         });
     }
 
-    // 销毁 这里只需销毁当前效果会内存泄漏的对象，继承的由公共销毁
+    // English comment.
     disposeCompEft() {
         this.pathIns.dispose();
         this.moverIns.dispose();
     }
 
-    // 效果初始化
+    // English comment.
     compEftInit() {
         this.moverIns = new Mover(this);
         this.pathIns = new Path(this);
 
-        // 添加路径
+        // English comment.
         this.config.data.forEach((opt) => this.addPath(opt, false));
 
-        // 触发对应的生命周期
+        // English comment.
         this._triggerInnerEvent('mounted', { val: this.config.name });
     }
 
-    // 获取相机缩放
+    // English comment.
     getCameraScale() {
         const { camera, scene } = this.renderer;
-        const fov = camera.fov * PI;  // 将角度转换为弧度
+        const fov = camera.fov * PI;  // English comment.
         const { aspect } = camera;
-        const distance = camera.position.distanceTo(scene.position);  // 相机到场景的距离
+        const distance = camera.position.distanceTo(scene.position);  // English comment.
         return (2 * Math.tan(fov / 2) * distance) / aspect;
     }
 
     /**
-     * @description 判断组件选中组件是否自己
-     * @author
-     * @param {Object3D} node
+     * English comment.
      */
     isSelfCom(node) {
         return node.userData.ceId === this.id;
     }
 
-    // 鼠标点击
+    // English comment.
     onMouseDown(e, array) {
         if (array && array[0] && this.isSelfCom(array[0].object)) {
             const mesh = array[0].object;
@@ -120,7 +114,7 @@ class PathFlows extends EffectBase {
         return [e, []];
     }
 
-    // 鼠标移入
+    // English comment.
     onMouseIn(e, array) {
         if (array && array[0] && this.isSelfCom(array[0].object)) {
             const mesh = array[0].object;
@@ -131,7 +125,7 @@ class PathFlows extends EffectBase {
         return [e, []];
     }
 
-    // 鼠标移出
+    // English comment.
     onMouseOut(e) {
         if (this.selData) {
             const data = glUtil.extend(true, this.selData, {});
@@ -141,7 +135,7 @@ class PathFlows extends EffectBase {
         return [e, []];
     }
 
-    // 获取对外数据
+    // English comment.
     getOutData(node) {
         const { id: cId, data } = node.userData;
         const { id: pId, data: pData } = node.parent.userData;
@@ -165,17 +159,13 @@ class PathFlows extends EffectBase {
         };
     }
 
-    // 获取路径节点
+    // English comment.
     getPathNode(id) {
         return this.pathIns.getPathNode(id);
     }
 
     /**
-     * @description 添加路径
-     * @author
-     * @date 2021-12-23
-     * @param {object} config 路径信息
-     * @memberof PathFlows
+     * English comment.
      */
     addPath(config, state = true) {
         if (!config.id || !config.points || !config.points.length) {
@@ -194,33 +184,27 @@ class PathFlows extends EffectBase {
         return true;
     }
 
-    // 移动物动画
+    // English comment.
     moverAnimate(id, radio, scale) {
         this.moverIns.animate(id, radio, scale);
     }
 
-    // 对外接口
+    // English comment.
     /**
-     * [setConfig 根据type设置不同效果]
-     * @DateTime 2021-08-11
-     * @param    {[string]}   type      [更改类别]
-     * @param    {[object]}   opts      [配置参数]
+     * English comment.
      */
     setConfig(type, opts) {
         return Interface.setConfig.call(this, type, opts);
     }
 
     /**
-     * [getConfig 根据type 获取不同返回]
-     * @DateTime 2021-08-11
-     * @param    {[string]}   type      [更改类别]
-     * @param    {[object]}   opts      [配置参数]
+     * English comment.
      */
     getConfig(type, opts) {
         return Interface.getConfig.call(this, type, opts);
     }
 }
-// 组件描述
+// English comment.
 PathFlows.description = '路径动画';
 
 export default PathFlows;

@@ -1,22 +1,16 @@
 /**
- * EventEmitter 事件发射器
- *
- * @class EventEmitter
- * @description 简单的事件发射器实现
+ * English comment.
  */
 export class EventEmitter {
     /**
-     * 创建事件发射器实例
+     * English comment.
      */
     constructor() {
         this.events = new Map();
     }
 
     /**
-     * 监听事件
-     *
-     * @param {string} event - 事件名称
-     * @param {Function} listener - 事件监听器
+     * English comment.
      */
     on(event, listener) {
         if (!this.events.has(event)) {
@@ -28,10 +22,7 @@ export class EventEmitter {
     }
 
     /**
-     * 监听一次事件
-     *
-     * @param {string} event - 事件名称
-     * @param {Function} listener - 事件监听器
+     * English comment.
      */
     once(event, listener) {
         const onceWrapper = (...args) => {
@@ -43,10 +34,7 @@ export class EventEmitter {
     }
 
     /**
-     * 移除事件监听
-     *
-     * @param {string} event - 事件名称
-     * @param {Function} listener - 事件监听器
+     * English comment.
      */
     off(event, listener) {
         const listeners = this.events.get(event);
@@ -62,10 +50,7 @@ export class EventEmitter {
     }
 
     /**
-     * 触发事件
-     *
-     * @param {string} event - 事件名称
-     * @param {*} args - 事件参数
+     * English comment.
      */
     emit(event, ...args) {
         const listeners = this.events.get(event);
@@ -83,9 +68,7 @@ export class EventEmitter {
     }
 
     /**
-     * 移除所有事件监听
-     *
-     * @param {string} event - 事件名称（可选）
+     * English comment.
      */
     removeAllListeners(event) {
         if (event) {
@@ -98,10 +81,7 @@ export class EventEmitter {
     }
 
     /**
-     * 获取事件监听器数量
-     *
-     * @param {string} event - 事件名称
-     * @returns {number} 监听器数量
+     * English comment.
      */
     listenerCount(event) {
         const listeners = this.events.get(event);

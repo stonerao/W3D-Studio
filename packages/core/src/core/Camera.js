@@ -1,17 +1,11 @@
 import * as THREE from 'three';
 
 /**
- * Camera 相机类
- *
- * @class Camera
- * @description 相机的创建和控制
+ * English comment.
  */
 export class Camera {
     /**
-     * 创建相机实例
-     *
-     * @param {Scene} scene - 场景实例
-     * @param {Object} options - 配置选项
+     * English comment.
      */
     constructor(scene, options = {}) {
         this.scene = scene;
@@ -23,7 +17,7 @@ export class Camera {
             lookAt: [0, 0, 0],
             ...options
         };
-        // 创建透视相机
+        // English comment.
         const width = this.scene.container.clientWidth;
         const height = this.scene.container.clientHeight;
         const aspect = width / height;
@@ -35,45 +29,34 @@ export class Camera {
             this.options.far
         );
 
-        // 设置相机位置
+        // English comment.
         const [x, y, z] = this.options.position;
         this.instance.position.set(x, y, z);
 
-        // 设置相机朝向
+        // English comment.
         const [lx, ly, lz] = this.options.lookAt;
         this.instance.lookAt(lx, ly, lz);
 
-        // 添加到场景
+        // English comment.
         this.scene.scene.add(this.instance);
     }
 
     /**
-     * 设置相机位置
-     *
-     * @param {number} x - X 坐标
-     * @param {number} y - Y 坐标
-     * @param {number} z - Z 坐标
+     * English comment.
      */
     setPosition(x, y, z) {
         this.instance.position.set(x, y, z);
     }
 
     /**
-     * 设置相机朝向
-     *
-     * @param {number} x - X 坐标
-     * @param {number} y - Y 坐标
-     * @param {number} z - Z 坐标
+     * English comment.
      */
     lookAt(x, y, z) {
         this.instance.lookAt(x, y, z);
     }
 
     /**
-     * 调整相机大小
-     *
-     * @param {number} width - 宽度
-     * @param {number} height - 高度
+     * English comment.
      */
     resize(width, height) {
         this.instance.aspect = width / height;
@@ -81,18 +64,14 @@ export class Camera {
     }
 
     /**
-     * 获取相机位置
-     *
-     * @returns {THREE.Vector3} 相机位置
+     * English comment.
      */
     getPosition() {
         return this.instance.position.clone();
     }
 
     /**
-     * 获取相机方向
-     *
-     * @returns {THREE.Vector3} 相机方向
+     * English comment.
      */
     getDirection() {
         const direction = new THREE.Vector3();
@@ -101,35 +80,33 @@ export class Camera {
     }
 
     /**
-     * 更新相机配置
-     *
-     * @param {Object} config - 配置选项
+     * English comment.
      */
     updateConfig(config = {}) {
         if (!config || typeof config !== 'object') return;
 
-        // 更新 FOV
+        // English comment.
         if (config.fov !== undefined && config.fov !== this.options.fov) {
             this.options.fov = config.fov;
             this.instance.fov = config.fov;
             this.instance.updateProjectionMatrix();
         }
 
-        // 更新近平面
+        // English comment.
         if (config.near !== undefined && config.near !== this.options.near) {
             this.options.near = config.near;
             this.instance.near = config.near;
             this.instance.updateProjectionMatrix();
         }
 
-        // 更新远平面
+        // English comment.
         if (config.far !== undefined && config.far !== this.options.far) {
             this.options.far = config.far;
             this.instance.far = config.far;
             this.instance.updateProjectionMatrix();
         }
 
-        // 更新位置
+        // English comment.
         if (config.position !== undefined) {
             const pos = Array.isArray(config.position) ? config.position : [config.position.x, config.position.y, config.position.z];
             if (pos[0] !== undefined && pos[1] !== undefined && pos[2] !== undefined) {
@@ -138,7 +115,7 @@ export class Camera {
             }
         }
 
-        // 更新看向点
+        // English comment.
         if (config.lookAt !== undefined) {
             const lookAt = Array.isArray(config.lookAt) ? config.lookAt : [config.lookAt.x, config.lookAt.y, config.lookAt.z];
             if (lookAt[0] !== undefined && lookAt[1] !== undefined && lookAt[2] !== undefined) {
@@ -149,9 +126,7 @@ export class Camera {
     }
 
     /**
-     * 获取当前配置
-     *
-     * @returns {Object} 当前配置
+     * English comment.
      */
     getConfig() {
         return {
@@ -164,7 +139,7 @@ export class Camera {
     }
 
     /**
-     * 销毁相机
+     * English comment.
      */
     dispose() {
         if (this.instance.parent) {

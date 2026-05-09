@@ -67,7 +67,7 @@ const emit = defineEmits(['update:modelValue']);
 
 const points = computed(() => props.modelValue || []);
 
-// 获取点的坐标值（支持数组和对象格式）
+// English comment.
 const getPointValue = (point, axis) => {
     if (Array.isArray(point)) {
         const index = axis === 'x' ? 0 : axis === 'y' ? 1 : 2;
@@ -76,28 +76,28 @@ const getPointValue = (point, axis) => {
     return point[axis] ?? 0;
 };
 
-// 更新点坐标
+// English comment.
 const updatePoint = (index, axis, value) => {
     const newPoints = [...points.value];
     const numValue = parseFloat(value) || 0;
 
     if (Array.isArray(newPoints[index])) {
-        // 数组格式 [x, y, z]
+        // English comment.
         const axisIndex = axis === 'x' ? 0 : axis === 'y' ? 1 : 2;
         newPoints[index] = [...newPoints[index]];
         newPoints[index][axisIndex] = numValue;
     } else {
-        // 对象格式 {x, y, z}
+        // English comment.
         newPoints[index] = { ...newPoints[index], [axis]: numValue };
     }
 
     emit('update:modelValue', newPoints);
 };
 
-// 添加点
+// English comment.
 const addPoint = () => {
     const newPoints = [...points.value];
-    // 根据现有格式添加新点
+    // English comment.
     if (newPoints.length > 0) {
         if (Array.isArray(newPoints[0])) {
             newPoints.push([0, 0, 0]);
@@ -105,13 +105,13 @@ const addPoint = () => {
             newPoints.push({ x: 0, y: 0, z: 0 });
         }
     } else {
-        // 默认使用对象格式
+        // English comment.
         newPoints.push({ x: 0, y: 0, z: 0 });
     }
     emit('update:modelValue', newPoints);
 };
 
-// 删除点
+// English comment.
 const removePoint = (index) => {
     const newPoints = points.value.filter((_, i) => i !== index);
     emit('update:modelValue', newPoints);

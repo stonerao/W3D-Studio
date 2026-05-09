@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <!-- 加载状态 -->
+        <!-- English comment. -->
         <div v-if="isLoading" class="loading-state">
             <div class="loading-text">加载模型中... {{ loadProgress > 0 ? Math.round(loadProgress * 100) + '%' : '' }}</div>
             <div v-if="loadProgress > 0" class="progress-bar">
@@ -31,7 +31,7 @@
             </div>
         </div>
 
-        <!-- 模型信息 -->
+        <!-- English comment. -->
         <div v-else-if="modelInstance" class="settings-content">
             <div class="section-label">尺寸适配</div>
             <div class="settings-group">
@@ -99,7 +99,7 @@
                 </div>
             </div>
 
-            <!-- Mesh 选择器 -->
+            <!-- English comment. -->
             <div class="setting-item">
                 <label>Mesh（共 {{ meshList.length }} 个）</label>
                 <div class="mesh-selector-row">
@@ -121,9 +121,9 @@
                 </div>
             </div>
 
-            <!-- 选中 Mesh 的属性编辑 -->
+            <!-- English comment. -->
             <template v-if="selectedMeshName && selectedMeshProps">
-                <!-- 快捷操作 -->
+                <!-- English comment. -->
                 <div class="setting-item-inline">
                     <label>可见</label>
                     <input
@@ -140,7 +140,7 @@
                     <Button variant="outline" size="sm" @click="showAllMeshes">显示全部</Button>
                 </div>
 
-                <!-- 材质属性 -->
+                <!-- English comment. -->
                 <div class="section-label">材质</div>
                 <div class="settings-group">
                     <div class="setting-item">
@@ -209,7 +209,7 @@
                     </div>
                 </div>
 
-                <!-- Mesh 变换 -->
+                <!-- English comment. -->
                 <div class="section-label">变换</div>
                 <div class="settings-group">
                     <div class="setting-item">
@@ -243,7 +243,7 @@
                 选择一个 Mesh 开始编辑
             </div>
 
-            <!-- 动画列表（如果有） -->
+            <!-- English comment. -->
             <template v-if="animationList.length > 0">
                 <div class="section-label">动画（{{ animationList.length }}）</div>
                 <div class="settings-group">
@@ -269,7 +269,7 @@
                 </div>
             </template>
 
-            <!-- 烘焙光照配置 -->
+            <!-- English comment. -->
             <div class="section-label">
                 烘焙光照
                 <span class="status-tag" :class="bakedLightingEnabled ? 'enabled' : 'disabled'">
@@ -289,12 +289,12 @@
             </div>
         </div>
 
-        <!-- 未加载状态 -->
+        <!-- English comment. -->
         <div v-else class="empty-state">
             <div class="empty-text">请选择本地模型文件或设置模型 URL</div>
         </div>
 
-        <!-- 烘焙光照配置弹窗 -->
+        <!-- English comment. -->
         <BakedLightingModal
             v-model="showBakedLightingModal"
             :model-loader-id="componentId"
@@ -330,7 +330,7 @@ const props = defineProps({
     }
 });
 
-// 状态
+// English comment.
 const isLoading = ref(false);
 const loadProgress = ref(0);
 const meshList = ref([]);
@@ -342,7 +342,7 @@ const geometryStats = ref(null);
 const modelBounds = ref(null);
 const localModelInputRef = ref(null);
 
-// Mesh 编辑状态
+// English comment.
 const selectedMeshName = ref('');
 const selectedMeshProps = ref(null);
 const selectedMaterialProps = ref({});
@@ -353,11 +353,11 @@ const MESH_CONFIG_DEBOUNCE_MS = 160;
 let meshConfigPersistTimer = null;
 const pendingMeshConfigMap = new Map();
 
-// 烘焙光照状态
+// English comment.
 const bakedLightingCollapsed = ref(false);
 const showBakedLightingModal = ref(false);
 
-// 计算属性
+// English comment.
 const component = computed(() => {
     return componentStore.components.find((c) => c.id === props.componentId);
 });
@@ -391,7 +391,7 @@ const interactiveMeshes = computed(() => {
     return component.value?.config?.interactiveMeshes || false;
 });
 
-// 烘焙光照计算属性
+// English comment.
 const bakedLightingConfig = computed(() => {
     return component.value?.config?.bakedLighting || {};
 });
@@ -514,13 +514,13 @@ const modelMaxDimSummary = computed(() => {
     return formatDimension(maxDim);
 });
 
-// 弧度转角度
+// English comment.
 const radToDeg = (rad) => {
     if (rad === undefined || rad === null) return 0;
     return rad * (180 / Math.PI);
 };
 
-// 角度转弧度
+// English comment.
 const degToRad = (deg) => {
     if (deg === undefined || deg === null) return 0;
     return deg * (Math.PI / 180);
@@ -665,26 +665,26 @@ const syncLoadStateFromInstance = () => {
     loadProgress.value = normalizeLoadProgress(instance?.loadProgress);
 };
 
-// 方法
+// English comment.
 const loadModelInfo = () => {
     if (!modelInstance.value) return;
 
     try {
-        // 获取 Mesh 列表
+        // English comment.
         const meshes = modelInstance.value.getAllMeshes?.() || [];
         meshList.value = meshes.map((mesh) => ({
             name: mesh.name || '未命名',
             uuid: mesh.uuid
         }));
 
-        // 获取动画列表
+        // English comment.
         const animations = modelInstance.value.getAnimationNames?.() || [];
         animationList.value = animations;
 
-        // 获取当前播放的动画
+        // English comment.
         currentAnimation.value = modelInstance.value.getCurrentAnimationName?.() || null;
 
-        // 获取交互 Mesh 列表
+        // English comment.
         if (Array.isArray(interactiveMeshes.value)) {
             interactiveMeshNames.value = [...interactiveMeshes.value];
         } else {
@@ -703,7 +703,7 @@ const loadModelInfo = () => {
     }
 };
 
-// Mesh 选择变化
+// English comment.
 const onMeshSelect = () => {
     if (!selectedMeshName.value || !modelInstance.value) {
         selectedMeshProps.value = null;
@@ -711,31 +711,31 @@ const onMeshSelect = () => {
         return;
     }
 
-    // 获取 Mesh 变换属性
+    // English comment.
     selectedMeshProps.value = modelInstance.value.getMeshTransform?.(selectedMeshName.value);
 
-    // 获取材质属性
+    // English comment.
     selectedMaterialProps.value = modelInstance.value.getMeshMaterialProps?.(selectedMeshName.value) || {};
 };
 
-// 更新材质属性
+// English comment.
 const updateMaterialProperty = (prop, value) => {
     if (!selectedMeshName.value || !modelInstance.value) return;
 
-    // 实时更新场景
+    // English comment.
     modelInstance.value.updateMeshMaterial?.(selectedMeshName.value, { [prop]: value });
 
-    // 更新本地状态
+    // English comment.
     selectedMaterialProps.value = {
         ...selectedMaterialProps.value,
         [prop]: value
     };
 
-    // 防抖保存到组件配置
+    // English comment.
     queueMeshConfigPersist();
 };
 
-// 更新 Mesh 变换
+// English comment.
 const updateMeshTransform = (type, axis, value) => {
     if (!selectedMeshName.value || !modelInstance.value) return;
     if (isNaN(value)) return;
@@ -746,19 +746,19 @@ const updateMeshTransform = (type, axis, value) => {
         }
     };
 
-    // 实时更新场景
+    // English comment.
     modelInstance.value.updateMeshTransform?.(selectedMeshName.value, transform);
 
-    // 更新本地状态
+    // English comment.
     if (selectedMeshProps.value && selectedMeshProps.value[type]) {
         selectedMeshProps.value[type][axis] = value;
     }
 
-    // 防抖保存到组件配置
+    // English comment.
     queueMeshConfigPersist();
 };
 
-// 更新 Mesh 可见性
+// English comment.
 const updateMeshVisibility = (visible) => {
     if (!selectedMeshName.value || !modelInstance.value) return;
 
@@ -768,29 +768,29 @@ const updateMeshVisibility = (visible) => {
         selectedMeshProps.value.visible = visible;
     }
 
-    // 防抖保存到组件配置
+    // English comment.
     queueMeshConfigPersist();
 };
 
-// 高亮选中的 Mesh
+// English comment.
 const highlightSelectedMesh = () => {
     if (!selectedMeshName.value || !modelInstance.value) return;
     modelInstance.value.highlightMesh?.(selectedMeshName.value);
 };
 
-// 取消高亮
+// English comment.
 const unhighlightSelectedMesh = () => {
     if (!selectedMeshName.value || !modelInstance.value) return;
     modelInstance.value.unhighlightMesh?.(selectedMeshName.value);
 };
 
-// 隔离显示选中的 Mesh
+// English comment.
 const isolateSelectedMesh = () => {
     if (!selectedMeshName.value || !modelInstance.value) return;
     modelInstance.value.isolateMesh?.(selectedMeshName.value);
 };
 
-// 显示所有 Mesh
+// English comment.
 const showAllMeshes = () => {
     if (!modelInstance.value) return;
     modelInstance.value.showAllMeshes?.();
@@ -816,7 +816,7 @@ const toggleMeshInteractive = (meshName) => {
 
     interactiveMeshNames.value = newList;
 
-    // 更新组件配置
+    // English comment.
     componentStore.updateComponent(props.componentId, {
         config: {
             ...component.value.config,
@@ -824,7 +824,7 @@ const toggleMeshInteractive = (meshName) => {
         }
     });
 
-    // 更新实例
+    // English comment.
     if (modelInstance.value?.setInteractiveMeshes) {
         modelInstance.value.setInteractiveMeshes(newList);
     }
@@ -898,7 +898,7 @@ const setAnimationSpeed = (speed) => {
     }
 };
 
-// 烘焙光照方法
+// English comment.
 const openBakedLightingModal = () => {
     showBakedLightingModal.value = true;
 };
@@ -936,19 +936,19 @@ const handleBakedLightingSave = (config) => {
 const handleBakedLightingUpdated = (config) => {
     console.log('[ModelLoaderEditor] 烘焙配置已更新，通知ModelEffect:', config);
 
-    // 通过场景事件系统发射全局事件通知 ModelEffect 组件更新
+    // English comment.
     if (modelInstance.value?.scene?.eventSystem) {
         modelInstance.value.scene.eventSystem.emit('bakedLightingConfigUpdated', {
             config,
             modelLoaderId: props.componentId
         });
     } else if (modelInstance.value) {
-        // 备用方案：通过 ModelLoader 实例发射（如果场景不可用）
+        // English comment.
         modelInstance.value.emit('bakedLightingConfigUpdated', config);
     }
 };
 
-// 监听模型实例变化
+// English comment.
 watch(modelInstance, (newInstance) => {
     syncLoadStateFromInstance();
     if (newInstance) {
@@ -958,7 +958,7 @@ watch(modelInstance, (newInstance) => {
     }
 }, { immediate: true });
 
-// 监听选中 Mesh 变化，刷新属性
+// English comment.
 watch(selectedMeshName, onMeshSelect);
 
 watch(
@@ -974,21 +974,9 @@ watch(
     }
 );
 
-/* // 监听 URL 配置变化，重新加载模型
-watch(
-    () => component.value?.config?.url,
-    (newUrl, oldUrl) => {
-        if (newUrl && newUrl !== oldUrl && modelInstance.value) {
-            console.log('ModelLoader URL changed, reloading model:', newUrl);
-            // 触发模型重新加载
-            modelInstance.value.loadModel?.(newUrl).catch((error) => {
-                console.error('Failed to reload model:', error);
-            });
-        }
-    }
-); */
+/* English comment. */
 
-// 监听加载事件
+// English comment.
 let loadStartHandler = null;
 let loadProgressHandler = null;
 let loadCompleteHandler = null;
@@ -1111,7 +1099,7 @@ onUnmounted(() => {
     display: none;
 }
 
-/* 共用布局类（与 SceneSettings 保持一致） */
+/* English comment. */
 .settings-content {
     display: flex;
     flex-direction: column;
@@ -1178,7 +1166,7 @@ onUnmounted(() => {
     gap: 0.375rem;
 }
 
-/* 加载 / 空状态 */
+/* English comment. */
 .loading-state,
 .empty-state {
     padding: 1.5rem;
@@ -1202,7 +1190,7 @@ onUnmounted(() => {
     transition: width 0.3s;
 }
 
-/* 分组标题 */
+/* English comment. */
 .section-label {
     display: flex;
     align-items: center;
@@ -1217,7 +1205,7 @@ onUnmounted(() => {
     margin-top: 0.25rem;
 }
 
-/* 工具栏（操作按钮行） */
+/* English comment. */
 .mesh-toolbar {
     display: flex;
     gap: 0.375rem;
@@ -1225,7 +1213,7 @@ onUnmounted(() => {
     padding: 0.5rem 0.75rem;
 }
 
-/* 空提示 */
+/* English comment. */
 .empty-hint {
     padding: 1.5rem;
     text-align: center;
@@ -1233,7 +1221,7 @@ onUnmounted(() => {
     font-size: 0.75rem;
 }
 
-/* 动画列表项 */
+/* English comment. */
 .animation-item {
     display: flex;
     align-items: center;
@@ -1279,7 +1267,7 @@ onUnmounted(() => {
     font-size: 0.6875rem;
 }
 
-/* 烘焙状态标签 */
+/* English comment. */
 .status-tag {
     font-size: 0.625rem;
     padding: 0.1rem 0.375rem;
@@ -1299,7 +1287,7 @@ onUnmounted(() => {
     color: var(--color-text-tertiary);
 }
 
-/* 信息行 */
+/* English comment. */
 .info-label {
     font-size: 0.6875rem;
     color: var(--color-text-secondary);

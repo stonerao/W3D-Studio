@@ -9,8 +9,7 @@ const MODEL_TARGET_META_KEY = '__w3dModelTargetMeta';
 const MODEL_LOADER_INTERACTION_EVENTS = new Set(['onClick', 'onDoubleClick', 'onHover', 'onHoverOut']);
 
 /**
- * 事件系统组合式函数
- * 提供事件绑定、解绑、触发等功能
+ * English comment.
  */
 export function useEventSystem() {
     const componentStore = useComponentStore();
@@ -207,11 +206,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 为组件绑定事件
-     * @param {string} componentId - 组件 ID
-     * @param {string} eventType - 事件类型
-     * @param {Object} eventConfig - 事件配置
-     * @returns {Object} 事件对象
+     * English comment.
      */
     const bindEvent = (componentId, eventType, eventConfig = {}) => {
         const component = componentStore.getComponentById(componentId);
@@ -228,16 +223,16 @@ export function useEventSystem() {
             throw new Error(`Unknown event type: ${eventType}`);
         }
 
-        // 创建事件对象
+        // English comment.
         const event = {
             id: eventConfig.id || `event_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
             type: eventType,
             enabled: eventConfig.enabled !== undefined ? eventConfig.enabled : true,
-            // 处理方式：'code' 代码处理器 | 'method' 组件方法调用 | 'blueprint' 蓝图事件流
+            // English comment.
             handlerType: eventConfig.handlerType || 'code',
-            // 代码处理器
+            // English comment.
             handler: eventConfig.handler || metadata.example,
-            // 组件方法调用配置
+            // English comment.
             methodCallConfig: eventConfig.methodCallConfig || null,
             blueprint: eventConfig.blueprint || null,
             blueprintTriggerNodeId: eventConfig.blueprintTriggerNodeId || '',
@@ -246,11 +241,11 @@ export function useEventSystem() {
             createdAt: eventConfig.createdAt || Date.now()
         };
 
-        // 添加到组件的事件列表
+        // English comment.
         componentStore.addEvent(componentId, event);
         syncModelLoaderEventInteractiveMeshes(componentId);
 
-        // 如果事件已启用，立即绑定到组件实例
+        // English comment.
         if (event.enabled && component.instance) {
             attachEventToInstance(component.instance, event);
         }
@@ -261,9 +256,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 解绑事件
-     * @param {string} componentId - 组件 ID
-     * @param {string} eventId - 事件 ID
+     * English comment.
      */
     const unbindEvent = (componentId, eventId) => {
         const component = componentStore.getComponentById(componentId);
@@ -276,12 +269,12 @@ export function useEventSystem() {
             throw new Error(`Event not found: ${eventId}`);
         }
 
-        // 从组件实例移除事件监听
+        // English comment.
         if (component.instance) {
             detachEventFromInstance(component.instance, event);
         }
 
-        // 从 store 中移除
+        // English comment.
         componentStore.removeEvent(componentId, eventId);
         syncModelLoaderEventInteractiveMeshes(componentId);
 
@@ -289,10 +282,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 更新事件配置
-     * @param {string} componentId - 组件 ID
-     * @param {string} eventId - 事件 ID
-     * @param {Object} updates - 更新内容
+     * English comment.
      */
     const updateEvent = (componentId, eventId, updates) => {
         const component = componentStore.getComponentById(componentId);
@@ -305,14 +295,14 @@ export function useEventSystem() {
             throw new Error(`Event not found: ${eventId}`);
         }
 
-        // 如果启用状态改变，需要重新绑定/解绑
+        // English comment.
         const enabledChanged = updates.enabled !== undefined && updates.enabled !== event.enabled;
 
-        // 更新事件
+        // English comment.
         componentStore.updateEvent(componentId, eventId, updates);
         syncModelLoaderEventInteractiveMeshes(componentId);
 
-        // 重新绑定到实例
+        // English comment.
         if (component.instance) {
             if (enabledChanged) {
                 if (updates.enabled) {
@@ -321,7 +311,7 @@ export function useEventSystem() {
                     detachEventFromInstance(component.instance, event);
                 }
             } else if (event.enabled) {
-                // 如果事件已启用且处理器改变，重新绑定
+                // English comment.
                 detachEventFromInstance(component.instance, event);
                 attachEventToInstance(component.instance, { ...event, ...updates });
             }
@@ -331,9 +321,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 切换事件启用状态
-     * @param {string} componentId - 组件 ID
-     * @param {string} eventId - 事件 ID
+     * English comment.
      */
     const toggleEvent = (componentId, eventId) => {
         const component = componentStore.getComponentById(componentId);
@@ -390,10 +378,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 触发事件
-     * @param {string} componentId - 组件 ID
-     * @param {string} eventType - 事件类型
-     * @param {Array} args - 事件参数
+     * English comment.
      */
     const triggerEvent = (componentId, eventType, ...args) => {
         const component = componentStore.getComponentById(componentId);
@@ -424,7 +409,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 编辑器事件类型 → 核心 EventSystem 事件名映射
+     * English comment.
      */
     const interactiveEventMap = {
         onClick: 'click',
@@ -483,9 +468,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 将事件绑定到组件实例
-     * @param {Object} instance - 组件实例
-     * @param {Object} event - 事件对象
+     * English comment.
      */
     const attachEventToInstance = (instance, event) => {
         if (!instance || !event.enabled) return;
@@ -499,19 +482,19 @@ export function useEventSystem() {
         }
 
         try {
-            // 根据处理方式创建处理函数
+            // English comment.
             let handlerFn;
             if (event.handlerType === 'method') {
-                // 组件方法调用
+                // English comment.
                 handlerFn = createComponentMethodCallHandler(event.methodCallConfig);
             } else if (event.handlerType === 'blueprint') {
                 handlerFn = createBlueprintHandler(event, componentId, instance);
             } else {
-                // 代码处理器
+                // English comment.
                 handlerFn = createHandlerFunction(event.handler);
             }
 
-            // 根据事件类型绑定到实例
+            // English comment.
             switch (event.type) {
             case 'onLoaded':
             case 'onMounted':
@@ -525,7 +508,7 @@ export function useEventSystem() {
                 break;
             }
 
-                // 交互事件：通过组件 eventEmitter 监听核心 EventSystem 分发的事件
+                // English comment.
             case 'onClick':
             case 'onDoubleClick':
             case 'onHover':
@@ -535,7 +518,7 @@ export function useEventSystem() {
 
                 const targetMatcher = createTargetFilterMatcher(event.targetFilter, componentId);
 
-                // 包装处理函数，传入 (eventData, componentInstance)
+                // English comment.
                 const wrappedHandler = (eventData) => {
                     try {
                         getEventModelTarget(eventData, componentId);
@@ -546,7 +529,7 @@ export function useEventSystem() {
                     }
                 };
 
-                // 保存到 instance 上，以便 detach 时精确移除
+                // English comment.
                 if (!instance._interactiveHandlers) {
                     instance._interactiveHandlers = {};
                 }
@@ -555,11 +538,11 @@ export function useEventSystem() {
                     handler: wrappedHandler
                 };
 
-                // 绑定到组件实例的 eventEmitter
-                // 核心 EventSystem 在射线命中可交互 Mesh 时会调用
+                // English comment.
+                // English comment.
                 // mesh.userData.eventEmitter.emit(eventType, eventData)
-                // 而 setupInteractiveObjects 已将 mesh.userData.eventEmitter 设为 instance.eventEmitter
-                // 因此此处只需 instance.on 即可完成闭环
+                // English comment.
+                // English comment.
                 if (typeof instance.on === 'function') {
                     instance.on(coreEventName, wrappedHandler);
                 }
@@ -572,7 +555,7 @@ export function useEventSystem() {
                 console.warn(`Unknown event type: ${event.type}`);
             }
 
-            // 保存事件处理器引用
+            // English comment.
             if (!instance._eventHandlers) {
                 instance._eventHandlers = {};
             }
@@ -583,18 +566,16 @@ export function useEventSystem() {
     };
 
     /**
-     * 从组件实例移除事件
-     * @param {Object} instance - 组件实例
-     * @param {Object} event - 事件对象
+     * English comment.
      */
     const detachEventFromInstance = (instance, event) => {
         if (!instance || !instance._eventHandlers) return;
 
         try {
-            // 移除事件处理器引用
+            // English comment.
             delete instance._eventHandlers[event.id];
 
-            // 恢复原始方法
+            // English comment.
             switch (event.type) {
             case 'onLoaded':
             case 'onMounted':
@@ -614,7 +595,7 @@ export function useEventSystem() {
             case 'onHoverOut': {
                 const record = instance._interactiveHandlers?.[event.id];
                 if (record) {
-                    // 从组件 eventEmitter 移除
+                    // English comment.
                     if (typeof instance.off === 'function') {
                         instance.off(record.coreEventName, record.handler);
                     }
@@ -629,9 +610,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 创建组件方法调用处理器
-     * @param {Object} methodCallConfig - 方法调用配置
-     * @returns {Function} 处理函数
+     * English comment.
      */
     const createComponentMethodCallHandler = (methodCallConfig) => {
         if (!methodCallConfig) {
@@ -701,23 +680,23 @@ export function useEventSystem() {
         return (...eventArgs) => {
             const { targetComponentId, methodName, parameters } = methodCallConfig;
 
-            // 查找目标组件
+            // English comment.
             const targetComponent = componentStore.getComponentById(targetComponentId);
             if (!targetComponent || !targetComponent.instance) {
                 console.warn(`Target component not found or not initialized: ${targetComponentId}`);
                 return;
             }
 
-            // 检查方法是否存在
+            // English comment.
             if (!canInvokeMethod(targetComponent.instance, methodName)) {
                 console.warn(`Method ${methodName} not found on component ${targetComponent.name}`);
                 return;
             }
 
-            // 解析参数
+            // English comment.
             const resolvedParams = resolveMethodParameters(parameters, eventArgs);
 
-            // 调用方法
+            // English comment.
             try {
                 if (Array.isArray(resolvedParams)) {
                     invokeMethod(targetComponent.instance, methodName, resolvedParams);
@@ -732,10 +711,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 解析方法参数
-     * @param {Array} parameters - 参数配置数组
-     * @param {Array} eventArgs - 事件参数
-     * @returns {Array} 解析后的参数值
+     * English comment.
      */
     const resolveMethodParameters = (parameters = [], eventArgs = []) => {
         const hasLegacyShape = parameters.some((p) => {
@@ -748,16 +724,16 @@ export function useEventSystem() {
             );
         });
 
-        // 兼容旧版：返回参数数组并按原逻辑展开调用
+        // English comment.
         if (hasLegacyShape) {
             return parameters.map((param) => {
                 switch (param.source) {
                 case 'static':
-                    // 静态值
+                    // English comment.
                     return parseValue(param.value, param.type);
 
                 case 'url':
-                    // URL 参数
+                    // English comment.
                     return getUrlParameter(param.key);
 
                 case 'localStorage':
@@ -769,7 +745,7 @@ export function useEventSystem() {
                     return getSessionStorageValue(param.key);
 
                 case 'event':
-                    // 事件参数
+                    // English comment.
                     return eventArgs[param.index] || param.defaultValue;
 
                 default:
@@ -778,7 +754,7 @@ export function useEventSystem() {
             });
         }
 
-        // 新版：参数为 { key, value }，value 支持 JS 表达式
+        // English comment.
         const paramsObject = {};
         parameters.forEach((param) => {
             const key = (param?.key ?? '').trim();
@@ -789,16 +765,13 @@ export function useEventSystem() {
     };
 
     /**
-     * 解析 value：支持 JS 表达式；失败则回退为原字符串
-     * @param {any} input - 用户输入
-     * @param {Array} eventArgs - 事件参数
-     * @returns {any}
+     * English comment.
      */
     const evaluateJsExpression = (input, eventArgs = []) => {
         const raw = String(input ?? '').trim();
         if (!raw) return undefined;
 
-        // JSON（对象/数组）优先尝试
+        // English comment.
         if (
             (raw.startsWith('{') && raw.endsWith('}')) ||
             (raw.startsWith('[') && raw.endsWith(']'))
@@ -806,7 +779,7 @@ export function useEventSystem() {
             try {
                 return JSON.parse(raw);
             } catch {
-                // 继续走表达式
+                // English comment.
             }
         }
 
@@ -864,10 +837,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 解析值类型
-     * @param {*} value - 原始值
-     * @param {string} type - 目标类型
-     * @returns {*} 解析后的值
+     * English comment.
      */
     const parseValue = (value, type) => {
         switch (type) {
@@ -887,9 +857,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 获取 URL 参数
-     * @param {string} key - 参数名
-     * @returns {string|null} 参数值
+     * English comment.
      */
     const getUrlParameter = (key) => {
         const params = new URLSearchParams(window.location.search);
@@ -897,9 +865,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 获取 localStorage 值
-     * @param {string} key - 键名
-     * @returns {string|null} 值
+     * English comment.
      */
     const getLocalStorageValue = (key) => {
         try {
@@ -910,9 +876,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 获取 sessionStorage 值
-     * @param {string} key - 键名
-     * @returns {string|null} 值
+     * English comment.
      */
     const getSessionStorageValue = (key) => {
         try {
@@ -923,13 +887,11 @@ export function useEventSystem() {
     };
 
     /**
-     * 创建事件处理函数
-     * @param {string} handlerCode - 处理器代码
-     * @returns {Function} 处理函数
+     * English comment.
      */
     const createHandlerFunction = (handlerCode) => {
         try {
-            // 使用 Function 构造器创建函数
+            // English comment.
             // eslint-disable-next-line no-new-func
             return new Function('return ' + handlerCode)();
         } catch (error) {
@@ -1331,9 +1293,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 执行事件处理器
-     * @param {string} handlerCode - 处理器代码
-     * @param {Array} args - 参数
+     * English comment.
      */
     const executeEventHandler = (handlerCode, args) => {
         const handlerFn = createHandlerFunction(handlerCode);
@@ -1341,9 +1301,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 将“已存在于 store 的事件列表”重新挂到组件实例上
-     * 用于反序列化/实例重建后恢复事件（不会改变 eventId）。
-     * @param {string} componentId - 组件 ID
+     * English comment.
      */
     const attachExistingEventsToInstance = (componentId) => {
         const component = componentStore.getComponentById(componentId);
@@ -1359,7 +1317,7 @@ export function useEventSystem() {
     };
 
     /**
-     * 重新挂载所有组件的已存在事件
+     * English comment.
      */
     const attachAllExistingEvents = () => {
         componentStore.components.forEach((c) => attachExistingEventsToInstance(c.id));

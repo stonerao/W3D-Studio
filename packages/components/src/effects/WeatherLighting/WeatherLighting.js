@@ -18,8 +18,8 @@ function toJulian(date) {
 }
 
 function getSunPositionApprox(date, latDeg, lonDeg) {
-    // 近似太阳位置（足够满足“启动获取 + ≤30min 粒度连续变化”）
-    // 输出：altitude/azimuth（弧度）
+    // English comment.
+    // English comment.
     const jd = toJulian(date);
     const d = jd - 2451545.0;
 
@@ -105,7 +105,7 @@ function deepMerge(target = {}, source = {}) {
 }
 
 function inferTimePresetFromSunAltitude(altitudeRad) {
-    // 粗略分段：满足编辑器展示与路灯联动
+    // English comment.
     if (!Number.isFinite(altitudeRad)) return 'noon';
     if (altitudeRad <= -0.05) return 'night';
     if (altitudeRad <= 0.20) return 'dawn';
@@ -143,20 +143,20 @@ export class WeatherLighting extends Component {
         // 'manual' | 'auto'
         mode: 'manual',
 
-        // 手填经纬度
+        // English comment.
         location: {
             lat: 29.0001,
             lon: 130.0001
         },
 
-        // 在线天气接口，可按需填写
+        // English comment.
         provider: {
             url: '',
             updateIntervalMinutes: 30,
             timeoutMs: 8000
         },
 
-        // 天气（手动模式）
+        // English comment.
         weather: {
             preset: 'clear', // clear | rainLight | rainHeavy | snow | fog | cloudy
             enabled: true
@@ -182,26 +182,26 @@ export class WeatherLighting extends Component {
             }
         },
 
-        // 光照
+        // English comment.
         lighting: {
-            // 仅保留一个“当前时段(小时)”：0-23。
-            // - 为 null 时使用本地时间（自动）
-            // - 为 0-23 时固定到该小时（手动）
+            // English comment.
+            // English comment.
+            // English comment.
             timeHour: null,
             sunDistance: 200,
-            // 默认开启方向光阴影，避免“看不到阴影”
+            // English comment.
             castShadow: true,
             shadowMapSize: 2048,
-            // 打开阴影时，自动让场景内 Mesh 接收/投射阴影（避免“开了阴影但看不到”）
+            // English comment.
             autoApplyMeshShadows: true,
-            // 阴影相机范围：默认按 area 估算；点击“适配阴影范围”后会写入
+            // English comment.
             shadowCamera: null,
-            // 阴影目标点：默认跟随天气区域中心；适配后可固定为场景中心
+            // English comment.
             shadowTarget: {
                 mode: 'area', // 'area' | 'scene'
                 center: [0, 0, 0]
             },
-            // 可选：生成一个仅接收阴影的地面，保证阴影移动肉眼可见
+            // English comment.
             shadowGround: {
                 enabled: true,
                 y: 0,
@@ -209,7 +209,7 @@ export class WeatherLighting extends Component {
             }
         },
 
-        // 粒子效果区域
+        // English comment.
         area: {
             enabled: true,
             followCamera: false,
@@ -217,7 +217,7 @@ export class WeatherLighting extends Component {
             size: [120, 60, 120]
         },
 
-        // 夜间路灯/信号灯（TrafficRoadsideDeviceManager.devices[].type）
+        // English comment.
         roadsideLights: {
             enabled: true,
             streetLightType: 'streetLight',
@@ -265,12 +265,12 @@ export class WeatherLighting extends Component {
     async onMounted() {
         this._initLights();
 
-        // 为了遵循 SDK 组件模式：内部需要用到 EnvironmentEffect / WeatherClouds
-        // 如果宿主没注册，则这里兜底注册（重复注册会被忽略）
+        // English comment.
+        // English comment.
         this.scene.registerComponent('EnvironmentEffect', EnvironmentEffect);
         this.scene.registerComponent('WeatherClouds', WeatherClouds);
 
-        // 创建内部环境粒子组件（不暴露到编辑器组件列表）
+        // English comment.
         this._envEffect = await this.scene.add('EnvironmentEffect', {
             name: this._envEffectName,
             particleCount: 3000,
@@ -309,7 +309,7 @@ export class WeatherLighting extends Component {
     onDispose() {
         this._clearTimers();
 
-        // 清理内部组件
+        // English comment.
         try {
             this.scene.remove(this._envEffectName);
         } catch {
@@ -321,7 +321,7 @@ export class WeatherLighting extends Component {
             // ignore
         }
 
-        // 清理灯光
+        // English comment.
         if (this._ambientLight) {
             this.componentScene.remove(this._ambientLight);
             this._ambientLight = null;
@@ -337,17 +337,17 @@ export class WeatherLighting extends Component {
 
         this._disposeShadowGround();
 
-        // 清理路灯
+        // English comment.
         this._clearRoadsideLights();
     }
 
     onUpdate() {
         this._updateSunLerp();
 
-        // 模型可能在组件挂载后才加载完成：定期补开 Mesh 的 cast/receive
+        // English comment.
         this._applyMeshShadowsThrottled();
 
-        // 路灯同步：不要每帧全量扫，节流
+        // English comment.
         const now = nowMs();
         if (now - this._lastRoadsideSyncMs > 1000) {
             this._lastRoadsideSyncMs = now;
@@ -361,7 +361,7 @@ export class WeatherLighting extends Component {
         if (!this.config.lighting?.autoApplyMeshShadows) return;
 
         const now = nowMs();
-        // 2 秒扫一次，避免每帧 traverse
+        // English comment.
         if (now - this._lastMeshShadowApplyMs < 2000) return;
         this._lastMeshShadowApplyMs = now;
 
@@ -376,7 +376,7 @@ export class WeatherLighting extends Component {
     async updateConfig(newConfig = {}) {
         this.config = deepMerge(this.config, newConfig || {});
 
-        // 更新区域会影响粒子组件
+        // English comment.
         if (this._envEffect && (newConfig?.area || newConfig?.area?.size || newConfig?.area?.center || newConfig?.area?.followCamera)) {
             const area = this._getEffectArea();
             this._envEffect.updateConfig({ effectArea: area });
@@ -415,7 +415,7 @@ export class WeatherLighting extends Component {
         this.emit('config-updated', { changed: Object.keys(newConfig || {}) });
     }
 
-    // ===== 对外 API（可选） =====
+    // English comment.
 
     setMode(mode) {
         this.updateConfig({ mode });
@@ -426,7 +426,7 @@ export class WeatherLighting extends Component {
     }
 
     setTimePreset(timePreset) {
-        // 兼容旧 API：转换为 timeHour
+        // English comment.
         const hour = presetToHour(timePreset);
         if (hour === null) return;
         this.setTimeHour(hour);
@@ -449,12 +449,12 @@ export class WeatherLighting extends Component {
     }
 
     _isNightHour(h) {
-        // 固定夜间：20:00-次日5:00（不再暴露为参数）
+        // English comment.
         return h < 5 || h >= 20;
     }
 
     /**
-     * 阴影诊断信息：用于快速判断“无阴影”是参数还是逻辑问题
+     * English comment.
      */
     getShadowDebugInfo() {
         const rendererShadowEnabled = !!this.scene?.renderer?.instance?.shadowMap?.enabled;
@@ -498,8 +498,7 @@ export class WeatherLighting extends Component {
     }
 
     /**
-     * 计算并返回“让所有物体都在阴影范围内”的推荐配置（不直接写入 store）
-     * 编辑器侧应将返回值 merge 后调用 updateComponentConfig。
+     * English comment.
      */
     computeShadowFit(options = {}) {
         const margin = clampNumber(options.margin, 10);
@@ -509,7 +508,7 @@ export class WeatherLighting extends Component {
 
         const { box, center, size } = bounds;
 
-        // 用最大维度的半径来粗略覆盖（稳健优先）
+        // English comment.
         const half = Math.max(size.x, size.y, size.z) / 2 + Math.max(0, margin);
         const far = Math.max(500, half * 10);
 
@@ -517,7 +516,7 @@ export class WeatherLighting extends Component {
             lighting: {
                 castShadow: true,
                 autoApplyMeshShadows: true,
-                // 让阴影目标点固定在场景中心，避免 followCamera 导致阴影范围跑偏
+                // English comment.
                 shadowTarget: {
                     mode: 'scene',
                     center: [center.x, center.y, center.z]
@@ -530,7 +529,7 @@ export class WeatherLighting extends Component {
                     near: 0.5,
                     far
                 },
-                // 默认开启接收阴影地面，并放到场景包围盒底部
+                // English comment.
                 shadowGround: {
                     ...(this.config.lighting?.shadowGround || {}),
                     enabled: true,
@@ -544,19 +543,19 @@ export class WeatherLighting extends Component {
         await this._refreshWeatherOnce();
     }
 
-    // ===== 内部：光照 =====
+    // English comment.
 
     _initLights() {
-        // 环境光
+        // English comment.
         this._ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
         this._ambientLight.name = `${this.config.name}__ambient`;
 
-        // 太阳光
+        // English comment.
         this._sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
         this._sunLight.name = `${this.config.name}__sun`;
         this._sunLight.castShadow = !!this.config.lighting?.castShadow;
 
-        // DirectionalLight 的 target 需要在场景图中，才能稳定更新方向/阴影
+        // English comment.
         this._sunTarget = this._sunLight.target;
         this._sunTarget.name = `${this.config.name}__sunTarget`;
 
@@ -564,7 +563,7 @@ export class WeatherLighting extends Component {
         this.componentScene.add(this._sunLight);
         this.componentScene.add(this._sunTarget);
 
-        // 初始阴影参数
+        // English comment.
         this._applySunShadowSettings();
     }
 
@@ -579,7 +578,7 @@ export class WeatherLighting extends Component {
             return;
         }
 
-        // renderer 阴影总开关
+        // English comment.
         try {
             this.scene?.renderer?.enableShadow?.(true);
         } catch {
@@ -592,7 +591,7 @@ export class WeatherLighting extends Component {
 
         const cam = this._sunLight.shadow.camera;
 
-        // 优先使用“适配后的 shadowCamera”，否则用天气区域大小估算
+        // English comment.
         const sc = this.config.lighting?.shadowCamera;
         if (sc && typeof sc === 'object') {
             cam.left = clampNumber(sc.left, -60);
@@ -616,10 +615,10 @@ export class WeatherLighting extends Component {
         }
         cam.updateProjectionMatrix();
 
-        // 轻微偏移减少阴影痤疮
+        // English comment.
         this._sunLight.shadow.bias = -0.0001;
 
-        // 可选：自动给场景 Mesh 开启 cast/receive
+        // English comment.
         if (this.config.lighting?.autoApplyMeshShadows) {
             this.scene?.scene?.traverse?.((obj) => {
                 if (obj && obj.isMesh) {
@@ -629,7 +628,7 @@ export class WeatherLighting extends Component {
             });
         }
 
-        // 可选：阴影接收地面
+        // English comment.
         this._ensureShadowGround();
     }
 
@@ -670,20 +669,20 @@ export class WeatherLighting extends Component {
             this.componentScene.add(mesh);
         }
 
-        // 更新不透明度
+        // English comment.
         const opacity = Math.max(0, Math.min(1, clampNumber(sg.opacity, 0.35)));
         if (this._shadowGround.material && this._shadowGround.material.opacity !== opacity) {
             this._shadowGround.material.opacity = opacity;
         }
 
-        // 尺寸与位置：跟随天气区域中心，大小取 area 的 width/depth
+        // English comment.
         const area = this._getEffectArea();
         const center = asVector3Array(area.center, [0, 0, 0]);
         const y = clampNumber(sg.y, 0);
         const width = Math.max(1, clampNumber(area.width, 120));
         const depth = Math.max(1, clampNumber(area.depth, 120));
 
-        // 仅在尺寸变化时重建几何体（避免每帧创建）
+        // English comment.
         const prevW = clampNumber(this._shadowGround.userData?._w, 0);
         const prevD = clampNumber(this._shadowGround.userData?._d, 0);
         if (Math.abs(prevW - width) > 1e-3 || Math.abs(prevD - depth) > 1e-3) {
@@ -735,7 +734,7 @@ export class WeatherLighting extends Component {
         const t = (h - dayStart) / Math.max(1e-6, dayEnd - dayStart);
         const k = Math.max(0, Math.min(1, t));
 
-        // 简化：固定“半圆太阳路径”，不暴露偏移/角度等参数
+        // English comment.
         const minAlt = degToRad(0);
         const maxAlt = degToRad(70);
         const altitude = minAlt + Math.sin(Math.PI * k) * (maxAlt - minAlt);
@@ -744,8 +743,8 @@ export class WeatherLighting extends Component {
         const aziEnd = degToRad(270);
         const azimuth = lerp(aziStart, aziEnd, k);
 
-        // SunCalc：azimuth 从南向西为正（Three 默认约定不一致），这里做一个稳定映射：
-        // 使用球坐标，y=up。让太阳围绕场景旋转即可，不追求严苛天文方位。
+        // English comment.
+        // English comment.
         const y = Math.sin(altitude) * distance;
         const r = Math.cos(altitude) * distance;
         const x = Math.sin(azimuth) * r;
@@ -754,19 +753,19 @@ export class WeatherLighting extends Component {
         const c = this._getShadowTargetCenter();
         const target = new THREE.Vector3(c[0] + x, c[1] + y, c[2] + z);
 
-        // 太阳照向 shadowTarget（默认=区域中心；适配后=场景中心）
+        // English comment.
         if (this._sunTarget) {
             this._sunTarget.position.set(c[0], c[1], c[2]);
         }
 
         if (this._isManualTimeHour()) {
-            // 手动小时：立即应用，避免“还在 lerp 看起来不变化”
+            // English comment.
             this._sunLight.position.copy(target);
             this._sunLerp.startMs = 0;
             this._sunLerp.endMs = 0;
             this._sunLerp.altitudeRad = altitude;
         } else {
-            // 自动本地时间：用固定粒度做平滑过渡
+            // English comment.
             const now = nowMs();
             const intervalMs = minutesToMs(10);
             this._sunLerp.startMs = now;
@@ -780,14 +779,14 @@ export class WeatherLighting extends Component {
             }
         }
 
-        // 太阳光强度：随高度角变化（夜晚极低）
+        // English comment.
         const sunIntensity = Math.max(0, Math.min(1.2, Math.max(0, Math.sin(altitude)) * 1.2));
         this._sunLight.intensity = sunIntensity;
 
-        // 阴影参数可能随 area/开关变化
+        // English comment.
         this._applySunShadowSettings();
 
-        // 估算 timePreset（用于路灯开关）
+        // English comment.
         this._currentAutoTimePreset = inferTimePresetFromSunAltitude(altitude);
     }
 
@@ -810,7 +809,7 @@ export class WeatherLighting extends Component {
         }
         if (this._sunLight) {
             this._sunLight.color = new THREE.Color(p.sun.color);
-            // sun 模式下强度由太阳高度角驱动；preset 模式用预设强度
+            // English comment.
             if (this.config.lighting?.mode === 'preset') {
                 this._sunLight.intensity = p.sun.intensity;
             }
@@ -819,7 +818,7 @@ export class WeatherLighting extends Component {
 
     _applySunDirectionFromTimePreset(timePreset) {
         if (!this._sunLight) return;
-        // 兼容旧逻辑：timePreset -> timeHour
+        // English comment.
         const hour = presetToHour(timePreset);
         if (hour === null) return;
         this.updateConfig({ lighting: { ...this.config.lighting, timeHour: hour } });
@@ -855,13 +854,13 @@ export class WeatherLighting extends Component {
         return { box, center, size };
     }
 
-    // ===== 内部：天气 =====
+    // English comment.
 
     _getEffectArea() {
         const area = this.config.area || {};
         const size = asVector3Array(area.size, WeatherLighting.defaultConfig.area.size);
 
-        // followCamera: 若启用则以当前相机为中心（Y 也跟随，保持直观）
+        // English comment.
         let center = asVector3Array(area.center, WeatherLighting.defaultConfig.area.center);
         if (area.followCamera && this.scene?.camera?.instance) {
             const p = this.scene.camera.instance.position;
@@ -889,7 +888,7 @@ export class WeatherLighting extends Component {
             return;
         }
 
-        // 占位：雾暂不做实际效果
+        // English comment.
         if (isPlaceholderWeather(preset)) {
             this._envEffect.clearEffect();
             this._applyCloudPreset('overcast');
@@ -988,7 +987,7 @@ export class WeatherLighting extends Component {
             const timePreset = data?.lighting?.timePreset;
             const mappedHour = Number.isFinite(apiTimeHour) ? clampInt(apiTimeHour, 0, 23, 12) : presetToHour(timePreset);
 
-            // 自动模式：允许接口同时给出天气与时段
+            // English comment.
             const next = {
                 weather: {
                     ...this.config.weather,
@@ -996,12 +995,12 @@ export class WeatherLighting extends Component {
                 },
                 lighting: {
                     ...this.config.lighting,
-                    // auto 模式下允许接口驱动时段：统一落到 timeHour
+                    // English comment.
                     timeHour: mappedHour !== null ? mappedHour : this.config.lighting?.timeHour
                 }
             };
 
-            // 不要把 mode 改掉，只更新内部应用状态
+            // English comment.
             this.config = { ...this.config, ...next };
             this._applyAll();
             this.emit('weather-updated', data);
@@ -1013,16 +1012,16 @@ export class WeatherLighting extends Component {
     }
 
     _setupTimers() {
-        // 先清掉旧定时器，避免重复
+        // English comment.
         this._clearTimers();
 
-        // 太阳：只保留 timeHour。若未设置则使用本地时间并按固定粒度刷新。
+        // English comment.
         this._scheduleSunTarget();
         if (!this._isManualTimeHour()) {
             this._timers.push(setInterval(() => this._scheduleSunTarget(), minutesToMs(10)));
         }
 
-        // 天气：仅 auto
+        // English comment.
         if (this.config.mode === 'auto') {
             const weatherIntervalMs = minutesToMs(this.config.provider?.updateIntervalMinutes ?? 30);
             this._refreshWeatherOnce();
@@ -1038,28 +1037,28 @@ export class WeatherLighting extends Component {
     }
 
     _applyAll() {
-        // 阴影开关/参数应用
+        // English comment.
         this._applySunShadowSettings();
 
-        // 可能仅开启了 shadowGround，但 castShadow 关闭，这里也要同步一次
+        // English comment.
         this._ensureShadowGround();
 
-        // 光照应用：按当前 hour 推导一个时段用于色温/环境光
+        // English comment.
         const tp = this._currentAutoTimePreset || 'noon';
         this._applyLightingPreset(tp);
 
-        // 天气应用（避免重复 setEffect）
+        // English comment.
         const preset = this.config.weather?.preset || 'clear';
         if (preset !== this._lastWeatherAppliedPreset) {
             this._applyWeatherPreset(preset);
             this._lastWeatherAppliedPreset = preset;
         }
 
-        // 路灯同步：立即做一次
+        // English comment.
         this._syncRoadsideLights();
     }
 
-    // ===== 内部：路灯联动 =====
+    // English comment.
 
     _isNightNow() {
         return (this._currentAutoTimePreset || 'noon') === 'night';
@@ -1074,7 +1073,7 @@ export class WeatherLighting extends Component {
         if (!traffic || this._roadsideObservedTraffic.has(traffic)) return;
 
         const handler = () => {
-            // traffic 配置变化，触发一次重建
+            // English comment.
             this._syncRoadsideLights(true);
         };
 
@@ -1083,13 +1082,13 @@ export class WeatherLighting extends Component {
     }
 
     _clearRoadsideLights() {
-        // 解除监听
+        // English comment.
         for (const [, unsub] of this._roadsideObservedTraffic) {
             try { unsub(); } catch { /* ignore */ }
         }
         this._roadsideObservedTraffic.clear();
 
-        // 移除 lights
+        // English comment.
         for (const [, light] of this._roadsidePointLights) {
             if (light.parent) {
                 light.parent.remove(light);
@@ -1106,7 +1105,7 @@ export class WeatherLighting extends Component {
 
         const night = this._isNightNow();
 
-        // 白天不需要灯光：直接清掉
+        // English comment.
         if (!night) {
             if (this._roadsidePointLights.size) this._clearRoadsideLights();
             return;
@@ -1117,7 +1116,7 @@ export class WeatherLighting extends Component {
             this._observeTrafficIfNeeded(t);
         }
 
-        // 以当前 traffic devices 为真值来源
+        // English comment.
         const desired = new Map(); // deviceId -> { object, intensity }
         const streetType = this.config.roadsideLights.streetLightType || 'streetLight';
         const signalType = this.config.roadsideLights.signalLightType || 'signalLight';
@@ -1142,7 +1141,7 @@ export class WeatherLighting extends Component {
             }
         }
 
-        // 移除多余
+        // English comment.
         for (const [deviceId, light] of this._roadsidePointLights) {
             if (!desired.has(deviceId)) {
                 if (light.parent) light.parent.remove(light);
@@ -1150,7 +1149,7 @@ export class WeatherLighting extends Component {
             }
         }
 
-        // 创建/更新
+        // English comment.
         for (const [deviceId, meta] of desired) {
             const existing = this._roadsidePointLights.get(deviceId);
             const distance = clampNumber(this.config.roadsideLights.distance, 35);
@@ -1159,13 +1158,13 @@ export class WeatherLighting extends Component {
             if (!existing) {
                 const light = new THREE.PointLight(0xffffff, meta.intensity, distance, decay);
                 light.name = `${this.config.name}__roadside_${deviceId}`;
-                // 稍微抬高一点，避免和模型重合
+                // English comment.
                 light.position.set(0, 3, 0);
                 meta.obj.add(light);
                 this._roadsidePointLights.set(deviceId, light);
             } else {
                 if (force) {
-                    // 可能 device object 变了，确保挂载正确
+                    // English comment.
                     if (existing.parent !== meta.obj) {
                         if (existing.parent) existing.parent.remove(existing);
                         meta.obj.add(existing);

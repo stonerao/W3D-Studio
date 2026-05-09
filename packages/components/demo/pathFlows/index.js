@@ -1,5 +1,5 @@
 /**
- * 路径生成工具，包含路径样式，沿路径运动
+ * English comment.
  */
 import Effect from './Effect';
 

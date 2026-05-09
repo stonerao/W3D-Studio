@@ -1,10 +1,9 @@
 /**
- * 配置数据验证工具
- * 用于验证组件配置、场景配置等数据的有效性
+ * English comment.
  */
 
 /**
- * 验证规则类型
+ * English comment.
  */
 export const ValidatorTypes = {
     REQUIRED: 'required',
@@ -17,7 +16,7 @@ export const ValidatorTypes = {
 };
 
 /**
- * 数据类型
+ * English comment.
  */
 export const DataTypes = {
     STRING: 'string',
@@ -29,7 +28,7 @@ export const DataTypes = {
 };
 
 /**
- * 验证结果
+ * English comment.
  */
 class ValidationResult {
     constructor() {
@@ -52,14 +51,11 @@ class ValidationResult {
 }
 
 /**
- * 验证器类
+ * English comment.
  */
 export class Validator {
     /**
-     * 验证数据
-     * @param {*} data - 要验证的数据
-     * @param {Object} schema - 验证规则
-     * @returns {ValidationResult} 验证结果
+     * English comment.
      */
     static validate(data, schema) {
         const result = new ValidationResult();
@@ -67,18 +63,18 @@ export class Validator {
         for (const [field, rules] of Object.entries(schema)) {
             const value = data[field];
 
-            // 必填验证
+            // English comment.
             if (rules.required && (value === undefined || value === null || value === '')) {
                 result.addError(field, `${rules.label || field} 是必填项`);
                 continue;
             }
 
-            // 如果值为空且非必填，跳过后续验证
+            // English comment.
             if (value === undefined || value === null || value === '') {
                 continue;
             }
 
-            // 类型验证
+            // English comment.
             if (rules.type) {
                 if (!this.validateType(value, rules.type)) {
                     result.addError(field, `${rules.label || field} 类型错误，期望 ${rules.type}`);
@@ -86,7 +82,7 @@ export class Validator {
                 }
             }
 
-            // 最小值验证
+            // English comment.
             if (rules.min !== undefined) {
                 if (typeof value === 'number' && value < rules.min) {
                     result.addError(field, `${rules.label || field} 不能小于 ${rules.min}`);
@@ -99,7 +95,7 @@ export class Validator {
                 }
             }
 
-            // 最大值验证
+            // English comment.
             if (rules.max !== undefined) {
                 if (typeof value === 'number' && value > rules.max) {
                     result.addError(field, `${rules.label || field} 不能大于 ${rules.max}`);
@@ -112,7 +108,7 @@ export class Validator {
                 }
             }
 
-            // 正则验证
+            // English comment.
             if (rules.pattern && typeof value === 'string') {
                 const regex = new RegExp(rules.pattern);
                 if (!regex.test(value)) {
@@ -120,14 +116,14 @@ export class Validator {
                 }
             }
 
-            // 枚举验证
+            // English comment.
             if (rules.enum && Array.isArray(rules.enum)) {
                 if (!rules.enum.includes(value)) {
                     result.addError(field, `${rules.label || field} 必须是以下值之一: ${rules.enum.join(', ')}`);
                 }
             }
 
-            // 自定义验证
+            // English comment.
             if (rules.validator && typeof rules.validator === 'function') {
                 const customResult = rules.validator(value, data);
                 if (customResult !== true) {
@@ -140,10 +136,7 @@ export class Validator {
     }
 
     /**
-     * 验证类型
-     * @param {*} value - 值
-     * @param {string} type - 期望类型
-     * @returns {boolean} 是否匹配
+     * English comment.
      */
     static validateType(value, type) {
         switch (type) {
@@ -165,15 +158,12 @@ export class Validator {
     }
 
     /**
-     * 验证组件配置
-     * @param {Object} config - 组件配置
-     * @param {Object} configSchema - 配置 Schema
-     * @returns {ValidationResult} 验证结果
+     * English comment.
      */
     static validateComponentConfig(config, configSchema) {
         const schema = {};
 
-        // 将 configSchema 转换为验证规则
+        // English comment.
         for (const field of configSchema) {
             schema[field.key] = {
                 label: field.label,
@@ -191,9 +181,7 @@ export class Validator {
     }
 
     /**
-     * 映射字段类型到数据类型
-     * @param {string} fieldType - 字段类型
-     * @returns {string} 数据类型
+     * English comment.
      */
     static mapFieldTypeToDataType(fieldType) {
         const typeMap = {
@@ -208,19 +196,17 @@ export class Validator {
     }
 
     /**
-     * 验证 URL
-     * @param {string} url - URL 字符串
-     * @returns {boolean} 是否有效
+     * English comment.
      */
     static isValidURL(url) {
         if (!url || typeof url !== 'string') return false;
 
-        // 支持相对路径和绝对路径
+        // English comment.
         if (url.startsWith('/') || url.startsWith('./') || url.startsWith('../')) {
             return true;
         }
 
-        // 验证绝对 URL
+        // English comment.
         try {
             new URL(url);
             return true;
@@ -230,14 +216,12 @@ export class Validator {
     }
 
     /**
-     * 验证颜色值
-     * @param {string} color - 颜色值
-     * @returns {boolean} 是否有效
+     * English comment.
      */
     static isValidColor(color) {
         if (!color || typeof color !== 'string') return false;
 
-        // 支持 hex、rgb、rgba、颜色名称
+        // English comment.
         const hexPattern = /^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/;
         const rgbPattern = /^rgb\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*\)$/;
         const rgbaPattern = /^rgba\(\s*\d+\s*,\s*\d+\s*,\s*\d+\s*,\s*[\d.]+\s*\)$/;
@@ -246,9 +230,7 @@ export class Validator {
     }
 
     /**
-     * 验证 Vector3
-     * @param {Array} vector - 向量数组
-     * @returns {boolean} 是否有效
+     * English comment.
      */
     static isValidVector3(vector) {
         return (
@@ -260,7 +242,7 @@ export class Validator {
 }
 
 /**
- * 快捷验证方法
+ * English comment.
  */
 export const validate = (data, schema) => Validator.validate(data, schema);
 export const validateComponentConfig = (config, configSchema) =>

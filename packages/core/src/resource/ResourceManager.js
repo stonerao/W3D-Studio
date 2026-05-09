@@ -2,30 +2,25 @@ import { EventEmitter } from '@w3d/utils';
 import { EventTypes } from '../event/EventTypes.js';
 
 /**
- * ResourceManager 资源管理器
- *
- * @class ResourceManager
- * @description 资源加载、缓存和管理
+ * English comment.
  */
 export class ResourceManager {
     /**
-     * 创建资源管理器实例
-     *
-     * @param {Scene} scene - 场景实例
+     * English comment.
      */
     constructor(scene) {
         this.scene = scene;
 
-        // 资源缓存
+        // English comment.
         this.cache = new Map();
 
-        // 加载队列
+        // English comment.
         this.loadQueue = [];
 
-        // 事件发射器
+        // English comment.
         this.eventEmitter = new EventEmitter();
 
-        // 加载统计
+        // English comment.
         this.stats = {
             total: 0,
             loaded: 0,
@@ -34,27 +29,22 @@ export class ResourceManager {
     }
 
     /**
-     * 加载资源
-     *
-     * @param {string} url - 资源 URL
-     * @param {string} type - 资源类型
-     * @param {Function} loader - 加载器函数
-     * @returns {Promise} 加载结果
+     * English comment.
      */
     async load(url, type, loader) {
-        // 检查缓存
+        // English comment.
         if (this.cache.has(url)) {
             return this.cache.get(url);
         }
 
-        // 触发加载开始事件
+        // English comment.
         this.eventEmitter.emit(EventTypes.RESOURCE_LOAD_START, { url, type });
         this.stats.total++;
 
         try {
-            // 执行加载
+            // English comment.
             const resource = await loader(url, (progress) => {
-                // 触发加载进度事件
+                // English comment.
                 this.eventEmitter.emit(EventTypes.RESOURCE_LOAD_PROGRESS, {
                     url,
                     type,
@@ -62,11 +52,11 @@ export class ResourceManager {
                 });
             });
 
-            // 缓存资源
+            // English comment.
             this.cache.set(url, resource);
             this.stats.loaded++;
 
-            // 触发加载完成事件
+            // English comment.
             this.eventEmitter.emit(EventTypes.RESOURCE_LOAD_COMPLETE, {
                 url,
                 type,
@@ -77,7 +67,7 @@ export class ResourceManager {
         } catch (error) {
             this.stats.failed++;
 
-            // 触发加载错误事件
+            // English comment.
             this.eventEmitter.emit(EventTypes.RESOURCE_LOAD_ERROR, {
                 url,
                 type,
@@ -89,26 +79,21 @@ export class ResourceManager {
     }
 
     /**
-     * 获取缓存的资源
-     *
-     * @param {string} url - 资源 URL
-     * @returns {*} 资源对象
+     * English comment.
      */
     get(url) {
         return this.cache.get(url);
     }
 
     /**
-     * 移除缓存的资源
-     *
-     * @param {string} url - 资源 URL
+     * English comment.
      */
     remove(url) {
         this.cache.delete(url);
     }
 
     /**
-     * 清空缓存
+     * English comment.
      */
     clear() {
         this.cache.clear();
@@ -120,9 +105,7 @@ export class ResourceManager {
     }
 
     /**
-     * 获取加载统计
-     *
-     * @returns {Object} 统计信息
+     * English comment.
      */
     getStats() {
         return {
@@ -132,17 +115,14 @@ export class ResourceManager {
     }
 
     /**
-     * 监听资源加载事件
-     *
-     * @param {string} event - 事件名称
-     * @param {Function} handler - 事件处理函数
+     * English comment.
      */
     on(event, handler) {
         this.eventEmitter.on(event, handler);
     }
 
     /**
-     * 销毁资源管理器
+     * English comment.
      */
     dispose() {
         this.clear();

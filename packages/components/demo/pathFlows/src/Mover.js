@@ -1,8 +1,4 @@
-/*
- * @Description: 沿路径运动的mesh类
- * @Author:
- * @Date: 2022-02-07 16:44:54
-*/
+/* English comment. */
 import glUtil from '@glUtil';
 import { getLerpPosition, getRotaion } from './util';
 
@@ -14,11 +10,7 @@ export default class Mover {
     }
 
     /**
-     * @description 添加沿路径移动车辆
-     * @author
-     * @date 2022-02-07
-     * @param {Array} array 移物配置数组
-     * @returns {*}
+     * English comment.
      */
     addMover(array) {
         array.forEach((opt) => {
@@ -46,7 +38,7 @@ export default class Mover {
 
             const { points } = this.pathIns.config.data.filter((item) => item.id === id)[0];
 
-            // 材质设置
+            // English comment.
             if (mtlConfig) this.setMeshMtl(mesh.material, mtlConfig);
             mesh.userData = {
                 ...mesh.userData,
@@ -81,10 +73,7 @@ export default class Mover {
     }
 
     /**
-     * @description 删除移动物
-     * @author
-     * @date 2022-03-05
-     * @param {array} ids
+     * English comment.
      */
     delMover(ids) {
         for (let i = 0; i < ids.length; i++) {
@@ -101,11 +90,7 @@ export default class Mover {
     }
 
     /**
-     * @description 设置车辆材质属性
-     * @author
-     * @date 2021-12-16
-     * @param {*} mtl 材质
-     * @param {*} config 配置项
+     * English comment.
      */
     setMeshMtl(mtl, config) {
         Object.keys(config).forEach((key) => {
@@ -116,9 +101,7 @@ export default class Mover {
     }
 
     /**
-     * @description 车辆移动动画
-     * @author
-     * @date 2021-12-16
+     * English comment.
      */
     animate(id, uTime, sc) {
         if (!this._MoverObjs[id]) return;
@@ -168,14 +151,14 @@ export default class Mover {
             const frRadio = oldRadio >= 1 ? 0.999999 : oldRadio;
 
             if (pfmMode) {
-                // 性能模式，通过缓存直接获取
+                // English comment.
                 const { positions, rotations, rotations2D } = this.pathIns.pathIns.bufferPos[id];
                 const index = (radio * (positions.length - 1)) | 0;
                 rotate = is2DView ? rotations2D[index] : rotations[index];
                 frPos = positions[index];
                 position = positions[index];
             } else {
-                // 实时计算模式
+                // English comment.
                 frPos = getLerpPosition(points, isCurve, frRadio);
                 position = getLerpPosition(points, isCurve, radio);
                 rotate = getRotaion(frPos, position);
@@ -185,7 +168,7 @@ export default class Mover {
         });
     }
 
-    // 设置物体首尾透明度
+    // English comment.
     setSEOpacity(node, radio) {
         const op = radio <= 0.1 ? radio * 10 : (1 - radio) * 10;
         node.traverse((item) => {
@@ -197,9 +180,7 @@ export default class Mover {
     }
 
     /**
-     * @description 销毁mesh
-     * @author
-     * @date 2022-01-06
+     * English comment.
      */
     dispose() {
         Object.keys(this._MoverObjs).forEach((key) => {
@@ -211,12 +192,7 @@ export default class Mover {
     }
 
     /**
-     * @description 显示移动物
-     * @author
-     * @param {array} ids
-     * @param {*} time
-     * @param {function} callback
-     * @returns {*}
+     * English comment.
      */
     show(ids, time, callback) {
         for (let i = 0; i < ids.length; i++) {
@@ -228,7 +204,7 @@ export default class Mover {
         }
     }
 
-    // 隐藏
+    // English comment.
     hide(ids, time, callback) {
         for (let i = 0; i < ids.length; i++) {
             const nodes = this._MoverObjs[ids[i]];

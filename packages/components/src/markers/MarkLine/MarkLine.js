@@ -2,10 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * MarkLine 标注线组件
- *
- * @class MarkLine
- * @extends Component
+ * English comment.
  */
 export class MarkLine extends Component {
     static defaultConfig = {
@@ -36,14 +33,13 @@ export class MarkLine extends Component {
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     updateConfig(newConfig) {
-        // 合并配置
+        // English comment.
         Object.assign(this.config, newConfig);
 
-        // 移除旧的线条
+        // English comment.
         if (this.line) {
             this.remove(this.line);
             this.line.geometry.dispose();
@@ -51,7 +47,7 @@ export class MarkLine extends Component {
             this.line = null;
         }
 
-        // 重新创建
+        // English comment.
         this.createLine();
     }
 

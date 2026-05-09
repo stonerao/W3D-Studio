@@ -2,10 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * MarkArea 标注区域组件
- *
- * @class MarkArea
- * @extends Component
+ * English comment.
  */
 export class MarkArea extends Component {
     static defaultConfig = {
@@ -29,27 +26,26 @@ export class MarkArea extends Component {
         });
 
         this.area = new THREE.Mesh(geometry, material);
-        // 默认水平放置
+        // English comment.
         this.area.rotation.x = -Math.PI / 2;
         this.add(this.area);
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     updateConfig(newConfig) {
-        // 合并配置
+        // English comment.
         Object.assign(this.config, newConfig);
 
-        // 移除旧的区域
+        // English comment.
         if (this.area) {
             this.remove(this.area);
             this.area.geometry.dispose();
             this.area.material.dispose();
         }
 
-        // 重新创建
+        // English comment.
         this.createArea();
     }
 

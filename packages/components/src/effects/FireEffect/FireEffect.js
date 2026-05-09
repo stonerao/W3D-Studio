@@ -2,10 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * FireEffect 火焰效果组件
- *
- * @class FireEffect
- * @extends Component
+ * English comment.
  */
 export class FireEffect extends Component {
     static defaultConfig = {
@@ -18,7 +15,7 @@ export class FireEffect extends Component {
     }
 
     createFire() {
-        // 简化的火焰效果实现
+        // English comment.
         const geometry = new THREE.ConeGeometry(this.config.size, this.config.size * 2, 8);
         const material = new THREE.MeshBasicMaterial({
             color: this.config.color,
@@ -31,21 +28,20 @@ export class FireEffect extends Component {
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     updateConfig(newConfig) {
-        // 合并配置
+        // English comment.
         Object.assign(this.config, newConfig);
 
-        // 移除旧的火焰
+        // English comment.
         if (this.fire) {
             this.remove(this.fire);
             this.fire.geometry.dispose();
             this.fire.material.dispose();
         }
 
-        // 重新创建
+        // English comment.
         this.createFire();
     }
 

@@ -12,7 +12,7 @@
         >
             <template v-for="area in areas" :key="area.id" #[area.id]>
                 <div class="area-content">
-                    <!-- 区域 ID -->
+                    <!-- English comment. -->
                     <div class="form-field">
                         <label class="form-label">区域 ID</label>
                         <Input
@@ -23,7 +23,7 @@
                         />
                     </div>
 
-                    <!-- 点坐标编辑器 -->
+                    <!-- English comment. -->
                     <div class="form-field">
                         <label class="form-label">点坐标</label>
                         <AreaPointsEditor
@@ -32,7 +32,7 @@
                         />
                     </div>
 
-                    <!-- 区域样式配置（可选） -->
+                    <!-- English comment. -->
                     <div v-if="showStyleConfig" class="style-config">
                         <div class="style-config-title">区域样式（留空继承全局配置）</div>
 
@@ -165,7 +165,7 @@
                         </div>
                     </div>
 
-                    <!-- 删除按钮 -->
+                    <!-- English comment. -->
                     <div class="area-actions">
                         <Button
                             variant="danger"
@@ -179,7 +179,7 @@
             </template>
         </Accordion>
 
-        <!-- 添加区域按钮 -->
+        <!-- English comment. -->
         <button class="btn-add-area" @click="addArea">
             <span class="btn-add-icon">+</span>
             <span>添加区域块</span>
@@ -212,7 +212,7 @@ const toast = useToast();
 
 const areas = computed(() => props.modelValue || []);
 
-// 折叠面板配置
+// English comment.
 const accordionItems = computed(() => {
     return areas.value.map(area => ({
         key: area.id,
@@ -220,7 +220,7 @@ const accordionItems = computed(() => {
     }));
 });
 
-// 生成唯一 ID
+// English comment.
 const generateAreaId = () => {
     const existingIds = areas.value.map(a => a.id);
     let counter = 1;
@@ -232,7 +232,7 @@ const generateAreaId = () => {
     return newId;
 };
 
-// 添加区域
+// English comment.
 const addArea = () => {
     const newAreas = [...areas.value];
     newAreas.push({
@@ -247,17 +247,17 @@ const addArea = () => {
     emit('update:modelValue', newAreas);
 };
 
-// 删除区域
+// English comment.
 const removeArea = (areaId) => {
     const newAreas = areas.value.filter(a => a.id !== areaId);
     emit('update:modelValue', newAreas);
 };
 
-// 更新区域 ID
+// English comment.
 const updateAreaId = (oldId, newId) => {
     if (!newId || newId === oldId) return;
 
-    // 检查 ID 是否已存在
+    // English comment.
     if (areas.value.some(a => a.id === newId && a.id !== oldId)) {
         toast.warning('该 ID 已存在，请使用其他 ID');
         return;
@@ -272,7 +272,7 @@ const updateAreaId = (oldId, newId) => {
     emit('update:modelValue', newAreas);
 };
 
-// 更新区域点坐标
+// English comment.
 const updateAreaPoints = (areaId, newPoints) => {
     const newAreas = areas.value.map(a => {
         if (a.id === areaId) {
@@ -283,16 +283,16 @@ const updateAreaPoints = (areaId, newPoints) => {
     emit('update:modelValue', newAreas);
 };
 
-// 更新区域样式
+// English comment.
 const updateAreaStyle = (areaId, styleKey, value) => {
     const newAreas = areas.value.map(a => {
         if (a.id === areaId) {
             const updatedArea = { ...a };
             if (value === '' || value === null || value === undefined) {
-                // 删除该样式属性，使用全局配置
+                // English comment.
                 delete updatedArea[styleKey];
             } else {
-                // 设置样式属性
+                // English comment.
                 const numValue = styleKey === 'color' ? value : parseFloat(value);
                 updatedArea[styleKey] = numValue;
             }

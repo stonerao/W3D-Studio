@@ -1,15 +1,15 @@
 ﻿<template>
     <div class="data-binding-editor">
-        <!-- 未选中组件 -->
+        <!-- English comment. -->
         <div v-if="!selectedComponent" class="empty-state empty-state--panel">
             <div class="empty-state__mark">DATA</div>
             <div class="empty-state__title">未选择组件</div>
             <div class="empty-state__desc">选择画布中的组件后，可以在这里配置数据接入。</div>
         </div>
 
-        <!-- 已选中组件 -->
+        <!-- English comment. -->
         <div v-else class="binding-content">
-            <!-- 组件信息 -->
+            <!-- English comment. -->
             <section class="component-summary" aria-label="当前组件">
                 <div class="component-summary__main">
                     <div class="component-summary__eyebrow">当前组件</div>
@@ -24,7 +24,7 @@
                 <span :class="['binding-status', bindingStatusClass]">{{ bindingStatusLabel }}</span>
             </section>
 
-            <!-- 启用开关 -->
+            <!-- English comment. -->
             <section class="data-access-panel">
                 <label class="switch-row">
                     <input
@@ -47,7 +47,7 @@
                 </Button>
             </section>
 
-            <!-- 数据源列表 -->
+            <!-- English comment. -->
             <div v-if="bindingEnabled" class="data-sources-section">
                 <div v-if="dataSources.length > 0" class="section-header">
                     <div class="section-heading">
@@ -178,7 +178,7 @@
             </div>
         </div>
 
-        <!-- 数据源配置模态框 -->
+        <!-- English comment. -->
         <Modal
             v-model="showDataSourceModal"
             title=""
@@ -223,7 +223,7 @@
                     <span>4 预览保存</span>
                 </div>
 
-                <!-- 全局公共配置（可折叠） -->
+                <!-- English comment. -->
                 <div v-if="!isDataAccessMode && !isPublicSourceMode" class="global-config-section">
                     <div
                         class="global-config-header"
@@ -278,7 +278,7 @@
                     </div>
                 </div>
 
-                <!-- 数据源名称 -->
+                <!-- English comment. -->
                 <div class="form-field">
                     <label class="form-label">数据源名称</label>
                     <Input
@@ -338,7 +338,7 @@
                     />
                 </div>
 
-                <!-- 地址配置区域 -->
+                <!-- English comment. -->
                 <div class="address-section">
                     <div v-if="isHttpMode" class="address-row">
                         <div class="address-field method-field">
@@ -627,7 +627,7 @@
                     </div>
                 </div>
 
-                <!-- Params/Body/Header Tab 切换 -->
+                <!-- English comment. -->
                 <div v-if="isHttpMode || isDataAccessMode" class="params-section">
                     <div v-if="isHttpMode" class="params-tabs">
                         <button
@@ -768,7 +768,7 @@
                         </div>
 
                         <template v-else>
-                        <!-- Params 参数表格 -->
+                        <!-- English comment. -->
                         <div v-show="activeParamsTab === 'params'" class="params-table-wrapper">
                             <div v-if="!hasLocalVariables" class="form-hint form-hint--compact">
                                 当前项目还没有本地变量。选择“本地变量”时可先手动输入变量名，或先到变量面板创建变量。
@@ -888,7 +888,7 @@
                             </table>
                         </div>
 
-                        <!-- Body 请求体 -->
+                        <!-- English comment. -->
                         <div v-show="activeParamsTab === 'body'" class="body-section">
                             <div class="body-editor">
                                 <div class="body-type-group">
@@ -1013,7 +1013,7 @@
                             </div>
                         </div>
 
-                        <!-- Header 请求头表格 -->
+                        <!-- English comment. -->
                         <div v-show="activeParamsTab === 'header'" class="params-table-wrapper">
                             <table class="params-table">
                                 <thead>
@@ -1075,7 +1075,7 @@
                     </div>
                 </div>
 
-                <!-- 数据转换 -->
+                <!-- English comment. -->
                 <section class="data-flow-section data-flow-section--transform">
                     <div class="data-flow-section__header">
                         <div class="data-flow-section__title-wrap">
@@ -1117,7 +1117,7 @@
                 </template>
             </div>
 
-            <!-- 底部信息 & 操作 -->
+            <!-- English comment. -->
             <template #footer>
                 <div v-if="isSelectingSourceType" class="modal-footer-content modal-footer-content--selector">
                     <div class="footer-actions">
@@ -1161,7 +1161,7 @@
             @save="handleDataTransformSave"
         />
 
-        <!-- 全局配置编辑弹窗 -->
+        <!-- English comment. -->
         <Modal
             v-model="showGlobalConfigModal"
             title=""
@@ -1406,15 +1406,15 @@ const { executeDataBinding, fetchDataSource } = useComponent();
 const toast = useToast();
 const { confirm: showConfirm } = useConfirm();
 
-// 执行状态
+// English comment.
 const isExecuting = ref(false);
 
 const selectedComponent = computed(() => componentStore.selectedComponent);
 
-// 绑定启用状态
+// English comment.
 const bindingEnabled = ref(false);
 
-// 全局配置显示状态
+// English comment.
 const showGlobalConfig = ref(true);
 const showGlobalConfigModal = ref(false);
 const showDataStructureModal = ref(false);
@@ -1441,7 +1441,7 @@ const requestPreview = ref({
     bodyText: ''
 });
 
-// 超时单位选项
+// English comment.
 const timeoutUnit = ref('秒');
 const timeoutUnitOptions = [
     { label: '秒', value: '秒' },
@@ -1455,7 +1455,7 @@ const paramValueSourceOptions = [
     { label: 'Cookie', value: 'cookie' }
 ];
 
-// 参数 Tab 切换
+// English comment.
 const activeParamsTab = ref('params');
 const paramsTabs = [
     { key: 'params', label: 'Params' },
@@ -1463,7 +1463,7 @@ const paramsTabs = [
     { key: 'header', label: 'Header' }
 ];
 
-// 绑定目标类型选项
+// English comment.
 const bindingTypeOptions = [
     { label: '属性', value: 'property' },
     { label: '方法', value: 'method' }
@@ -1497,7 +1497,7 @@ const visualFilterOperatorOptions = [
     { label: '不为空', value: 'notEmpty' }
 ];
 
-// 请求方法选项
+// English comment.
 const modeOptions = [
     { label: 'HTTP 接口', value: 'http' },
     { label: '公共接口', value: 'public-source' },
@@ -1532,9 +1532,9 @@ const localFormatOptions = [
     { label: '文本', value: 'text' }
 ];
 
-// ========== 多数据源管理 ==========
+// English comment.
 
-// 数据源列表
+// English comment.
 const dataSources = computed(() => {
     const binding = selectedComponent.value?.dataBinding;
     return binding?.sources || [];
@@ -2674,8 +2674,8 @@ const applyTransformExampleToForm = (reference) => {
 
 const createMigrationLineTransformFn = (modeLabel = '数据接入') => {
     return `// ${modeLabel} 完成回调数据转换
-// 优先复用当前数据：如果已经是 MigrationLine 需要的 lines 结构，将直接返回
-// 兼容常见字段：points / start-end / from-to / source-target
+// English comment.
+// English comment.
 function transform(data) {
     const list = Array.isArray(data)
         ? data
@@ -2729,8 +2729,8 @@ function transform(data) {
 
 const createAreaBlockTransformFn = (modeLabel = '数据接入') => {
     return `// ${modeLabel} 完成回调数据转换
-// 优先复用当前数据：如果已经是 AreaBlock 需要的 areas 结构，将直接返回
-// 兼容常见字段：points / polygon / path / vertices
+// English comment.
+// English comment.
 function transform(data) {
     const list = Array.isArray(data)
         ? data
@@ -2782,8 +2782,8 @@ function transform(data) {
 
 const createLabel3DTransformFn = (modeLabel = '数据接入') => {
     return `// ${modeLabel} 完成回调数据转换
-// 优先复用当前数据：如果已经是 Label3D 需要的 labels 结构，将直接返回
-// 兼容常见字段：label / text / name / position / point
+// English comment.
+// English comment.
 function transform(data) {
     const list = Array.isArray(data)
         ? data
@@ -2832,8 +2832,8 @@ function transform(data) {
 
 const createPointTypeMarkerTransformFn = (modeLabel = '数据接入') => {
     return `// ${modeLabel} 完成回调数据转换
-// 适用于 PointTypeMarkerManager 的 points 绑定
-// 兼容字段：position / point / x-y-z / typeId
+// English comment.
+// English comment.
 function transform(data) {
     const list = Array.isArray(data)
         ? data
@@ -2873,9 +2873,9 @@ function transform(data) {
 
 const createRoadsideDevicePositionTransformFn = (modeLabel = '数据接入') => {
     return `// ${modeLabel} 完成回调数据转换
-// 适用于 TrafficRoadsideDeviceManager 的 updateData / updateDevicePositions 方法绑定
-// 接口格式: [{ id, name, x, y, z }]
-// 匹配规则: 优先按 id 更新路侧设备，id 不匹配时按 name 更新
+// English comment.
+// English comment.
+// English comment.
 function transform(data) {
     const list = Array.isArray(data)
         ? data
@@ -3187,11 +3187,11 @@ const getActionButtonClass = (mode = 'http', action = 'edit') => {
     return `btn-icon--${action}-${mode || 'http'}`;
 };
 
-// 数据源配置模态框
+// English comment.
 const showDataSourceModal = ref(false);
 const editingSourceId = ref(null);
 
-// 数据源表单
+// English comment.
 const dataSourceForm = reactive({
     name: '',
     mode: 'http',
@@ -3234,8 +3234,8 @@ const LOCATION_SIMULATOR_TEST_WS_URL = 'ws://localhost:3000/api/ws/location-simu
 const LOCATION_SIMULATOR_START_MESSAGE = JSON.stringify({ type: 'start' });
 
 const createLocationSimulatorTransformFn = () => `// 定位模拟 WebSocket 数据转换
-// data: ws://localhost:3000/api/ws/location-simulator?sessionId=loc_abc 推送的点位数组
-// 返回值: [{ id, name, x, y, z }]
+// English comment.
+// English comment.
 function transform(data) {
     return Array.isArray(data) ? data : [];
 }`;
@@ -3303,7 +3303,7 @@ const getAvailableBindingOptions = (index) => {
     return sourceOptions.filter((opt) => !selectedValues.has(opt.value));
 };
 
-// 打开添加数据源模态框
+// English comment.
 const openAddDataSourceModal = () => {
     editingSourceId.value = null;
     resetDataSourceForm();
@@ -3354,7 +3354,7 @@ const applyLocationSimulatorTestData = () => {
     toast.success('已填入定位模拟 WebSocket 测试数据');
 };
 
-// 编辑数据源
+// English comment.
 const editDataSource = (source) => {
     editingSourceId.value = source.id;
     isSelectingSourceType.value = false;
@@ -3409,7 +3409,7 @@ const editDataSource = (source) => {
     showDataSourceModal.value = true;
 };
 
-// 关闭数据源模态框
+// English comment.
 const closeDataSourceModal = () => {
     showDataSourceModal.value = false;
     editingSourceId.value = null;
@@ -3417,7 +3417,7 @@ const closeDataSourceModal = () => {
     resetDataSourceForm();
 };
 
-// 重置数据源表单
+// English comment.
 const resetDataSourceForm = () => {
     dataSourceForm.name = '';
     dataSourceForm.mode = 'http';
@@ -4061,7 +4061,7 @@ const normalizeParamRow = (item = {}) => {
     };
 };
 
-// 保存数据源
+// English comment.
 const saveDataSource = () => {
     if (!selectedComponent.value) return;
 
@@ -4072,13 +4072,13 @@ const saveDataSource = () => {
     const sourceData = buildSourcePayload();
 
     if (editingSourceId.value) {
-        // 更新现有数据源
+        // English comment.
         disconnectDataSourceRuntime(selectedComponent.value.id, editingSourceId.value);
         componentStore.updateDataSource(selectedComponent.value.id, editingSourceId.value, sourceData);
         applySinglePropertyBinding(sourceData.bindProperty, sourceData.id);
         toast.success('数据源已更新');
     } else {
-        // 添加新数据源
+        // English comment.
         componentStore.addDataSource(selectedComponent.value.id, sourceData);
         applySinglePropertyBinding(sourceData.bindProperty, sourceData.id);
         toast.success('数据源已添加');
@@ -4087,9 +4087,9 @@ const saveDataSource = () => {
     closeDataSourceModal();
 };
 
-// ========== 参数表格操作 ==========
+// English comment.
 
-// 添加参数行
+// English comment.
 const addParam = (afterIndex) => {
     const newParam = { key: '', value: '', valueSource: 'input', variableName: '' };
     if (afterIndex < 0) {
@@ -4166,7 +4166,7 @@ const updateBodyParamVariableName = (index, variableName) => {
     };
 };
 
-// 删除参数行
+// English comment.
 const removeParam = (index) => {
     dataSourceForm.params.splice(index, 1);
 };
@@ -4175,7 +4175,7 @@ const removeBodyParam = (index) => {
     dataSourceForm.bodyParams.splice(index, 1);
 };
 
-// 确保有参数行
+// English comment.
 const ensureParamRow = () => {
     if (dataSourceForm.params.length === 0) {
         dataSourceForm.params.push({ key: '', value: '', valueSource: 'input', variableName: '' });
@@ -4188,7 +4188,7 @@ const ensureBodyParamRow = () => {
     }
 };
 
-// 添加 Header 行
+// English comment.
 const addHeader = (afterIndex) => {
     const newHeader = { key: '', value: '' };
     if (afterIndex < 0) {
@@ -4198,19 +4198,19 @@ const addHeader = (afterIndex) => {
     }
 };
 
-// 删除 Header 行
+// English comment.
 const removeHeader = (index) => {
     dataSourceForm.headers.splice(index, 1);
 };
 
-// 确保有 Header 行
+// English comment.
 const ensureHeaderRow = () => {
     if (dataSourceForm.headers.length === 0) {
         dataSourceForm.headers.push({ key: '', value: '' });
     }
 };
 
-// 参数验证状态
+// English comment.
 const getParamValidation = (param) => {
     const key = String(param?.key || '').trim();
     const valueSource = param?.valueSource || 'input';
@@ -4223,7 +4223,7 @@ const getParamValidation = (param) => {
     return 'incomplete';
 };
 
-// 参数验证文本
+// English comment.
 const getParamValidationText = (param) => {
     const valueSource = param?.valueSource || 'input';
     if (!param.key && !param.value && !param.variableName) return '-';
@@ -4240,7 +4240,7 @@ const getParamValidationText = (param) => {
     return '不完整';
 };
 
-// 删除数据源确认
+// English comment.
 const removeDataSourceConfirm = async (sourceId) => {
     const confirmed = await showConfirm('确定要删除这个数据源吗？', {
         title: '删除数据源',
@@ -4254,14 +4254,14 @@ const removeDataSourceConfirm = async (sourceId) => {
     }
 };
 
-// 获取属性标签
+// English comment.
 const getPropertyLabel = (property) => {
     if (!property) return '未绑定';
-    // 简化显示
+    // English comment.
     return property.replace('globalConfig.', '');
 };
 
-// 测试数据源
+// English comment.
 const testDataSource = async (source) => {
     try {
         toast.info('正在测试数据源...');
@@ -4292,7 +4292,7 @@ const testDataSource = async (source) => {
     }
 };
 
-// 执行单个数据源并更新组件
+// English comment.
 const executeSingleDataSource = async (source) => {
     if (!selectedComponent.value) return;
 
@@ -4320,7 +4320,7 @@ const executeSingleDataSource = async (source) => {
     }
 };
 
-// 执行所有数据源
+// English comment.
 const executeAllDataSources = async () => {
     if (!selectedComponent.value) return;
 
@@ -4348,7 +4348,7 @@ const executeAllDataSources = async () => {
     }
 };
 
-// 监听选中组件变化
+// English comment.
 watch(selectedComponent, (component) => {
     bindingEnabled.value = component?.dataBinding?.enabled || false;
 }, { immediate: true });
@@ -5022,7 +5022,7 @@ watch(
     margin-top: 0.5rem;
 }
 
-/* 数据源管理样式 */
+/* English comment. */
 .data-sources-section {
     display: flex;
     flex-direction: column;
@@ -5588,7 +5588,7 @@ watch(
     display: block;
 }
 
-/* 数据源表单样式 */
+/* English comment. */
 .data-source-form {
     display: flex;
     flex-direction: column;
@@ -5747,7 +5747,7 @@ watch(
     color: var(--color-text-secondary);
 }
 
-/* 全局配置区域 */
+/* English comment. */
 .global-config-section {
     background-color: var(--color-bg-tertiary);
     border: 1px solid var(--color-border);
@@ -5841,7 +5841,7 @@ watch(
     background-color: var(--color-bg-hover);
 }
 
-/* 地址配置区域 */
+/* English comment. */
 .address-section {
     display: flex;
     flex-direction: column;
@@ -5944,7 +5944,7 @@ watch(
     background-color: rgba(var(--color-primary-rgb), 0.08);
 }
 
-/* 参数 Tab 区域 */
+/* English comment. */
 .params-section {
     border: 1px solid var(--color-border);
     border-radius: var(--border-radius-sm);
@@ -5990,7 +5990,7 @@ watch(
     justify-content: flex-end;
 }
 
-/* 参数表格 */
+/* English comment. */
 .params-table-wrapper {
     overflow-x: auto;
 }
@@ -6093,7 +6093,7 @@ watch(
     color: var(--color-text-secondary);
 }
 
-/* Body 区域 */
+/* English comment. */
 .body-section {
     padding: 0.75rem;
 }
@@ -6113,7 +6113,7 @@ watch(
     color: var(--color-text-secondary);
 }
 
-/* 全局配置表单 */
+/* English comment. */
 .global-config-form {
     display: flex;
     flex-direction: column;

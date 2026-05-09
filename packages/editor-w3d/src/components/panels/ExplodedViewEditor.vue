@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="exploded-view-editor">
-        <!-- 操作按钮 -->
+        <!-- English comment. -->
         <div class="action-buttons">
             <Button
                 :variant="isExploded ? 'default' : 'outline'"
@@ -16,7 +16,7 @@
             >取消选中</Button>
         </div>
 
-        <!-- 关联模型 -->
+        <!-- English comment. -->
         <div class="section">
             <div class="section-header">
                 <span class="section-title">关联模型</span>
@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <!-- 楼层爆炸图设置 -->
+        <!-- English comment. -->
         <div class="section">
             <div class="section-header">
                 <span class="section-title">楼层爆炸图设置</span>
@@ -69,7 +69,7 @@
             </div>
         </div>
 
-        <!-- 楼层爆炸图设置弹窗（包含楼层和 Mesh 选择） -->
+        <!-- English comment. -->
         <div v-if="configModalVisible" class="config-modal-overlay">
             <div class="config-modal" @click.stop>
                 <div class="modal-header">
@@ -290,70 +290,70 @@ const componentStore = useComponentStore();
 const { updateComponentConfig } = useComponent();
 const toast = useToast();
 
-// 当前组件（由 props.componentId 指定）
+// English comment.
 const component = computed(() => {
     return componentStore.components.find((c) => c.id === props.componentId);
 });
 
-// 当前组件的配置（从 component.config 获取）
+// English comment.
 const config = computed(() => component.value?.config || {});
 
-// 是否处于爆炸（已展开）状态
+// English comment.
 const isExploded = ref(false);
 
-// 当前选中的楼层索引（null 表示未选中）
+// English comment.
 const selectedFloorIndex = ref(null);
 
-// UI 中已展开的楼层索引数组
+// English comment.
 const expandedFloors = ref([]);
 
-// 编辑器中管理的楼层配置数组
+// English comment.
 const floors = ref([]);
 
-// 爆炸图设置弹窗状态
+// English comment.
 const configModalVisible = ref(false);
 
-// 多选楼层（按楼层索引值记录）
+// English comment.
 const selectedFloorKeys = ref([]);
 
-// 楼层配置草稿是否有未保存改动
+// English comment.
 const floorConfigDirty = ref(false);
 
-// 楼层草稿变更次数（用于 UI 提示）
+// English comment.
 const pendingChangeCount = ref(0);
 
-// 最近保存时间
+// English comment.
 const lastSavedAt = ref(null);
 
-// ModelLoader 树缓存
+// English comment.
 const loaderTreeCache = new Map();
 
-// 每个楼层的树搜索关键字（key: floor.index）
+// English comment.
 const meshSearchKeywordByFloor = ref({});
 
-// 每个楼层已折叠的树节点（key: floor.index, value: string[]）
+// English comment.
 const collapsedNodeKeysByFloor = ref({});
 
-// 当前用于预览和选择 Mesh 的 ModelLoader ID
+// English comment.
 const selectedLoaderId = ref(null);
 
-// 标志：正在从配置加载，避免 watch 回调触发保存
+// English comment.
 const isLoadingFromConfig = ref(false);
 
-// 该组件是否已有楼层配置
+// English comment.
 const hasFloors = computed(() => floors.value.length > 0);
 
-// 有效楼层数量：至少包含一个 Mesh 的楼层数
+// English comment.
 const validFloorCount = computed(() => {
     return floors.value.filter(floor =>
         floor.meshes && floor.meshes.length > 0
     ).length;
 });
 
-// 是否存在至少一个有效楼层
+// English comment.
 const hasValidFloors = computed(() => validFloorCount.value > 0);
 
-// 是否已选择至少一个楼层
+// English comment.
 const hasSelectedFloors = computed(() => selectedFloorKeys.value.length > 0);
 
 const lastSavedTimeLabel = computed(() => {
@@ -361,13 +361,13 @@ const lastSavedTimeLabel = computed(() => {
     return `最近保存 ${new Date(lastSavedAt.value).toLocaleTimeString('zh-CN', { hour12: false })}`;
 });
 
-// 当前关联模型的树状结构（按模型第一级组织）
+// English comment.
 const selectedLoaderTree = computed(() => {
     if (!selectedLoaderId.value) return [];
     return getLoaderTreeNodes(selectedLoaderId.value);
 });
 
-// 用于空态判断的树状行（不带折叠，仅用于判断是否有可选节点）
+// English comment.
 const selectedLoaderTreeRows = computed(() => {
     const rows = [];
     const walk = (nodes, level) => {
@@ -479,12 +479,12 @@ const getDisplayTreeRows = (floor, floorIndex) => {
     return rows;
 };
 
-// 从组件库中过滤出类型为 ModelLoader 的组件
+// English comment.
 const modelLoaderComponents = computed(() => {
     return componentStore.components.filter((c) => c.type === 'ModelLoader');
 });
 
-// 用于 UI 下拉的 ModelLoader 选项（label/value）
+// English comment.
 const availableModelLoaderOptions = computed(() => {
     return modelLoaderComponents.value.map((loader) => ({
         label: loader.name || `ModelLoader (${loader.id.substring(0, 8)})`,
@@ -492,18 +492,18 @@ const availableModelLoaderOptions = computed(() => {
     }));
 });
 
-// 初始化
+// English comment.
 onMounted(() => {
     loadFloorsFromConfig();
     const modalStateCache = getConfigModalStateCache();
     configModalVisible.value = modalStateCache.get(props.componentId) === true;
 });
 
-// 监听配置变化
+// English comment.
 watch(
     () => config.value.floorMap,
     () => {
-        // 如果正在从配置加载，跳过以防止循环
+        // English comment.
         if (!isLoadingFromConfig.value) {
             loadFloorsFromConfig();
         }
@@ -511,7 +511,7 @@ watch(
     { deep: true }
 );
 
-// 监听 selectedLoaderId 变化，保存到配置
+// English comment.
 watch(selectedLoaderId, async (newValue, oldValue) => {
     if (newValue !== oldValue && !isLoadingFromConfig.value) {
         try {
@@ -530,9 +530,7 @@ watch(configModalVisible, (visible) => {
 });
 
 /**
- * 从配置加载楼层数据
- * 当 config.floorOrder 存在时，按该顺序排列楼层（保留用户自定义顺序）；
- * 否则回退到数字排序（向后兼容旧数据）。
+ * English comment.
  */
 const loadFloorsFromConfig = () => {
     isLoadingFromConfig.value = true;
@@ -540,18 +538,18 @@ const loadFloorsFromConfig = () => {
     const floorMap = config.value.floorMap || {};
     const savedFloorOrder = config.value.floorOrder || [];
 
-    // 恢复 selectedLoaderId
+    // English comment.
     if (config.value.selectedLoaderId) {
         selectedLoaderId.value = config.value.selectedLoaderId;
     }
 
-    // 将 floorMap 转换为 floors 数组（格式归一化）
+    // English comment.
     const floorEntries = Object.entries(floorMap).map(([index, data]) => {
-        // 新格式：{ meshes: [...], animate: true/false }
+        // English comment.
         if (data && data.meshes && Array.isArray(data.meshes)) {
             return { index, meshes: data.meshes, animate: data.animate !== false };
         }
-        // 兼容旧格式 modelLoaders
+        // English comment.
         if (data && data.modelLoaders && Array.isArray(data.modelLoaders)) {
             const allMeshes = data.modelLoaders.flatMap(ml => ml.meshes || []);
             return { index, meshes: allMeshes, animate: data.animate !== false };
@@ -560,17 +558,17 @@ const loadFloorsFromConfig = () => {
     });
 
     if (savedFloorOrder.length > 0) {
-        // 按保存的自定义顺序重建数组
+        // English comment.
         const entryMap = Object.fromEntries(floorEntries.map(f => [f.index, f]));
         const ordered = savedFloorOrder
             .map(idx => entryMap[String(idx)])
             .filter(Boolean);
-        // 将 floorOrder 中没有的楼层追加到末尾
+        // English comment.
         const inOrder = new Set(savedFloorOrder.map(String));
         const extra = floorEntries.filter(f => !inOrder.has(String(f.index)));
         floors.value = [...ordered, ...extra];
     } else {
-        // 回退：按楼层索引数字排序
+        // English comment.
         floors.value = floorEntries.sort((a, b) => {
             const numA = parseInt(a.index);
             const numB = parseInt(b.index);
@@ -581,15 +579,14 @@ const loadFloorsFromConfig = () => {
 };
 
 /**
- * 保存楼层配置到组件
- * 同时保存 floorOrder 数组，确保自定义顺序在刷新后得以还原
+ * English comment.
  */
 const saveFloorsToConfig = async () => {
-    // 设置标志位，防止 watch 触发循环
+    // English comment.
     isLoadingFromConfig.value = true;
 
     const floorMap = {};
-    // 按当前 floors 数组顺序保存显式顺序
+    // English comment.
     const floorOrder = floors.value.map(f => f.index);
 
     floors.value.forEach((floor) => {
@@ -603,7 +600,7 @@ const saveFloorsToConfig = async () => {
     try {
         await updateComponentConfig(props.componentId, {
             floorMap,
-            floorOrder,                                          // 显式保存排列顺序
+            floorOrder,                                          // English comment.
             selectedLoaderId: selectedLoaderId.value,
             gap: config.value.gap ?? 5,
             animate: config.value.animate ?? true,
@@ -626,10 +623,10 @@ const saveFloorsToConfig = async () => {
 };
 
 /**
- * 添加楼层
+ * English comment.
  */
 const addFloor = () => {
-    // 计算新楼层索引
+    // English comment.
     let newIndex = 1;
     const existingIndices = floors.value.map((f) => parseInt(f.index)).filter((n) => !isNaN(n));
     if (existingIndices.length > 0) {
@@ -642,7 +639,7 @@ const addFloor = () => {
         animate: true
     });
 
-    // 展开新添加的楼层
+    // English comment.
     expandedFloors.value.push(floors.value.length - 1);
 
     queueOrSaveFloorConfig();
@@ -651,7 +648,7 @@ const addFloor = () => {
 };
 
 /**
- * 打开爆炸图设置弹窗
+ * English comment.
  */
 const openConfigModal = () => {
     if (!selectedLoaderId.value) {
@@ -663,7 +660,7 @@ const openConfigModal = () => {
 };
 
 /**
- * 关闭爆炸图设置弹窗
+ * English comment.
  */
 const closeConfigModal = () => {
     if (floorConfigDirty.value && !confirm('当前有未保存的楼层配置，确定关闭吗？')) {
@@ -673,7 +670,7 @@ const closeConfigModal = () => {
 };
 
 /**
- * 标记楼层配置为未保存
+ * English comment.
  */
 const markFloorConfigDirty = () => {
     floorConfigDirty.value = true;
@@ -681,7 +678,7 @@ const markFloorConfigDirty = () => {
 };
 
 /**
- * 在弹窗内记录改动，弹窗外仍即时保存
+ * English comment.
  */
 const queueOrSaveFloorConfig = () => {
     if (configModalVisible.value) {
@@ -692,7 +689,7 @@ const queueOrSaveFloorConfig = () => {
 };
 
 /**
- * 弹窗内统一保存
+ * English comment.
  */
 const saveFloorConfigFromModal = async () => {
     const saved = await saveFloorsToConfig();
@@ -705,14 +702,14 @@ const saveFloorConfigFromModal = async () => {
 };
 
 /**
- * 楼层是否处于多选状态
+ * English comment.
  */
 const isFloorMultiSelected = (floor) => {
     return selectedFloorKeys.value.includes(String(floor.index));
 };
 
 /**
- * 切换楼层多选
+ * English comment.
  */
 const toggleFloorMultiSelect = (floor) => {
     const floorKey = String(floor.index);
@@ -725,21 +722,21 @@ const toggleFloorMultiSelect = (floor) => {
 };
 
 /**
- * 全选楼层
+ * English comment.
  */
 const selectAllFloors = () => {
     selectedFloorKeys.value = floors.value.map(f => String(f.index));
 };
 
 /**
- * 清空楼层多选
+ * English comment.
  */
 const clearFloorSelection = () => {
     selectedFloorKeys.value = [];
 };
 
 /**
- * 批量删除选中楼层
+ * English comment.
  */
 const removeSelectedFloors = () => {
     if (!hasSelectedFloors.value) return;
@@ -757,7 +754,7 @@ const removeSelectedFloors = () => {
 };
 
 /**
- * 批量切换选中楼层动画
+ * English comment.
  */
 const toggleAnimateForSelectedFloors = () => {
     if (!hasSelectedFloors.value) return;
@@ -778,8 +775,7 @@ const toggleAnimateForSelectedFloors = () => {
 };
 
 /**
- * 读取模型第一级对象并生成默认楼层
- * 第一级有多少对象，就生成多少层
+ * English comment.
  */
 const applyDefaultFloorsFromFirstLevel = () => {
     if (!selectedLoaderId.value) {
@@ -809,14 +805,14 @@ const applyDefaultFloorsFromFirstLevel = () => {
 };
 
 /**
- * 删除楼层
+ * English comment.
  */
 const removeFloor = (index) => {
     const floor = floors.value[index];
     selectedFloorKeys.value = selectedFloorKeys.value.filter(key => key !== String(floor.index));
     floors.value.splice(index, 1);
 
-    // 更新展开状态：移除当前索引，并调整后续索引
+    // English comment.
     expandedFloors.value = expandedFloors.value
         .filter(i => i !== index)
         .map(i => i > index ? i - 1 : i);
@@ -826,7 +822,7 @@ const removeFloor = (index) => {
 };
 
 /**
- * 更新楼层索引
+ * English comment.
  */
 const updateFloorIndex = (index, newValue) => {
     const oldValue = String(floors.value[index].index);
@@ -839,7 +835,7 @@ const updateFloorIndex = (index, newValue) => {
 };
 
 /**
- * 更新楼层动画开关
+ * English comment.
  */
 const updateFloorAnimate = (index, value) => {
     floors.value[index].animate = value;
@@ -847,7 +843,7 @@ const updateFloorAnimate = (index, value) => {
 };
 
 /**
- * 切换楼层动画
+ * English comment.
  */
 const toggleFloorAnimate = (index) => {
     floors.value[index].animate = !floors.value[index].animate;
@@ -855,7 +851,7 @@ const toggleFloorAnimate = (index) => {
 };
 
 /**
- * 切换楼层展开
+ * English comment.
  */
 const toggleFloorExpand = (index) => {
     const expandIndex = expandedFloors.value.indexOf(index);
@@ -867,25 +863,23 @@ const toggleFloorExpand = (index) => {
 };
 
 /**
- * 移动楼层位置
- * @param {number} index - 当前索引
- * @param {number} direction - 移动方向，-1 上移，1 下移
+ * English comment.
  */
 const moveFloor = (index, direction) => {
     const newIndex = index + direction;
     if (newIndex < 0 || newIndex >= floors.value.length) return;
 
-    // 交换位置
+    // English comment.
     const temp = floors.value[index];
     floors.value[index] = floors.value[newIndex];
     floors.value[newIndex] = temp;
 
-    // 更新展开状态：如果当前楼层是展开的，保持展开状态
+    // English comment.
     const wasExpanded = expandedFloors.value.includes(index);
     const targetWasExpanded = expandedFloors.value.includes(newIndex);
 
     if (wasExpanded || targetWasExpanded) {
-        // 重新计算展开状态
+        // English comment.
         const newExpandedFloors = expandedFloors.value.filter(i => i !== index && i !== newIndex);
         if (wasExpanded) newExpandedFloors.push(newIndex);
         if (targetWasExpanded) newExpandedFloors.push(index);
@@ -898,14 +892,14 @@ const moveFloor = (index, direction) => {
 
 
 /**
- * 判断节点是否已在楼层中选中
+ * English comment.
  */
 const isNodeSelected = (floor, nodeName) => {
     return Array.isArray(floor.meshes) && floor.meshes.includes(nodeName);
 };
 
 /**
- * 切换楼层中的 Mesh / Group 选择
+ * English comment.
  */
 const toggleNodeInFloor = (floorIndex, nodeName) => {
     const floor = floors.value[floorIndex];
@@ -924,7 +918,7 @@ const toggleNodeInFloor = (floorIndex, nodeName) => {
 
 
 /**
- * 切换爆炸效果
+ * English comment.
  */
 const toggleExplode = () => {
     const instance = component.value?.instance;
@@ -943,7 +937,7 @@ const toggleExplode = () => {
 };
 
 /**
- * 选中楼层
+ * English comment.
  */
 const selectFloor = (floorIndex) => {
     const instance = component.value?.instance;
@@ -959,7 +953,7 @@ const selectFloor = (floorIndex) => {
 };
 
 /**
- * 取消选中楼层
+ * English comment.
  */
 const deselectFloor = () => {
     const instance = component.value?.instance;
@@ -970,10 +964,7 @@ const deselectFloor = () => {
 };
 
 /**
- * 获取模型可用于楼层配置的树状结构
- * 规则：
- * 1) 以模型第一级对象作为根层级
- * 2) 仅保留有名称的对象（过滤内部对象）
+ * English comment.
  */
 const getLoaderTreeNodes = (loaderId) => {
     if (loaderTreeCache.has(loaderId)) {
@@ -1026,7 +1017,7 @@ const getLoaderTreeNodes = (loaderId) => {
         return tree;
     }
 
-    // 回退：仅 Mesh 列表
+    // English comment.
     if (typeof instance.getAllMeshes === 'function') {
         const meshRows = [];
         const allMeshes = instance.getAllMeshes();
@@ -1042,12 +1033,12 @@ const getLoaderTreeNodes = (loaderId) => {
 };
 
 /**
- * 反向排列当前楼层顺序
+ * English comment.
  */
 const reverseFloorOrder = () => {
     if (floors.value.length < 2) return;
     floors.value = [...floors.value].reverse();
-    // 同步展开状态索引（反转后索引也反转）
+    // English comment.
     const len = floors.value.length;
     expandedFloors.value = expandedFloors.value.map(i => len - 1 - i);
     queueOrSaveFloorConfig();
@@ -1055,7 +1046,7 @@ const reverseFloorOrder = () => {
 };
 
 /**
- * 验证楼层配置是否有效
+ * English comment.
  */
 const isFloorValid = (floor) => {
     return floor.meshes && floor.meshes.length > 0;
@@ -1069,14 +1060,14 @@ const isFloorValid = (floor) => {
     gap: 1rem;
 }
 
-/* 操作按钮 */
+/* English comment. */
 .action-buttons {
     display: flex;
     gap: 0.5rem;
     padding: 0.75rem;
 }
 
-/* 分区 */
+/* English comment. */
 .section {
     border-top: 1px solid var(--color-border);
 }
@@ -1116,7 +1107,7 @@ const isFloorValid = (floor) => {
     color: #10b981;
 }
 
-/* 空状态 */
+/* English comment. */
 .empty-state {
     padding: 1.25rem;
     text-align: center;
@@ -1133,7 +1124,7 @@ const isFloorValid = (floor) => {
     color: var(--color-text-tertiary);
 }
 
-/* 楼层列表 */
+/* English comment. */
 .floor-list {
     max-height: 300px;
     overflow-y: auto;
@@ -1300,7 +1291,7 @@ const isFloorValid = (floor) => {
     gap: 0.25rem;
 }
 
-/* 楼层操作小按钮 */
+/* English comment. */
 .btn-floor-toggle {
     width: 1.5rem;
     height: 1.5rem;
@@ -1358,7 +1349,7 @@ const isFloorValid = (floor) => {
     color: #ef4444;
 }
 
-/* 楼层详情 */
+/* English comment. */
 .floor-details {
     padding: 0.75rem;
     background: var(--color-bg-tertiary);
@@ -1399,7 +1390,7 @@ const isFloorValid = (floor) => {
     cursor: pointer;
 }
 
-/* 验证警告 */
+/* English comment. */
 .validation-warning {
     padding: 0.5rem 0.75rem;
     background: rgba(245, 158, 11, 0.08);
@@ -1496,7 +1487,7 @@ const isFloorValid = (floor) => {
     color: var(--color-text-tertiary);
 }
 
-/* 模型选择器 */
+/* English comment. */
 .model-selector {
     margin-bottom: 0.5rem;
 }
@@ -1541,7 +1532,7 @@ const isFloorValid = (floor) => {
     font-style: italic;
 }
 
-/* 模型列表 */
+/* English comment. */
 .model-list {
     max-height: 200px;
     overflow-y: auto;
@@ -1589,7 +1580,7 @@ const isFloorValid = (floor) => {
     font-size: 0.75rem;
 }
 
-/* 选中的加载器信息 */
+/* English comment. */
 .selected-loader-info {
     display: flex;
     align-items: center;
@@ -1604,7 +1595,7 @@ const isFloorValid = (floor) => {
     color: var(--color-text-primary);
 }
 
-/* ModelLoader 配置 */
+/* English comment. */
 .loaders-config {
     display: flex;
     flex-direction: column;
@@ -1687,7 +1678,7 @@ const isFloorValid = (floor) => {
     font-style: italic;
 }
 
-/* 模型关联 */
+/* English comment. */
 .model-association {
     padding: 0.75rem;
 }
@@ -1782,7 +1773,7 @@ const isFloorValid = (floor) => {
     font-family: monospace;
 }
 
-/* ModelLoader 下拉选择器 */
+/* English comment. */
 .loader-select-wrap {
     display: flex;
     flex-direction: column;

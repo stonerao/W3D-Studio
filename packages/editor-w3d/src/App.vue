@@ -14,10 +14,10 @@ import { useToast } from './composables/useToast';
 
 const toast = useToast();
 
-// Toast 组件引用
+// English comment.
 const toastRef = ref(null);
 
-// 初始化 Toast
+// English comment.
 onMounted(() => {
     if (toastRef.value) {
         toast.setToastInstance(toastRef.value);

@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="property-editor">
-        <!-- 未选中组件 -->
+        <!-- English comment. -->
         <div v-if="!selectedComponent" class="empty-state">
             <div class="empty-icon">
                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -8,10 +8,10 @@
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
                 </svg>
             </div>
-            <div class="empty-text">请选择一个组件以编辑属性</div>
+            <div class="empty-text">{{ t('propertyEditor.selectComponent') }}</div>
         </div>
 
-        <!-- 已选中组件 -->
+        <!-- English comment. -->
         <div v-else class="property-content">
             <PropertyEditorHeader
                 :selected-component="selectedComponent"
@@ -23,7 +23,7 @@
                 @preview-camera-jump="previewCameraJump"
             />
 
-            <!-- 属性分组 -->
+            <!-- English comment. -->
             <Accordion :items="accordionItems" :default-open="['transform', 'properties']">
                 <template #transform>
                     <div class="common-transform-section">
@@ -146,7 +146,7 @@
                     </div>
                 </template>
 
-                <!-- ModelLoader 高级功能 -->
+                <!-- English comment. -->
                 <template v-if="isModelLoader" #modelloader>
                     <ModelLoaderEditor
                         v-if="selectedComponent"
@@ -175,7 +175,7 @@
                     />
                 </template>
 
-                <!-- TrafficRoadsideDeviceManager 设备管理 -->
+                <!-- English comment. -->
                 <template v-if="isTrafficRoadsideDeviceManager" #trafficdevices>
                     <TrafficRoadsideDeviceManagerEditor
                         v-if="selectedComponent"
@@ -197,7 +197,7 @@
                     />
                 </template>
 
-                <!-- TrajectoryMove 轨迹编辑 -->
+                <!-- English comment. -->
                 <template v-if="isTrajectoryMove" #trajectorymove>
                     <TrajectoryMoveEditor
                         v-if="selectedComponent"
@@ -205,7 +205,7 @@
                     />
                 </template>
 
-                <!-- ExplodedView 楼层爆炸图配置 -->
+                <!-- English comment. -->
                 <template v-if="isExplodedView" #explodedview>
                     <ExplodedViewEditor
                         v-if="selectedComponent"
@@ -229,7 +229,7 @@
             </Accordion>
         </div>
 
-        <!-- 资源选择器 -->
+        <!-- English comment. -->
         <AssetPickerModal
             v-model="showAssetPicker"
             :category="assetPickerCategory"
@@ -1188,6 +1188,7 @@ import { useEditorStore } from '../../stores/useEditorStore';
 import { useVariableStore } from '../../stores/useVariableStore';
 import { useComponent } from '../../composables/useComponent';
 import { useToast } from '../../composables/useToast';
+import { useEditorI18n } from '../../i18n';
 import { getComponent } from '../../utils/componentRegistry';
 import { Validator } from '../../utils/validator';
 import Input from '../ui/Input.vue';
@@ -1220,6 +1221,7 @@ const editorStore = useEditorStore();
 const variableStore = useVariableStore();
 const { updateComponentConfig, setComponentVisibility, applyComponentVariableBindings } = useComponent();
 const toast = useToast();
+const { t } = useEditorI18n();
 
 const selectedComponent = computed(() => componentStore.selectedComponent);
 const isEditMode = computed(() => editorStore.mode === 'edit');
@@ -1227,21 +1229,21 @@ const isTransformLockedInEdit = computed(() => {
     return isEditMode.value && selectedComponent.value?.locked === true;
 });
 
-// 调用命令时推荐使用的组件 ID（优先使用场景 config.id）
+// English comment.
 const callableComponentId = computed(() => {
     const comp = selectedComponent.value;
     if (!comp) return '';
     return comp?.config?.id || comp?.instance?.config?.id || comp?.id || '';
 });
 
-// 获取组件元数据
+// English comment.
 const componentMetadata = computed(() => {
     if (!selectedComponent.value) return null;
     const comp = getComponent(selectedComponent.value.type);
     return comp?.metadata || null;
 });
 
-// 获取组件配置
+// English comment.
 const componentConfig = computed(() => {
     return selectedComponent.value?.config || {};
 });
@@ -1341,7 +1343,7 @@ const isHiddenInBasicPanel = (field) => {
     return BASIC_HIDDEN_CONFIG_FIELDS[type]?.has(field.key) === true;
 };
 
-// 获取配置 Schema（过滤掉 transform 相关的字段和隐藏字段）
+// English comment.
 const configSchema = computed(() => {
     if (!componentMetadata.value) return [];
     const baseSchema = (componentMetadata.value.configSchema || []).filter(
@@ -1370,7 +1372,7 @@ const configSchema = computed(() => {
     }
 
     if (selectedComponent.value?.type === 'MigrationLine') {
-        // MigrationLine 固定使用 MeshLine 渲染，所有字段均展示
+        // English comment.
         const meshlineFields = new Set([
             'lines',
             'globalConfig.color',
@@ -1445,7 +1447,7 @@ const advancedRawFields = computed(() => {
     });
 });
 
-// 是否是 ModelLoader 组件
+// English comment.
 const isModelLoader = computed(() => {
     return selectedComponent.value?.type === 'ModelLoader';
 });
@@ -1458,7 +1460,7 @@ const isGeoJSONLoader = computed(() => {
     return selectedComponent.value?.type === 'GeoJSONLoader';
 });
 
-// 是否是 TrafficRoadsideDeviceManager 组件
+// English comment.
 const isTrafficRoadsideDeviceManager = computed(() => {
     return selectedComponent.value?.type === 'TrafficRoadsideDeviceManager';
 });
@@ -1471,12 +1473,12 @@ const isCameraPointManager = computed(() => {
     return selectedComponent.value?.type === 'CameraPointManager';
 });
 
-// 是否是 TrajectoryMove 组件
+// English comment.
 const isTrajectoryMove = computed(() => {
     return selectedComponent.value?.type === 'TrajectoryMove';
 });
 
-// 是否是 ExplodedView 组件
+// English comment.
 const isExplodedView = computed(() => {
     return selectedComponent.value?.type === 'ExplodedView';
 });
@@ -1489,7 +1491,7 @@ const isPostProcessing = computed(() => {
     return selectedComponent.value?.type === 'PostProcessing';
 });
 
-// 是否是 CameraTour 组件
+// English comment.
 const isCameraTour = computed(() => {
     return selectedComponent.value?.type === 'CameraTour';
 });
@@ -1731,7 +1733,7 @@ const lowcodeSummaryRows = computed(() => {
     return [];
 });
 
-// Accordion 配置
+// English comment.
 const accordionItems = computed(() => {
     const items = [
         {
@@ -1757,7 +1759,7 @@ const accordionItems = computed(() => {
         });
     }
 
-    // 如果是 ModelLoader，添加高级功能面板
+    // English comment.
     if (isModelLoader.value) {
         items.push({
             key: 'modelloader',
@@ -1784,7 +1786,7 @@ const accordionItems = computed(() => {
         });
     }
 
-    // 如果是 TrafficRoadsideDeviceManager，添加设备管理面板
+    // English comment.
     if (isTrafficRoadsideDeviceManager.value) {
         items.push({
             key: 'trafficdevices',
@@ -1809,7 +1811,7 @@ const accordionItems = computed(() => {
         });
     }
 
-    // 如果是 TrajectoryMove，添加轨迹编辑面板
+    // English comment.
     if (isTrajectoryMove.value) {
         items.push({
             key: 'trajectorymove',
@@ -1818,7 +1820,7 @@ const accordionItems = computed(() => {
         });
     }
 
-    // 如果是 ExplodedView，添加楼层爆炸图配置面板
+    // English comment.
     if (isExplodedView.value) {
         items.push({
             key: 'explodedview',
@@ -1846,7 +1848,7 @@ const accordionItems = computed(() => {
     return items;
 });
 
-// 验证单个字段
+// English comment.
 const validateField = (field, value) => {
     const schema = {
         [field.key]: {
@@ -1862,7 +1864,7 @@ const validateField = (field, value) => {
     return Validator.validate({ [field.key]: value }, schema);
 };
 
-// 更新组件名称
+// English comment.
 const updateComponentName = (name) => {
     if (selectedComponent.value) {
         componentStore.updateComponent(selectedComponent.value.id, { name });
@@ -2005,7 +2007,7 @@ const previewCameraJump = async () => {
 };
 
 /**
- * 读取点路径嵌套值，例如 'emitter.range' → config.emitter.range
+ * English comment.
  */
 const getFieldValue = (key) => {
     const parts = key.split('.');
@@ -2018,8 +2020,7 @@ const getFieldValue = (key) => {
 };
 
 /**
- * 将点路径键值对转换为嵌套对象 patch
- * 例如 ('emitter.range', 0.5) → { emitter: { range: 0.5 } }
+ * English comment.
  */
 const buildNestedPatch = (dotPath, value) => {
     const parts = dotPath.split('.');
@@ -2034,7 +2035,7 @@ const buildNestedPatch = (dotPath, value) => {
     return result;
 };
 
-// 更新配置
+// English comment.
 const updateConfig = (key, value) => {
     if (!selectedComponent.value) return;
     if (isTransformLockedInEdit.value && ['position', 'rotation', 'scale'].includes(String(key || ''))) {
@@ -2043,7 +2044,7 @@ const updateConfig = (key, value) => {
     }
 
     try {
-        // 验证配置值
+        // English comment.
         const field = configSchema.value.find((f) => f.key === key);
         if (field) {
             const validationResult = validateField(field, value);
@@ -2054,7 +2055,7 @@ const updateConfig = (key, value) => {
             }
         }
 
-        // 将点路径 key 展开为嵌套 patch，交由 updateComponentConfig 深合并
+        // English comment.
         const patch = buildNestedPatch(key, value);
         updateComponentConfig(selectedComponent.value.id, patch);
     } catch (error) {
@@ -2068,7 +2069,7 @@ const updateHeatmapSurfaceComponent = (value) => {
     updateConfig('surfaceTarget.meshName', '');
 };
 
-// 更新 Vector3 值
+// English comment.
 const updateVector3 = (key, index, value) => {
     const currentValue = getFieldValue(key) || [0, 0, 0];
     const newValue = [...currentValue];
@@ -2091,7 +2092,7 @@ const updateRange = (key, index, value) => {
     updateConfig(key, newValue);
 };
 
-// JSON 值格式化（用于显示）
+// English comment.
 const formatJsonValue = (value) => {
     if (value === undefined || value === null) return '';
     try {
@@ -2101,7 +2102,7 @@ const formatJsonValue = (value) => {
     }
 };
 
-// 更新 JSON 配置
+// English comment.
 const updateJsonConfig = (key, jsonString) => {
     if (!selectedComponent.value) return;
     try {
@@ -2146,13 +2147,13 @@ const handlePropertyEditorAction = (action) => {
     }
 };
 
-// 资源选择器状态
+// English comment.
 const showAssetPicker = ref(false);
 const assetPickerCategory = ref('model');
 const pendingAssetFieldKey = ref('');
 const pendingAssetCurrentValue = ref('');
 
-// CameraTour 视角列表弹窗状态
+// English comment.
 const showCameraViewsModal = ref(false);
 const cameraViewsDraftList = ref([]);
 const managerViewsSource = ref([]);
@@ -2418,7 +2419,7 @@ const saveCameraViewsDraft = () => {
     toast.success('视角列表已更新');
 };
 
-// MultiPathAnimation 弹窗状态
+// English comment.
 const showMultiPathModal = ref(false);
 const multiPathDraft = ref({
     paths: []
@@ -2815,7 +2816,7 @@ watch(
     }
 );
 
-// MigrationLine 线条列表弹窗状态
+// English comment.
 const showMigrationLineModal = ref(false);
 const migrationLineDraftList = ref([]);
 const migrationLineCollapsedRows = ref({});
@@ -3201,7 +3202,7 @@ watch(
     }
 );
 
-// Heatmap 弹窗状态
+// English comment.
 const showHeatmapModal = ref(false);
 const heatmapDraftPoints = ref([]);
 const heatmapDraftColors = ref([]);
@@ -3454,7 +3455,7 @@ const saveHeatmapDraft = () => {
     toast.success('热力图数据与映射已更新');
 };
 
-// AreaBlock 区域块列表弹窗状态
+// English comment.
 const showAreaBlockModal = ref(false);
 const areaBlockDraftList = ref([]);
 const areaBlockCollapsedRows = ref({});
@@ -3849,7 +3850,7 @@ watch(
     }
 );
 
-// Label3D 标签列表弹窗状态
+// English comment.
 const showLabel3DLabelsModal = ref(false);
 const label3DDraftList = ref([]);
 const label3DCollapsedRows = ref({});
@@ -4198,9 +4199,9 @@ watch(
     }
 );
 
-// 为指定字段打开资源选择器（用于 type: 'asset' 类型的字段）
+// English comment.
 const openAssetPickerForField = (field) => {
-    // 根据 field.category 设置资源类别，默认为 'model'
+    // English comment.
     assetPickerCategory.value = field.category || 'model';
     pendingAssetFieldKey.value = field.key;
     pendingAssetCurrentValue.value = String(getFieldValue(field.key) || '').trim();
@@ -4258,7 +4259,7 @@ const inferSplatFormat = (asset) => {
     return '';
 };
 
-// 处理资源选择
+// English comment.
 const handleAssetSelect = (asset) => {
     if (asset && asset.url && pendingAssetFieldKey.value) {
         if (pendingAssetFieldKey.value === 'url' && isModelLoader.value) {

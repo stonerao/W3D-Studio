@@ -1,8 +1,5 @@
 /**
- * Stats 统计信息
- *
- * @class Stats
- * @description FPS 和性能统计
+ * English comment.
  */
 export class Stats {
     constructor() {
@@ -12,7 +9,7 @@ export class Stats {
     }
 
     /**
-     * 更新统计
+     * English comment.
      */
     update() {
         this.frameCount++;
@@ -27,9 +24,7 @@ export class Stats {
     }
 
     /**
-     * 获取 FPS
-     *
-     * @returns {number} FPS
+     * English comment.
      */
     getFPS() {
         return this.fps;

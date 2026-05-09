@@ -1,19 +1,9 @@
 /**
- * IndexedDBCache IndexedDB 缓存管理器
- *
- * @class IndexedDBCache
- * @description 使用 IndexedDB 持久化缓存模型和纹理资源
+ * English comment.
  */
 export class IndexedDBCache {
     /**
-     * 创建 IndexedDB 缓存管理器实例
-     *
-     * @param {Object} config - 配置选项
-     * @param {boolean} config.enabled - 是否启用 IndexedDB 缓存
-     * @param {string} config.dbName - 数据库名称
-     * @param {string} config.storeName - 对象存储名称
-     * @param {boolean} config.debug - 调试模式
-     * @param {number} config.version - 数据库版本号
+     * English comment.
      */
     constructor(config = {}) {
         this.config = {
@@ -31,9 +21,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 初始化 IndexedDB
-     *
-     * @returns {Promise<void>}
+     * English comment.
      */
     async init() {
         if (!this.config.enabled) {
@@ -50,10 +38,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 内部初始化数据库方法
-     *
-     * @private
-     * @returns {Promise<void>}
+     * English comment.
      */
     async _initDB() {
         if (!window.indexedDB) {
@@ -63,10 +48,10 @@ export class IndexedDBCache {
         }
 
         try {
-            // 检查版本号是否变化
+            // English comment.
             await this._checkVersionChange();
 
-            // 打开数据库
+            // English comment.
             this.db = await this._openDatabase();
             this.isInitialized = true;
             this.log('IndexedDB initialized successfully');
@@ -77,10 +62,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 检查版本号变化并清空缓存
-     *
-     * @private
-     * @returns {Promise<void>}
+     * English comment.
      */
     async _checkVersionChange() {
         const storedVersion = localStorage.getItem(`${this.config.dbName}_version`);
@@ -91,15 +73,12 @@ export class IndexedDBCache {
             await this._clearDatabase();
         }
 
-        // 保存当前版本号
+        // English comment.
         localStorage.setItem(`${this.config.dbName}_version`, currentVersion);
     }
 
     /**
-     * 清空数据库
-     *
-     * @private
-     * @returns {Promise<void>}
+     * English comment.
      */
     async _clearDatabase() {
         return new Promise((resolve, reject) => {
@@ -121,10 +100,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 打开数据库
-     *
-     * @private
-     * @returns {Promise<IDBDatabase>}
+     * English comment.
      */
     _openDatabase() {
         return new Promise((resolve, reject) => {
@@ -141,13 +117,13 @@ export class IndexedDBCache {
             request.onupgradeneeded = (event) => {
                 const db = event.target.result;
 
-                // 创建对象存储（如果不存在）
+                // English comment.
                 if (!db.objectStoreNames.contains(this.config.storeName)) {
                     const objectStore = db.createObjectStore(this.config.storeName, {
                         keyPath: 'url'
                     });
 
-                    // 创建索引
+                    // English comment.
                     objectStore.createIndex('type', 'type', { unique: false });
                     objectStore.createIndex('timestamp', 'timestamp', { unique: false });
 
@@ -158,10 +134,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 获取缓存的资源
-     *
-     * @param {string} url - 资源 URL
-     * @returns {Promise<ArrayBuffer|null>} 资源数据
+     * English comment.
      */
     async get(url) {
         if (!this.config.enabled || !this.isInitialized) {
@@ -196,12 +169,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 存储资源到缓存
-     *
-     * @param {string} url - 资源 URL
-     * @param {ArrayBuffer} data - 资源数据
-     * @param {string} type - 资源类型 ('model' | 'texture')
-     * @returns {Promise<void>}
+     * English comment.
      */
     async set(url, data, type = 'unknown') {
         if (!this.config.enabled || !this.isInitialized) {
@@ -238,10 +206,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 检查资源是否在缓存中
-     *
-     * @param {string} url - 资源 URL
-     * @returns {Promise<boolean>}
+     * English comment.
      */
     async has(url) {
         if (!this.config.enabled || !this.isInitialized) {
@@ -257,10 +222,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 删除缓存的资源
-     *
-     * @param {string} url - 资源 URL
-     * @returns {Promise<void>}
+     * English comment.
      */
     async delete(url) {
         if (!this.config.enabled || !this.isInitialized) {
@@ -288,9 +250,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 清空所有缓存
-     *
-     * @returns {Promise<void>}
+     * English comment.
      */
     async clear() {
         if (!this.config.enabled || !this.isInitialized) {
@@ -318,9 +278,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 获取缓存统计信息
-     *
-     * @returns {Promise<Object>}
+     * English comment.
      */
     async getStats() {
         if (!this.config.enabled || !this.isInitialized) {
@@ -354,10 +312,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 调试日志
-     *
-     * @private
-     * @param {string} message - 日志消息
+     * English comment.
      */
     log(message) {
         if (this.config.debug) {
@@ -366,7 +321,7 @@ export class IndexedDBCache {
     }
 
     /**
-     * 关闭数据库连接
+     * English comment.
      */
     close() {
         if (this.db) {

@@ -3,7 +3,8 @@
     "version": "1.0.0",
     "private": true,
     "type": "module",
-    "description": "W3D SDK 三维低码编辑器平台",
+    "description": "W3D Studio 三维低码编辑器平台",
+    "license": "SEE LICENSE IN LICENSE",
     "main": "./src/index.js",
     "module": "./src/index.js",
     "exports": {
@@ -28,6 +29,7 @@
         "pinia": "^2.1.7",
         "three": "^0.184.0",
         "vue": "^3.4.0",
+        "vue-i18n": "^11.4.2",
         "vue-router": "^4.5.1"
     },
     "devDependencies": {

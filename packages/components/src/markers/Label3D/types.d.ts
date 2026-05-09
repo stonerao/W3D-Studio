@@ -1,5 +1,5 @@
 /**
- * Label3D 组件类型定义
+ * English comment.
  */
 
 export interface LabelPosition {

@@ -1529,7 +1529,7 @@ const parseMethodParamValue = (value) => {
         try {
             return JSON.parse(raw);
         } catch {
-            // 兼容蓝图参数里常见的 JS 对象字面量写法
+            // English comment.
         }
     }
 

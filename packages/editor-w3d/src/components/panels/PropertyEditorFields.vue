@@ -6,16 +6,16 @@
             class="property-field"
         >
             <div v-if="field.type === 'text'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <Input
                     :model-value="getFieldValue(field.key)"
                     @update:model-value="emit('update-config', field.key, $event)"
-                    :placeholder="field.placeholder"
+                    :placeholder="displayText(field.placeholder)"
                 />
             </div>
 
             <div v-else-if="field.type === 'number'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <Slider
                     :model-value="getFieldValue(field.key) ?? field.default"
                     @update:model-value="emit('update-config', field.key, $event)"
@@ -26,7 +26,7 @@
             </div>
 
             <div v-else-if="field.type === 'color'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <ColorPicker
                     :model-value="getFieldValue(field.key) ?? field.default"
                     @update:model-value="emit('update-config', field.key, $event)"
@@ -34,7 +34,7 @@
             </div>
 
             <div v-else-if="field.type === 'boolean'" class="field-group-inline">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <input
                     type="checkbox"
                     :checked="getFieldValue(field.key) ?? field.default"
@@ -44,7 +44,7 @@
             </div>
 
             <div v-else-if="field.type === 'select'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <template v-if="isCameraJump && field.key === 'meshTarget.componentId'">
                     <Select
                         :model-value="getFieldValue(field.key) ?? field.default"
@@ -98,13 +98,13 @@
                     <Select
                         :model-value="getFieldValue(field.key) ?? field.default"
                         @update:model-value="emit('update-config', field.key, $event)"
-                        :options="field.options"
+                        :options="displayOptions(field.options)"
                     />
                 </template>
             </div>
 
             <div v-else-if="field.type === 'vector3'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <div class="vector3-inputs">
                     <Input
                         type="number"
@@ -131,75 +131,75 @@
             </div>
 
             <div v-else-if="field.type === 'vector2'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <div class="vector2-inputs">
                     <Input
                         type="number"
                         :model-value="getArrayValue(field, 0)"
                         @update:model-value="emit('update-vector2', field.key, 0, $event)"
-                        :placeholder="field.labels?.[0] || 'X'"
+                        :placeholder="displayText(field.labels?.[0] || 'X')"
                         :step="field.step ?? 0.000001"
                     />
                     <Input
                         type="number"
                         :model-value="getArrayValue(field, 1)"
                         @update:model-value="emit('update-vector2', field.key, 1, $event)"
-                        :placeholder="field.labels?.[1] || 'Y'"
+                        :placeholder="displayText(field.labels?.[1] || 'Y')"
                         :step="field.step ?? 0.000001"
                     />
                 </div>
-                <div v-if="field.description" class="field-description">{{ field.description }}</div>
+                <div v-if="field.description" class="field-description">{{ displayText(field.description) }}</div>
             </div>
 
             <div v-else-if="field.type === 'colorRange'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <div class="range-inputs">
                     <div class="range-input">
-                        <span>{{ field.labels?.[0] || '起始' }}</span>
+                        <span>{{ displayText(field.labels?.[0] || '起始') }}</span>
                         <ColorPicker
                             :model-value="getArrayValue(field, 0)"
                             @update:model-value="emit('update-range', field.key, 0, $event)"
                         />
                     </div>
                     <div class="range-input">
-                        <span>{{ field.labels?.[1] || '结束' }}</span>
+                        <span>{{ displayText(field.labels?.[1] || '结束') }}</span>
                         <ColorPicker
                             :model-value="getArrayValue(field, 1)"
                             @update:model-value="emit('update-range', field.key, 1, $event)"
                         />
                     </div>
                 </div>
-                <div v-if="field.description" class="field-description">{{ field.description }}</div>
+                <div v-if="field.description" class="field-description">{{ displayText(field.description) }}</div>
             </div>
 
             <div v-else-if="field.type === 'numberRange'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <div class="vector2-inputs">
                     <Input
                         type="number"
                         :model-value="getArrayValue(field, 0)"
                         @update:model-value="emit('update-range', field.key, 0, $event)"
-                        :placeholder="field.labels?.[0] || '最小值'"
+                        :placeholder="displayText(field.labels?.[0] || '最小值')"
                         :step="field.step ?? 0.1"
                     />
                     <Input
                         type="number"
                         :model-value="getArrayValue(field, 1)"
                         @update:model-value="emit('update-range', field.key, 1, $event)"
-                        :placeholder="field.labels?.[1] || '最大值'"
+                        :placeholder="displayText(field.labels?.[1] || '最大值')"
                         :step="field.step ?? 0.1"
                     />
                 </div>
-                <div v-if="field.description" class="field-description">{{ field.description }}</div>
+                <div v-if="field.description" class="field-description">{{ displayText(field.description) }}</div>
             </div>
 
             <div v-else-if="field.type === 'asset'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <div class="input-with-button">
                     <Input
                         :model-value="getFieldValue(field.key) || ''"
                         @update:model-value="emit('update-config', field.key, $event)"
-                        :placeholder="field.placeholder || '从资源库选择或手动输入'"
+                        :placeholder="displayText(field.placeholder || '从资源库选择或手动输入')"
                     />
                     <button
                         class="btn-select-asset"
@@ -212,7 +212,7 @@
             </div>
 
             <div v-else-if="field.type === 'json'" class="field-group">
-                <label>{{ field.label }}</label>
+                <label>{{ displayText(field.label) }}</label>
                 <template v-if="shouldUseLabel3DLabelsEditor(field)">
                     <div class="camera-views-summary">
                         <span class="camera-views-summary__text">已配置 {{ (getFieldValue('labels') || []).length || 0 }} 条标签</span>
@@ -274,12 +274,12 @@
                             class="json-textarea"
                             :value="formatJsonValue(getFieldValue(field.key))"
                             @blur="emit('update-json-config', field.key, $event.target.value)"
-                            :placeholder="field.placeholder"
+                            :placeholder="displayText(field.placeholder)"
                             rows="5"
                         ></textarea>
                     </details>
                 </template>
-                <div v-if="field.description" class="field-description">{{ field.description }}</div>
+                <div v-if="field.description" class="field-description">{{ displayText(field.description) }}</div>
             </div>
         </div>
 
@@ -294,6 +294,7 @@ import Input from '../ui/Input.vue';
 import Select from '../ui/Select.vue';
 import Slider from '../ui/Slider.vue';
 import ColorPicker from '../ui/ColorPicker.vue';
+import { translateDisplayText } from '../../i18n';
 
 const props = defineProps({
     selectedComponent: {
@@ -376,6 +377,15 @@ const emit = defineEmits([
     'open-asset-picker',
     'open-editor'
 ]);
+
+const displayText = (value) => translateDisplayText(value);
+
+const displayOptions = (options = []) => (
+    (options || []).map((option) => ({
+        ...option,
+        label: displayText(option?.label)
+    }))
+);
 
 const shouldUseLabel3DLabelsEditor = (field) => {
     if (!field || field.key !== 'labels') {

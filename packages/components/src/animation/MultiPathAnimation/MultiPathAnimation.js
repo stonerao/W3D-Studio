@@ -3,28 +3,24 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 /**
- * MultiPathAnimation 多轨迹路径动画组件
- *
- * @class MultiPathAnimation
- * @extends Component
- * @description 支持加载模型并在多条路径上进行实例化渲染的动画组件
+ * English comment.
  */
 export class MultiPathAnimation extends Component {
     static defaultConfig = {
-        modelUrl: '',              // 模型文件路径
-        paths: [],                 // 路径配置数组 [{ id, data: [[x,y,z], ...] }]
-        vehiclesPerPath: 5,       // 每条路径上的车辆数量
-        scale: [1, 1, 1],         // 组件缩放（保留兼容）
-        instancedScale: [2, 2, 2], // 实例模型缩放（仅作用于 instancedMesh）
-        position: [0, 0, 0],      // 模型位置偏移
-        rotation: [0, 0, 0],      // 模型旋转偏移（弧度）
-        speed: 10,                // 移动速度 (单位/秒)
-        loop: true,               // 是否循环
-        autoStart: true,          // 自动开始
-        lookAtDirection: 'forward', // 朝向模式
-        showPath: true,           // 显示路径轨迹
-        pathColor: '#ffaa00',     // 路径颜色
-        pathWidth: 2              // 路径线宽
+        modelUrl: '',              // English comment.
+        paths: [],                 // English comment.
+        vehiclesPerPath: 5,       // English comment.
+        scale: [1, 1, 1],         // English comment.
+        instancedScale: [2, 2, 2], // English comment.
+        position: [0, 0, 0],      // English comment.
+        rotation: [0, 0, 0],      // English comment.
+        speed: 10,                // English comment.
+        loop: true,               // English comment.
+        autoStart: true,          // English comment.
+        lookAtDirection: 'forward', // English comment.
+        showPath: true,           // English comment.
+        pathColor: '#ffaa00',     // English comment.
+        pathWidth: 2              // English comment.
     };
 
     onCreate() {
@@ -44,18 +40,18 @@ export class MultiPathAnimation extends Component {
             return;
         }
 
-        // 加载模型
+        // English comment.
         await this.loadModel();
 
-        // 创建路径曲线
+        // English comment.
         this.createPaths();
 
-        // 创建路径可视化
+        // English comment.
         if (this.config.showPath) {
             this.createPathVisualization();
         }
 
-        // 初始化动画状态
+        // English comment.
         this.initAnimations();
 
         this.isReady = true;
@@ -73,7 +69,7 @@ export class MultiPathAnimation extends Component {
                 (gltf) => {
                     const model = gltf.scene;
 
-                    // 获取模型的几何体和材质
+                    // English comment.
                     let geometry = null;
                     let material = null;
 
@@ -90,7 +86,7 @@ export class MultiPathAnimation extends Component {
                         return;
                     }
 
-                    // 创建 InstancedMesh（总车辆数 = 路径数 × 每条路径车辆数）
+                    // English comment.
                     const instanceCount = this.normalizedPaths.length * this.config.vehiclesPerPath;
                     this.instancedMesh = new THREE.InstancedMesh(
                         geometry,
@@ -98,7 +94,7 @@ export class MultiPathAnimation extends Component {
                         instanceCount
                     );
 
-                    // 添加到场景
+                    // English comment.
                     this.componentScene.add(this.instancedMesh);
 
                     console.log(`MultiPathAnimation: 模型加载成功，创建 ${instanceCount} 个实例`);
@@ -128,7 +124,7 @@ export class MultiPathAnimation extends Component {
     }
 
     createPathVisualization() {
-        // 清理旧的路径线
+        // English comment.
         this.pathLines.forEach((line) => this.scene.scene.remove(line));
         this.pathLines = [];
 
@@ -154,9 +150,9 @@ export class MultiPathAnimation extends Component {
             const curve = this.curves[pathIndex];
             const totalDistance = curve.getLength();
 
-            // 为每条路径创建多个车辆
+            // English comment.
             for (let vehicleIndex = 0; vehicleIndex < this.config.vehiclesPerPath; vehicleIndex++) {
-                // 让车辆在路径上均匀分布
+                // English comment.
                 const initialProgress = vehicleIndex / this.config.vehiclesPerPath;
 
                 this.animations.push({
@@ -190,7 +186,7 @@ export class MultiPathAnimation extends Component {
             return raw;
         }
 
-        // 兼容 pathCar.json 格式：{ points: [{ position: {x,y,z} }, ...] }
+        // English comment.
         if (raw && Array.isArray(raw.points)) {
             const data = raw.points
                 .map((p) => {
@@ -207,7 +203,7 @@ export class MultiPathAnimation extends Component {
             }
         }
 
-        // 兼容单一路径对象 { id, data: [[x,y,z], ...] }
+        // English comment.
         if (raw && Array.isArray(raw.data)) {
             return [raw];
         }
@@ -262,14 +258,14 @@ export class MultiPathAnimation extends Component {
 
             anyPlaying = true;
 
-            // 计算移动距离
+            // English comment.
             const moveDistance = this.config.speed * deltaTime;
             anim.currentDistance += moveDistance;
 
-            // 计算进度
+            // English comment.
             let newProgress = anim.currentDistance / anim.totalDistance;
 
-            // 处理循环
+            // English comment.
             if (this.config.loop && newProgress >= 1) {
                 newProgress = 0;
                 anim.currentDistance = 0;
@@ -294,14 +290,14 @@ export class MultiPathAnimation extends Component {
         this.animations.forEach((anim) => {
             const point = anim.curve.getPoint(anim.progress);
 
-            // 计算位置
+            // English comment.
             const position = new THREE.Vector3(
                 point.x + this.config.position[0],
                 point.y + this.config.position[1],
                 point.z + this.config.position[2]
             );
 
-            // 计算朝向
+            // English comment.
             const baseQuaternion = new THREE.Quaternion();
             const lookAtMode = this.config.lookAtDirection || 'forward';
 
@@ -324,7 +320,7 @@ export class MultiPathAnimation extends Component {
                 }
             }
 
-            // 旋转偏移（始终生效）
+            // English comment.
             const offsetRotation = new THREE.Euler(
                 this.config.rotation[0],
                 this.config.rotation[1],
@@ -333,7 +329,7 @@ export class MultiPathAnimation extends Component {
             const offsetQuaternion = new THREE.Quaternion().setFromEuler(offsetRotation);
             const finalQuaternion = baseQuaternion.multiply(offsetQuaternion);
 
-            // 创建变换矩阵（在实例矩阵里应用缩放，避免全局缩放影响路径）
+            // English comment.
             const scaleValue = this.config.instancedScale ?? this.config.scale;
             const scaleVector = Array.isArray(scaleValue)
                 ? scaleValue
@@ -345,7 +341,7 @@ export class MultiPathAnimation extends Component {
                 new THREE.Vector3(scaleVector[0], scaleVector[1], scaleVector[2])
             );
 
-            // 设置实例的变换矩阵
+            // English comment.
             this.instancedMesh.setMatrixAt(anim.index, matrix);
         });
 
@@ -372,7 +368,7 @@ export class MultiPathAnimation extends Component {
     onDispose() {
         this.stop();
 
-        // 清理路径线
+        // English comment.
         this.pathLines.forEach((line) => {
             if (line.geometry) line.geometry.dispose();
             if (line.material) line.material.dispose();
@@ -380,7 +376,7 @@ export class MultiPathAnimation extends Component {
         });
         this.pathLines = [];
 
-        // 清理 InstancedMesh
+        // English comment.
         if (this.instancedMesh) {
             if (this.instancedMesh.geometry) {
                 this.instancedMesh.geometry.dispose();
@@ -401,27 +397,26 @@ export class MultiPathAnimation extends Component {
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     async updateConfig(newConfig) {
-        // 停止当前动画
+        // English comment.
         this.stop();
 
-        // 合并配置
+        // English comment.
         Object.assign(this.config, newConfig);
 
-        // 清理并重建
+        // English comment.
         this.onDispose();
 
-        // 重新初始化
+        // English comment.
         this.isReady = false;
         this.curves = [];
         this.pathLines = [];
         this.animations = [];
         this.normalizedPaths = [];
 
-        // 重新挂载
+        // English comment.
         await this.onMounted();
     }
 

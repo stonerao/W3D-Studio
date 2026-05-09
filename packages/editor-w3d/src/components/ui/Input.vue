@@ -121,7 +121,7 @@ const handleKeydown = (event) => {
     opacity: 0.5;
 }
 
-/* Number input 特殊处理 */
+/* English comment. */
 .input[type="number"] {
     font-family: var(--font-mono);
     font-size: var(--font-size-sm);
@@ -142,7 +142,7 @@ const handleKeydown = (event) => {
     opacity: 1;
 }
 
-/* 错误状态 */
+/* English comment. */
 .input-error {
     border-color: var(--color-error);
     background-color: var(--color-error-bg);

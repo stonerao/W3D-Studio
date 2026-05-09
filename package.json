@@ -3,15 +3,16 @@
     "version": "2.0.0",
     "private": true,
     "type": "module",
-    "description": "W3D SDK v2.0 - 新一代 WebGL 3D 渲染引擎 Monorepo",
+    "description": "W3D Studio - 开源 WebGL 三维编辑器 Monorepo",
     "author": "W3D Team",
-    "license": "MIT",
+    "license": "SEE LICENSE IN LICENSE",
     "engines": {
         "node": ">=16.0.0",
         "pnpm": ">=8.0.0"
     },
     "scripts": {
         "dev": "pnpm --filter @w3d/editor-w3d dev",
+        "dev:ai": "pnpm --filter @w3d/editor-ai-gateway dev",
         "dev:core": "pnpm --filter @w3d/core dev",
         "dev:components": "pnpm --filter @w3d/components dev",
         "dev:utils": "pnpm --filter @w3d/utils dev",

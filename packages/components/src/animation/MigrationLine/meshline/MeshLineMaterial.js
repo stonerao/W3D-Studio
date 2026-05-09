@@ -1,22 +1,13 @@
 /**
- * MeshLineMaterial - 基于 THREE.MeshLine (MIT) 适配 Three.js 0.180
- *
- * 原始项目: https://github.com/spite/THREE.MeshLine
- * 原始作者: Jaume Sanchez Elias (MIT License)
- *
- * 适配变更:
- *  - 移除 THREE.ShaderChunk 依赖，着色器完全内联
- *  - 移除 THREE.UniformsLib.fog 依赖，fog 支持内联实现
- *  - 使用 ES Module import 替代 IIFE 全局挂载
- *  - 兼容 Three.js 0.180 的 ShaderMaterial API
+ * English comment.
  */
 
 import * as THREE from 'three';
 
-// ==================== 顶点着色器 ====================
+// English comment.
 const vertexShader = /* glsl */ `
 
-// --- log depth buffer 支持 (来自 Three.js 内建 chunk) ---
+// English comment.
 #ifdef USE_LOGDEPTHBUF
     #ifdef USE_LOGDEPTHBUF_EXT
         varying float vFragDepth;
@@ -26,12 +17,12 @@ const vertexShader = /* glsl */ `
     #endif
 #endif
 
-// --- fog 支持 ---
+// English comment.
 #ifdef USE_FOG
     varying float vFogDepth;
 #endif
 
-// --- MeshLine 属性 ---
+// English comment.
 attribute vec3 previous;
 attribute vec3 next;
 attribute float side;
@@ -117,10 +108,10 @@ void main() {
 }
 `;
 
-// ==================== 片段着色器 ====================
+// English comment.
 const fragmentShader = /* glsl */ `
 
-// --- fog 支持 ---
+// English comment.
 #ifdef USE_FOG
     uniform vec3 fogColor;
     varying float vFogDepth;
@@ -162,7 +153,7 @@ void main() {
     // --- log depth buffer ---
     #ifdef USE_LOGDEPTHBUF
         #ifdef USE_LOGDEPTHBUF_EXT
-            // 0.180 兼容: 简化 logdepthbuf 处理
+            // English comment.
             float fragDepth = vFragDepth;
         #endif
     #endif
@@ -172,7 +163,7 @@ void main() {
     if (useMap == 1.0) {
         vec2 mapUV = vec2(vUV.x * repeat.x + mapOffset.x, vUV.y * repeat.y + mapOffset.y);
         vec4 texColor = texture2D(map, mapUV);
-        // 用纹理颜色替换基础色（保留 vColor.a 作为整体透明度）
+        // English comment.
         c = vec4(texColor.rgb, texColor.a * vColor.a);
     }
     if (useAlphaMap == 1.0) {
@@ -200,13 +191,13 @@ void main() {
 }
 `;
 
-// ==================== MeshLineMaterial 类 ====================
+// English comment.
 
 export class MeshLineMaterial extends THREE.ShaderMaterial {
     constructor(parameters = {}) {
         super({
             uniforms: {
-                // 核心
+                // English comment.
                 lineWidth: { value: 1 },
                 map: { value: null },
                 useMap: { value: 0 },
@@ -216,17 +207,17 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
                 opacity: { value: 1 },
                 resolution: { value: new THREE.Vector2(1, 1) },
                 sizeAttenuation: { value: 1 },
-                // 虚线
+                // English comment.
                 dashArray: { value: 0 },
                 dashOffset: { value: 0 },
                 dashRatio: { value: 0.5 },
                 useDash: { value: 0 },
-                // 可见性
+                // English comment.
                 visibility: { value: 1 },
                 alphaTest: { value: 0 },
                 repeat: { value: new THREE.Vector2(1, 1) },
                 mapOffset: { value: new THREE.Vector2(0, 0) },
-                // fog（Three.js 0.180 自动注入 fog uniforms，此处仅声明占位）
+                // English comment.
                 fogColor: { value: new THREE.Color(0x000000) },
                 fogNear: { value: 1 },
                 fogFar: { value: 2000 },
@@ -240,13 +231,13 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
         this.isMeshLineMaterial = true;
         this.type = 'MeshLineMaterial';
 
-        // fog 支持: 设置 fog = true 让 Three.js 自动注入 #define USE_FOG
+        // English comment.
         this.fog = true;
 
-        // 定义属性存取器
+        // English comment.
         this._defineProperties();
 
-        // 应用用户参数
+        // English comment.
         this.setValues(parameters);
     }
 
@@ -278,7 +269,7 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             });
         }
 
-        // color 特殊处理（THREE.Color 对象）
+        // English comment.
         Object.defineProperty(this, 'color', {
             enumerable: true,
             get() {
@@ -289,7 +280,7 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             },
         });
 
-        // resolution 特殊处理（THREE.Vector2 copy）
+        // English comment.
         Object.defineProperty(this, 'resolution', {
             enumerable: true,
             get() {
@@ -300,7 +291,7 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             },
         });
 
-        // repeat 特殊处理（THREE.Vector2 copy）
+        // English comment.
         Object.defineProperty(this, 'repeat', {
             enumerable: true,
             get() {
@@ -311,7 +302,7 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             },
         });
 
-        // mapOffset 特殊处理（THREE.Vector2 copy）
+        // English comment.
         Object.defineProperty(this, 'mapOffset', {
             enumerable: true,
             get() {
@@ -322,7 +313,7 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             },
         });
 
-        // dashArray 特殊处理（联动 useDash）
+        // English comment.
         Object.defineProperty(this, 'dashArray', {
             enumerable: true,
             get() {

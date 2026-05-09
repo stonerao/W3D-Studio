@@ -68,7 +68,7 @@ const clearAll = () => {
     toasts.value = [];
 };
 
-// 暴露方法供外部调用
+// English comment.
 defineExpose({
     addToast,
     removeToast,
@@ -107,10 +107,10 @@ defineExpose({
     border-left: 4px solid;
     transition: transform var(--duration-fast, 150ms) var(--ease-out),
                 box-shadow var(--duration-fast, 150ms) var(--ease-out);
-    /* 硬件加速 */
+    /* English comment. */
     will-change: transform, opacity;
     transform: translateZ(0);
-    /* 毛玻璃效果 */
+    /* English comment. */
     backdrop-filter: blur(12px);
 }
 
@@ -204,7 +204,7 @@ defineExpose({
     background-color: var(--color-bg-hover);
 }
 
-/* 过渡动画 - 使用新动画系统 */
+/* English comment. */
 .toast-enter-active {
     animation: toast-slide-in var(--duration-slow, 300ms) var(--ease-out-back, cubic-bezier(0.34, 1.56, 0.64, 1));
 }

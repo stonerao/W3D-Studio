@@ -1,7 +1,7 @@
 ﻿<template>
     <div class="select-wrapper">
         <label v-if="label" class="select-label">
-            {{ label }}
+            {{ displayText(label) }}
         </label>
         <select
             :value="modelValue"
@@ -10,20 +10,22 @@
             @change="handleChange"
         >
             <option v-if="placeholder" value="" disabled>
-                {{ placeholder }}
+                {{ displayText(placeholder) }}
             </option>
             <option
                 v-for="option in options"
                 :key="option.value"
                 :value="option.value"
             >
-                {{ option.label }}
+                {{ displayText(option.label) }}
             </option>
         </select>
     </div>
 </template>
 
 <script setup>
+import { translateDisplayText } from '../../i18n';
+
 const props = defineProps({
     modelValue: {
         type: [String, Number, Boolean],
@@ -50,9 +52,11 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change']);
 
+const displayText = (value) => translateDisplayText(value);
+
 const handleChange = (event) => {
     const rawValue = event.target.value;
-    // 从 options 中找到匹配项以还原原始类型（避免 DOM 将数字/布尔值转为字符串）
+    // English comment.
     const matched = props.options.find((o) => String(o.value) === rawValue);
     const value = matched ? matched.value : rawValue;
     emit('update:modelValue', value);

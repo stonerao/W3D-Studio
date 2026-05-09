@@ -2,17 +2,13 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * AreaBlock 区域块组件
- *
- * @class AreaBlock
- * @extends Component
- * @description 在三维空间中展示区域块，支持墙壁、底部和边框渲染，带云雾 Shader 效果
+ * English comment.
  */
 export class AreaBlock extends Component {
     static defaultConfig = {
-        areas: [], // 区域块数据数组
+        areas: [], // English comment.
         globalConfig: {
-            // 全局默认配置
+            // English comment.
             color: '#00ff00',
             showWall: true,
             showBottom: true,
@@ -21,7 +17,7 @@ export class AreaBlock extends Component {
             wallOpacity: 0.5,
             bottomOpacity: 0.5,
             borderWidth: 2,
-            borderColor: null, // 默认使用 color
+            borderColor: null, // English comment.
             borderGlow: true,
             animationSpeed: 1.0,
             opacity: 0.5
@@ -31,27 +27,27 @@ export class AreaBlock extends Component {
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // 区域块对象映射表 (id -> areaObject)
+        // English comment.
         this.areaBlocks = new Map();
 
-        // 区域块数据映射表 (id -> areaData)
+        // English comment.
         this.areaDataMap = new Map();
 
-        // 时钟
+        // English comment.
         this.clock = new THREE.Clock();
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 合并全局配置
+        // English comment.
         this.globalConfig = {
             ...this.constructor.defaultConfig.globalConfig,
             ...this.config.globalConfig
         };
 
-        // 创建所有区域块
+        // English comment.
         if (this.config.areas && this.config.areas.length > 0) {
             for (const areaData of this.config.areas) {
                 await this.addArea(areaData);
@@ -60,23 +56,21 @@ export class AreaBlock extends Component {
     }
 
     /**
-     * 组件更新
+     * English comment.
      */
     onUpdate() {
         const delta = this.clock.getDelta();
 
-        // 更新所有区域块
+        // English comment.
         this.areaBlocks.forEach((areaObject) => {
             this.updateAreaBlock(areaObject, delta);
         });
     }
 
-    // ==================== Shader 材质相关方法 ====================
+    // English comment.
 
     /**
-     * 创建区域块的云雾 Shader 材质
-     * @param {Object} config - 配置
-     * @returns {THREE.ShaderMaterial}
+     * English comment.
      */
     createCloudShaderMaterial(config) {
         return new THREE.ShaderMaterial({
@@ -105,14 +99,14 @@ export class AreaBlock extends Component {
                 varying vec2 vUv;
                 varying vec3 vPosition;
 
-                // 随机纹理函数
+                // English comment.
                 vec4 textureRND2D(vec2 uv) {
                     uv = floor(fract(uv) * 1e3);
                     float v = uv.x + uv.y * 1e3;
                     return fract(1e5 * sin(vec4(v * 1e-2, (v + 1.0) * 1e-2, (v + 1e3) * 1e-2, (v + 1e3 + 1.0) * 1e-2)));
                 }
 
-                // 噪声函数
+                // English comment.
                 float noise(vec2 p) {
                     vec2 f = fract(p * 1e3);
                     vec4 r = textureRND2D(p);
@@ -120,7 +114,7 @@ export class AreaBlock extends Component {
                     return mix(mix(r.x, r.y, f.x), mix(r.z, r.w, f.x), f.y);
                 }
 
-                // 云雾函数
+                // English comment.
                 float cloud(vec2 p) {
                     float v = 0.0;
                     v += noise(p * 1.0) * 0.50000;
@@ -135,12 +129,12 @@ export class AreaBlock extends Component {
                     vec2 p = vUv * 0.05 + 0.5;
                     vec3 c = vec3(0.0, 0.0, 0.2);
 
-                    // 云雾效果
+                    // English comment.
                     c.rgb += vec3(0.6, 0.6, 0.8) * cloud(p * 0.3 + time * 0.0002) * 0.6;
                     c.gbr += vec3(0.8, 0.8, 1.0) * cloud(p * 0.2 + time * 0.0002) * 0.8;
                     c.grb += vec3(1.0, 1.0, 1.0) * cloud(p * 0.1 + time * 0.0002) * 1.0;
 
-                    // 应用颜色和透明度
+                    // English comment.
                     vec3 finalColor = mix(c, color, 0.5);
 
                     gl_FragColor = vec4(finalColor, opacity);
@@ -152,13 +146,10 @@ export class AreaBlock extends Component {
         });
     }
 
-    // ==================== 区域块创建和管理方法 ====================
+    // English comment.
 
     /**
-     * 创建区域块
-     * @param {Array} points - 区域点数组
-     * @param {Object} config - 配置
-     * @returns {THREE.Group}
+     * English comment.
      */
     createAreaBlock(points, config) {
         if (!points || points.length < 3) {
@@ -169,32 +160,32 @@ export class AreaBlock extends Component {
         const group = new THREE.Group();
         group.userData.type = 'areaBlock';
 
-        // 创建 2D 形状
+        // English comment.
         const shape = new THREE.Shape();
         shape.moveTo(points[0].x, points[0].z);
         for (let i = 1; i < points.length; i++) {
             shape.lineTo(points[i].x, points[i].z);
         }
-        shape.lineTo(points[0].x, points[0].z); // 闭合
+        shape.lineTo(points[0].x, points[0].z); // English comment.
 
-        // 创建墙壁面片（如果启用）
+        // English comment.
         if (config.showWall !== false) {
             const wallHeight = config.wallHeight || 5;
 
-            // 创建墙壁几何体
+            // English comment.
             const wallGeometry = new THREE.BufferGeometry();
             const vertices = [];
             const uvs = [];
             const indices = [];
 
-            // 为每条边创建墙壁面片
+            // English comment.
             for (let i = 0; i < points.length; i++) {
                 const p1 = points[i];
                 const p2 = points[(i + 1) % points.length];
 
                 const baseIndex = i * 4;
 
-                // 四个顶点（底部两个，顶部两个）
+                // English comment.
                 vertices.push(
                     p1.x,
                     p1.y || 0,
@@ -210,13 +201,13 @@ export class AreaBlock extends Component {
                     p2.z
                 );
 
-                // UV 坐标
+                // English comment.
                 const segmentLength = Math.sqrt(
                     Math.pow(p2.x - p1.x, 2) + Math.pow(p2.z - p1.z, 2)
                 );
                 uvs.push(0, 0, segmentLength / wallHeight, 0, 0, 1, segmentLength / wallHeight, 1);
 
-                // 索引（两个三角形）
+                // English comment.
                 indices.push(
                     baseIndex,
                     baseIndex + 1,
@@ -232,7 +223,7 @@ export class AreaBlock extends Component {
             wallGeometry.setIndex(indices);
             wallGeometry.computeVertexNormals();
 
-            // 创建云雾材质
+            // English comment.
             const wallMaterial = this.createCloudShaderMaterial({
                 ...config,
                 opacity: config.wallOpacity || config.opacity || 0.5
@@ -242,25 +233,25 @@ export class AreaBlock extends Component {
             group.add(wallMesh);
         }
 
-        // 创建底部面片（如果启用）
+        // English comment.
         if (config.showBottom !== false) {
-            // 使用 ShapeGeometry 创建底部面片
+            // English comment.
             const bottomGeometry = new THREE.ShapeGeometry(shape);
 
-            // 创建云雾材质（使用底部透明度）
+            // English comment.
             const bottomMaterial = this.createCloudShaderMaterial({
                 ...config,
                 opacity: config.bottomOpacity || config.opacity || 0.5
             });
 
             const bottomMesh = new THREE.Mesh(bottomGeometry, bottomMaterial);
-            bottomMesh.rotation.x = -Math.PI / 2; // 旋转到水平面
-            bottomMesh.position.y = 0; // 确保在 y=0 平面上
+            bottomMesh.rotation.x = -Math.PI / 2; // English comment.
+            bottomMesh.position.y = 0; // English comment.
             bottomMesh.userData.isBottom = true;
             group.add(bottomMesh);
         }
 
-        // 创建边框（如果启用）
+        // English comment.
         if (config.showBorder !== false) {
             const borderGeometry = new THREE.BufferGeometry();
             const borderVertices = [];
@@ -269,7 +260,7 @@ export class AreaBlock extends Component {
                 const p = points[i];
                 borderVertices.push(p.x, p.y || 0, p.z);
             }
-            // 闭合边框
+            // English comment.
             borderVertices.push(points[0].x, points[0].y || 0, points[0].z);
 
             borderGeometry.setAttribute(
@@ -289,7 +280,7 @@ export class AreaBlock extends Component {
             group.add(borderLine);
         }
 
-        // 创建交互检测用的平面（不可见）
+        // English comment.
         const interactionGeometry = new THREE.ShapeGeometry(shape);
         const interactionMaterial = new THREE.MeshBasicMaterial({
             transparent: true,
@@ -297,7 +288,7 @@ export class AreaBlock extends Component {
             side: THREE.DoubleSide
         });
         const interactionMesh = new THREE.Mesh(interactionGeometry, interactionMaterial);
-        interactionMesh.rotation.x = -Math.PI / 2; // 旋转到水平面
+        interactionMesh.rotation.x = -Math.PI / 2; // English comment.
         interactionMesh.userData.isInteraction = true;
         interactionMesh.userData.areaId = config.id;
         group.add(interactionMesh);
@@ -306,12 +297,10 @@ export class AreaBlock extends Component {
     }
 
     /**
-     * 更新区域块动画
-     * @param {THREE.Group} areaObject - 区域块对象
-     * @param {number} delta - 时间增量
+     * English comment.
      */
     updateAreaBlock(areaObject, delta) {
-        // 更新墙壁和底部材质的时间 uniform
+        // English comment.
         areaObject.children.forEach((child) => {
             if ((child.userData.isWall || child.userData.isBottom) && child.material.uniforms) {
                 child.material.uniforms.time.value += delta;
@@ -320,8 +309,7 @@ export class AreaBlock extends Component {
     }
 
     /**
-     * 添加区域块
-     * @param {Object} areaData - 区域块数据
+     * English comment.
      */
     async addArea(areaData) {
         const { id, points, userData } = areaData;
@@ -331,44 +319,43 @@ export class AreaBlock extends Component {
             return;
         }
 
-        // 检查是否已存在
+        // English comment.
         if (this.areaBlocks.has(id)) {
             console.warn(`AreaBlock: Area with id "${id}" already exists`);
             return;
         }
 
-        // 合并配置
+        // English comment.
         const areaConfig = {
             ...this.globalConfig,
             ...areaData,
             id
         };
 
-        // 创建区域块
+        // English comment.
         const areaObject = this.createAreaBlock(points, areaConfig);
         if (!areaObject) return;
 
-        // 设置 userData
+        // English comment.
         areaObject.userData = {
             ...userData,
             areaId: id,
             isAreaBlock: true
         };
 
-        // 添加到场景
+        // English comment.
         this.add(areaObject);
 
-        // 保存到映射表
+        // English comment.
         this.areaBlocks.set(id, areaObject);
         this.areaDataMap.set(id, areaData);
 
-        // 触发事件
+        // English comment.
         this.emit('areaAdded', { areaId: id, areaData });
     }
 
     /**
-     * 移除区域块
-     * @param {string} id - 区域块 ID
+     * English comment.
      */
     removeArea(id) {
         const areaObject = this.areaBlocks.get(id);
@@ -378,7 +365,7 @@ export class AreaBlock extends Component {
             return;
         }
 
-        // 清理资源
+        // English comment.
         areaObject.children.forEach((child) => {
             if (child.geometry) {
                 child.geometry.dispose();
@@ -388,36 +375,33 @@ export class AreaBlock extends Component {
             }
         });
 
-        // 从场景移除
+        // English comment.
         this.remove(areaObject);
 
-        // 从映射表中移除
+        // English comment.
         this.areaBlocks.delete(id);
         this.areaDataMap.delete(id);
 
-        // 触发事件
+        // English comment.
         this.emit('areaRemoved', { areaId: id });
     }
 
     /**
-     * 获取区域块数据
-     * @param {string} id - 区域块 ID
-     * @returns {Object|null}
+     * English comment.
      */
     getArea(id) {
         return this.areaDataMap.get(id) || null;
     }
 
     /**
-     * 获取所有区域块数据
-     * @returns {Array}
+     * English comment.
      */
     getAllAreas() {
         return Array.from(this.areaDataMap.values());
     }
 
     /**
-     * 清除所有区域块
+     * English comment.
      */
     clearAreas() {
         const ids = Array.from(this.areaBlocks.keys());
@@ -425,16 +409,15 @@ export class AreaBlock extends Component {
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     async updateConfig(newConfig) {
-        // 更新全局配置
+        // English comment.
         if (newConfig.globalConfig) {
             Object.assign(this.globalConfig, newConfig.globalConfig);
         }
 
-        // 更新区域数据（清除并重建）
+        // English comment.
         if (newConfig.areas) {
             this.clearAreas();
             this.config.areas = newConfig.areas;
@@ -465,10 +448,10 @@ export class AreaBlock extends Component {
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 清除所有区域块
+        // English comment.
         this.clearAreas();
     }
 }

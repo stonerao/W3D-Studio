@@ -1,5 +1,5 @@
 /**
- * Label3D 组件测试
+ * English comment.
  */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
@@ -10,7 +10,7 @@ describe('Label3D', () => {
     let label3D;
 
     beforeEach(() => {
-        // 模拟场景对象
+        // English comment.
         mockScene = {
             scene: {
                 add: vi.fn()
@@ -20,7 +20,7 @@ describe('Label3D', () => {
             }
         };
 
-        // 创建 Label3D 实例
+        // English comment.
         label3D = new Label3D(mockScene, {
             name: 'test-labels',
             globalConfig: {

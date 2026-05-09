@@ -1,0 +1,16 @@
+{
+    "name": "@w3d/editor-ai-gateway",
+    "version": "1.0.0",
+    "private": true,
+    "type": "module",
+    "description": "W3D editor AI gateway for DeepSeek",
+    "license": "SEE LICENSE IN LICENSE",
+    "main": "./src/server.js",
+    "scripts": {
+        "dev": "node --watch src/server.js",
+        "start": "node src/server.js"
+    },
+    "engines": {
+        "node": ">=18.0.0"
+    }
+}

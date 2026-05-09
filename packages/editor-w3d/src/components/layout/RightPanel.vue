@@ -8,31 +8,35 @@
     <div class="right-panel panel" :style="{ width: 'calc(var(--panel-width) + 60px)' }">
         <div class="panel-content right-panel__content">
             <div class="workspace-panel-header">
-                <div class="workspace-panel-header__text">
-                    <div class="workspace-panel-header__eyebrow">检查器</div>
+                    <div class="workspace-panel-header__text">
+                    <div class="workspace-panel-header__eyebrow">{{ t('panels.inspector') }}</div>
                     <div class="workspace-panel-header__title">{{ activeTabMeta.label }}</div>
                 </div>
             </div>
 
             <div class="workspace-panel-body">
-                <!-- 属性编辑器 -->
+                <!-- English comment. -->
                 <div v-show="activeTab === 'properties'" class="h-full">
                     <PropertyEditor />
                 </div>
 
-                <!-- 事件管理 -->
+                <!-- English comment. -->
                 <div v-show="activeTab === 'events'" class="h-full">
                     <EventEditor />
                 </div>
 
-                <!-- 数据接入 -->
+                <!-- English comment. -->
                 <div v-show="activeTab === 'data'" class="h-full">
                     <DataBindingEditor />
                 </div>
 
-                <!-- 场景设置 -->
+                <!-- English comment. -->
                 <div v-show="activeTab === 'scene'" class="h-full">
                     <SceneSettings />
+                </div>
+
+                <div v-show="activeTab === 'ai'" class="h-full">
+                    <AIChatPanel />
                 </div>
 
             </div>
@@ -49,17 +53,21 @@ import PropertyEditor from '../panels/PropertyEditor.vue';
 import EventEditor from '../panels/EventEditor.vue';
 import DataBindingEditor from '../panels/DataBindingEditor.vue';
 import SceneSettings from '../panels/SceneSettings.vue';
+import AIChatPanel from '../panels/AIChatPanel.vue';
+import { useEditorI18n } from '../../i18n';
 
 const activeTab = ref('properties');
+const { t } = useEditorI18n();
 
-const tabs = [
-    { key: 'properties', label: '属性', icon: 'icon-yuanshujubianji' },
-    { key: 'events', label: '事件', icon: 'icon-guzhang1' },
-    { key: 'data', label: '数据', icon: 'icon-wanggeshezhi' },
-    { key: 'scene', label: '设置', icon: 'icon-gongzuotaimorentubiao' }
-];
+const tabs = computed(() => [
+    { key: 'properties', label: t('panels.properties'), icon: 'icon-yuanshujubianji' },
+    { key: 'events', label: t('panels.events'), icon: 'icon-guzhang1' },
+    { key: 'data', label: t('panels.data'), icon: 'icon-wanggeshezhi' },
+    { key: 'scene', label: t('panels.settings'), icon: 'icon-gongzuotaimorentubiao' },
+    { key: 'ai', label: t('panels.ai'), icon: 'icon-gongzuotaimorentubiao' }
+]);
 
-const activeTabMeta = computed(() => tabs.find((tab) => tab.key === activeTab.value) || tabs[0]);
+const activeTabMeta = computed(() => tabs.value.find((tab) => tab.key === activeTab.value) || tabs.value[0]);
 </script>
 
 <style scoped>

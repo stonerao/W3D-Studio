@@ -3,40 +3,36 @@ import * as THREE from 'three';
 import { MeshLineGeometry, MeshLineMaterial, MeshLineRaycast } from './meshline/index.js';
 
 /**
- * MigrationLine 迁移线动画组件
- *
- * @class MigrationLine
- * @extends Component
- * @description 在三维空间中展示从一个点到另一个点（或多个点）的动态迁移效果
+ * English comment.
  */
 export class MigrationLine extends Component {
     static defaultConfig = {
-        lines: [], // 迁移线数据数组
-        areas: [], // 区域块数据数组
-        markers: [], // 图片点位数据数组
+        lines: [], // English comment.
+        areas: [], // English comment.
+        markers: [], // English comment.
         globalConfig: {
-            // MeshLine 全局配置
+            // English comment.
             color: '#00ff00',
             size: 2,
-            speed: 1, // 动画流动速度（统一控制虚线/纹理流动）
-            duration: 3000, // 毫秒
+            speed: 1, // English comment.
+            duration: 3000, // English comment.
             loop: true,
             delay: 0,
             autoStart: true,
-            lineWidth: 2, // 线宽（世界单位或像素，取决于 sizeAttenuation）
-            texture: '', // 纹理图片 URL（箭头/流光等，沿线贴图）
-            alphaTexture: '', // 透明度纹理 URL
-            textureRepeat: 4, // 纹理沿线重复次数
-            dashArray: 0.1, // 虚线周期（0=实线）默认0.1产生流动点动画
-            dashRatio: 0.5, // 虚线可见比例（0=全实，0.9=小圆点效果）
-            direction: 1, // 动画方向：1=正向（起点→终点），-1=反向（终点→起点）
-            sizeAttenuation: true, // 线宽是否随距离衰减
-            segments: 200, // 曲线细分段数
+            lineWidth: 2, // English comment.
+            texture: '', // English comment.
+            alphaTexture: '', // English comment.
+            textureRepeat: 4, // English comment.
+            dashArray: 0.1, // English comment.
+            dashRatio: 0.5, // English comment.
+            direction: 1, // English comment.
+            sizeAttenuation: true, // English comment.
+            segments: 200, // English comment.
             widthMode: 'constant', // 'constant' | 'taper' | 'wave'
-            taperRatio: 0.5, // taper 模式收窄比例
-            depthTest: true, // 深度测试
+            taperRatio: 0.5, // English comment.
+            depthTest: true, // English comment.
             blending: 'normal', // 'normal' | 'additive'
-            // Area Block 特定配置
+            // English comment.
             showWall: true,
             showBottom: true,
             showBorder: true,
@@ -46,93 +42,92 @@ export class MigrationLine extends Component {
             borderWidth: 2,
             borderGlow: true,
             animationSpeed: 1.0,
-            // Image Marker 特定配置
+            // English comment.
             markerType: 'sprite', // 'sprite' | 'plane'
             markerSize: 5,
             markerOpacity: 1.0,
             markerColor: '#ffffff',
-            markerSizeAttenuation: true // Sprite 大小是否随距离衰减
+            markerSizeAttenuation: true // English comment.
         }
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // 迁移线对象映射表 (id -> lineObject)
+        // English comment.
         this.migrationLines = new Map();
 
-        // 迁移线数据映射表 (id -> lineData)
+        // English comment.
         this.lineDataMap = new Map();
 
-        // 动画状态映射表 (id -> animationState)
+        // English comment.
         this.animationStates = new Map();
 
-        // 区域块对象映射表 (id -> areaObject)
+        // English comment.
         this.areaBlocks = new Map();
 
-        // 区域块数据映射表 (id -> areaData)
+        // English comment.
         this.areaDataMap = new Map();
 
-        // 图片点位对象映射表 (id -> markerObject)
+        // English comment.
         this.imageMarkers = new Map();
 
-        // 图片点位数据映射表 (id -> markerData)
+        // English comment.
         this.markerDataMap = new Map();
 
-        // 纹理缓存 (url -> texture)
+        // English comment.
         this.textureCache = new Map();
 
-        // 纹理加载器
+        // English comment.
         this.textureLoader = new THREE.TextureLoader();
 
-        // 鼠标交互相关
+        // English comment.
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
         this.hoveredArea = null;
         this.hoveredMarker = null;
 
-        // 时钟
+        // English comment.
         this.clock = new THREE.Clock();
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 合并全局配置
+        // English comment.
         this.globalConfig = {
             ...this.constructor.defaultConfig.globalConfig,
             ...this.config.globalConfig
         };
 
-        // 创建所有迁移线
+        // English comment.
         if (this.config.lines && this.config.lines.length > 0) {
             for (const lineData of this.config.lines) {
                 await this.createLine(lineData);
             }
         }
 
-        // 创建所有区域块
+        // English comment.
         if (this.config.areas && this.config.areas.length > 0) {
             for (const areaData of this.config.areas) {
                 await this.addArea(areaData);
             }
         }
 
-        // 创建所有图片点位
+        // English comment.
         if (this.config.markers && this.config.markers.length > 0) {
             for (const markerData of this.config.markers) {
                 await this.addImageMarker(markerData);
             }
         }
 
-        // 设置鼠标交互事件监听
+        // English comment.
         this.setupMouseEvents();
     }
 
     /**
-     * 创建单条迁移线
-     * @param {Object} lineData - 迁移线数据
+     * English comment.
      */
     async createLine(lineData) {
         const { id, points, type, userData } = lineData;
@@ -142,19 +137,19 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 合并配置
+        // English comment.
         const lineConfig = {
             ...this.globalConfig,
             ...lineData
         };
 
-        // 创建路径曲线
+        // English comment.
         const curve = this.createCurve(points);
 
-        // 始终使用 MeshLine 渲染
+        // English comment.
         const lineObject = await this.createMeshLine(curve, lineConfig);
 
-        // 设置 userData
+        // English comment.
         lineObject.userData = {
             lineId: id,
             customData: userData,
@@ -163,7 +158,7 @@ export class MigrationLine extends Component {
             type: 'meshline'
         };
 
-        // 添加到场景
+        // English comment.
         this.add(lineObject);
 
         console.log('[MigrationLine] Line added to scene:', {
@@ -174,11 +169,11 @@ export class MigrationLine extends Component {
             childrenCount: this.children.length
         });
 
-        // 保存到映射表
+        // English comment.
         this.migrationLines.set(id, lineObject);
         this.lineDataMap.set(id, lineData);
 
-        // 初始化动画状态
+        // English comment.
         const animationState = {
             isPlaying: lineConfig.autoStart,
             isPaused: false,
@@ -189,9 +184,9 @@ export class MigrationLine extends Component {
         };
         this.animationStates.set(id, animationState);
 
-        // 粒子位置已在 createParticleLine() 中初始化完成，无需额外处理
+        // English comment.
 
-        // 如果自动开始，触发 start 事件
+        // English comment.
         if (lineConfig.autoStart && lineConfig.delay === 0) {
             this.emit('start', { lineId: id, userData });
             animationState.hasStarted = true;
@@ -199,9 +194,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 创建路径曲线
-     * @param {Array} points - 路径点数组
-     * @returns {THREE.CatmullRomCurve3}
+     * English comment.
      */
     createCurve(points) {
         const vectors = points.map((p) => new THREE.Vector3(p.x || 0, p.y || 0, p.z || 0));
@@ -209,8 +202,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 获取渲染器分辨率（MeshLine 材质必需）
-     * @returns {THREE.Vector2}
+     * English comment.
      */
     _getResolution() {
         if (this.scene && this.scene.renderer && this.scene.renderer.instance) {
@@ -222,40 +214,35 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 根据 widthMode 生成宽度回调函数
-     * @param {Object} config
-     * @returns {Function|null}
+     * English comment.
      */
     _getWidthCallback(config) {
         switch (config.widthMode) {
             case 'taper':
-                // 从头到尾逐渐变细
+                // English comment.
                 return (p) => 1 - p * (config.taperRatio || 0.5);
             case 'wave':
-                // 正弦波形宽度
+                // English comment.
                 return (p) => 0.5 + Math.sin(p * Math.PI * 4) * 0.5;
             case 'constant':
             default:
-                return null; // 默认宽度 1
+                return null; // English comment.
         }
     }
 
     /**
-     * 创建 MeshLine 效果的迁移线（基于三角形带，支持纹理/线宽/虚线）
-     * @param {THREE.CatmullRomCurve3} curve - 路径曲线
-     * @param {Object} config - 配置
-     * @returns {Promise<THREE.Mesh>}
+     * English comment.
      */
     async createMeshLine(curve, config) {
         const segments = config.segments || 200;
         const curvePoints = curve.getPoints(segments);
 
-        // 构建 MeshLine 几何体
+        // English comment.
         const geometry = new MeshLineGeometry();
         const widthCallback = this._getWidthCallback(config);
         geometry.setPoints(curvePoints, widthCallback);
 
-        // 准备材质参数
+        // English comment.
         const materialParams = {
             color: new THREE.Color(config.color),
             lineWidth: config.lineWidth || 2,
@@ -266,19 +253,19 @@ export class MigrationLine extends Component {
             depthWrite: false,
         };
 
-        // 混合模式
+        // English comment.
         if (config.blending === 'additive') {
             materialParams.blending = THREE.AdditiveBlending;
         }
 
-        // 虚线配置
+        // English comment.
         if (config.dashArray && config.dashArray > 0) {
             materialParams.dashArray = config.dashArray;
             materialParams.dashRatio = config.dashRatio || 0.5;
             materialParams.dashOffset = 0;
         }
 
-        // 加载纹理（如果配置了）
+        // English comment.
         if (config.texture) {
             try {
                 const texture = await this._loadLineTexture(config.texture);
@@ -292,7 +279,7 @@ export class MigrationLine extends Component {
             }
         }
 
-        // 加载透明度纹理
+        // English comment.
         if (config.alphaTexture) {
             try {
                 const alphaTexture = await this._loadLineTexture(config.alphaTexture);
@@ -310,7 +297,7 @@ export class MigrationLine extends Component {
         mesh.raycast = MeshLineRaycast;
         mesh.frustumCulled = false;
 
-        // 监听窗口 resize 更新 resolution
+        // English comment.
         const onResize = () => {
             material.resolution = this._getResolution();
         };
@@ -329,9 +316,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 加载线条纹理（带缓存）
-     * @param {string} url
-     * @returns {Promise<THREE.Texture>}
+     * English comment.
      */
     _loadLineTexture(url) {
         if (this.textureCache.has(url)) {
@@ -351,53 +336,44 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 更新 MeshLine 动画
-     * - dashOffset 持续偏移实现虚线/流光流动
-     * - 纹理 UV offset 实现纹理流动
-     * - visibility 始终为 1（全线展示，避免循环闪烁）
-     * @param {THREE.Mesh} lineObject
-     * @param {number} progress - 动画进度 0~1
-     * @param {number} delta - 帧时间增量
+     * English comment.
      */
     updateMeshLine(lineObject, progress, delta) {
         const material = lineObject.material;
         const config = lineObject.userData.config;
-        // speed 为统一流动速度参数；direction: 1=正向, -1=反向
+        // English comment.
         const speed = (config.speed !== undefined ? config.speed : 1);
-        const dir = (config.direction === -1) ? 1 : -1; // dashOffset 递减=正向流动，取反即反向
+        const dir = (config.direction === -1) ? 1 : -1; // English comment.
 
-        // 始终展示完整线条（将 visibility 固定为 1，避免循环时闪烁）
+        // English comment.
         material.uniforms.visibility.value = 1.0;
 
-        // 虚线流动动画：dir 控制流动方向
+        // English comment.
         if (material.uniforms.dashArray.value > 0) {
             material.uniforms.dashOffset.value += dir * delta * speed * 0.08;
         }
 
-        // 纹理 UV 流动动画（通过 mapOffset uniform 驱动，ShaderMaterial 不自动应用 texture.offset）
+        // English comment.
         if (material.uniforms.useMap.value === 1) {
             material.uniforms.mapOffset.value.x += dir * delta * speed * 0.15;
         }
     }
 
     /**
-     * 创建 Shader 效果的迁移线（旧版保留）
-     * @param {THREE.CatmullRomCurve3} curve - 路径曲线
-     * @param {Object} config - 配置
-     * @returns {THREE.Line}
+     * English comment.
      */
     createShaderLine(curve, config) {
         const points = curve.getPoints(100);
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-        // 添加顶点索引属性（用于 shader 动画）
+        // English comment.
         const indices = new Float32Array(points.length);
         for (let i = 0; i < points.length; i++) {
             indices[i] = i / (points.length - 1);
         }
         geometry.setAttribute('aIndex', new THREE.BufferAttribute(indices, 1));
 
-        // 创建 Shader 材质
+        // English comment.
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 uTime: { value: 0 },
@@ -428,16 +404,16 @@ export class MigrationLine extends Component {
                 varying vec3 vPosition;
 
                 void main() {
-                    // 流动效果
+                    // English comment.
                     float flow = mod(vIndex - uTime * uFlowSpeed, 1.0);
 
-                    // 渐变透明度
+                    // English comment.
                     float alpha = smoothstep(0.0, 0.1, flow) * smoothstep(1.0, 0.9, flow);
 
-                    // 发光效果
+                    // English comment.
                     float glow = pow(alpha, 0.5) * uGlowIntensity;
 
-                    // 根据进度显示
+                    // English comment.
                     if (vIndex > uProgress) {
                         discard;
                     }
@@ -455,13 +431,10 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 创建粒子效果的迁移线
-     * @param {THREE.CatmullRomCurve3} curve - 路径曲线
-     * @param {Object} config - 配置
-     * @returns {THREE.Points}
+     * English comment.
      */
     createParticleLine(curve, config) {
-        // 注意：实际粒子数量可能与配置不同（如果被手动修改）
+        // English comment.
         const particleCount = config.particleCount;
         const geometry = new THREE.BufferGeometry();
 
@@ -474,32 +447,32 @@ export class MigrationLine extends Component {
             curveLength: curve.getLength()
         });
 
-        // 初始化粒子属性数组
+        // English comment.
         const positions = new Float32Array(particleCount * 3);
         const sizes = new Float32Array(particleCount);
         const alphas = new Float32Array(particleCount);
 
-        // 将粒子均匀分布在曲线路径上
+        // English comment.
         console.log('[MigrationLine] Distributing particles along curve...');
         for (let i = 0; i < particleCount; i++) {
-            // 计算粒子在曲线上的位置参数（0 到 1）
+            // English comment.
             const t = i / (particleCount - 1);
 
-            // 获取曲线上该位置的坐标
+            // English comment.
             const point = curve.getPoint(t);
 
-            // 设置粒子位置
+            // English comment.
             positions[i * 3] = point.x;
             positions[i * 3 + 1] = point.y;
             positions[i * 3 + 2] = point.z;
 
-            // 设置粒子大小
+            // English comment.
             sizes[i] = config.particleSize;
 
-            // 初始透明度设为 0（通过 update 方法控制显示）
+            // English comment.
             alphas[i] = 0;
 
-            // 输出前 3 个粒子的位置用于调试
+            // English comment.
             if (i < 3) {
                 console.log(
                     `  Particle ${i} (t=${t.toFixed(3)}): (${point.x.toFixed(2)}, ${point.y.toFixed(2)}, ${point.z.toFixed(2)})`
@@ -524,14 +497,14 @@ export class MigrationLine extends Component {
         geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
         geometry.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
 
-        // 创建粒子材质
-        // 粒子动画结合两种方式：
-        // 1. 通过修改 alpha 属性实现拖尾效果（光波移动）
-        // 2. 通过 uTime uniform 实现粒子大小的脉动效果（呼吸动画）
+        // English comment.
+        // English comment.
+        // English comment.
+        // English comment.
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 uColor: { value: new THREE.Color(config.color) },
-                uTime: { value: 0 } // 用于基于时间的动画效果
+                uTime: { value: 0 } // English comment.
             },
             vertexShader: `
                 uniform float uTime;
@@ -543,10 +516,10 @@ export class MigrationLine extends Component {
                     vAlpha = alpha;  // 使用 alpha 属性控制透明度
                     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
 
-                    // 添加基于时间的大小脉动效果（呼吸动画）
-                    // sin 函数产生 -1 到 1 的值，转换为 0 到 1 的范围
+                    // English comment.
+                    // English comment.
                     float pulse = sin(uTime * 2.0) * 0.5 + 0.5;
-                    // 粒子大小在基础大小的 80% 到 120% 之间变化
+                    // English comment.
                     float sizeMultiplier = 0.8 + pulse * 0.4;
 
                     gl_PointSize = size * 10.0 * sizeMultiplier;
@@ -559,17 +532,17 @@ export class MigrationLine extends Component {
                 varying float vAlpha;
 
                 void main() {
-                    // 创建圆形粒子
+                    // English comment.
                     vec2 center = gl_PointCoord - vec2(0.5);
                     float dist = length(center);
                     if (dist > 0.5) discard;
 
-                    // 添加基于时间的颜色高亮效果
-                    // 粒子在原色和更亮的颜色之间渐变
+                    // English comment.
+                    // English comment.
                     float brightness = sin(uTime * 3.0) * 0.2 + 1.0; // 1.0 到 1.2 之间
                     vec3 color = uColor * brightness;
 
-                    // 从中心到边缘渐变，并应用 alpha 控制
+                    // English comment.
                     float alpha = (1.0 - dist * 2.0) * vAlpha;
                     gl_FragColor = vec4(color, alpha);
                 }
@@ -595,8 +568,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 更新动画
-     * @param {number} delta - 时间增量
+     * English comment.
      */
     onUpdate(delta) {
         const currentTime = Date.now();
@@ -608,7 +580,7 @@ export class MigrationLine extends Component {
 
             if (!state || !state.isPlaying) return;
 
-            // 处理延迟
+            // English comment.
             if (!state.hasStarted) {
                 if (currentTime >= state.startTime) {
                     state.hasStarted = true;
@@ -621,11 +593,11 @@ export class MigrationLine extends Component {
                 }
             }
 
-            // 计算进度
+            // English comment.
             const elapsed = currentTime - state.startTime;
             let progress = elapsed / config.duration;
 
-            // 处理循环
+            // English comment.
             if (progress >= 1) {
                 if (config.loop) {
                     state.startTime = currentTime;
@@ -646,7 +618,7 @@ export class MigrationLine extends Component {
 
             state.progress = progress;
 
-            // 根据类型更新动画
+            // English comment.
             switch (type) {
                 case 'meshline':
                     this.updateMeshLine(lineObject, progress, delta);
@@ -659,7 +631,7 @@ export class MigrationLine extends Component {
                     break;
             }
 
-            // 触发更新事件
+            // English comment.
             this.emit('update', {
                 lineId: id,
                 progress: progress,
@@ -667,14 +639,14 @@ export class MigrationLine extends Component {
             });
         });
 
-        // 更新所有区域块
+        // English comment.
         this.areaBlocks.forEach((areaObject) => {
             this.updateAreaBlock(areaObject, delta);
         });
     }
 
     /**
-     * 更新 Shader 线条动画
+     * English comment.
      */
     updateShaderLine(lineObject, progress, delta) {
         const material = lineObject.material;
@@ -683,7 +655,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 初始化粒子位置（固定位置，只设置一次）
+     * English comment.
      */
     initializeParticles(lineObject) {
         const geometry = lineObject.geometry;
@@ -698,19 +670,19 @@ export class MigrationLine extends Component {
             curvePoints: curve.points.length
         });
 
-        // 将粒子均匀分布在整条曲线上（固定位置）
+        // English comment.
         for (let i = 0; i < particleCount; i++) {
-            // 计算粒子在曲线上的位置（0 到 1）
+            // English comment.
             const t = i / (particleCount - 1);
 
-            // 获取粒子在曲线上的固定位置
+            // English comment.
             const point = curve.getPoint(t);
 
             positions[i * 3] = point.x;
             positions[i * 3 + 1] = point.y;
             positions[i * 3 + 2] = point.z;
 
-            // 调试：输出前 3 个粒子的位置
+            // English comment.
             if (i < 3) {
                 console.log(`  Particle ${i} (t=${t.toFixed(3)}):`, {
                     x: point.x.toFixed(2),
@@ -719,11 +691,11 @@ export class MigrationLine extends Component {
                 });
             }
 
-            // 初始透明度设为 0（通过 update 方法控制显示）
+            // English comment.
             alphas[i] = 0;
         }
 
-        // 标记 position 需要更新（仅此一次）
+        // English comment.
         geometry.attributes.position.needsUpdate = true;
         geometry.attributes.alpha.needsUpdate = true;
 
@@ -739,11 +711,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 更新粒子线条动画
-     * 实现原理：
-     * - 粒子位置固定在曲线上（0 到 1 均匀分布）
-     * - 通过透明度控制显示：只显示进度点附近的粒子（拖尾效果）
-     * - 通过 uTime 控制粒子大小和亮度的脉动效果（呼吸动画）
+     * English comment.
      */
     updateParticleLine(lineObject, progress, delta) {
         const geometry = lineObject.geometry;
@@ -752,10 +720,10 @@ export class MigrationLine extends Component {
         const particleCount = lineObject.userData.particleCount;
         const trailLength = lineObject.userData.trailLength;
 
-        // 更新基于时间的动画效果
+        // English comment.
         material.uniforms.uTime.value += delta;
 
-        // 首次调用时输出详细信息
+        // English comment.
         if (!this._particleUpdateInitialized) {
             this._particleUpdateInitialized = true;
             console.log('[MigrationLine] First particle update:', {
@@ -772,25 +740,25 @@ export class MigrationLine extends Component {
         let minVisibleIndex = -1;
         let maxVisibleIndex = -1;
 
-        // 遍历所有粒子，根据当前进度计算透明度
+        // English comment.
         for (let i = 0; i < particleCount; i++) {
-            // 计算粒子在曲线上的位置（0 到 1）
+            // English comment.
             const particleT = i / (particleCount - 1);
 
-            // 计算粒子与当前进度的距离（负值表示在进度点之前）
+            // English comment.
             let distance = progress - particleT;
 
-            // 处理循环：如果启用循环，考虑环形距离
+            // English comment.
             const config = lineObject.userData.config;
             if (config.loop && distance < -0.5) {
-                distance += 1; // 循环到下一轮
+                distance += 1; // English comment.
             }
 
-            // 计算透明度：
-            // - 如果粒子在进度点之后的 trailLength 范围内（拖尾），显示并渐变
-            // - 否则完全透明
+            // English comment.
+            // English comment.
+            // English comment.
             if (distance >= 0 && distance <= trailLength) {
-                // 在拖尾范围内，从 1（进度点）到 0（拖尾末端）渐变
+                // English comment.
                 const fadeRatio = 1 - distance / trailLength;
                 alphas[i] = fadeRatio;
                 visibleCount++;
@@ -799,12 +767,12 @@ export class MigrationLine extends Component {
                 if (minVisibleIndex === -1) minVisibleIndex = i;
                 maxVisibleIndex = i;
             } else {
-                // 不在拖尾范围内，完全透明
+                // English comment.
                 alphas[i] = 0;
             }
         }
 
-        // 调试：每 60 帧输出一次状态（约 1 秒）
+        // English comment.
         if (!this._particleDebugCounter) this._particleDebugCounter = 0;
         this._particleDebugCounter++;
         if (this._particleDebugCounter % 60 === 0) {
@@ -821,21 +789,19 @@ export class MigrationLine extends Component {
             });
         }
 
-        // 更新 GPU 缓冲区
+        // English comment.
         geometry.attributes.alpha.needsUpdate = true;
     }
 
     /**
-     * 添加迁移线
-     * @param {Object} lineData - 迁移线数据
+     * English comment.
      */
     async addLine(lineData) {
         await this.createLine(lineData);
     }
 
     /**
-     * 移除迁移线
-     * @param {string} id - 迁移线 ID
+     * English comment.
      */
     removeLine(id) {
         const lineObject = this.migrationLines.get(id);
@@ -845,7 +811,7 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 清理资源
+        // English comment.
         if (lineObject.geometry) {
             lineObject.geometry.dispose();
         }
@@ -853,23 +819,22 @@ export class MigrationLine extends Component {
             lineObject.material.dispose();
         }
 
-        // 清理 Line2 的 resize 监听
+        // English comment.
         if (lineObject.userData.onResize) {
             window.removeEventListener('resize', lineObject.userData.onResize);
         }
 
-        // 从场景移除
+        // English comment.
         this.remove(lineObject);
 
-        // 从映射表移除
+        // English comment.
         this.migrationLines.delete(id);
         this.lineDataMap.delete(id);
         this.animationStates.delete(id);
     }
 
     /**
-     * 开始播放指定迁移线动画
-     * @param {string} id - 迁移线 ID
+     * English comment.
      */
     startLine(id) {
         const state = this.animationStates.get(id);
@@ -887,8 +852,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 暂停指定迁移线动画
-     * @param {string} id - 迁移线 ID
+     * English comment.
      */
     pauseLine(id) {
         const state = this.animationStates.get(id);
@@ -904,8 +868,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 停止指定迁移线动画
-     * @param {string} id - 迁移线 ID
+     * English comment.
      */
     stopLine(id) {
         const state = this.animationStates.get(id);
@@ -922,9 +885,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 更新迁移线配置
-     * @param {string} id - 迁移线 ID
-     * @param {Object} updates - 更新数据
+     * English comment.
      */
     async updateLine(id, updates) {
         const lineObject = this.migrationLines.get(id);
@@ -935,30 +896,30 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 更新数据
+        // English comment.
         Object.assign(lineData, updates);
 
-        // 如果更新了关键属性，需要重新创建
+        // English comment.
         if (updates.points || updates.type) {
-            // 保存当前状态
+            // English comment.
             const currentState = this.animationStates.get(id);
 
-            // 移除旧的
+            // English comment.
             this.removeLine(id);
 
-            // 创建新的
+            // English comment.
             await this.createLine(lineData);
 
-            // 恢复状态
+            // English comment.
             if (currentState) {
                 this.animationStates.set(id, currentState);
             }
         } else {
-            // 只更新配置
+            // English comment.
             Object.assign(lineObject.userData.config, updates);
 
             if (lineObject.material.isMeshLineMaterial) {
-                // ==== MeshLine 材质属性实时更新 ====
+                // English comment.
                 const mat = lineObject.material;
                 if (updates.color !== undefined) {
                     mat.uniforms.color.value.set(updates.color);
@@ -988,14 +949,14 @@ export class MigrationLine extends Component {
                 if (updates.sizeAttenuation !== undefined) {
                     mat.uniforms.sizeAttenuation.value = updates.sizeAttenuation ? 1 : 0;
                 }
-                // 纹理变更需要重建（导步异步）
+                // English comment.
                 if (updates.texture !== undefined || updates.alphaTexture !== undefined || updates.textureRepeat !== undefined) {
                     this.removeLine(id);
                     await this.createLine({ ...lineData, ...updates });
                     return;
                 }
             } else {
-                // 旧版 shader/particle 线 — 只处理颜色
+                // English comment.
                 if (updates.color) {
                     const color = new THREE.Color(updates.color);
                     if (lineObject.material.uniforms && lineObject.material.uniforms.uColor) {
@@ -1009,7 +970,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 开始所有迁移线动画
+     * English comment.
      */
     startAll() {
         this.animationStates.forEach((state, id) => {
@@ -1018,7 +979,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 停止所有迁移线动画
+     * English comment.
      */
     stopAll() {
         this.animationStates.forEach((state, id) => {
@@ -1027,7 +988,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 暂停所有迁移线动画
+     * English comment.
      */
     pauseAll() {
         this.animationStates.forEach((state, id) => {
@@ -1036,45 +997,38 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 获取迁移线数据
-     * @param {string} id - 迁移线 ID
-     * @returns {Object}
+     * English comment.
      */
     getLine(id) {
         return this.lineDataMap.get(id);
     }
 
     /**
-     * 获取所有迁移线数据
-     * @returns {Array}
+     * English comment.
      */
     getAllLines() {
         return Array.from(this.lineDataMap.values());
     }
 
     /**
-     * 获取迁移线状态
-     * @param {string} id - 迁移线 ID
-     * @returns {Object}
+     * English comment.
      */
     getLineState(id) {
         return this.animationStates.get(id);
     }
 
     /**
-     * 清除所有迁移线
+     * English comment.
      */
     clearLines() {
         const ids = Array.from(this.migrationLines.keys());
         ids.forEach((id) => this.removeLine(id));
     }
 
-    // ==================== 区域块相关方法 ====================
+    // English comment.
 
     /**
-     * 创建区域块的云雾 Shader 材质
-     * @param {Object} config - 配置
-     * @returns {THREE.ShaderMaterial}
+     * English comment.
      */
     createCloudShaderMaterial(config) {
         return new THREE.ShaderMaterial({
@@ -1103,14 +1057,14 @@ export class MigrationLine extends Component {
                 varying vec2 vUv;
                 varying vec3 vPosition;
 
-                // 随机纹理函数
+                // English comment.
                 vec4 textureRND2D(vec2 uv) {
                     uv = floor(fract(uv) * 1e3);
                     float v = uv.x + uv.y * 1e3;
                     return fract(1e5 * sin(vec4(v * 1e-2, (v + 1.0) * 1e-2, (v + 1e3) * 1e-2, (v + 1e3 + 1.0) * 1e-2)));
                 }
 
-                // 噪声函数
+                // English comment.
                 float noise(vec2 p) {
                     vec2 f = fract(p * 1e3);
                     vec4 r = textureRND2D(p);
@@ -1118,7 +1072,7 @@ export class MigrationLine extends Component {
                     return mix(mix(r.x, r.y, f.x), mix(r.z, r.w, f.x), f.y);
                 }
 
-                // 云雾函数
+                // English comment.
                 float cloud(vec2 p) {
                     float v = 0.0;
                     v += noise(p * 1.0) * 0.50000;
@@ -1133,12 +1087,12 @@ export class MigrationLine extends Component {
                     vec2 p = vUv * 0.05 + 0.5;
                     vec3 c = vec3(0.0, 0.0, 0.2);
 
-                    // 云雾效果
+                    // English comment.
                     c.rgb += vec3(0.6, 0.6, 0.8) * cloud(p * 0.3 + time * 0.0002) * 0.6;
                     c.gbr += vec3(0.8, 0.8, 1.0) * cloud(p * 0.2 + time * 0.0002) * 0.8;
                     c.grb += vec3(1.0, 1.0, 1.0) * cloud(p * 0.1 + time * 0.0002) * 1.0;
 
-                    // 应用颜色和透明度
+                    // English comment.
                     vec3 finalColor = mix(c, color, 0.5);
 
                     gl_FragColor = vec4(finalColor, opacity);
@@ -1151,10 +1105,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 创建区域块
-     * @param {Array} points - 区域点数组
-     * @param {Object} config - 配置
-     * @returns {THREE.Group}
+     * English comment.
      */
     createAreaBlock(points, config) {
         if (!points || points.length < 3) {
@@ -1165,32 +1116,32 @@ export class MigrationLine extends Component {
         const group = new THREE.Group();
         group.userData.type = 'areaBlock';
 
-        // 创建 2D 形状
+        // English comment.
         const shape = new THREE.Shape();
         shape.moveTo(points[0].x, points[0].z);
         for (let i = 1; i < points.length; i++) {
             shape.lineTo(points[i].x, points[i].z);
         }
-        shape.lineTo(points[0].x, points[0].z); // 闭合
+        shape.lineTo(points[0].x, points[0].z); // English comment.
 
-        // 创建墙壁面片（如果启用）
+        // English comment.
         if (config.showWall !== false) {
             const wallHeight = config.wallHeight || 5;
 
-            // 创建墙壁几何体
+            // English comment.
             const wallGeometry = new THREE.BufferGeometry();
             const vertices = [];
             const uvs = [];
             const indices = [];
 
-            // 为每条边创建墙壁面片
+            // English comment.
             for (let i = 0; i < points.length; i++) {
                 const p1 = points[i];
                 const p2 = points[(i + 1) % points.length];
 
                 const baseIndex = i * 4;
 
-                // 四个顶点（底部两个，顶部两个）
+                // English comment.
                 vertices.push(
                     p1.x,
                     p1.y || 0,
@@ -1206,13 +1157,13 @@ export class MigrationLine extends Component {
                     p2.z
                 );
 
-                // UV 坐标
+                // English comment.
                 const segmentLength = Math.sqrt(
                     Math.pow(p2.x - p1.x, 2) + Math.pow(p2.z - p1.z, 2)
                 );
                 uvs.push(0, 0, segmentLength / wallHeight, 0, 0, 1, segmentLength / wallHeight, 1);
 
-                // 索引（两个三角形）
+                // English comment.
                 indices.push(
                     baseIndex,
                     baseIndex + 1,
@@ -1228,7 +1179,7 @@ export class MigrationLine extends Component {
             wallGeometry.setIndex(indices);
             wallGeometry.computeVertexNormals();
 
-            // 创建云雾材质
+            // English comment.
             const wallMaterial = this.createCloudShaderMaterial({
                 ...config,
                 opacity: config.wallOpacity || config.opacity || 0.5
@@ -1238,25 +1189,25 @@ export class MigrationLine extends Component {
             group.add(wallMesh);
         }
 
-        // 创建底部面片（如果启用）
+        // English comment.
         if (config.showBottom !== false) {
-            // 使用 ShapeGeometry 创建底部面片
+            // English comment.
             const bottomGeometry = new THREE.ShapeGeometry(shape);
 
-            // 创建云雾材质（使用底部透明度）
+            // English comment.
             const bottomMaterial = this.createCloudShaderMaterial({
                 ...config,
                 opacity: config.bottomOpacity || config.opacity || 0.5
             });
 
             const bottomMesh = new THREE.Mesh(bottomGeometry, bottomMaterial);
-            bottomMesh.rotation.x = -Math.PI / 2; // 旋转到水平面
-            bottomMesh.position.y = 0; // 确保在 y=0 平面上
+            bottomMesh.rotation.x = -Math.PI / 2; // English comment.
+            bottomMesh.position.y = 0; // English comment.
             bottomMesh.userData.isBottom = true;
             group.add(bottomMesh);
         }
 
-        // 创建边框（如果启用）
+        // English comment.
         if (config.showBorder !== false) {
             const borderGeometry = new THREE.BufferGeometry();
             const borderVertices = [];
@@ -1265,7 +1216,7 @@ export class MigrationLine extends Component {
                 const p = points[i];
                 borderVertices.push(p.x, p.y || 0, p.z);
             }
-            // 闭合边框
+            // English comment.
             borderVertices.push(points[0].x, points[0].y || 0, points[0].z);
 
             borderGeometry.setAttribute(
@@ -1285,7 +1236,7 @@ export class MigrationLine extends Component {
             group.add(borderLine);
         }
 
-        // 创建交互检测用的平面（不可见）
+        // English comment.
         const interactionGeometry = new THREE.ShapeGeometry(shape);
         const interactionMaterial = new THREE.MeshBasicMaterial({
             transparent: true,
@@ -1293,7 +1244,7 @@ export class MigrationLine extends Component {
             side: THREE.DoubleSide
         });
         const interactionMesh = new THREE.Mesh(interactionGeometry, interactionMaterial);
-        interactionMesh.rotation.x = -Math.PI / 2; // 旋转到水平面
+        interactionMesh.rotation.x = -Math.PI / 2; // English comment.
         interactionMesh.userData.isInteraction = true;
         interactionMesh.userData.areaId = config.id;
         group.add(interactionMesh);
@@ -1302,12 +1253,10 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 更新区域块动画
-     * @param {THREE.Group} areaObject - 区域块对象
-     * @param {number} delta - 时间增量
+     * English comment.
      */
     updateAreaBlock(areaObject, delta) {
-        // 更新墙壁和底部材质的时间 uniform
+        // English comment.
         areaObject.children.forEach((child) => {
             if ((child.userData.isWall || child.userData.isBottom) && child.material.uniforms) {
                 child.material.uniforms.time.value += delta;
@@ -1316,8 +1265,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 添加区域块
-     * @param {Object} areaData - 区域块数据
+     * English comment.
      */
     async addArea(areaData) {
         const { id, points, userData } = areaData;
@@ -1327,18 +1275,18 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 合并配置
+        // English comment.
         const areaConfig = {
             ...this.config.globalConfig,
             ...areaData,
             id
         };
 
-        // 创建区域块
+        // English comment.
         const areaObject = this.createAreaBlock(points, areaConfig);
         if (!areaObject) return;
 
-        // 设置 userData
+        // English comment.
         areaObject.userData = {
             ...areaObject.userData,
             id,
@@ -1346,20 +1294,19 @@ export class MigrationLine extends Component {
             customData: userData
         };
 
-        // 添加到场景
+        // English comment.
         this.add(areaObject);
 
-        // 保存到映射表
+        // English comment.
         this.areaBlocks.set(id, areaObject);
         this.areaDataMap.set(id, areaData);
 
-        // 触发添加事件
+        // English comment.
         this.emit('areaAdded', { areaId: id, areaData });
     }
 
     /**
-     * 移除区域块
-     * @param {string} id - 区域块 ID
+     * English comment.
      */
     removeArea(id) {
         const areaObject = this.areaBlocks.get(id);
@@ -1369,10 +1316,10 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 从场景中移除
+        // English comment.
         this.remove(areaObject);
 
-        // 清理几何体和材质
+        // English comment.
         areaObject.children.forEach((child) => {
             if (child.geometry) child.geometry.dispose();
             if (child.material) {
@@ -1384,58 +1331,53 @@ export class MigrationLine extends Component {
             }
         });
 
-        // 从映射表中移除
+        // English comment.
         this.areaBlocks.delete(id);
         this.areaDataMap.delete(id);
 
-        // 触发移除事件
+        // English comment.
         this.emit('areaRemoved', { areaId: id });
     }
 
     /**
-     * 获取区域块数据
-     * @param {string} id - 区域块 ID
-     * @returns {Object}
+     * English comment.
      */
     getArea(id) {
         return this.areaDataMap.get(id);
     }
 
     /**
-     * 获取所有区域块数据
-     * @returns {Array}
+     * English comment.
      */
     getAllAreas() {
         return Array.from(this.areaDataMap.values());
     }
 
     /**
-     * 清除所有区域块
+     * English comment.
      */
     clearAreas() {
         const ids = Array.from(this.areaBlocks.keys());
         ids.forEach((id) => this.removeArea(id));
     }
 
-    // ==================== 图片点位相关方法 ====================
+    // English comment.
 
     /**
-     * 加载纹理（带缓存）
-     * @param {string} url - 图片 URL
-     * @returns {Promise<THREE.Texture>}
+     * English comment.
      */
     async loadTexture(url) {
-        // 检查缓存
+        // English comment.
         if (this.textureCache.has(url)) {
             return this.textureCache.get(url);
         }
 
-        // 加载纹理
+        // English comment.
         return new Promise((resolve, reject) => {
             this.textureLoader.load(
                 url,
                 (texture) => {
-                    // 缓存纹理
+                    // English comment.
                     this.textureCache.set(url, texture);
                     resolve(texture);
                 },
@@ -1449,9 +1391,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 创建图片点位
-     * @param {Object} markerData - 点位数据
-     * @returns {Promise<THREE.Object3D>}
+     * English comment.
      */
     async createImageMarker(markerData) {
         const {
@@ -1469,13 +1409,13 @@ export class MigrationLine extends Component {
             userData = {}
         } = markerData;
 
-        // 验证必需参数
+        // English comment.
         if (!id || !position || !images) {
             console.warn('ImageMarker: id, position, and images are required');
             return null;
         }
 
-        // 确定当前状态
+        // English comment.
         const currentState = state || Object.keys(images)[0];
         const imageUrl = images[currentState];
 
@@ -1484,7 +1424,7 @@ export class MigrationLine extends Component {
             return null;
         }
 
-        // 加载纹理
+        // English comment.
         let texture;
         try {
             texture = await this.loadTexture(imageUrl);
@@ -1496,7 +1436,7 @@ export class MigrationLine extends Component {
         let markerObject;
 
         if (type === 'sprite') {
-            // 创建 Sprite
+            // English comment.
             const material = new THREE.SpriteMaterial({
                 map: texture,
                 color: new THREE.Color(color),
@@ -1508,7 +1448,7 @@ export class MigrationLine extends Component {
             markerObject = new THREE.Sprite(material);
             markerObject.scale.set(size * scale.x, size * scale.y, 1);
         } else if (type === 'plane') {
-            // 创建 Plane
+            // English comment.
             const geometry = new THREE.PlaneGeometry(size * scale.x, size * scale.y);
             const material = new THREE.MeshBasicMaterial({
                 map: texture,
@@ -1521,7 +1461,7 @@ export class MigrationLine extends Component {
             markerObject = new THREE.Mesh(geometry, material);
         } else {
             console.warn(`ImageMarker: Unknown type "${type}", using sprite`);
-            // 默认使用 sprite
+            // English comment.
             const material = new THREE.SpriteMaterial({
                 map: texture,
                 color: new THREE.Color(color),
@@ -1534,14 +1474,14 @@ export class MigrationLine extends Component {
             markerObject.scale.set(size * scale.x, size * scale.y, 1);
         }
 
-        // 设置位置
+        // English comment.
         markerObject.position.set(
             position.x + offset.x,
             position.y + offset.y,
             position.z + offset.z
         );
 
-        // 存储用户数据
+        // English comment.
         markerObject.userData = {
             ...userData,
             markerId: id,
@@ -1553,8 +1493,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 添加图片点位
-     * @param {Object} markerData - 点位数据
+     * English comment.
      */
     async addImageMarker(markerData) {
         const { id } = markerData;
@@ -1564,40 +1503,38 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 检查是否已存在
+        // English comment.
         if (this.imageMarkers.has(id)) {
             console.warn(`ImageMarker: Marker with id "${id}" already exists`);
             return;
         }
 
-        // 创建点位对象
+        // English comment.
         const markerObject = await this.createImageMarker(markerData);
 
         if (!markerObject) {
             return;
         }
 
-        // 添加到场景
+        // English comment.
         this.add(markerObject);
 
-        // 保存到映射表
+        // English comment.
         this.imageMarkers.set(id, markerObject);
 
-        // 保存点位数据
+        // English comment.
         const currentState = markerData.state || Object.keys(markerData.images)[0];
         this.markerDataMap.set(id, {
             ...markerData,
             state: currentState
         });
 
-        // 触发添加事件
+        // English comment.
         this.emit('markerAdded', { markerId: id, markerData });
     }
 
     /**
-     * 更新点位状态（切换图片）
-     * @param {string} id - 点位 ID
-     * @param {string} newState - 新状态
+     * English comment.
      */
     async updateMarkerState(id, newState) {
         const markerObject = this.imageMarkers.get(id);
@@ -1616,7 +1553,7 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 加载新纹理
+        // English comment.
         let texture;
         try {
             texture = await this.loadTexture(imageUrl);
@@ -1625,20 +1562,20 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 更新材质纹理
+        // English comment.
         if (markerObject.material) {
             markerObject.material.map = texture;
             markerObject.material.needsUpdate = true;
         }
 
-        // 保存旧状态
+        // English comment.
         const oldState = markerData.state;
 
-        // 更新数据
+        // English comment.
         markerData.state = newState;
         this.markerDataMap.set(id, markerData);
 
-        // 触发状态切换事件
+        // English comment.
         this.emit('markerStateChanged', {
             markerId: id,
             oldState,
@@ -1647,9 +1584,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 更新点位配置
-     * @param {string} id - 点位 ID
-     * @param {Object} updates - 更新的配置
+     * English comment.
      */
     updateMarker(id, updates) {
         const markerObject = this.imageMarkers.get(id);
@@ -1660,7 +1595,7 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 更新大小
+        // English comment.
         if (updates.size !== undefined) {
             const scale = markerData.scale || { x: 1, y: 1 };
             if (markerObject.isSprite) {
@@ -1676,19 +1611,19 @@ export class MigrationLine extends Component {
             markerData.size = updates.size;
         }
 
-        // 更新颜色
+        // English comment.
         if (updates.color !== undefined && markerObject.material) {
             markerObject.material.color.set(updates.color);
             markerData.color = updates.color;
         }
 
-        // 更新透明度
+        // English comment.
         if (updates.opacity !== undefined && markerObject.material) {
             markerObject.material.opacity = updates.opacity;
             markerData.opacity = updates.opacity;
         }
 
-        // 更新位置偏移
+        // English comment.
         if (updates.offset !== undefined) {
             const position = markerData.position;
             const offset = { ...markerData.offset, ...updates.offset };
@@ -1700,7 +1635,7 @@ export class MigrationLine extends Component {
             markerData.offset = offset;
         }
 
-        // 更新缩放
+        // English comment.
         if (updates.scale !== undefined) {
             const size = markerData.size || 5;
             const scale = { ...markerData.scale, ...updates.scale };
@@ -1713,13 +1648,12 @@ export class MigrationLine extends Component {
             markerData.scale = scale;
         }
 
-        // 更新数据
+        // English comment.
         this.markerDataMap.set(id, markerData);
     }
 
     /**
-     * 移除图片点位
-     * @param {string} id - 点位 ID
+     * English comment.
      */
     removeMarker(id) {
         const markerObject = this.imageMarkers.get(id);
@@ -1729,10 +1663,10 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // 从场景中移除
+        // English comment.
         this.remove(markerObject);
 
-        // 释放资源
+        // English comment.
         if (markerObject.geometry) {
             markerObject.geometry.dispose();
         }
@@ -1740,43 +1674,40 @@ export class MigrationLine extends Component {
             markerObject.material.dispose();
         }
 
-        // 从映射表中移除
+        // English comment.
         this.imageMarkers.delete(id);
         this.markerDataMap.delete(id);
 
-        // 触发移除事件
+        // English comment.
         this.emit('markerRemoved', { markerId: id });
     }
 
     /**
-     * 获取点位数据
-     * @param {string} id - 点位 ID
-     * @returns {Object}
+     * English comment.
      */
     getMarker(id) {
         return this.markerDataMap.get(id);
     }
 
     /**
-     * 获取所有点位数据
-     * @returns {Array}
+     * English comment.
      */
     getAllMarkers() {
         return Array.from(this.markerDataMap.values());
     }
 
     /**
-     * 清除所有点位
+     * English comment.
      */
     clearMarkers() {
         const ids = Array.from(this.imageMarkers.keys());
         ids.forEach((id) => this.removeMarker(id));
     }
 
-    // ==================== 鼠标交互相关方法 ====================
+    // English comment.
 
     /**
-     * 设置鼠标事件监听
+     * English comment.
      */
     setupMouseEvents() {
         if (!this.scene || !this.scene.renderer || !this.scene.renderer.domElement) {
@@ -1788,11 +1719,11 @@ export class MigrationLine extends Component {
 
         const domElement = this.scene.renderer.domElement;
 
-        // 绑定事件处理函数（保存引用以便后续移除）
+        // English comment.
         this.onMouseClick = this.handleMouseClick.bind(this);
         this.onMouseMove = this.handleMouseMove.bind(this);
 
-        // 添加事件监听
+        // English comment.
         domElement.addEventListener('click', this.onMouseClick);
         domElement.addEventListener('mousemove', this.onMouseMove);
 
@@ -1800,7 +1731,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 移除鼠标事件监听
+     * English comment.
      */
     removeMouseEvents() {
         if (!this.scene || !this.scene.renderer || !this.scene.renderer.domElement) {
@@ -1809,7 +1740,7 @@ export class MigrationLine extends Component {
 
         const domElement = this.scene.renderer.domElement;
 
-        // 移除事件监听
+        // English comment.
         if (this.onMouseClick) {
             domElement.removeEventListener('click', this.onMouseClick);
         }
@@ -1819,8 +1750,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 处理鼠标点击事件
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     handleMouseClick(event) {
         console.log('[MigrationLine] handleMouseClick called', {
@@ -1838,7 +1768,7 @@ export class MigrationLine extends Component {
 
             console.log('[MigrationLine] Emitting markerClick event:', { markerId, markerData });
 
-            // 触发点击事件
+            // English comment.
             this.emit('markerClick', {
                 markerId,
                 markerData,
@@ -1850,19 +1780,18 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 处理鼠标移动事件
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     handleMouseMove(event) {
         const intersectedMarker = this.getIntersectedMarker(event);
 
-        // 检查鼠标移入/移出
+        // English comment.
         if (intersectedMarker) {
             const markerId = intersectedMarker.userData.markerId;
 
-            // 如果是新的点位，触发移入事件
+            // English comment.
             if (!this.hoveredMarker || this.hoveredMarker.userData.markerId !== markerId) {
-                // 先触发之前点位的移出事件
+                // English comment.
                 if (this.hoveredMarker) {
                     const prevMarkerId = this.hoveredMarker.userData.markerId;
                     const prevMarkerData = this.markerDataMap.get(prevMarkerId);
@@ -1874,7 +1803,7 @@ export class MigrationLine extends Component {
                     });
                 }
 
-                // 触发新点位的移入事件
+                // English comment.
                 const markerData = this.markerDataMap.get(markerId);
                 this.emit('markerMouseEnter', {
                     markerId,
@@ -1885,7 +1814,7 @@ export class MigrationLine extends Component {
                 this.hoveredMarker = intersectedMarker;
             }
         } else {
-            // 鼠标不在任何点位上，触发移出事件
+            // English comment.
             if (this.hoveredMarker) {
                 const markerId = this.hoveredMarker.userData.markerId;
                 const markerData = this.markerDataMap.get(markerId);
@@ -1902,9 +1831,7 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 获取鼠标位置相交的点位
-     * @param {MouseEvent} event - 鼠标事件
-     * @returns {THREE.Object3D|null}
+     * English comment.
      */
     getIntersectedMarker(event) {
         if (!this.scene || !this.scene.camera || !this.scene.renderer) {
@@ -1915,7 +1842,7 @@ export class MigrationLine extends Component {
         const domElement = this.scene.renderer.domElement;
         const rect = domElement.getBoundingClientRect();
 
-        // 计算鼠标在 Three.js 坐标系中的位置（-1 到 1）
+        // English comment.
         this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
@@ -1925,10 +1852,10 @@ export class MigrationLine extends Component {
             rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
         });
 
-        // 更新射线
+        // English comment.
         this.raycaster.setFromCamera(this.mouse, this.scene.camera);
 
-        // 获取所有点位对象
+        // English comment.
         const markerObjects = Array.from(this.imageMarkers.values());
 
         console.log('[MigrationLine] Marker objects count:', markerObjects.length);
@@ -1939,7 +1866,7 @@ export class MigrationLine extends Component {
             return null;
         }
 
-        // 检测相交
+        // English comment.
         const intersects = this.raycaster.intersectObjects(markerObjects, false);
 
         console.log('[MigrationLine] Intersects:', intersects);
@@ -1953,22 +1880,22 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 移除鼠标事件监听
+        // English comment.
         this.removeMouseEvents();
 
-        // 清除所有迁移线
+        // English comment.
         this.clearLines();
 
-        // 清除所有区域块
+        // English comment.
         this.clearAreas();
 
-        // 清除所有图片点位
+        // English comment.
         this.clearMarkers();
 
-        // 清除纹理缓存
+        // English comment.
         this.textureCache.forEach((texture) => {
             texture.dispose();
         });
@@ -1976,19 +1903,18 @@ export class MigrationLine extends Component {
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     async updateConfig(newConfig) {
-        // 更新全局配置
+        // English comment.
         if (newConfig.globalConfig) {
             Object.assign(this.globalConfig, newConfig.globalConfig);
 
-            // 如果只有 globalConfig 变化而没有 lines 内容，即时更新已存在线条的材质属性
+            // English comment.
             if (!newConfig.lines) {
                 const gc = newConfig.globalConfig;
 
-                // 纹理相关变化需要重建线条（涉及异步加载）
+                // English comment.
                 const needsRebuild = gc.texture !== undefined
                     || gc.alphaTexture !== undefined
                     || gc.textureRepeat !== undefined
@@ -2006,7 +1932,7 @@ export class MigrationLine extends Component {
                     this.migrationLines.forEach((lineObject) => {
                         if (!lineObject.material.isMeshLineMaterial) return;
                         const mat = lineObject.material;
-                        // 将 globalConfig 变更合并到 userData.config
+                        // English comment.
                         Object.assign(lineObject.userData.config, gc);
                         if (gc.color !== undefined) mat.uniforms.color.value.set(gc.color);
                         if (gc.lineWidth !== undefined) mat.uniforms.lineWidth.value = gc.lineWidth;
@@ -2016,7 +1942,7 @@ export class MigrationLine extends Component {
                         }
                         if (gc.dashRatio !== undefined) mat.uniforms.dashRatio.value = gc.dashRatio;
                         if (gc.opacity !== undefined) mat.uniforms.opacity.value = gc.opacity;
-                        // direction 存储在 userData.config 中，updateMeshLine 每帧读取，无需额外处理
+                        // English comment.
                         if (gc.depthTest !== undefined) mat.depthTest = gc.depthTest;
                         if (gc.sizeAttenuation !== undefined) {
                             mat.uniforms.sizeAttenuation.value = gc.sizeAttenuation ? 1 : 0;
@@ -2032,7 +1958,7 @@ export class MigrationLine extends Component {
             }
         }
 
-        // 更新迁移线数据
+        // English comment.
         if (newConfig.lines) {
             this.clearLines();
             this.config.lines = newConfig.lines;
@@ -2041,7 +1967,7 @@ export class MigrationLine extends Component {
             }
         }
 
-        // 更新区域数据
+        // English comment.
         if (newConfig.areas) {
             this.clearAreas();
             this.config.areas = newConfig.areas;
@@ -2050,7 +1976,7 @@ export class MigrationLine extends Component {
             }
         }
 
-        // 更新图片点位数据
+        // English comment.
         if (newConfig.markers) {
             this.clearMarkers();
             this.config.markers = newConfig.markers;

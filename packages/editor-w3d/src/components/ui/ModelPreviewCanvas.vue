@@ -77,7 +77,7 @@ const MODEL_NAME = '__model_preview_model__';
 const previewMaterialCache = new WeakMap();
 
 /**
- * 格式化文件大小
+ * English comment.
  */
 const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 B';
@@ -129,12 +129,12 @@ const replacePreviewMaterials = (root) => {
 };
 
 /**
- * 初始化 SDK 预览场景
+ * English comment.
  */
 const initScene = async () => {
     if (!canvasContainer.value) return;
 
-    // 清理旧实例
+    // English comment.
     cleanup();
 
     scene = new Scene(canvasContainer.value, {
@@ -165,12 +165,12 @@ const initScene = async () => {
         }
     });
 
-    // 注册编辑器组件（ModelLoader/GridHelper 等）
+    // English comment.
     registerAllComponents(scene);
 
     await scene.init();
 
-    // 灯光/阴影/背景
+    // English comment.
     scene.renderer?.enableShadow?.(true);
     scene.light?.updateConfig?.({
         ambient: { color: '#ffffff', intensity: 0.6 },
@@ -184,7 +184,7 @@ const initScene = async () => {
 
     await applyBackground(scene, { type: 'color', color: '#1a1a1a' }, '__preview_hdr__');
 
-    // 网格辅助
+    // English comment.
     try {
         await scene.add('GridHelper', {
             name: GRID_NAME,
@@ -195,7 +195,7 @@ const initScene = async () => {
         });
     } catch {}
 
-    // 监听容器尺寸变化，手动触发 resize（避免全局 window resize 监听）
+    // English comment.
     if (typeof ResizeObserver !== 'undefined') {
         resizeObserver = new ResizeObserver(() => {
             try {
@@ -223,7 +223,7 @@ const ensureScene = async () => {
 };
 
 /**
- * 加载模型
+ * English comment.
  */
 const loadModel = async (file) => {
     if (!file) return;
@@ -236,7 +236,7 @@ const loadModel = async (file) => {
         await ensureScene();
         if (!scene) throw new Error('Preview scene not initialized');
 
-        // 创建 URL
+        // English comment.
         if (currentObjectUrl) {
             try {
                 URL.revokeObjectURL(currentObjectUrl);
@@ -244,7 +244,7 @@ const loadModel = async (file) => {
         }
         currentObjectUrl = URL.createObjectURL(file);
 
-        // 确保 ModelLoader 存在并挂好事件
+        // English comment.
         if (!modelLoader) {
             modelLoader = await scene.add('ModelLoader', {
                 name: MODEL_NAME,
@@ -266,7 +266,7 @@ const loadModel = async (file) => {
             });
 
             modelLoader.on('loadComplete', () => {
-                // 由外层在 updateConfig 后统一处理（避免重复触发）
+                // English comment.
             });
 
             modelLoader.on('loadError', ({ error: loadError }) => {
@@ -277,10 +277,10 @@ const loadModel = async (file) => {
             });
         }
 
-        // 从文件名提取扩展名作为格式提示，供 Blob URL 场景使用
+        // English comment.
         const fileExt = (file.name.split('.').pop() || '').toLowerCase();
 
-        // 触发加载（ModelLoader.updateConfig 会在 URL 变化时重新加载）
+        // English comment.
         await modelLoader.updateConfig({
             url: currentObjectUrl,
             format: fileExt,
@@ -292,7 +292,7 @@ const loadModel = async (file) => {
             modelLoader?.componentScene || modelLoader?.model || modelLoader?.group || modelLoader?.object3d
         );
 
-        // 若加载过程中触发了 loadError，则直接退出
+        // English comment.
         if (error.value) {
             return;
         }
@@ -300,7 +300,7 @@ const loadModel = async (file) => {
         const stats = modelLoader.getGeometryStats?.() || null;
         const bounds = modelLoader.getBounds?.() || null;
 
-        // 适配相机到模型
+        // English comment.
         if (bounds) {
             const [cx, cy, cz] = bounds.center;
             const maxDim = bounds.maxDim || 1;
@@ -327,7 +327,7 @@ const loadModel = async (file) => {
         loading.value = false;
         emit('loaded', modelInfo.value);
 
-        // 等待一帧渲染后生成缩略图
+        // English comment.
         setTimeout(() => {
             generateThumbnail();
         }, 100);
@@ -340,27 +340,27 @@ const loadModel = async (file) => {
 };
 
 /**
- * 生成缩略图
+ * English comment.
  */
 const generateThumbnail = () => {
     if (!scene?.renderer) return;
 
     try {
-        // 渲染一帧（确保画面已刷新）
+        // English comment.
         scene.renderOnce?.();
 
-        // 获取 canvas 数据
+        // English comment.
         const canvas = scene.renderer.getDomElement?.();
         if (!canvas) return;
 
-        // 创建缩略图 canvas
+        // English comment.
         const thumbnailSize = 512;
         const thumbnailCanvas = document.createElement('canvas');
         thumbnailCanvas.width = thumbnailSize;
         thumbnailCanvas.height = thumbnailSize;
         const ctx = thumbnailCanvas.getContext('2d');
 
-        // 绘制到缩略图 canvas（保持宽高比）
+        // English comment.
         const aspectRatio = canvas.width / canvas.height;
         let drawWidth = thumbnailSize;
         let drawHeight = thumbnailSize;
@@ -375,14 +375,14 @@ const generateThumbnail = () => {
             offsetX = (thumbnailSize - drawWidth) / 2;
         }
 
-        // 填充背景色
+        // English comment.
         ctx.fillStyle = '#1a1a1a';
         ctx.fillRect(0, 0, thumbnailSize, thumbnailSize);
 
-        // 绘制模型
+        // English comment.
         ctx.drawImage(canvas, offsetX, offsetY, drawWidth, drawHeight);
 
-        // 转换为 Blob
+        // English comment.
         thumbnailCanvas.toBlob((blob) => {
             if (blob) {
                 emit('thumbnail-generated', blob);
@@ -395,7 +395,7 @@ const generateThumbnail = () => {
 };
 
 /**
- * 清理资源
+ * English comment.
  */
 const cleanup = () => {
     initPromise = null;
@@ -423,7 +423,7 @@ const cleanup = () => {
     }
 };
 
-// 监听文件变化（不使用 immediate，避免在 DOM 挂载前触发）
+// English comment.
 watch(() => props.file, (newFile) => {
     if (newFile) {
         loadModel(newFile);
@@ -431,11 +431,11 @@ watch(() => props.file, (newFile) => {
 });
 
 onMounted(async () => {
-    // 等待 DOM 完全渲染，确保 canvasContainer.value 已可用
+    // English comment.
     await nextTick();
-    // 预先初始化场景（即使暂无文件也建立好预览环境）
+    // English comment.
     await ensureScene();
-    // 若挂载时已有文件，则立即触发加载
+    // English comment.
     if (props.file) {
         loadModel(props.file);
     }

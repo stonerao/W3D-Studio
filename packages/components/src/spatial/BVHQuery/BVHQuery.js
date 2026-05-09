@@ -12,85 +12,62 @@ import {
     StaticGeometryGenerator
 } from 'three-mesh-bvh';
 
-// 扩展 Three.js 原型以支持 BVH 加速
-// 参考 three-mesh-bvh 示例的实现方式
+// English comment.
+// English comment.
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 
 /**
- * BVHQuery 空间查询组件
- *
- * @class BVHQuery
- * @extends Component
- * @description 基于 BVH（Bounding Volume Hierarchy）的高性能空间查询组件
- *
- * 功能特性：
- * - 射线投射加速（10-100倍性能提升）
- * - 最近点查询（点到网格、几何体到几何体）
- * - 碰撞检测（球体、包围盒、几何体）
- * - 形状投射（自定义查询）
- * - 距离查询
- * - BVH 可视化调试
- *
- * @example
- * const bvhQuery = await scene.add('BVHQuery', {
- *     mesh: targetMesh,
- *     bvhOptions: {
- *         strategy: 'SAH',
- *         maxDepth: 40,
- *         maxLeafTris: 10
- *     },
- *     showHelper: true
- * });
+ * English comment.
  */
 export class BVHQuery extends Component {
     static defaultConfig = {
-        // 目标网格或几何体
+        // English comment.
         mesh: null,
         geometry: null,
 
-        // BVH 构建选项
+        // English comment.
         bvhOptions: {
             strategy: 'SAH', // 'CENTER' | 'AVERAGE' | 'SAH'
-            maxDepth: 40, // 最大深度
-            maxLeafTris: 10, // 叶节点最大三角形数
-            verbose: false, // 打印警告
-            setBoundingBox: true // 设置包围盒
+            maxDepth: 40, // English comment.
+            maxLeafTris: 10, // English comment.
+            verbose: false, // English comment.
+            setBoundingBox: true // English comment.
         },
 
-        // 是否异步生成（使用 WebWorker）
+        // English comment.
         async: false,
 
-        // 是否自动更新（当几何体变化时）
+        // English comment.
         autoUpdate: false,
 
-        // 是否启用可视化辅助器
+        // English comment.
         showHelper: false,
         helperOptions: {
-            depth: 10, // 显示深度
-            color: 0x00ff88, // 颜色
-            opacity: 0.3, // 透明度
-            displayEdges: true // 显示边缘
+            depth: 10, // English comment.
+            color: 0x00ff88, // English comment.
+            opacity: 0.3, // English comment.
+            displayEdges: true // English comment.
         }
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // BVH 实例
+        // English comment.
         this.bvh = null;
 
-        // 目标网格
+        // English comment.
         this.targetMesh = null;
 
-        // 目标几何体
+        // English comment.
         this.targetGeometry = null;
 
-        // BVH 可视化辅助器
+        // English comment.
         this.helper = null;
 
-        // 查询统计信息
+        // English comment.
         this.stats = {
             lastQueryTime: 0,
             totalQueries: 0,
@@ -99,32 +76,30 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 初始化目标几何体
+        // English comment.
         if (!this._initializeGeometry()) {
             return;
         }
 
-        // 验证几何体
+        // English comment.
         if (!this._validateGeometry()) {
             return;
         }
 
-        // 生成 BVH
+        // English comment.
         await this.generateBVH();
 
-        // 创建可视化辅助器
+        // English comment.
         if (this.config.showHelper) {
             this.createHelper();
         }
     }
 
     /**
-     * 初始化目标几何体
-     * @private
-     * @returns {boolean} 是否成功初始化
+     * English comment.
      */
     _initializeGeometry() {
         if (this.config.mesh) {
@@ -141,9 +116,7 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 验证几何体
-     * @private
-     * @returns {boolean} 是否验证通过
+     * English comment.
      */
     _validateGeometry() {
         if (!this.targetGeometry) {
@@ -163,17 +136,16 @@ export class BVHQuery extends Component {
         return true;
     }
 
-    // ==================== BVH 生成和管理 ====================
+    // English comment.
 
     /**
-     * 生成 BVH
-     * @returns {Promise<void>}
+     * English comment.
      */
     async generateBVH() {
         const startTime = Date.now();
 
         try {
-            // 创建 BVH（异步生成暂未实现）
+            // English comment.
             if (this.config.async) {
                 console.warn(
                     'BVHQuery: Async generation not implemented yet, using sync generation'
@@ -182,12 +154,12 @@ export class BVHQuery extends Component {
 
             this.bvh = new MeshBVH(this.targetGeometry, this.config.bvhOptions);
 
-            // 将 BVH 附加到几何体（参考 bvh.js 示例）
+            // English comment.
             this.targetGeometry.boundsTree = this.bvh;
 
             const buildTime = Date.now() - startTime;
 
-            // 触发事件
+            // English comment.
             this.emit('bvhGenerated', {
                 buildTime,
                 stats: this.getStats()
@@ -200,8 +172,7 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 重新调整 BVH（顶点更新后）
-     * @param {Array|null} nodeIndices - 需要更新的节点索引
+     * English comment.
      */
     refit(nodeIndices = null) {
         if (!this.bvh) {
@@ -219,44 +190,35 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 重新生成 BVH
-     * @param {Object|null} options - 新的 BVH 选项
-     * @returns {Promise<void>}
+     * English comment.
      */
     async rebuild(options = null) {
-        // 清理现有 BVH
+        // English comment.
         if (this.bvh) {
             this.bvh = null;
             this.targetGeometry.boundsTree = null;
         }
 
-        // 更新配置
+        // English comment.
         if (options) {
             this.config.bvhOptions = { ...this.config.bvhOptions, ...options };
         }
 
-        // 重新生成
+        // English comment.
         await this.generateBVH();
     }
 
-    // ==================== 射线投射 ====================
+    // English comment.
 
     /**
-     * 射线投射
-     * @param {THREE.Ray} ray - 射线
-     * @param {Object} options - 选项
-     * @param {number} [options.side=THREE.FrontSide] - 面的方向
-     * @param {boolean} [options.firstHitOnly=false] - 是否只返回最近的交点
-     * @param {number} [options.near=0] - 最近距离
-     * @param {number} [options.far=Infinity] - 最远距离
-     * @returns {Array|Object|null} 交点数组或单个交点
+     * English comment.
      */
     raycast(ray, options = {}) {
         if (!this._checkBVH()) {
             return options.firstHitOnly ? null : [];
         }
 
-        // 验证 ray 参数
+        // English comment.
         if (!ray || !ray.origin || !ray.direction) {
             console.error('BVHQuery: Invalid ray parameter. Expected THREE.Ray object.');
             return options.firstHitOnly ? null : [];
@@ -275,15 +237,10 @@ export class BVHQuery extends Component {
         );
     }
 
-    // ==================== 最近点查询 ====================
+    // English comment.
 
     /**
-     * 查找最近点
-     * @param {THREE.Vector3} point - 查询点
-     * @param {Object} options - 选项
-     * @param {number} [options.minThreshold=0] - 最小距离阈值
-     * @param {number} [options.maxThreshold=Infinity] - 最大距离阈值
-     * @returns {Object|null} 最近点信息
+     * English comment.
      */
     closestPointToPoint(point, options = {}) {
         if (!this._checkBVH()) {
@@ -299,13 +256,7 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 查找几何体间最近点
-     * @param {THREE.BufferGeometry} geometry - 目标几何体
-     * @param {THREE.Matrix4} geometryToBvh - 几何体到 BVH 的变换矩阵
-     * @param {Object} options - 选项
-     * @param {number} [options.minThreshold=0] - 最小距离阈值
-     * @param {number} [options.maxThreshold=Infinity] - 最大距离阈值
-     * @returns {Object|null} 最近点信息
+     * English comment.
      */
     closestPointToGeometry(geometry, geometryToBvh, options = {}) {
         if (!this._checkBVH()) {
@@ -329,12 +280,10 @@ export class BVHQuery extends Component {
         });
     }
 
-    // ==================== 碰撞检测 ====================
+    // English comment.
 
     /**
-     * 球体碰撞检测
-     * @param {THREE.Sphere} sphere - 球体
-     * @returns {Boolean} 是否相交
+     * English comment.
      */
     intersectsSphere(sphere) {
         if (!this._checkBVH()) {
@@ -351,10 +300,7 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 包围盒碰撞检测
-     * @param {THREE.Box3} box - 包围盒
-     * @param {THREE.Matrix4} boxToBvh - 包围盒到 BVH 的变换矩阵
-     * @returns {Boolean} 是否相交
+     * English comment.
      */
     intersectsBox(box, boxToBvh = null) {
         if (!this._checkBVH()) {
@@ -371,10 +317,7 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 几何体碰撞检测
-     * @param {THREE.BufferGeometry} geometry - 几何体
-     * @param {THREE.Matrix4} geometryToBvh - 几何体到 BVH 的变换矩阵
-     * @returns {Boolean} 是否相交
+     * English comment.
      */
     intersectsGeometry(geometry, geometryToBvh) {
         if (!this._checkBVH()) {
@@ -390,12 +333,10 @@ export class BVHQuery extends Component {
         );
     }
 
-    // ==================== 形状投射 ====================
+    // English comment.
 
     /**
-     * 形状投射（高级查询）
-     * @param {Object} callbacks - 回调函数
-     * @returns {*} 查询结果
+     * English comment.
      */
     shapecast(callbacks) {
         if (!this._checkBVH()) {
@@ -407,12 +348,10 @@ export class BVHQuery extends Component {
         });
     }
 
-    // ==================== 距离查询 ====================
+    // English comment.
 
     /**
-     * 计算点到网格的距离
-     * @param {THREE.Vector3} point - 查询点
-     * @returns {Number} 距离
+     * English comment.
      */
     distanceToPoint(point) {
         const result = this.closestPointToPoint(point);
@@ -420,20 +359,17 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 计算几何体间的距离
-     * @param {THREE.BufferGeometry} geometry - 几何体
-     * @param {THREE.Matrix4} geometryToBvh - 几何体到 BVH 的变换矩阵
-     * @returns {Number} 距离
+     * English comment.
      */
     distanceToGeometry(geometry, geometryToBvh) {
         const result = this.closestPointToGeometry(geometry, geometryToBvh);
         return result && result.target1 ? result.target1.distance : Infinity;
     }
 
-    // ==================== 辅助功能 ====================
+    // English comment.
 
     /**
-     * 创建可视化辅助器
+     * English comment.
      */
     createHelper() {
         if (!this.bvh) {
@@ -460,7 +396,7 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 更新辅助器
+     * English comment.
      */
     updateHelper(options = {}) {
         if (!this.helper) {
@@ -484,7 +420,7 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 显示/隐藏辅助器
+     * English comment.
      */
     toggleHelper(visible = null) {
         if (!this.helper) {
@@ -502,14 +438,14 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 获取 BVH 统计信息
+     * English comment.
      */
     getStats() {
         if (!this.bvh) {
             return null;
         }
 
-        // 计算节点数量
+        // English comment.
         let nodeCount = 0;
         let leafNodeCount = 0;
 
@@ -534,9 +470,7 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 更新查询统计信息
-     * @private
-     * @param {number} queryTime - 查询时间（毫秒）
+     * English comment.
      */
     _updateStats(queryTime) {
         this.stats.lastQueryTime = queryTime;
@@ -546,12 +480,10 @@ export class BVHQuery extends Component {
             this.stats.totalQueries;
     }
 
-    // ==================== 私有辅助方法 ====================
+    // English comment.
 
     /**
-     * 检查 BVH 是否已生成
-     * @private
-     * @returns {boolean}
+     * English comment.
      */
     _checkBVH() {
         if (!this.bvh) {
@@ -562,12 +494,7 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 执行查询并处理错误
-     * @private
-     * @param {string} queryType - 查询类型
-     * @param {Function} queryFn - 查询函数
-     * @param {*} defaultValue - 默认返回值
-     * @returns {*} 查询结果
+     * English comment.
      */
     _executeQuery(queryType, queryFn, defaultValue = null) {
         const startTime = Date.now();
@@ -593,22 +520,22 @@ export class BVHQuery extends Component {
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDestroy() {
-        // 清理 BVH
+        // English comment.
         if (this.bvh) {
             this.bvh = null;
         }
 
-        // 清理辅助器
+        // English comment.
         if (this.helper) {
             this.remove(this.helper);
             this.helper.dispose();
             this.helper = null;
         }
 
-        // 清理几何体上的 BVH
+        // English comment.
         if (this.targetGeometry && this.targetGeometry.boundsTree) {
             this.targetGeometry.boundsTree = null;
         }

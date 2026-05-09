@@ -3,108 +3,72 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 
 /**
- * ModelEffect 模型效果组件
- *
- * @class ModelEffect
- * @extends Component
- * @description 用于封装常见的模型视觉效果，包括材质变色、矩阵动画、透明度渐变、发光效果等
- *
- * @example
- * const modelEffect = await scene.add('ModelEffect', {
- *     name: 'model-effect',
- *     target: mesh,
- *     effect: 'color',
- *     targetColor: 0xFF0000,
- *     duration: 1000,
- *     autoReverse: false,
- *     loop: false
- * });
- *
- * // 应用颜色效果
- * modelEffect.applyEffect({
- *     effect: 'color',
- *     targetColor: 0xFF0000,
- *     duration: 1000
- * });
- *
- * // 应用变换效果
- * modelEffect.applyEffect({
- *     effect: 'transform',
- *     targetPosition: { x: 0, y: 10, z: 0 },
- *     duration: 2000
- * });
- *
- * // 停止当前效果
- * modelEffect.stopEffect();
- *
- * // 重置到初始状态
- * modelEffect.resetEffect();
+ * English comment.
  */
 export class ModelEffect extends Component {
     /**
-     * 默认配置
+     * English comment.
      */
     static defaultConfig = {
-        target: null,                           // 目标 Mesh 或 Mesh 数组
-        effect: 'color',                        // 效果类型：'color' | 'transform' | 'opacity' | 'emissive'
-        duration: 1000,                         // 动画时长（毫秒）
-        easing: TWEEN.Easing.Quadratic.Out,    // 缓动函数
-        // 颜色效果参数
-        targetColor: 0xFF0000,                  // 目标颜色
-        // 变换效果参数
-        targetPosition: null,                   // 目标位置 { x, y, z }
-        targetRotation: null,                   // 目标旋转 { x, y, z }
-        targetScale: null,                      // 目标缩放 { x, y, z }
-        // 透明度效果参数
-        targetOpacity: 1.0,                     // 目标透明度 (0-1)
-        // 发光效果参数
-        targetEmissive: null,                   // 目标发光颜色
-        emissiveIntensity: 1.0,                 // 发光强度
-        // 通用参数
-        autoReverse: false,                     // 是否自动反向播放
-        loop: false,                            // 是否循环
-        onComplete: null                        // 完成回调
+        target: null,                           // English comment.
+        effect: 'color',                        // English comment.
+        duration: 1000,                         // English comment.
+        easing: TWEEN.Easing.Quadratic.Out,    // English comment.
+        // English comment.
+        targetColor: 0xFF0000,                  // English comment.
+        // English comment.
+        targetPosition: null,                   // English comment.
+        targetRotation: null,                   // English comment.
+        targetScale: null,                      // English comment.
+        // English comment.
+        targetOpacity: 1.0,                     // English comment.
+        // English comment.
+        targetEmissive: null,                   // English comment.
+        emissiveIntensity: 1.0,                 // English comment.
+        // English comment.
+        autoReverse: false,                     // English comment.
+        loop: false,                            // English comment.
+        onComplete: null                        // English comment.
     };
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     onMounted() {
-        // 目标对象数组
+        // English comment.
         this.targets = [];
 
-        // 原始状态存储
+        // English comment.
         this.originalStates = new Map();
 
-        // 当前活动的动画
+        // English comment.
         this.activeTweens = [];
 
-        // Tween 动画组
+        // English comment.
         this.tweenGroup = new TWEEN.Group();
 
-        // 效果状态
+        // English comment.
         this.effectState = {
             isPlaying: false,
             currentEffect: null
         };
 
-        // 初始化目标对象
+        // English comment.
         this.initializeTargets();
 
-        // 如果配置了自动应用效果
+        // English comment.
         if (this.config.target && this.config.effect) {
             this.applyEffect(this.config);
         }
 
-        // 监听烘焙光照配置更新事件（通过场景事件系统）
+        // English comment.
         if (this.scene?.eventSystem) {
             this.scene.eventSystem.on('bakedLightingConfigUpdated', this.handleBakedLightingUpdate.bind(this));
         }
     }
 
     /**
-     * 处理烘焙光照更新
-     * @param {Object} data - 事件数据，包含 config 和 modelLoaderId
+     * English comment.
      */
     handleBakedLightingUpdate(data) {
         const config = data?.config || data;
@@ -112,15 +76,15 @@ export class ModelEffect extends Component {
         // eslint-disable-next-line no-console
         console.log('[ModelEffect] 接收到烘焙光照配置更新:', config);
 
-        // 如果当前有目标对象，重新保存其状态
+        // English comment.
         if (this.targets.length > 0) {
-            // 延迟执行，确保烘焙光照已应用到材质
+            // English comment.
             // eslint-disable-next-line no-undef
             setTimeout(() => {
-                // 清空旧状态
+                // English comment.
                 this.originalStates.clear();
 
-                // 重新保存状态（包含更新后的烘焙光照材质）
+                // English comment.
                 this.targets.forEach((obj) => {
                     this.saveOriginalState(obj);
                 });
@@ -128,14 +92,14 @@ export class ModelEffect extends Component {
                 // eslint-disable-next-line no-console
                 console.log('[ModelEffect] 已更新材质状态以反映烘焙光照变化');
 
-                // 触发自定义事件
+                // English comment.
                 this.emit('materialStateUpdated', { bakedLightingConfig: config });
-            }, 100); // 延迟100ms确保材质已更新
+            }, 100); // English comment.
         }
     }
 
     /**
-     * 初始化目标对象
+     * English comment.
      */
     initializeTargets() {
         const { target } = this.config;
@@ -145,10 +109,10 @@ export class ModelEffect extends Component {
             return;
         }
 
-        // 将目标转换为数组
+        // English comment.
         this.targets = Array.isArray(target) ? target : [target];
 
-        // 保存每个目标的原始状态
+        // English comment.
         this.targets.forEach((obj) => {
             this.saveOriginalState(obj);
         });
@@ -157,8 +121,7 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 保存对象的原始状态
-     * @param {THREE.Object3D} obj - 目标对象
+     * English comment.
      */
     saveOriginalState(obj) {
         if (!obj) return;
@@ -170,7 +133,7 @@ export class ModelEffect extends Component {
             materials: []
         };
 
-        // 遍历保存所有 Mesh 的材质状态
+        // English comment.
         obj.traverse((child) => {
             if (child.isMesh && child.material) {
                 const materials = Array.isArray(child.material) ? child.material : [child.material];
@@ -191,15 +154,13 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 应用效果
-     * @param {Object} options - 效果选项
-     * @returns {Promise<void>}
+     * English comment.
      */
     applyEffect(options = {}) {
-        // 停止当前正在进行的效果
+        // English comment.
         this.stopEffect();
 
-        // 合并配置
+        // English comment.
         const effectConfig = {
             ...this.config,
             ...options
@@ -209,7 +170,7 @@ export class ModelEffect extends Component {
         this.effectState.currentEffect = effect;
         this.effectState.isPlaying = true;
 
-        // 根据效果类型调用相应方法
+        // English comment.
         switch (effect) {
         case 'color':
             return this.applyColorEffect(effectConfig);
@@ -226,9 +187,7 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 应用颜色效果
-     * @param {Object} config - 配置参数
-     * @returns {Promise<void>}
+     * English comment.
      */
     applyColorEffect(config) {
         const { targetColor, duration, easing, autoReverse, loop, onComplete } = config;
@@ -267,7 +226,7 @@ export class ModelEffect extends Component {
                                     resolve();
                                 });
 
-                            // 如果启用自动反向
+                            // English comment.
                             if (autoReverse) {
                                 tween.yoyo(true).repeat(loop ? Infinity : 1);
                             } else if (loop) {
@@ -284,9 +243,7 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 应用变换效果
-     * @param {Object} config - 配置参数
-     * @returns {Promise<void>}
+     * English comment.
      */
     applyTransformEffect(config) {
         const {
@@ -346,7 +303,7 @@ export class ModelEffect extends Component {
                         }
                     });
 
-                // 如果启用自动反向
+                // English comment.
                 if (autoReverse) {
                     tween.yoyo(true).repeat(loop ? Infinity : 1);
                 } else if (loop) {
@@ -360,9 +317,7 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 应用透明度效果
-     * @param {Object} config - 配置参数
-     * @returns {Promise<void>}
+     * English comment.
      */
     applyOpacityEffect(config) {
         const { targetOpacity, duration, easing, autoReverse, loop, onComplete } = config;
@@ -377,7 +332,7 @@ export class ModelEffect extends Component {
                             const startOpacity = { value: mat.opacity !== undefined ? mat.opacity : 1.0 };
                             const endOpacity = { value: targetOpacity };
 
-                            // 如果目标透明度小于1，需要启用透明
+                            // English comment.
                             if (targetOpacity < 1.0) {
                                 mat.transparent = true;
                             }
@@ -394,7 +349,7 @@ export class ModelEffect extends Component {
                                     resolve();
                                 });
 
-                            // 如果启用自动反向
+                            // English comment.
                             if (autoReverse) {
                                 tween.yoyo(true).repeat(loop ? Infinity : 1);
                             } else if (loop) {
@@ -411,9 +366,7 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 应用发光效果
-     * @param {Object} config - 配置参数
-     * @returns {Promise<void>}
+     * English comment.
      */
     applyEmissiveEffect(config) {
         const {
@@ -470,7 +423,7 @@ export class ModelEffect extends Component {
                                     resolve();
                                 });
 
-                            // 如果启用自动反向
+                            // English comment.
                             if (autoReverse) {
                                 tween.yoyo(true).repeat(loop ? Infinity : 1);
                             } else if (loop) {
@@ -487,10 +440,10 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 停止当前效果
+     * English comment.
      */
     stopEffect() {
-        // 停止所有活动的 Tween
+        // English comment.
         this.activeTweens.forEach((tween) => {
             tween.stop();
         });
@@ -503,23 +456,23 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 重置到初始状态
+     * English comment.
      */
     resetEffect() {
-        // 停止当前效果
+        // English comment.
         this.stopEffect();
 
-        // 恢复每个目标的原始状态
+        // English comment.
         this.targets.forEach((obj) => {
             const state = this.originalStates.get(obj);
             if (!state) return;
 
-            // 恢复变换
+            // English comment.
             obj.position.copy(state.position);
             obj.rotation.copy(state.rotation);
             obj.scale.copy(state.scale);
 
-            // 恢复材质
+            // English comment.
             state.materials.forEach((matState) => {
                 const { mesh, material, color, emissive, opacity, transparent } = matState;
 
@@ -547,21 +500,20 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 更新目标对象
-     * @param {THREE.Object3D|THREE.Object3D[]} newTarget - 新的目标对象
+     * English comment.
      */
     setTarget(newTarget) {
-        // 停止当前效果
+        // English comment.
         this.stopEffect();
 
-        // 清空原有状态
+        // English comment.
         this.originalStates.clear();
 
-        // 更新目标
+        // English comment.
         this.config.target = newTarget;
         this.targets = Array.isArray(newTarget) ? newTarget : [newTarget];
 
-        // 保存新目标的原始状态
+        // English comment.
         this.targets.forEach((obj) => {
             this.saveOriginalState(obj);
         });
@@ -570,27 +522,26 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 每帧更新
-     * @param {number} delta - 时间差（秒）
+     * English comment.
      */
     onUpdate(delta) {
-        // 更新 Tween 动画组
+        // English comment.
         this.tweenGroup.update();
     }
 
     /**
-     * 组件卸载
+     * English comment.
      */
     onUnmounted() {
-        // 移除场景事件监听
+        // English comment.
         if (this.scene?.eventSystem) {
             this.scene.eventSystem.off('bakedLightingConfigUpdated', this.handleBakedLightingUpdate.bind(this));
         }
 
-        // 停止所有效果
+        // English comment.
         this.stopEffect();
 
-        // 清空状态
+        // English comment.
         this.targets = [];
         this.originalStates.clear();
         this.activeTweens = [];
@@ -600,7 +551,7 @@ export class ModelEffect extends Component {
     }
 
     /**
-     * 清理资源
+     * English comment.
      */
     dispose() {
         this.stopEffect();

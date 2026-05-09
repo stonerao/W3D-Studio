@@ -1,5 +1,5 @@
 /**
- * 服务模块导出
+ * English comment.
  */
 
 export { editorActions, EditorActionsService } from './editorActions';

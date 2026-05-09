@@ -3,4 +3,5 @@ packages:
     - 'packages/components'
     - 'packages/utils'
     - 'packages/editor-w3d'
+    - 'packages/editor-ai-gateway'
     - 'packages/site'

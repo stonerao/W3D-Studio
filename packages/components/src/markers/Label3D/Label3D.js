@@ -2,17 +2,13 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * Label3D 三维标签组件
- *
- * @class Label3D
- * @extends Component
- * @description 使用 Canvas 生成文字纹理，通过 Sprite 渲染到三维场景中
+ * English comment.
  */
 export class Label3D extends Component {
     static defaultConfig = {
-        labels: [], // 标签数据数组
+        labels: [], // English comment.
         globalConfig: {
-            // 全局默认配置
+            // English comment.
             renderMode: 'sprite', // sprite | plane
             fontSize: 32,
             fontFamily: 'Arial, sans-serif',
@@ -23,69 +19,68 @@ export class Label3D extends Component {
             borderWidth: 2,
             padding: 10,
             borderRadius: 5,
-            backgroundImage: null, // 背景图片 URL
-            billboard: true, // 是否始终面向相机
-            scale: 1, // 整体缩放
-            size: 1, // 标签基础尺寸
-            width: 2, // 标签宽度（plane 或 sprite 非自适应时）
-            height: 1, // 标签高度（plane 或 sprite 非自适应时）
-            autoSize: true, // sprite 默认按文本宽高比自适应
-            center: { x: 0.5, y: 0 }, // 仅 sprite：锚点中心
-            depthTest: true, // 是否进行深度测试
-            sizeAttenuation: true, // 是否随距离缩放
-            parent: null, // 父对象（THREE.Object3D），如果指定则挂载到父对象而非组件自身
-            useLocalPosition: false, // 是否使用父对象的局部坐标系
-            autoConvertToLocal: false // 是否自动将世界坐标转换为局部坐标
+            backgroundImage: null, // English comment.
+            billboard: true, // English comment.
+            scale: 1, // English comment.
+            size: 1, // English comment.
+            width: 2, // English comment.
+            height: 1, // English comment.
+            autoSize: true, // English comment.
+            center: { x: 0.5, y: 0 }, // English comment.
+            depthTest: true, // English comment.
+            sizeAttenuation: true, // English comment.
+            parent: null, // English comment.
+            useLocalPosition: false, // English comment.
+            autoConvertToLocal: false // English comment.
         }
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // 标签对象映射表 (id -> sprite)
+        // English comment.
         this.labelSprites = new Map();
 
-        // 标签数据映射表 (id -> labelData)
+        // English comment.
         this.labelDataMap = new Map();
 
-        // 父对象映射表 (id -> parent)
+        // English comment.
         this.parentMap = new Map();
         this.alarmHighlightConfigMap = new Map();
 
-        // Canvas 缓存
+        // English comment.
         this.canvasCache = new Map();
 
-        // 图片加载缓存
+        // English comment.
         this.imageCache = new Map();
 
-        // 复用文字测量 Canvas，减少频繁创建临时对象
+        // English comment.
         this._measureCanvas = document.createElement('canvas');
         this._measureCtx = this._measureCanvas.getContext('2d');
 
-        // Plane billboard 优化：仅当相机位置变化时刷新朝向
+        // English comment.
         this._lastBillboardCameraPos = new THREE.Vector3(Number.NaN, Number.NaN, Number.NaN);
         this._billboardEpsilon = 1e-6;
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 合并全局配置
+        // English comment.
         this.globalConfig = {
             ...this.constructor.defaultConfig.globalConfig,
             ...this.config.globalConfig
         };
 
-        // 创建所有标签
+        // English comment.
         if (this.config.labels && this.config.labels.length > 0) {
             await this.createLabels(this.config.labels);
         }
     }
 
     /**
-     * 创建标签
-     * @param {Array} labels - 标签数据数组
+     * English comment.
      */
     async createLabels(labels) {
         for (const labelData of labels) {
@@ -94,8 +89,7 @@ export class Label3D extends Component {
     }
 
     /**
-     * 创建单个标签
-     * @param {Object} labelData - 标签数据
+     * English comment.
      */
     async createLabel(labelData) {
         const { id, label, position, userData, config, parent } = labelData;
@@ -105,57 +99,57 @@ export class Label3D extends Component {
             return;
         }
 
-        // 合并配置
+        // English comment.
         const labelConfig = {
             ...this.globalConfig,
             ...config
         };
 
-        // 确定父对象（优先使用标签自己的 parent，其次使用全局 parent）
+        // English comment.
         const parentObject = parent || labelConfig.parent;
 
-        // 加载背景图片（如果有）
+        // English comment.
         let backgroundImage = null;
         if (labelConfig.backgroundImage) {
             backgroundImage = await this.loadImage(labelConfig.backgroundImage);
         }
 
-        // 创建 Canvas 纹理
+        // English comment.
         const { canvas, width, height } = this.createCanvasTexture(
             label,
             labelConfig,
             backgroundImage
         );
 
-        // 创建 Sprite 材质
+        // English comment.
         const texture = new THREE.CanvasTexture(canvas);
         texture.needsUpdate = true;
 
-        // 创建渲染对象（Sprite / Plane）
+        // English comment.
         const labelObject = this.createLabelObject(texture, labelConfig, width, height);
 
-        // 设置位置
+        // English comment.
         if (position) {
             const pos = new THREE.Vector3(position.x || 0, position.y || 0, position.z || 0);
 
-            // 如果有父对象且需要转换坐标系
+            // English comment.
             if (parentObject && labelConfig.autoConvertToLocal) {
-                // 将世界坐标转换为父对象的局部坐标
+                // English comment.
                 const localPos = parentObject.worldToLocal(pos.clone());
                 labelObject.position.copy(localPos);
             } else if (parentObject && labelConfig.useLocalPosition) {
-                // 直接使用局部坐标
+                // English comment.
                 labelObject.position.copy(pos);
             } else {
-                // 使用世界坐标
+                // English comment.
                 labelObject.position.copy(pos);
             }
         }
 
-        // 设置缩放（根据 Canvas 实际尺寸）
+        // English comment.
         this.applyLabelScale(labelObject, labelConfig, width, height);
 
-        // 设置 userData
+        // English comment.
         labelObject.userData = {
             labelId: id,
             labelText: label,
@@ -165,7 +159,7 @@ export class Label3D extends Component {
             renderMode: this.getRenderMode(labelConfig)
         };
 
-        // 添加到场景或父对象
+        // English comment.
         if (parentObject) {
             parentObject.add(labelObject);
             this.parentMap.set(id, parentObject);
@@ -173,7 +167,7 @@ export class Label3D extends Component {
             this.add(labelObject);
         }
 
-        // 保存到映射表
+        // English comment.
         this.labelSprites.set(id, labelObject);
         this.labelDataMap.set(id, {
             ...labelData,
@@ -258,11 +252,7 @@ export class Label3D extends Component {
     }
 
     /**
-     * 创建 Canvas 纹理
-     * @param {string} text - 文字内容
-     * @param {Object} config - 配置
-     * @param {Image} backgroundImage - 背景图片
-     * @returns {Object} { canvas, width, height }
+     * English comment.
      */
     createCanvasTexture(text, config, backgroundImage = null) {
         const {
@@ -277,28 +267,28 @@ export class Label3D extends Component {
             borderRadius
         } = config;
 
-        // 复用测量上下文，减少临时 Canvas 分配
+        // English comment.
         const measureCtx = this._measureCtx;
         measureCtx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
         const metrics = measureCtx.measureText(text);
         const textWidth = metrics.width;
         const textHeight = fontSize;
 
-        // 计算 Canvas 尺寸（包含 padding 和 border）
+        // English comment.
         const canvasWidth = Math.ceil(textWidth + padding * 2 + borderWidth * 2);
         const canvasHeight = Math.ceil(textHeight + padding * 2 + borderWidth * 2);
 
-        // 创建实际 Canvas
+        // English comment.
         const canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
         const ctx = canvas.getContext('2d');
 
-        // 绘制背景图片
+        // English comment.
         if (backgroundImage) {
             ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
         } else {
-            // 绘制背景
+            // English comment.
             ctx.fillStyle = backgroundColor;
             if (borderRadius > 0) {
                 this.drawRoundedRect(
@@ -315,7 +305,7 @@ export class Label3D extends Component {
             }
         }
 
-        // 绘制边框
+        // English comment.
         if (borderWidth > 0) {
             ctx.strokeStyle = borderColor;
             ctx.lineWidth = borderWidth;
@@ -339,7 +329,7 @@ export class Label3D extends Component {
             }
         }
 
-        // 绘制文字
+        // English comment.
         ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
         ctx.fillStyle = textColor;
         ctx.textAlign = 'center';
@@ -350,7 +340,7 @@ export class Label3D extends Component {
     }
 
     /**
-     * 绘制圆角矩形路径
+     * English comment.
      */
     drawRoundedRect(ctx, x, y, width, height, radius) {
         ctx.beginPath();
@@ -367,12 +357,10 @@ export class Label3D extends Component {
     }
 
     /**
-     * 加载图片
-     * @param {string} url - 图片 URL
-     * @returns {Promise<Image>}
+     * English comment.
      */
     loadImage(url) {
-        // 检查缓存
+        // English comment.
         if (this.imageCache.has(url)) {
             return Promise.resolve(this.imageCache.get(url));
         }
@@ -393,9 +381,7 @@ export class Label3D extends Component {
     }
 
     /**
-     * 更新标签
-     * @param {string} id - 标签 ID
-     * @param {Object} updates - 更新数据
+     * English comment.
      */
     async updateLabel(id, updates) {
         const labelObject = this.labelSprites.get(id);
@@ -406,7 +392,7 @@ export class Label3D extends Component {
             return;
         }
 
-        // 更新标签数据
+        // English comment.
         Object.assign(labelData, updates);
 
         const mergedConfig = {
@@ -426,7 +412,7 @@ export class Label3D extends Component {
             return;
         }
 
-        // 如果更新了文字或配置，重新创建纹理
+        // English comment.
         if (updates.label || updates.config) {
             const labelConfig = mergedConfig;
 
@@ -441,7 +427,7 @@ export class Label3D extends Component {
                 backgroundImage
             );
 
-            // 优先复用现有纹理，避免频繁创建/销毁 GPU 资源
+            // English comment.
             if (labelObject.material?.map) {
                 labelObject.material.map.image = canvas;
                 labelObject.material.map.needsUpdate = true;
@@ -457,7 +443,7 @@ export class Label3D extends Component {
             labelObject.userData.renderMode = targetRenderMode;
         }
 
-        // 如果更新了位置
+        // English comment.
         if (updates.position) {
             const labelConfig = {
                 ...this.globalConfig,
@@ -470,7 +456,7 @@ export class Label3D extends Component {
                 updates.position.z ?? labelObject.position.z
             );
 
-            // 如果有父对象且需要转换坐标系
+            // English comment.
             if (parentObject && labelConfig.autoConvertToLocal) {
                 const localPos = parentObject.worldToLocal(pos.clone());
                 labelObject.position.copy(localPos);
@@ -481,19 +467,19 @@ export class Label3D extends Component {
             }
         }
 
-        // 如果更新了父对象
+        // English comment.
         if (updates.parent !== undefined) {
             const oldParent = this.parentMap.get(id);
             const newParent = updates.parent;
 
-            // 从旧父对象移除
+            // English comment.
             if (oldParent) {
                 oldParent.remove(labelObject);
             } else {
                 this.remove(labelObject);
             }
 
-            // 添加到新父对象
+            // English comment.
             if (newParent) {
                 newParent.add(labelObject);
                 this.parentMap.set(id, newParent);
@@ -503,15 +489,14 @@ export class Label3D extends Component {
             }
         }
 
-        // 如果更新了 userData
+        // English comment.
         if (updates.userData) {
             labelObject.userData.customData = updates.userData;
         }
     }
 
     /**
-     * 移除标签
-     * @param {string} id - 标签 ID
+     * English comment.
      */
     removeLabel(id) {
         const labelObject = this.labelSprites.get(id);
@@ -521,7 +506,7 @@ export class Label3D extends Component {
             return;
         }
 
-        // 清理资源
+        // English comment.
         if (labelObject.material?.map) {
             labelObject.material.map.dispose();
         }
@@ -532,7 +517,7 @@ export class Label3D extends Component {
             labelObject.geometry.dispose();
         }
 
-        // 从场景或父对象移除
+        // English comment.
         const parentObject = this.parentMap.get(id);
         if (parentObject) {
             parentObject.remove(labelObject);
@@ -541,23 +526,20 @@ export class Label3D extends Component {
             this.remove(labelObject);
         }
 
-        // 从映射表移除
+        // English comment.
         this.labelSprites.delete(id);
         this.labelDataMap.delete(id);
     }
 
     /**
-     * 获取标签
-     * @param {string} id - 标签 ID
-     * @returns {Object} 标签数据
+     * English comment.
      */
     getLabel(id) {
         return this.labelDataMap.get(id);
     }
 
     /**
-     * 获取所有标签
-     * @returns {Array} 标签数据数组
+     * English comment.
      */
     getAllLabels() {
         return Array.from(this.labelDataMap.values());
@@ -615,7 +597,7 @@ export class Label3D extends Component {
     }
 
     /**
-     * 清除所有标签
+     * English comment.
      */
     clearLabels() {
         const ids = Array.from(this.labelSprites.keys());
@@ -625,8 +607,7 @@ export class Label3D extends Component {
     }
 
     /**
-     * 显示标签
-     * @param {string} id - 标签 ID
+     * English comment.
      */
     showLabel(id) {
         const sprite = this.labelSprites.get(id);
@@ -636,8 +617,7 @@ export class Label3D extends Component {
     }
 
     /**
-     * 隐藏标签
-     * @param {string} id - 标签 ID
+     * English comment.
      */
     hideLabel(id) {
         const sprite = this.labelSprites.get(id);
@@ -647,25 +627,21 @@ export class Label3D extends Component {
     }
 
     /**
-     * 获取可交互对象（用于事件系统）
-     * @returns {Array<THREE.Object3D>}
+     * English comment.
      */
     getInteractiveObjects() {
         return Array.from(this.labelSprites.values());
     }
 
     /**
-     * 获取标签的父对象
-     * @param {string} id - 标签 ID
-     * @returns {THREE.Object3D|null} 父对象
+     * English comment.
      */
     getLabelParent(id) {
         return this.parentMap.get(id) || null;
     }
 
     /**
-     * 批量设置标签的父对象
-     * @param {Array<{id: string, parent: THREE.Object3D}>} parentMappings - 父对象映射数组
+     * English comment.
      */
     async batchSetParents(parentMappings) {
         for (const { id, parent } of parentMappings) {
@@ -674,16 +650,15 @@ export class Label3D extends Component {
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     async updateConfig(newConfig) {
-        // 更新全局配置
+        // English comment.
         if (newConfig.globalConfig) {
             Object.assign(this.globalConfig, newConfig.globalConfig);
         }
 
-        // 标签列表整体同步：增、删、改
+        // English comment.
         if (Array.isArray(newConfig.labels)) {
             const nextLabels = newConfig.labels
                 .filter((item) => item && typeof item === 'object' && item.id)
@@ -694,14 +669,14 @@ export class Label3D extends Component {
 
             const nextIdSet = new Set(nextLabels.map((item) => item.id));
 
-            // 删除已不存在的标签
+            // English comment.
             for (const existingId of Array.from(this.labelDataMap.keys())) {
                 if (!nextIdSet.has(existingId)) {
                     this.removeLabel(existingId);
                 }
             }
 
-            // 新增/更新标签（并行），避免大列表串行阻塞
+            // English comment.
             const syncTasks = nextLabels.map((nextLabel) => {
                 if (this.labelDataMap.has(nextLabel.id)) {
                     return this.updateLabel(nextLabel.id, nextLabel);
@@ -714,7 +689,7 @@ export class Label3D extends Component {
             return;
         }
 
-        // 仅全局配置变化时，刷新所有现存标签（并行）
+        // English comment.
         const refreshTasks = [];
         for (const [id, labelData] of this.labelDataMap) {
             refreshTasks.push(this.updateLabel(id, {
@@ -745,11 +720,10 @@ export class Label3D extends Component {
     }
 
     /**
-     * 每帧更新
-     * @param {number} delta - 时间增量
+     * English comment.
      */
     onUpdate(_delta) {
-        // 如果启用了 billboard 效果，让标签始终面向相机
+        // English comment.
         if (this.globalConfig.billboard && this.scene.camera) {
             const cameraPosition = this.scene?.camera?.position || this.scene?.camera?.instance?.position;
             if (!cameraPosition || typeof cameraPosition.distanceToSquared !== 'function') {
@@ -760,7 +734,7 @@ export class Label3D extends Component {
                 this._lastBillboardCameraPos = new THREE.Vector3(Number.NaN, Number.NaN, Number.NaN);
             }
 
-            // 相机位置未变化时跳过 Plane 朝向计算
+            // English comment.
             if (cameraPosition.distanceToSquared(this._lastBillboardCameraPos) <= this._billboardEpsilon) {
                 return;
             }
@@ -783,20 +757,20 @@ export class Label3D extends Component {
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 清除所有标签
+        // English comment.
         this.clearLabels();
 
-        // 清除缓存
+        // English comment.
         this.canvasCache.clear();
         this.imageCache.clear();
 
         this._measureCanvas = null;
         this._measureCtx = null;
 
-        // 清除父对象映射
+        // English comment.
         this.parentMap.clear();
         this.alarmHighlightConfigMap.clear();
     }

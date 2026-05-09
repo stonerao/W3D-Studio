@@ -1,7 +1,7 @@
 ﻿<template>
     <div v-if="modelValue" class="mesh-selector-modal-overlay" @click="handleOverlayClick">
         <div class="mesh-selector-modal" @click.stop>
-            <!-- 标题栏 -->
+            <!-- English comment. -->
             <div class="modal-header">
                 <h3>选择 Mesh / Group</h3>
                 <button class="btn-close" @click="close">
@@ -22,7 +22,7 @@
                 </button>
             </div>
 
-            <!-- 搜索栏 -->
+            <!-- English comment. -->
             <div class="modal-toolbar">
                 <input
                     v-model="searchQuery"
@@ -34,7 +34,7 @@
                 <button class="btn-deselect-all" @click="deselectAll">清空</button>
             </div>
 
-            <!-- Mesh 树 -->
+            <!-- English comment. -->
             <div class="modal-content">
                 <div v-if="loading" class="loading">加载中...</div>
                 <div v-else-if="meshTree.length === 0" class="empty">未找到任何 Mesh</div>
@@ -49,7 +49,7 @@
                 </div>
             </div>
 
-            <!-- 底部操作栏 -->
+            <!-- English comment. -->
             <div class="modal-footer">
                 <span class="selected-count">已选: {{ localSelectedMeshes.length }}</span>
                 <div class="footer-buttons">
@@ -89,7 +89,7 @@ const meshTree = ref([]);
 const searchQuery = ref('');
 const localSelectedMeshes = ref([]);
 
-// 过滤后的树
+// English comment.
 const filteredTree = computed(() => {
     if (!searchQuery.value) return meshTree.value;
 
@@ -98,7 +98,7 @@ const filteredTree = computed(() => {
 });
 
 /**
- * 递归过滤树
+ * English comment.
  */
 function filterTree(nodes, query) {
     return nodes
@@ -118,7 +118,7 @@ function filterTree(nodes, query) {
 }
 
 /**
- * 构建 Mesh 树
+ * English comment.
  */
 function buildMeshTree() {
     loading.value = true;
@@ -143,22 +143,22 @@ function buildMeshTree() {
 
         let rootObjects = [];
 
-        // 尝试多种方式获取根对象
-        // 方式 1: 从 model 属性
+        // English comment.
+        // English comment.
         if (instance.model) {
             console.log('[MeshSelectorModal] 从 model 属性获取对象');
             rootObjects = [instance.model];
         }
-        // 方式 2: 从 componentScene
+        // English comment.
         else if (instance.componentScene?.children && instance.componentScene.children.length > 0) {
             console.log('[MeshSelectorModal] 从 componentScene 获取对象');
             rootObjects = instance.componentScene.children;
         }
-        // 方式 3: 从 getAllMeshes
+        // English comment.
         else if (typeof instance.getAllMeshes === 'function') {
             console.log('[MeshSelectorModal] 从 getAllMeshes 方法获取对象');
             const allMeshes = instance.getAllMeshes();
-            // 将 mesh 对象包装成树节点
+            // English comment.
             meshTree.value = allMeshes.map((mesh, index) => ({
                 id: `mesh-${index}`,
                 name: mesh.name || 'Unnamed',
@@ -187,10 +187,10 @@ function buildMeshTree() {
                 children: []
             };
 
-            // 递归处理子对象
+            // English comment.
             if (object.children && object.children.length > 0) {
                 object.children.forEach((child) => {
-                    // 过滤掉内部辅助对象
+                    // English comment.
                     if (
                         child
                     ) {
@@ -220,7 +220,7 @@ function buildMeshTree() {
 }
 
 /**
- * 切换 Mesh 选择
+ * English comment.
  */
 function toggleMesh(meshName) {
     const index = localSelectedMeshes.value.indexOf(meshName);
@@ -232,13 +232,13 @@ function toggleMesh(meshName) {
 }
 
 /**
- * 全选
+ * English comment.
  */
 function selectAll() {
     const allMeshNames = [];
     const collectMeshes = (nodes) => {
         nodes.forEach((node) => {
-            // 收集 Mesh 和 Group 节点
+            // English comment.
             if ((node.isMesh || node.type === 'Group') && node.name && !node.name.startsWith('Unnamed')) {
                 allMeshNames.push(node.name);
             }
@@ -253,14 +253,14 @@ function selectAll() {
 }
 
 /**
- * 清空
+ * English comment.
  */
 function deselectAll() {
     localSelectedMeshes.value = [];
 }
 
 /**
- * 确认选择
+ * English comment.
  */
 function confirm() {
     emit('select', [...localSelectedMeshes.value]);
@@ -268,20 +268,20 @@ function confirm() {
 }
 
 /**
- * 关闭模态框
+ * English comment.
  */
 function close() {
     emit('update:modelValue', false);
 }
 
 /**
- * 点击遮罩层关闭
+ * English comment.
  */
 function handleOverlayClick() {
     close();
 }
 
-// 监听打开状态,重新构建树
+// English comment.
 watch(
     () => props.modelValue,
     (newVal) => {

@@ -9,7 +9,7 @@
             性能优化模式已启用，烘焙贴图会通过源 Mesh 代理同步到合并 Mesh。
         </div>
 
-                <!-- 全局配置面板 -->
+                <!-- English comment. -->
                 <div class="config-section">
                 <div class="section-header">
                     <span class="section-title">全局参数</span>
@@ -252,7 +252,7 @@
                     </div>
                 </div>
 
-                <!-- 搜索栏 -->
+                <!-- English comment. -->
                 <template v-if="editMode === 'manual'">
                 <div class="modal-toolbar">
                 <div class="search-input-wrapper">
@@ -293,7 +293,7 @@
                 </div>
                 </template>
 
-                <!-- Mesh 贴图配置列表（树形结构） -->
+                <!-- English comment. -->
                 <template v-if="editMode === 'manual'">
                 <div class="modal-content">
                 <div v-if="loading" class="loading">加载中...</div>
@@ -322,7 +322,7 @@
                 </div>
                 </template>
 
-        <!-- 底部操作栏 -->
+        <!-- English comment. -->
         <template #footer>
             <div class="baked-footer-wrapper">
                 <div class="footer-info">
@@ -341,7 +341,7 @@
         </template>
     </Modal>
 
-    <!-- 资源选择器 -->
+    <!-- English comment. -->
     <AssetPickerModal
         v-model="showAssetPicker"
         category="texture"
@@ -379,7 +379,7 @@ const editorStore = useEditorStore();
 const { updateComponentConfig } = useComponent();
 const toast = useToast();
 
-// 内部状态
+// English comment.
 const isOpen = ref(props.modelValue);
 const loading = ref(false);
 const meshTreeNodes = ref([]);
@@ -419,7 +419,7 @@ const batchResultFilterOptions = [
     { label: '将覆盖', value: 'overwrite' }
 ];
 
-// 默认配置
+// English comment.
 const defaultConfig = {
     enabled: true,
     textureMapping: {},
@@ -433,7 +433,7 @@ const defaultConfig = {
     applyChunkSize: 48
 };
 
-// 本地配置
+// English comment.
 const localConfig = ref({ ...defaultConfig });
 
 const isPerformanceModeEnabled = computed(() => {
@@ -482,7 +482,7 @@ const filteredBatchPreviewRows = computed(() => {
 });
 
 /**
- * 获取 ModelLoader 组件实例
+ * English comment.
  */
 function getModelLoaderInstance() {
     if (!props.modelLoaderId) return null;
@@ -491,7 +491,7 @@ function getModelLoaderInstance() {
 }
 
 /**
- * 从 ModelLoader 获取现有的烘焙配置
+ * English comment.
  */
 function loadExistingConfig() {
     const componentData = componentStore.components.find(c => c.id === props.modelLoaderId);
@@ -515,7 +515,7 @@ function loadExistingConfig() {
 }
 
 /**
- * 构建 Mesh 树形结构
+ * English comment.
  */
 function buildMeshTree() {
     loading.value = true;
@@ -549,7 +549,7 @@ function buildMeshTree() {
 
         let rootObjects = [];
 
-        // 获取根对象
+        // English comment.
         if (instance.model) {
             rootObjects = [instance.model];
         } else if (instance.componentScene?.children?.length > 0) {
@@ -562,7 +562,7 @@ function buildMeshTree() {
             return;
         }
 
-        // 递归构建树形结构
+        // English comment.
         let meshCount = 0;
         const buildTreeNode = (object, parentPath = '') => {
             if (object?.userData?.__w3dPerformanceBatchMesh === true) {
@@ -583,12 +583,12 @@ function buildMeshTree() {
                 children: []
             };
 
-            // 如果是 Mesh，计数
+            // English comment.
             if (isMesh) {
                 meshCount++;
             }
 
-            // 递归处理子节点
+            // English comment.
             if (object.children && object.children.length > 0) {
                 object.children.forEach(child => {
                     const childNode = buildTreeNode(child, nodePath);
@@ -618,7 +618,7 @@ function buildMeshTree() {
 }
 
 /**
- * 展开/折叠节点
+ * English comment.
  */
 function handleToggleNode(nodeId) {
     if (expandedNodes.value.has(nodeId)) {
@@ -629,7 +629,7 @@ function handleToggleNode(nodeId) {
 }
 
 /**
- * 打开资源选择器
+ * English comment.
  */
 function openAssetPicker(meshName) {
     console.log('[BakedLightingModal] 打开资源选择器 for mesh:', meshName);
@@ -648,7 +648,7 @@ function openBatchAssetPicker() {
 }
 
 /**
- * 处理资源选择
+ * English comment.
  */
 function handleAssetSelect(asset) {
     console.log('[BakedLightingModal] 资源已选择:', asset);
@@ -897,21 +897,21 @@ function toggleMeshEyedropper() {
 }
 
 /**
- * 清除单个 Mesh 的贴图
+ * English comment.
  */
 function clearTexture(meshName) {
     delete localConfig.value.textureMapping[meshName];
 }
 
 /**
- * 清空所有贴图
+ * English comment.
  */
 function clearAllTextures() {
     localConfig.value.textureMapping = {};
 }
 
 /**
- * 获取文件名
+ * English comment.
  */
 function getFileName(path) {
     if (!path) return '';
@@ -919,11 +919,11 @@ function getFileName(path) {
 }
 
 /**
- * 获取贴图预览 URL
+ * English comment.
  */
 function getTexturePreviewUrl(path) {
     if (!path) return '';
-    // 如果是相对路径，添加基础 URL
+    // English comment.
     if (path.startsWith('/')) {
         return path;
     }
@@ -931,14 +931,14 @@ function getTexturePreviewUrl(path) {
 }
 
 /**
- * 处理图片加载错误
+ * English comment.
  */
 function handleImageError(event) {
     event.target.style.display = 'none';
 }
 
 /**
- * 应用配置（不关闭弹窗）
+ * English comment.
  */
 async function applyConfig() {
     if (!props.modelLoaderId) {
@@ -972,7 +972,7 @@ async function applyConfig() {
 }
 
 /**
- * 确认并保存
+ * English comment.
  */
 async function confirm() {
     await applyConfig();
@@ -983,7 +983,7 @@ async function confirm() {
 }
 
 /**
- * 关闭弹窗
+ * English comment.
  */
 function close() {
     if (isMeshPickingActive.value) {
@@ -992,7 +992,7 @@ function close() {
     isOpen.value = false;
 }
 
-// 监听 modelValue 变化
+// English comment.
 watch(() => props.modelValue, (newValue) => {
     isOpen.value = newValue;
     if (newValue) {
@@ -1002,7 +1002,7 @@ watch(() => props.modelValue, (newValue) => {
         batchPreviewRows.value = [];
         batchResultFilter.value = 'all';
         activeNodeName.value = '';
-        // 默认展开第一层
+        // English comment.
         expandedNodes.value = new Set(meshTreeNodes.value.map(node => node.id));
         if (totalMeshCount.value >= 300 && localConfig.value.IndependentMaterial) {
             toast.info('当前模型 Mesh 数量较多，若应用烘焙后卡顿，建议关闭“独立材质”并适当降低分批应用数量。');
@@ -1014,7 +1014,7 @@ watch(() => props.modelValue, (newValue) => {
     }
 });
 
-// 监听 isOpen 变化
+// English comment.
 watch(isOpen, (newValue) => {
     emit('update:modelValue', newValue);
 });
@@ -1035,7 +1035,7 @@ watch(() => componentStore.meshPickResult?.token, (token) => {
 </script>
 
 <style scoped>
-/* Footer wrapper样式 */
+/* English comment. */
 .baked-footer-wrapper {
     display: flex;
     align-items: center;
@@ -1059,7 +1059,7 @@ watch(() => componentStore.meshPickResult?.token, (token) => {
     gap: 0.5rem;
 }
 
-/* 配置区域 */
+/* English comment. */
 .config-section {
     padding: 0.75rem 0;
     border-bottom: 1px solid var(--color-border);
@@ -1078,7 +1078,7 @@ watch(() => componentStore.meshPickResult?.token, (token) => {
     color: var(--color-text-primary);
 }
 
-/* 开关样式 */
+/* English comment. */
 .toggle-switch {
     display: flex;
     align-items: center;
@@ -1125,7 +1125,7 @@ watch(() => componentStore.meshPickResult?.token, (token) => {
     color: var(--color-text-secondary);
 }
 
-/* 配置网格 */
+/* English comment. */
 .config-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
@@ -1421,7 +1421,7 @@ watch(() => componentStore.meshPickResult?.token, (token) => {
     accent-color: var(--color-primary);
 }
 
-/* 工具栏 */
+/* English comment. */
 .modal-toolbar {
     display: flex;
     align-items: center;
@@ -1528,7 +1528,7 @@ watch(() => componentStore.meshPickResult?.token, (token) => {
     cursor: not-allowed;
 }
 
-/* 内容区域 */
+/* English comment. */
 .modal-content {
     flex: 1;
     overflow-y: auto;
@@ -1547,7 +1547,7 @@ watch(() => componentStore.meshPickResult?.token, (token) => {
     font-size: 0.875rem;
 }
 
-/* Mesh 树形容器 */
+/* English comment. */
 .mesh-tree-container {
     display: flex;
     flex-direction: column;
@@ -1559,7 +1559,7 @@ watch(() => componentStore.meshPickResult?.token, (token) => {
     pointer-events: none;
 }
 
-/* 底部按钮 */
+/* English comment. */
 .btn-cancel,
 .btn-apply,
 .btn-confirm {

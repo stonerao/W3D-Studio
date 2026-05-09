@@ -1,27 +1,27 @@
 module.exports = {
-    // 缩进
+    // English comment.
     tabWidth: 4,
     useTabs: false,
     
-    // 分号
+    // English comment.
     semi: true,
     
-    // 引号
+    // English comment.
     singleQuote: true,
     
-    // 尾随逗号
+    // English comment.
     trailingComma: 'none',
     
-    // 括号空格
+    // English comment.
     bracketSpacing: true,
     
-    // 箭头函数参数括号
+    // English comment.
     arrowParens: 'always',
     
-    // 换行符
+    // English comment.
     endOfLine: 'lf',
     
-    // 每行最大字符数
+    // English comment.
     printWidth: 100
 };
 

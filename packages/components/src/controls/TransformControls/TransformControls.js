@@ -2,65 +2,37 @@ import { Component } from '@w3d/core';
 import { TransformControls as ThreeTransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 
 /**
- * TransformControls 变换控制组件
- *
- * 提供对3D物体的交互式变换控制（平移、旋转、缩放）
- *
- * @class TransformControls
- * @extends Component
- *
- * @example
- * // 注册组件
- * scene.registerComponent('TransformControls', TransformControls);
- *
- * // 创建变换控制器
- * const transformControls = await scene.add('TransformControls', {
- *     name: 'transform',
- *     mode: 'translate',
- *     size: 1,
- *     space: 'world'
- * });
- *
- * // 附加到物体
- * transformControls.attach(mesh);
- *
- * // 切换模式
- * transformControls.setMode('rotate');
- * transformControls.setMode('scale');
- *
- * // 启用/禁用
- * transformControls.setEnabled(true);
- * transformControls.setEnabled(false);
+ * English comment.
  */
 export class TransformControls extends Component {
     /**
-     * 默认配置
+     * English comment.
      */
     static defaultConfig = {
-        mode: 'translate',      // 变换模式: 'translate' | 'rotate' | 'scale'
-        size: 1,                // 控制器大小
-        space: 'world',         // 坐标空间: 'world' | 'local'
-        enabled: true,          // 是否启用
-        showX: true,            // 显示X轴
-        showY: true,            // 显示Y轴
-        showZ: true,            // 显示Z轴
-        translationSnap: null,  // 平移吸附
-        rotationSnap: null,     // 旋转吸附
-        scaleSnap: null,        // 缩放吸附
-        disableOrbitOnDrag: true // 拖拽时禁用轨道控制器
+        mode: 'translate',      // English comment.
+        size: 1,                // English comment.
+        space: 'world',         // English comment.
+        enabled: true,          // English comment.
+        showX: true,            // English comment.
+        showY: true,            // English comment.
+        showZ: true,            // English comment.
+        translationSnap: null,  // English comment.
+        rotationSnap: null,     // English comment.
+        scaleSnap: null,        // English comment.
+        disableOrbitOnDrag: true // English comment.
     };
 
     /**
-     * 创建组件
+     * English comment.
      */
     onCreate() {
-        // Three.js TransformControls 实例
+        // English comment.
         this.control = null;
 
-        // 当前附加的物体
+        // English comment.
         this.attachedObject = null;
 
-        // 事件处理器引用
+        // English comment.
         this.eventHandlers = {
             change: null,
             draggingChanged: null,
@@ -72,32 +44,32 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     onMounted() {
-        // 创建 TransformControls
+        // English comment.
         this.control = new ThreeTransformControls(
             this.scene.camera.instance,
             this.scene.renderer.instance.domElement
         );
-        // 应用配置
+        // English comment.
         this.applyConfig();
 
         	const gizmo =  this.control.getHelper();
         this.scene.scene.add( gizmo );
 
-        // 添加scene
+        // English comment.
         // this.scene.scene.add(this.control);
 
-        // 设置事件监听
+        // English comment.
         this.setupEventListeners();
 
-        // 触发挂载事件
+        // English comment.
         this.emit('mounted', { control: this.control });
     }
 
     /**
-     * 应用配置
+     * English comment.
      */
     applyConfig() {
         if (!this.control) return;
@@ -135,12 +107,12 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 设置事件监听
+     * English comment.
      */
     setupEventListeners() {
         if (!this.control) return;
 
-        // 变换改变事件
+        // English comment.
         this.eventHandlers.change = (_event) => {
             this.emit('change', {
                 object: this.attachedObject,
@@ -149,11 +121,11 @@ export class TransformControls extends Component {
         };
         this.control.addEventListener('change', this.eventHandlers.change);
 
-        // 拖拽状态改变事件
+        // English comment.
         this.eventHandlers.draggingChanged = (event) => {
             const isDragging = event.value;
 
-            // 如果配置了禁用轨道控制器
+            // English comment.
             if (this.config.disableOrbitOnDrag && this.scene.controls) {
                 if (isDragging) {
                     if (typeof this.scene.controls.acquireLock === 'function') {
@@ -175,7 +147,7 @@ export class TransformControls extends Component {
         };
         this.control.addEventListener('dragging-changed', this.eventHandlers.draggingChanged);
 
-        // 物体变换事件
+        // English comment.
         this.eventHandlers.objectChange = () => {
             this.emit('object-change', {
                 object: this.attachedObject,
@@ -186,7 +158,7 @@ export class TransformControls extends Component {
         };
         this.control.addEventListener('objectChange', this.eventHandlers.objectChange);
 
-        // 鼠标按下事件
+        // English comment.
         this.eventHandlers.mouseDown = () => {
             this.emit('mouse-down', {
                 object: this.attachedObject
@@ -194,7 +166,7 @@ export class TransformControls extends Component {
         };
         this.control.addEventListener('mouseDown', this.eventHandlers.mouseDown);
 
-        // 鼠标抬起事件
+        // English comment.
         this.eventHandlers.mouseUp = () => {
             this.emit('mouse-up', {
                 object: this.attachedObject
@@ -204,8 +176,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 附加到物体
-     * @param {THREE.Object3D} object - 要控制的3D物体
+     * English comment.
      */
     attach(object) {
         if (!this.control) {
@@ -225,7 +196,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 分离当前物体
+     * English comment.
      */
     detach() {
         if (!this.control) return;
@@ -238,8 +209,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 设置变换模式
-     * @param {string} mode - 'translate' | 'rotate' | 'scale'
+     * English comment.
      */
     setMode(mode) {
         if (!this.control) return;
@@ -257,8 +227,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 设置启用/禁用状态
-     * @param {boolean} enabled - 是否启用
+     * English comment.
      */
     setEnabled(enabled) {
         if (!this.control) return;
@@ -270,8 +239,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 设置坐标空间
-     * @param {string} space - 'world' | 'local'
+     * English comment.
      */
     setSpace(space) {
         if (!this.control) return;
@@ -289,8 +257,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 设置控制器大小
-     * @param {number} size - 大小值
+     * English comment.
      */
     setSize(size) {
         if (!this.control) return;
@@ -302,8 +269,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 设置平移吸附
-     * @param {number|null} snap - 吸附值，null 表示禁用
+     * English comment.
      */
     setTranslationSnap(snap) {
         if (!this.control) return;
@@ -315,8 +281,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 设置旋转吸附
-     * @param {number|null} snap - 吸附值（弧度），null 表示禁用
+     * English comment.
      */
     setRotationSnap(snap) {
         if (!this.control) return;
@@ -328,8 +293,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 设置缩放吸附
-     * @param {number|null} snap - 吸附值，null 表示禁用
+     * English comment.
      */
     setScaleSnap(snap) {
         if (!this.control) return;
@@ -341,9 +305,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 设置轴显示
-     * @param {string} axis - 'x' | 'y' | 'z'
-     * @param {boolean} show - 是否显示
+     * English comment.
      */
     setAxisVisible(axis, show) {
         if (!this.control) return;
@@ -364,7 +326,7 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 重置变换
+     * English comment.
      */
     reset() {
         if (!this.control) return;
@@ -375,42 +337,38 @@ export class TransformControls extends Component {
     }
 
     /**
-     * 获取当前模式
-     * @returns {string} 当前模式
+     * English comment.
      */
     getMode() {
         return this.control?.mode || this.config.mode;
     }
 
     /**
-     * 获取当前空间
-     * @returns {string} 当前空间
+     * English comment.
      */
     getSpace() {
         return this.control?.space || this.config.space;
     }
 
     /**
-     * 获取当前附加的物体
-     * @returns {THREE.Object3D|null} 附加的物体
+     * English comment.
      */
     getAttachedObject() {
         return this.attachedObject;
     }
 
     /**
-     * 获取控制器实例
-     * @returns {TransformControls} Three.js TransformControls 实例
+     * English comment.
      */
     getControl() {
         return this.control;
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 移除事件监听
+        // English comment.
         if (this.control) {
             Object.keys(this.eventHandlers).forEach(key => {
                 if (this.eventHandlers[key]) {
@@ -418,10 +376,10 @@ export class TransformControls extends Component {
                 }
             });
 
-            // 分离物体
+            // English comment.
             this.detach();
 
-            // 销毁控制器
+            // English comment.
             this.control.dispose();
             this.control = null;
         }

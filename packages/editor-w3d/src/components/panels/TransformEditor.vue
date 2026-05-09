@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="transform-editor">
-        <!-- 位置 -->
+        <!-- English comment. -->
         <div class="transform-group">
             <div class="group-header">
                 <div class="group-label">位置</div>
@@ -51,7 +51,7 @@
             </div>
         </div>
 
-        <!-- 旋转 -->
+        <!-- English comment. -->
         <div class="transform-group">
             <div class="group-header">
                 <div class="group-label">旋转</div>
@@ -102,7 +102,7 @@
             </div>
         </div>
 
-        <!-- 缩放 -->
+        <!-- English comment. -->
         <div class="transform-group">
             <div class="group-header">
                 <div class="group-label">缩放</div>
@@ -241,12 +241,12 @@ const normalizedScale = computed(() => {
     return normalizeVector3(props.scale, [1, 1, 1]).map((item) => (item > 0 ? item : 1));
 });
 
-// 将旋转从弧度转换为角度
+// English comment.
 const rotationDegrees = computed(() => {
     return normalizedRotation.value.map((rad) => Math.round((rad * 180) / Math.PI));
 });
 
-// 统一缩放值
+// English comment.
 const uniformScale = computed(() => {
     return normalizedScale.value[0];
 });
@@ -259,21 +259,21 @@ const openVariableBinding = (propertyKey) => {
     emit('open-variable-binding', propertyKey);
 };
 
-// 更新位置
+// English comment.
 const updatePosition = (index, value) => {
     const newPosition = [...normalizedPosition.value];
     newPosition[index] = parseFloat(value) || 0;
     emit('update:position', newPosition);
 };
 
-// 更新旋转（输入为角度，转换为弧度）
+// English comment.
 const updateRotation = (index, value) => {
     const newRotation = [...normalizedRotation.value];
     newRotation[index] = ((parseFloat(value) || 0) * Math.PI) / 180;
     emit('update:rotation', newRotation);
 };
 
-// 更新统一缩放
+// English comment.
 const updateUniformScale = (value) => {
     const scaleValue = parseFloat(value) || 0.01;
     if (lockScale.value) {
@@ -283,7 +283,7 @@ const updateUniformScale = (value) => {
     }
 };
 
-// 更新单个轴的缩放
+// English comment.
 const updateScale = (index, value) => {
     const scaleValue = parseFloat(value) || 0.01;
     const newScale = [...normalizedScale.value];
@@ -291,13 +291,13 @@ const updateScale = (index, value) => {
     emit('update:scale', newScale);
 };
 
-// 监听锁定状态变化
+// English comment.
 watch(lockScale, (locked) => {
     if (locked) {
-        // 锁定时，使用当前的统一缩放值
+        // English comment.
         emit('update:scale', uniformScale.value);
     } else {
-        // 解锁时，转换为数组形式
+        // English comment.
         const currentScale = uniformScale.value;
         emit('update:scale', [currentScale, currentScale, currentScale]);
     }

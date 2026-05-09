@@ -1,17 +1,11 @@
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls.js';
 
 /**
- * Controls 控制器类
- *
- * @class Controls
- * @description 轨道控制器等交互控制
+ * English comment.
  */
 export class Controls {
     /**
-     * 创建控制器实例
-     *
-     * @param {Scene} scene - 场景实例
-     * @param {Object} options - 配置选项
+     * English comment.
      */
     constructor(scene, options = {}) {
         this.scene = scene;
@@ -30,7 +24,7 @@ export class Controls {
             ...options
         };
 
-        // Orbit 的“基础开关”与“锁”分离，支持多方互斥管控
+        // English comment.
         this.baseEnabled = this.options.enabled !== false;
         this.orbitLocks = new Set();
 
@@ -43,7 +37,7 @@ export class Controls {
     }
 
     /**
-     * 应用配置选项
+     * English comment.
      */
     applyOptions() {
         if (!this.instance) return;
@@ -65,7 +59,7 @@ export class Controls {
     }
 
     /**
-     * 根据基础开关与锁状态刷新 enabled。
+     * English comment.
      */
     applyEnabledState() {
         if (!this.instance) return;
@@ -73,7 +67,7 @@ export class Controls {
     }
 
     /**
-     * 更新控制器
+     * English comment.
      */
     update() {
         if (
@@ -85,28 +79,21 @@ export class Controls {
     }
 
     /**
-     * 代理 OrbitControls 事件监听（例如 'change'）
-     * @param {string} event - 事件名
-     * @param {Function} handler - 处理函数
+     * English comment.
      */
     addEventListener(event, handler) {
         this.instance?.addEventListener?.(event, handler);
     }
 
     /**
-     * 移除事件监听
-     * @param {string} event - 事件名
-     * @param {Function} handler - 处理函数
+     * English comment.
      */
     removeEventListener(event, handler) {
         this.instance?.removeEventListener?.(event, handler);
     }
 
     /**
-     * 启用自动旋转
-     *
-     * @param {boolean} enabled - 是否启用
-     * @param {number} speed - 旋转速度
+     * English comment.
      */
     enableAutoRotate(enabled = true, speed = 2.0) {
         this.instance.autoRotate = enabled;
@@ -114,11 +101,7 @@ export class Controls {
     }
 
     /**
-     * 设置目标点
-     *
-     * @param {number} x - X 坐标
-     * @param {number} y - Y 坐标
-     * @param {number} z - Z 坐标
+     * English comment.
      */
     setTarget(x, y, z) {
         this.instance.target.set(x, y, z);
@@ -126,16 +109,14 @@ export class Controls {
     }
 
     /**
-     * 重置控制器
+     * English comment.
      */
     reset() {
         this.instance.reset();
     }
 
     /**
-     * 获取 Orbit 控制权锁。
-     * @param {string} reason - 锁标识
-     * @returns {string}
+     * English comment.
      */
     acquireLock(reason = 'default') {
         const key = String(reason || 'default');
@@ -145,8 +126,7 @@ export class Controls {
     }
 
     /**
-     * 释放 Orbit 控制权锁。
-     * @param {string} reason - 锁标识
+     * English comment.
      */
     releaseLock(reason = 'default') {
         const key = String(reason || 'default');
@@ -155,7 +135,7 @@ export class Controls {
     }
 
     /**
-     * 清空所有 Orbit 锁。
+     * English comment.
      */
     clearLocks() {
         this.orbitLocks.clear();
@@ -163,8 +143,7 @@ export class Controls {
     }
 
     /**
-     * 设置 Orbit 基础启用状态（未上锁时生效）。
-     * @param {boolean} enabled
+     * English comment.
      */
     setEnabled(enabled = true) {
         this.baseEnabled = !!enabled;
@@ -173,9 +152,7 @@ export class Controls {
     }
 
     /**
-     * 更新控制器配置
-     *
-     * @param {Object} config - 配置选项
+     * English comment.
      */
     updateConfig(config = {}) {
         if (!config || typeof config !== 'object') return;
@@ -241,9 +218,7 @@ export class Controls {
     }
 
     /**
-     * 获取当前配置
-     *
-     * @returns {Object} 当前配置
+     * English comment.
      */
     getConfig() {
         return {
@@ -262,7 +237,7 @@ export class Controls {
     }
 
     /**
-     * 销毁控制器
+     * English comment.
      */
     dispose() {
         this.instance.dispose();

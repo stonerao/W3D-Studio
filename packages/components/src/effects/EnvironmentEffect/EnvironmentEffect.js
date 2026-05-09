@@ -1,21 +1,5 @@
 /**
- * EnvironmentEffect 环境效果组件
- *
- * @class EnvironmentEffect
- * @extends Component
- * @description 提供温度、湿度、风速、雨量等环境效果的粒子系统实现
- *
- * @example
- * const envEffect = await scene.add('EnvironmentEffect', {
- *     particleCount: 1000,
- *     particleTexture: '/images/particle.png'
- * });
- *
- * // 设置雨量效果
- * envEffect.setEffect('rain', 70);
- *
- * // 清除效果
- * envEffect.clearEffect();
+ * English comment.
  */
 
 import { Component } from '@w3d/core';
@@ -23,21 +7,21 @@ import * as THREE from 'three';
 
 export class EnvironmentEffect extends Component {
     /**
-     * 默认配置
+     * English comment.
      */
     static defaultConfig = {
-        particleCount: 1000,                    // 粒子数量
-        particleSize: 0.5,                      // 粒子大小
-        particleTexture: '/images/particle.png', // 粒子纹理路径
-        effectArea: { width: 50, height: 30, depth: 50, center: [0, 0, 0], followCamera: false }, // 效果区域范围
-        animationSpeed: 1.0,                    // 动画速度倍率
-        opacity: 0.6,                           // 粒子透明度
-        color: 0xffffff,                        // 粒子颜色
-        windDirection: { x: 1, y: 0, z: 0 }     // 风向（用于风速效果）
+        particleCount: 1000,                    // English comment.
+        particleSize: 0.5,                      // English comment.
+        particleTexture: '/images/particle.png', // English comment.
+        effectArea: { width: 50, height: 30, depth: 50, center: [0, 0, 0], followCamera: false }, // English comment.
+        animationSpeed: 1.0,                    // English comment.
+        opacity: 0.6,                           // English comment.
+        color: 0xffffff,                        // English comment.
+        windDirection: { x: 1, y: 0, z: 0 }     // English comment.
     };
 
     /**
-     * 效果类型配置
+     * English comment.
      */
     static EFFECT_CONFIGS = {
         temperature: {
@@ -48,7 +32,7 @@ export class EnvironmentEffect extends Component {
             opacityMax: 0.6,
             sizeMin: 0.3,
             sizeMax: 0.8,
-            movement: 'rise',       // 向上飘动
+            movement: 'rise',       // English comment.
             speed: 0.5
         },
         humidity: {
@@ -59,7 +43,7 @@ export class EnvironmentEffect extends Component {
             opacityMax: 0.5,
             sizeMin: 0.8,
             sizeMax: 1.5,
-            movement: 'float',      // 漂浮
+            movement: 'float',      // English comment.
             speed: 0.2
         },
         wind: {
@@ -70,7 +54,7 @@ export class EnvironmentEffect extends Component {
             opacityMax: 0.7,
             sizeMin: 0.4,
             sizeMax: 1.0,
-            movement: 'horizontal', // 水平移动
+            movement: 'horizontal', // English comment.
             speed: 2.0
         },
         rain: {
@@ -81,10 +65,10 @@ export class EnvironmentEffect extends Component {
             opacityMax: 0.9,
             sizeMin: 0.1,
             sizeMax: 0.3,
-            scaleY: 3.0,            // 雨滴拉伸
-            movement: 'fall',       // 向下掉落
+            scaleY: 3.0,            // English comment.
+            movement: 'fall',       // English comment.
             speed: 3.0,
-            texture: '/images/icon-yd.png' // 雨滴图标
+            texture: '/images/icon-yd.png' // English comment.
         },
         snow: {
             name: '下雪效果',
@@ -94,65 +78,65 @@ export class EnvironmentEffect extends Component {
             opacityMax: 1.0,
             sizeMin: 0.3,
             sizeMax: 0.8,
-            movement: 'snowfall',   // 雪花飘落
+            movement: 'snowfall',   // English comment.
             speed: 0.8,
-            texture: '/images/icon-xh.png' // 雪花图标
+            texture: '/images/icon-xh.png' // English comment.
         },
         pollution: {
             name: '污染效果',
-            colorStart: 0x8B7355,   // 棕褐色（烟雾）
-            colorEnd: 0x556B2F,     // 暗橄榄绿（有毒气体）
+            colorStart: 0x8B7355,   // English comment.
+            colorEnd: 0x556B2F,     // English comment.
             opacityMin: 0.4,
             opacityMax: 0.7,
             sizeMin: 1.5,
-            sizeMax: 3.0,           // 较大粒子模拟浓雾
-            movement: 'pollution',  // 污染雾气漂浮
+            sizeMax: 3.0,           // English comment.
+            movement: 'pollution',  // English comment.
             speed: 0.15
         },
         noise: {
             name: '噪音效果',
-            colorStart: 0xFF6600,   // 橙色（警示色）
-            colorEnd: 0xFFCC00,     // 黄色
+            colorStart: 0xFF6600,   // English comment.
+            colorEnd: 0xFFCC00,     // English comment.
             opacityMin: 0.3,
             opacityMax: 0.8,
             sizeMin: 0.2,
             sizeMax: 0.6,
-            movement: 'pulse',      // 脉冲波动
+            movement: 'pulse',      // English comment.
             speed: 2.5
         }
     };
 
     /**
-     * 组件挂载
+     * English comment.
      */
     onMounted() {
-        // 当前效果类型
+        // English comment.
         this.currentEffect = null;
-        // 当前效果强度（0-100）
+        // English comment.
         this.intensity = 50;
 
-        // 粒子系统相关
+        // English comment.
         this.particles = null;
         this.geometry = null;
         this.material = null;
         this.texture = null;
 
-        // 粒子属性缓冲区
+        // English comment.
         this.positions = null;
         this.colors = null;
         this.sizes = null;
         this.velocities = null;
         this.opacities = null;
 
-        // 效果区域
+        // English comment.
         this.effectArea = { ...this.config.effectArea };
         this._areaCenter = new THREE.Vector3();
         this._lastAreaCenter = new THREE.Vector3();
 
-        // 加载纹理
+        // English comment.
         this.loadTexture();
 
-        // 初始化粒子系统
+        // English comment.
         this.initParticleSystem();
     }
 
@@ -184,7 +168,7 @@ export class EnvironmentEffect extends Component {
     }
 
     /**
-     * 加载粒子纹理
+     * English comment.
      */
     loadTexture(texturePath) {
         const textureLoader = new THREE.TextureLoader();
@@ -201,30 +185,30 @@ export class EnvironmentEffect extends Component {
     }
 
     /**
-     * 初始化粒子系统
+     * English comment.
      */
     initParticleSystem() {
         const count = this.config.particleCount;
 
-        // 创建几何体
+        // English comment.
         this.geometry = new THREE.BufferGeometry();
 
-        // 初始化位置数组
+        // English comment.
         this.positions = new Float32Array(count * 3);
-        // 初始化颜色数组
+        // English comment.
         this.colors = new Float32Array(count * 3);
-        // 初始化大小数组
+        // English comment.
         this.sizes = new Float32Array(count);
-        // 初始化速度数组（用于动画）
+        // English comment.
         this.velocities = new Float32Array(count * 3);
-        // 初始化透明度数组
+        // English comment.
         this.opacities = new Float32Array(count);
 
-        // 设置初始位置（隐藏在场景外）
+        // English comment.
         for (let i = 0; i < count; i++) {
             const i3 = i * 3;
             this.positions[i3] = 0;
-            this.positions[i3 + 1] = -1000; // 隐藏
+            this.positions[i3 + 1] = -1000; // English comment.
             this.positions[i3 + 2] = 0;
             this.colors[i3] = 1;
             this.colors[i3 + 1] = 1;
@@ -233,12 +217,12 @@ export class EnvironmentEffect extends Component {
             this.opacities[i] = 0;
         }
 
-        // 设置几何体属性
+        // English comment.
         this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
         this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
         this.geometry.setAttribute('size', new THREE.BufferAttribute(this.sizes, 1));
 
-        // 创建着色器材质（支持顶点颜色和大小）
+        // English comment.
         this.material = new THREE.PointsMaterial({
             size: this.config.particleSize,
             map: this.texture,
@@ -250,24 +234,22 @@ export class EnvironmentEffect extends Component {
             sizeAttenuation: true
         });
 
-        // 创建粒子系统
+        // English comment.
         this.particles = new THREE.Points(this.geometry, this.material);
         this.particles.frustumCulled = false;
-        this.particles.visible = false; // 初始隐藏
+        this.particles.visible = false; // English comment.
 
-        // 添加到场景
+        // English comment.
         this.scene.scene.add(this.particles);
 
         console.log('[EnvironmentEffect] 粒子系统初始化完成');
     }
 
     /**
-     * 设置环境效果
-     * @param {string} effectType - 效果类型：'temperature' | 'humidity' | 'wind' | 'rain' | 'none'
-     * @param {number} intensity - 效果强度（0-100，默认 50）
+     * English comment.
      */
     setEffect(effectType, intensity = 50) {
-        // 清除效果
+        // English comment.
         if (!effectType || effectType === 'none') {
             this.clearEffect();
             return;
@@ -284,18 +266,18 @@ export class EnvironmentEffect extends Component {
         this.currentEffect = effectType;
         this.intensity = Math.max(0, Math.min(100, intensity));
 
-        // 如果效果配置中有专用纹理，则加载该纹理
+        // English comment.
         if (effectConfig.texture) {
             this.loadTexture(effectConfig.texture);
         }
 
-        // 根据效果类型初始化粒子
+        // English comment.
         this.setupParticlesForEffect(effectType, effectConfig);
 
-        // 显示粒子系统
+        // English comment.
         this.particles.visible = true;
 
-        // 发送效果变更事件
+        // English comment.
         this.emit('effectChanged', {
             effectType,
             intensity: this.intensity,
@@ -304,7 +286,7 @@ export class EnvironmentEffect extends Component {
     }
 
     /**
-     * 根据效果类型设置粒子属性
+     * English comment.
      */
     setupParticlesForEffect(effectType, config) {
         const count = this.config.particleCount;
@@ -313,10 +295,10 @@ export class EnvironmentEffect extends Component {
         this._lastAreaCenter.copy(center);
         const intensityFactor = this.intensity / 100;
 
-        // 实际使用的粒子数量（根据强度调整）
+        // English comment.
         const activeCount = Math.floor(count * intensityFactor);
 
-        // 颜色插值
+        // English comment.
         const colorStart = new THREE.Color(config.colorStart);
         const colorEnd = new THREE.Color(config.colorEnd);
 
@@ -324,90 +306,90 @@ export class EnvironmentEffect extends Component {
             const i3 = i * 3;
 
             if (i < activeCount) {
-                // 随机位置
+                // English comment.
                 this.positions[i3] = center.x + (Math.random() - 0.5) * area.width;
                 this.positions[i3 + 1] = center.y + Math.random() * area.height;
                 this.positions[i3 + 2] = center.z + (Math.random() - 0.5) * area.depth;
 
-                // 随机颜色（在开始和结束颜色之间插值）
+                // English comment.
                 const t = Math.random();
                 const color = new THREE.Color().lerpColors(colorStart, colorEnd, t);
                 this.colors[i3] = color.r;
                 this.colors[i3 + 1] = color.g;
                 this.colors[i3 + 2] = color.b;
 
-                // 随机大小
+                // English comment.
                 const size = config.sizeMin + Math.random() * (config.sizeMax - config.sizeMin);
                 this.sizes[i] = size;
 
-                // 随机透明度
+                // English comment.
                 this.opacities[i] = config.opacityMin + Math.random() * (config.opacityMax - config.opacityMin);
 
-                // 设置速度（根据运动类型）
+                // English comment.
                 this.setupVelocity(i, config);
             } else {
-                // 隐藏未使用的粒子
+                // English comment.
                 this.positions[i3 + 1] = -1000;
                 this.sizes[i] = 0;
                 this.opacities[i] = 0;
             }
         }
 
-        // 更新缓冲区
+        // English comment.
         this.geometry.attributes.position.needsUpdate = true;
         this.geometry.attributes.color.needsUpdate = true;
         this.geometry.attributes.size.needsUpdate = true;
 
-        // 更新材质透明度
+        // English comment.
         this.material.opacity = (config.opacityMin + config.opacityMax) / 2 * intensityFactor;
     }
 
     /**
-     * 设置粒子速度
+     * English comment.
      */
     setupVelocity(index, config) {
         const i3 = index * 3;
         const speed = config.speed * this.config.animationSpeed;
 
         switch (config.movement) {
-        case 'rise': // 温度 - 向上
-            this.velocities[i3] = (Math.random() - 0.5) * 0.3; // 轻微水平摆动
+        case 'rise': // English comment.
+            this.velocities[i3] = (Math.random() - 0.5) * 0.3; // English comment.
             this.velocities[i3 + 1] = speed * (0.5 + Math.random() * 0.5);
             this.velocities[i3 + 2] = (Math.random() - 0.5) * 0.3;
             break;
 
-        case 'float': // 湿度 - 漂浮
+        case 'float': // English comment.
             this.velocities[i3] = (Math.random() - 0.5) * speed * 0.5;
             this.velocities[i3 + 1] = (Math.random() - 0.5) * speed * 0.3;
             this.velocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5;
             break;
 
-        case 'horizontal': // 风速 - 水平
+        case 'horizontal': // English comment.
             const windDir = this.config.windDirection;
             this.velocities[i3] = windDir.x * speed * (0.8 + Math.random() * 0.4);
             this.velocities[i3 + 1] = (Math.random() - 0.5) * 0.2;
             this.velocities[i3 + 2] = windDir.z * speed * (0.8 + Math.random() * 0.4);
             break;
 
-        case 'fall': // 雨量 - 下落
+        case 'fall': // English comment.
             this.velocities[i3] = (Math.random() - 0.5) * 0.1;
             this.velocities[i3 + 1] = -speed * (0.8 + Math.random() * 0.4);
             this.velocities[i3 + 2] = (Math.random() - 0.5) * 0.1;
             break;
 
-        case 'snowfall': // 下雪 - 缓慢飘落带摇摆
-            this.velocities[i3] = (Math.random() - 0.5) * speed * 0.5; // 水平摇摆
-            this.velocities[i3 + 1] = -speed * (0.5 + Math.random() * 0.3); // 缓慢下落
-            this.velocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5; // 水平摇摆
+        case 'snowfall': // English comment.
+            this.velocities[i3] = (Math.random() - 0.5) * speed * 0.5; // English comment.
+            this.velocities[i3 + 1] = -speed * (0.5 + Math.random() * 0.3); // English comment.
+            this.velocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.5; // English comment.
             break;
 
-        case 'pollution': // 污染 - 缓慢漂浮的浓雾
+        case 'pollution': // English comment.
             this.velocities[i3] = (Math.random() - 0.5) * speed * 0.8;
-            this.velocities[i3 + 1] = (Math.random() - 0.3) * speed * 0.3; // 轻微上升趋势
+            this.velocities[i3 + 1] = (Math.random() - 0.3) * speed * 0.3; // English comment.
             this.velocities[i3 + 2] = (Math.random() - 0.5) * speed * 0.8;
             break;
 
-        case 'pulse': // 噪音 - 脉冲式扩散
+        case 'pulse': // English comment.
             const angle = Math.random() * Math.PI * 2;
             const radius = speed * (0.5 + Math.random() * 0.5);
             this.velocities[i3] = Math.cos(angle) * radius;
@@ -423,7 +405,7 @@ export class EnvironmentEffect extends Component {
     }
 
     /**
-     * 清除当前环境效果
+     * English comment.
      */
     clearEffect() {
         if (!this.currentEffect) return;
@@ -433,12 +415,12 @@ export class EnvironmentEffect extends Component {
         this.currentEffect = null;
         this.intensity = 0;
 
-        // 隐藏粒子系统
+        // English comment.
         if (this.particles) {
             this.particles.visible = false;
         }
 
-        // 重置所有粒子
+        // English comment.
         const count = this.config.particleCount;
         for (let i = 0; i < count; i++) {
             const i3 = i * 3;
@@ -451,26 +433,25 @@ export class EnvironmentEffect extends Component {
             this.geometry.attributes.size.needsUpdate = true;
         }
 
-        // 发送效果清除事件
+        // English comment.
         this.emit('effectCleared');
     }
 
     /**
-     * 更新效果强度
-     * @param {number} intensity - 效果强度（0-100）
+     * English comment.
      */
     updateIntensity(intensity) {
         if (!this.currentEffect) return;
 
         this.intensity = Math.max(0, Math.min(100, intensity));
 
-        // 重新设置粒子
+        // English comment.
         const effectConfig = EnvironmentEffect.EFFECT_CONFIGS[this.currentEffect];
         if (effectConfig) {
             this.setupParticlesForEffect(this.currentEffect, effectConfig);
         }
 
-        // 发送强度变更事件
+        // English comment.
         this.emit('intensityChanged', {
             intensity: this.intensity,
             effectType: this.currentEffect
@@ -478,7 +459,7 @@ export class EnvironmentEffect extends Component {
     }
 
     /**
-     * 获取当前效果信息
+     * English comment.
      */
     getEffectInfo() {
         if (!this.currentEffect) {
@@ -494,7 +475,7 @@ export class EnvironmentEffect extends Component {
     }
 
     /**
-     * 每帧更新
+     * English comment.
      */
     onUpdate(delta) {
         if (!this.currentEffect || !this.particles?.visible) return;
@@ -505,7 +486,7 @@ export class EnvironmentEffect extends Component {
         const intensityFactor = this.intensity / 100;
         const activeCount = Math.floor(count * intensityFactor);
 
-        // 跟随相机：把粒子整体平移到新中心（保持相对分布不跳变）
+        // English comment.
         const dx = center.x - this._lastAreaCenter.x;
         const dy = center.y - this._lastAreaCenter.y;
         const dz = center.z - this._lastAreaCenter.z;
@@ -519,25 +500,25 @@ export class EnvironmentEffect extends Component {
             this._lastAreaCenter.copy(center);
         }
 
-        // 更新粒子位置
+        // English comment.
         for (let i = 0; i < activeCount; i++) {
             const i3 = i * 3;
 
-            // 应用速度
+            // English comment.
             this.positions[i3] += this.velocities[i3] * delta;
             this.positions[i3 + 1] += this.velocities[i3 + 1] * delta;
             this.positions[i3 + 2] += this.velocities[i3 + 2] * delta;
 
-            // 边界检测和循环
+            // English comment.
             this.handleBoundary(i, area, center);
         }
 
-        // 更新位置缓冲区
+        // English comment.
         this.geometry.attributes.position.needsUpdate = true;
     }
 
     /**
-     * 处理粒子边界
+     * English comment.
      */
     handleBoundary(index, area, center) {
         const i3 = index * 3;
@@ -547,29 +528,29 @@ export class EnvironmentEffect extends Component {
         const cy = center?.y ?? 0;
         const cz = center?.z ?? 0;
 
-        // X 轴边界
+        // English comment.
         if (this.positions[i3] > cx + halfWidth) {
             this.positions[i3] = cx - halfWidth;
         } else if (this.positions[i3] < cx - halfWidth) {
             this.positions[i3] = cx + halfWidth;
         }
 
-        // Y 轴边界
+        // English comment.
         const bottom = cy;
         const top = cy + area.height;
         if (this.positions[i3 + 1] > top) {
             this.positions[i3 + 1] = bottom;
-            // 重新随机 X 和 Z 位置
+            // English comment.
             this.positions[i3] = cx + (Math.random() - 0.5) * area.width;
             this.positions[i3 + 2] = cz + (Math.random() - 0.5) * area.depth;
         } else if (this.positions[i3 + 1] < bottom) {
             this.positions[i3 + 1] = top;
-            // 重新随机 X 和 Z 位置
+            // English comment.
             this.positions[i3] = cx + (Math.random() - 0.5) * area.width;
             this.positions[i3 + 2] = cz + (Math.random() - 0.5) * area.depth;
         }
 
-        // Z 轴边界
+        // English comment.
         if (this.positions[i3 + 2] > cz + halfDepth) {
             this.positions[i3 + 2] = cz - halfDepth;
         } else if (this.positions[i3 + 2] < cz - halfDepth) {
@@ -578,12 +559,12 @@ export class EnvironmentEffect extends Component {
     }
 
     /**
-     * 设置效果区域
+     * English comment.
      */
     setEffectArea(width, height, depth) {
         this.effectArea = { ...this.effectArea, width, height, depth };
 
-        // 如果当前有效果，重新设置粒子
+        // English comment.
         if (this.currentEffect) {
             const effectConfig = EnvironmentEffect.EFFECT_CONFIGS[this.currentEffect];
             if (effectConfig) {
@@ -593,12 +574,12 @@ export class EnvironmentEffect extends Component {
     }
 
     /**
-     * 设置风向（用于风速效果）
+     * English comment.
      */
     setWindDirection(x, y, z) {
         this.config.windDirection = { x, y, z };
 
-        // 如果当前是风速效果，重新设置粒子
+        // English comment.
         if (this.currentEffect === 'wind') {
             const effectConfig = EnvironmentEffect.EFFECT_CONFIGS.wind;
             this.setupParticlesForEffect('wind', effectConfig);
@@ -606,35 +587,35 @@ export class EnvironmentEffect extends Component {
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
         console.log('[EnvironmentEffect] 销毁组件');
 
-        // 从场景移除
+        // English comment.
         if (this.particles) {
             this.scene.scene.remove(this.particles);
         }
 
-        // 释放几何体
+        // English comment.
         if (this.geometry) {
             this.geometry.dispose();
             this.geometry = null;
         }
 
-        // 释放材质
+        // English comment.
         if (this.material) {
             this.material.dispose();
             this.material = null;
         }
 
-        // 释放纹理
+        // English comment.
         if (this.texture) {
             this.texture.dispose();
             this.texture = null;
         }
 
-        // 清空引用
+        // English comment.
         this.particles = null;
         this.positions = null;
         this.colors = null;

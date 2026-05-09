@@ -1,36 +1,35 @@
 /**
- * 事件类型配置
- * 定义编辑器支持的所有事件类型及其元数据
+ * English comment.
  */
 
 /**
- * 事件类型枚举
+ * English comment.
  */
 export const EventType = {
-    // 生命周期事件
+    // English comment.
     ON_LOADED: 'onLoaded',
     ON_MOUNTED: 'onMounted',
     ON_UNMOUNT: 'onUnmount',
     ON_UPDATE: 'onUpdate',
 
-    // 交互事件
+    // English comment.
     ON_CLICK: 'onClick',
     ON_DOUBLE_CLICK: 'onDoubleClick',
     ON_HOVER: 'onHover',
     ON_HOVER_OUT: 'onHoverOut',
 
-    // 数据事件
+    // English comment.
     ON_DATA_UPDATE: 'onDataUpdate',
     ON_CONFIG_CHANGE: 'onConfigChange',
 
-    // 动画事件
+    // English comment.
     ON_ANIMATION_START: 'onAnimationStart',
     ON_ANIMATION_END: 'onAnimationEnd',
     ON_ANIMATION_LOOP: 'onAnimationLoop'
 };
 
 /**
- * 事件分类
+ * English comment.
  */
 export const EventCategory = {
     LIFECYCLE: 'lifecycle',
@@ -40,10 +39,10 @@ export const EventCategory = {
 };
 
 /**
- * 事件元数据配置
+ * English comment.
  */
 export const eventMetadata = {
-    // ========== 生命周期事件 ==========
+    // English comment.
     [EventType.ON_LOADED]: {
         displayName: '加载完成',
         description: '组件资源加载完成时触发',
@@ -58,7 +57,7 @@ export const eventMetadata = {
         ],
         example: `function onLoaded(component) {
     console.log('组件加载完成:', component);
-    // 在这里编写加载完成后的逻辑
+    // English comment.
 }`
     },
 
@@ -93,7 +92,7 @@ export const eventMetadata = {
         ],
         example: `function onUnmount(component) {
     console.log('组件已卸载:', component);
-    // 清理资源
+    // English comment.
 }`
     },
 
@@ -115,12 +114,12 @@ export const eventMetadata = {
             }
         ],
         example: `function onUpdate(delta, component) {
-    // 每帧执行的逻辑
+    // English comment.
     // component.rotation.y += delta;
 }`
     },
 
-    // ========== 交互事件 ==========
+    // English comment.
     [EventType.ON_CLICK]: {
         displayName: '点击',
         description: '组件被点击时触发',
@@ -140,7 +139,7 @@ export const eventMetadata = {
         ],
         example: `function onClick(event, component) {
     console.log('组件被点击:', event, component);
-    // 处理点击逻辑
+    // English comment.
 }`
     },
 
@@ -184,7 +183,7 @@ export const eventMetadata = {
             }
         ],
         example: `function onHover(event, component) {
-    // 高亮显示
+    // English comment.
 }`
     },
 
@@ -206,11 +205,11 @@ export const eventMetadata = {
             }
         ],
         example: `function onHoverOut(event, component) {
-    // 取消高亮
+    // English comment.
 }`
     },
 
-    // ========== 数据事件 ==========
+    // English comment.
     [EventType.ON_DATA_UPDATE]: {
         displayName: '数据更新',
         description: '组件数据更新时触发',
@@ -265,7 +264,7 @@ export const eventMetadata = {
 }`
     },
 
-    // ========== 动画事件 ==========
+    // English comment.
     [EventType.ON_ANIMATION_START]: {
         displayName: '动画开始',
         description: '动画开始播放时触发',
@@ -339,26 +338,21 @@ export const eventMetadata = {
 };
 
 /**
- * 获取事件元数据
- * @param {string} eventType - 事件类型
- * @returns {Object|null} 事件元数据
+ * English comment.
  */
 export function getEventMetadata(eventType) {
     return eventMetadata[eventType] || null;
 }
 
 /**
- * 获取所有事件类型
- * @returns {Array} 事件类型数组
+ * English comment.
  */
 export function getAllEventTypes() {
     return Object.values(EventType);
 }
 
 /**
- * 根据分类获取事件类型
- * @param {string} category - 事件分类
- * @returns {Array} 事件类型数组
+ * English comment.
  */
 export function getEventTypesByCategory(category) {
     return Object.entries(eventMetadata)
@@ -367,8 +361,7 @@ export function getEventTypesByCategory(category) {
 }
 
 /**
- * 获取所有事件分类
- * @returns {Array} 分类数组
+ * English comment.
  */
 export function getAllCategories() {
     return Object.values(EventCategory);

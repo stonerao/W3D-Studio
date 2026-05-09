@@ -5,41 +5,34 @@ import { FBXLoader } from 'three/examples/jsm/loaders/FBXLoader.js';
 import { clone as cloneSkeleton } from 'three/examples/jsm/utils/SkeletonUtils.js';
 
 /**
- * ModelLoader 模型加载器
- *
- * @class ModelLoader
- * @description 支持 GLTF/GLB/FBX 格式的模型加载
+ * English comment.
  */
 export class ModelLoader {
     /**
-     * 创建模型加载器实例
-     *
-     * @param {IndexedDBCache} indexedDBCache - IndexedDB 缓存实例（可选）
-     * @param {Object} options - 配置选项
-     * @param {string} options.dracoDecoderPath - Draco 解码器路径
+     * English comment.
      */
     constructor(indexedDBCache = null, options = {}) {
-        // GLTF/GLB 加载器
+        // English comment.
         this.manager = new LoadingManager();
         this.gltfLoader = new GLTFLoader(this.manager);
 
-        // 单例 DRACOLoader 实例
+        // English comment.
         this._dracoLoader = new DRACOLoader();
         this._dracoPath = options.dracoDecoderPath || '/draco/';
         this._dracoLoader.setDecoderPath(this._dracoPath);
         this.gltfLoader.setDRACOLoader(this._dracoLoader);
 
-        // Draco 预加载状态
+        // English comment.
         this._dracoPreloaded = false;
         this._dracoPreloadPromise = null;
 
-        // FBX 加载器
+        // English comment.
         this.fbxLoader = new FBXLoader(this.manager);
 
-        // 保持向后兼容
+        // English comment.
         this.loader = this.gltfLoader;
 
-        // IndexedDB 缓存
+        // English comment.
         this.cache = indexedDBCache;
         this.parsedModelCache = new Map();
         this.pendingLoads = new Map();
@@ -64,10 +57,7 @@ export class ModelLoader {
     }
 
     /**
-     * 预加载 Draco 解码器
-     * 确保在加载模型前解码器已完全初始化
-     *
-     * @returns {Promise<void>}
+     * English comment.
      */
     async preloadDraco() {
         if (this._dracoPreloaded) {
@@ -80,8 +70,8 @@ export class ModelLoader {
 
         this._dracoPreloadPromise = new Promise((resolve) => {
             this._dracoLoader.preload();
-            // DRACOLoader.preload() 是同步启动异步加载的
-            // 通过短暂延迟确保 Worker 初始化完成
+            // English comment.
+            // English comment.
             // eslint-disable-next-line no-undef
             globalThis.setTimeout(() => {
                 this._dracoPreloaded = true;
@@ -93,31 +83,22 @@ export class ModelLoader {
     }
 
     /**
-     * 获取 DRACOLoader 实例（单例）
-     *
-     * @returns {DRACOLoader} DRACOLoader 实例
+     * English comment.
      */
     getDracoLoader() {
         return this._dracoLoader;
     }
 
     /**
-     * 根据文件扩展名检测模型格式
-     *
-     * Blob URL（如 blob:http://.../<uuid>）没有扩展名，此时会返回 null。
-     * 调用方可通过 formatHint 参数显式指定格式，优先级高于 URL 检测。
-     *
-     * @param {string} url - 模型 URL
-     * @param {string} [formatHint] - 可选的格式提示（如 'glb'、'gltf'、'fbx'）
-     * @returns {string|null} 模型格式，无法检测时返回 null
+     * English comment.
      */
     detectFormat(url, formatHint) {
-        // 调用方显式提供格式时，直接使用（去掉可能携带的前缀点号）
+        // English comment.
         if (formatHint) {
             return formatHint.toLowerCase().replace(/^\./, '');
         }
 
-        // Blob URL 没有路径扩展名，无法自动检测
+        // English comment.
         if (url.startsWith('blob:')) {
             return null;
         }
@@ -149,12 +130,7 @@ export class ModelLoader {
     }
 
     /**
-     * 加载模型（自动检测格式）
-     *
-     * @param {string} url - 模型 URL
-     * @param {Function} onProgress - 进度回调
-     * @param {string} [formatHint] - 可选的格式提示，当 URL 为 Blob URL 时必须提供
-     * @returns {Promise<Object>} 统一的模型对象
+     * English comment.
      */
     async load(url, onProgress, formatHint) {
         const cacheKey = this._buildCacheKey(url, formatHint);
@@ -172,7 +148,7 @@ export class ModelLoader {
         }
 
         const loadTask = (async () => {
-        // 尝试从 IndexedDB 缓存加载
+        // English comment.
         if (this.cache && shouldUsePersistentCache) {
             const cachedData = await this.cache.get(url);
             if (cachedData) {
@@ -188,7 +164,7 @@ export class ModelLoader {
             }
         }
 
-        // 从网络加载
+        // English comment.
         const format = this.detectFormat(url, formatHint);
         // eslint-disable-next-line no-console
         console.log('[CoreModelLoader][Debug] load start', {
@@ -219,7 +195,7 @@ export class ModelLoader {
             resolvedFormat = modelData?.type || null;
         }
 
-        // 缓存到 IndexedDB
+        // English comment.
         if (this.cache && shouldUsePersistentCache && modelData && resolvedFormat) {
             await this._cacheModel(url);
         }
@@ -269,11 +245,7 @@ export class ModelLoader {
     }
 
     /**
-     * 加载 GLTF/GLB 模型
-     *
-     * @param {string} url - 模型 URL
-     * @param {Function} onProgress - 进度回调
-     * @returns {Promise<Object>} GLTF 对象
+     * English comment.
      */
     loadGLTF(url, onProgress) {
         return new Promise((resolve, reject) => {
@@ -281,14 +253,14 @@ export class ModelLoader {
                 url,
                 (gltf) => {
                     this._applyMaterialDepthDefaults(gltf.scene);
-                    // 返回统一的格式
-                    // 注意：移除 parser 引用，避免 DRACOLoader Worker postMessage 克隆错误
+                    // English comment.
+                    // English comment.
                     resolve({
                         scene: gltf.scene,
                         animations: gltf.animations || [],
                         cameras: gltf.cameras || [],
                         asset: gltf.asset || {},
-                        parser: null, // parser 包含不可克隆的对象，设为 null
+                        parser: null, // English comment.
                         userData: gltf.userData || {},
                         type: 'gltf'
                     });
@@ -307,11 +279,7 @@ export class ModelLoader {
     }
 
     /**
-     * 加载 FBX 模型
-     *
-     * @param {string} url - 模型 URL
-     * @param {Function} onProgress - 进度回调
-     * @returns {Promise<Object>} 统一格式的 FBX 对象
+     * English comment.
      */
     loadFBX(url, onProgress) {
         return new Promise((resolve, reject) => {
@@ -319,7 +287,7 @@ export class ModelLoader {
                 url,
                 (object) => {
                     this._applyMaterialDepthDefaults(object);
-                    // 将 FBX 对象转换为统一的格式（类似 GLTF）
+                    // English comment.
                     const animations = object.animations || [];
 
                     resolve({
@@ -346,26 +314,21 @@ export class ModelLoader {
     }
 
     /**
-     * 设置 Draco 解码器路径
-     * 复用现有的 DRACOLoader 实例，避免重复创建
-     *
-     * @param {string} path - 解码器路径
+     * English comment.
      */
     setDracoDecoderPath(path) {
         if (path === this._dracoPath) {
-            return; // 路径未变，无需更新
+            return; // English comment.
         }
         this._dracoPath = path;
         this._dracoLoader.setDecoderPath(path);
-        // 路径变更后重置预加载状态
+        // English comment.
         this._dracoPreloaded = false;
         this._dracoPreloadPromise = null;
     }
 
     /**
-     * 获取当前 Draco 解码器路径
-     *
-     * @returns {string} 解码器路径
+     * English comment.
      */
     getDracoDecoderPath() {
         return this._dracoPath;
@@ -424,7 +387,7 @@ export class ModelLoader {
     }
 
     /**
-     * 销毁加载器资源
+     * English comment.
      */
     dispose() {
         if (this._dracoLoader) {
@@ -438,24 +401,17 @@ export class ModelLoader {
     }
 
     /**
-     * 从缓存加载模型
-     *
-     * @private
-     * @param {string} url - 模型 URL
-     * @param {ArrayBuffer} cachedData - 缓存的数据
-     * @param {Function} onProgress - 进度回调
-     * @param {string} [formatHint] - 可选的格式提示
-     * @returns {Promise<Object>} 统一的模型对象
+     * English comment.
      */
     async _loadFromCache(url, cachedData, onProgress, formatHint) {
         const format = this.detectFormat(url, formatHint);
 
-        // 模拟进度回调
+        // English comment.
         if (onProgress) {
             onProgress(1);
         }
 
-        // 根据格式解析缓存数据
+        // English comment.
         switch (format) {
         case 'gltf':
         case 'glb':
@@ -468,11 +424,7 @@ export class ModelLoader {
     }
 
     /**
-     * 从缓存解析 GLTF/GLB 模型
-     *
-     * @private
-     * @param {ArrayBuffer} data - 缓存的数据
-     * @returns {Promise<Object>} GLTF 对象
+     * English comment.
      */
     _parseGLTFFromCache(data) {
         return new Promise((resolve, reject) => {
@@ -499,11 +451,7 @@ export class ModelLoader {
     }
 
     /**
-     * 从缓存解析 FBX 模型
-     *
-     * @private
-     * @param {ArrayBuffer} data - 缓存的数据
-     * @returns {Promise<Object>} 统一格式的 FBX 对象
+     * English comment.
      */
     _parseFBXFromCache(data) {
         return new Promise((resolve, reject) => {
@@ -528,21 +476,16 @@ export class ModelLoader {
     }
 
     /**
-     * 缓存模型到 IndexedDB
-     *
-     * @private
-     * @param {string} url - 模型 URL
-     * @param {string} format - 模型格式
-     * @returns {Promise<void>}
+     * English comment.
      */
     async _cacheModel(url) {
         try {
-            // 重新获取原始数据以缓存
+            // English comment.
             const response = await fetch(url);
             const arrayBuffer = await response.arrayBuffer();
             await this.cache.set(url, arrayBuffer, 'model');
         } catch (error) {
-            // 缓存失败不影响主流程
+            // English comment.
             console.warn(`Failed to cache model: ${url}`, error);
         }
     }

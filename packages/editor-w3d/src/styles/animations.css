@@ -1,14 +1,9 @@
-/* ========================================
-   W3D Editor - 动画系统
-   基于 W3D UI 规格书设计
-   ======================================== */
+/* English comment. */
 
-/* ====================
-   1. CSS 变量与缓动函数
-   ==================== */
+/* English comment. */
 
 :root {
-    /* 动画时长 */
+    /* English comment. */
     --duration-instant: 100ms;
     --duration-fast: 150ms;
     --duration-normal: 200ms;
@@ -16,7 +11,7 @@
     --duration-slower: 400ms;
     --duration-slowest: 500ms;
 
-    /* 缓动函数 */
+    /* English comment. */
     --ease-linear: linear;
     --ease-in: cubic-bezier(0.4, 0, 1, 1);
     --ease-out: cubic-bezier(0, 0, 0.2, 1);
@@ -28,35 +23,31 @@
     --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
 }
 
-/* ====================
-   2. 基础过渡类
-   ==================== */
+/* English comment. */
 
-/* 标准过渡 */
+/* English comment. */
 .go-transition {
     transition: all var(--duration-slow) var(--ease-out);
 }
 
-/* 快速过渡 */
+/* English comment. */
 .go-transition-quick {
     transition: all var(--duration-fast) var(--ease-out);
 }
 
-/* 平滑过渡 */
+/* English comment. */
 .go-transition-smooth {
     transition: all var(--duration-normal) var(--ease-in-out);
 }
 
-/* 弹性过渡 */
+/* English comment. */
 .go-transition-bounce {
     transition: all var(--duration-slow) var(--ease-bounce);
 }
 
-/* ====================
-   3. Vue 过渡动画 - Fade
-   ==================== */
+/* English comment. */
 
-/* 基础淡入淡出 */
+/* English comment. */
 .fade-enter-active,
 .fade-leave-active {
     transition: opacity var(--duration-normal) var(--ease-out);
@@ -67,7 +58,7 @@
     opacity: 0;
 }
 
-/* 快速淡入淡出 */
+/* English comment. */
 .fade-fast-enter-active,
 .fade-fast-leave-active {
     transition: opacity var(--duration-fast) var(--ease-out);
@@ -78,7 +69,7 @@
     opacity: 0;
 }
 
-/* 淡入上滑 */
+/* English comment. */
 .fade-up-enter-active,
 .fade-up-leave-active {
     transition: all var(--duration-normal) var(--ease-out);
@@ -94,7 +85,7 @@
     transform: translateY(-10px);
 }
 
-/* 淡入下滑 */
+/* English comment. */
 .fade-down-enter-active,
 .fade-down-leave-active {
     transition: all var(--duration-normal) var(--ease-out);
@@ -110,7 +101,7 @@
     transform: translateY(10px);
 }
 
-/* 淡入左滑 */
+/* English comment. */
 .fade-left-enter-active,
 .fade-left-leave-active {
     transition: all var(--duration-normal) var(--ease-out);
@@ -126,7 +117,7 @@
     transform: translateX(-20px);
 }
 
-/* 淡入右滑 */
+/* English comment. */
 .fade-right-enter-active,
 .fade-right-leave-active {
     transition: all var(--duration-normal) var(--ease-out);
@@ -142,11 +133,9 @@
     transform: translateX(20px);
 }
 
-/* ====================
-   4. Vue 过渡动画 - Scale (缩放)
-   ==================== */
+/* English comment. */
 
-/* 中心缩放 */
+/* English comment. */
 .scale-enter-active,
 .scale-leave-active {
     transition: all var(--duration-normal) var(--ease-out-expo);
@@ -158,7 +147,7 @@
     transform: scale(0.9);
 }
 
-/* 弹性缩放 */
+/* English comment. */
 .scale-bounce-enter-active {
     transition: all var(--duration-slow) var(--ease-spring);
 }
@@ -173,7 +162,7 @@
     transform: scale(0.85);
 }
 
-/* 缩放淡入 (模态框专用) */
+/* English comment. */
 .zoom-enter-active,
 .zoom-leave-active {
     transition: all var(--duration-slow) var(--ease-out-expo);
@@ -189,11 +178,9 @@
     transform: scale(1.02);
 }
 
-/* ====================
-   5. Vue 过渡动画 - Slide (滑动)
-   ==================== */
+/* English comment. */
 
-/* 从左滑入 */
+/* English comment. */
 .slide-left-enter-active,
 .slide-left-leave-active {
     transition: all var(--duration-slow) var(--ease-out-expo);
@@ -209,7 +196,7 @@
     transform: translateX(-100%);
 }
 
-/* 从右滑入 */
+/* English comment. */
 .slide-right-enter-active,
 .slide-right-leave-active {
     transition: all var(--duration-slow) var(--ease-out-expo);
@@ -225,7 +212,7 @@
     transform: translateX(100%);
 }
 
-/* 从上滑入 */
+/* English comment. */
 .slide-up-enter-active,
 .slide-up-leave-active {
     transition: all var(--duration-slow) var(--ease-out-expo);
@@ -241,7 +228,7 @@
     transform: translateY(-100%);
 }
 
-/* 从下滑入 */
+/* English comment. */
 .slide-down-enter-active,
 .slide-down-leave-active {
     transition: all var(--duration-slow) var(--ease-out-expo);
@@ -257,11 +244,9 @@
     transform: translateY(100%);
 }
 
-/* ====================
-   6. 列表动画
-   ==================== */
+/* English comment. */
 
-/* 基础列表动画 */
+/* English comment. */
 .list-enter-active,
 .list-leave-active {
     transition: all var(--duration-slow) var(--ease-out);
@@ -277,7 +262,7 @@
     position: absolute;
 }
 
-/* 完整列表动画 (带移动效果) */
+/* English comment. */
 .list-complete-item {
     transition: all var(--duration-slower) var(--ease-out);
 }
@@ -296,7 +281,7 @@
     transition: transform var(--duration-slower) var(--ease-out);
 }
 
-/* 网格列表动画 */
+/* English comment. */
 .grid-list-enter-active,
 .grid-list-leave-active {
     transition: all var(--duration-slow) var(--ease-out);
@@ -312,11 +297,9 @@
     position: absolute;
 }
 
-/* ====================
-   7. 模态框动画
-   ==================== */
+/* English comment. */
 
-/* 模态框遮罩 */
+/* English comment. */
 .modal-enter-active,
 .modal-leave-active {
     transition: opacity var(--duration-slow) var(--ease-out);
@@ -327,7 +310,7 @@
     opacity: 0;
 }
 
-/* 模态框内容 */
+/* English comment. */
 .modal-enter-active .modal-container,
 .modal-leave-active .modal-container {
     transition: all var(--duration-slow) var(--ease-out-expo);
@@ -343,11 +326,9 @@
     transform: scale(0.95) translateY(10px);
 }
 
-/* ====================
-   8. 折叠/展开动画
-   ==================== */
+/* English comment. */
 
-/* 高度折叠 */
+/* English comment. */
 .collapse-enter-active,
 .collapse-leave-active {
     transition: all var(--duration-slow) var(--ease-out);
@@ -362,7 +343,7 @@
     padding-bottom: 0;
 }
 
-/* 手风琴动画 */
+/* English comment. */
 .accordion-content-enter-active {
     animation: accordion-open var(--duration-slow) var(--ease-out);
 }
@@ -395,16 +376,14 @@
     }
 }
 
-/* ====================
-   9. Toast/通知动画
-   ==================== */
+/* English comment. */
 
-/* Toast 进入 */
+/* English comment. */
 .toast-enter-active {
     animation: toast-in var(--duration-slow) var(--ease-out-back);
 }
 
-/* Toast 退出 */
+/* English comment. */
 .toast-leave-active {
     animation: toast-out var(--duration-fast) var(--ease-in);
 }
@@ -431,14 +410,12 @@
     }
 }
 
-/* Toast 移动 */
+/* English comment. */
 .toast-move {
     transition: transform var(--duration-slow) var(--ease-out);
 }
 
-/* ====================
-   10. 下拉菜单动画
-   ==================== */
+/* English comment. */
 
 .dropdown-enter-active,
 .dropdown-leave-active {
@@ -452,9 +429,7 @@
     transform: scaleY(0.9) translateY(-4px);
 }
 
-/* ====================
-   11. 标签页切换动画
-   ==================== */
+/* English comment. */
 
 .tab-content-enter-active,
 .tab-content-leave-active {
@@ -471,11 +446,9 @@
     transform: translateX(-10px);
 }
 
-/* ====================
-   12. 强调动画 (Keyframes)
-   ==================== */
+/* English comment. */
 
-/* 脉冲 */
+/* English comment. */
 @keyframes pulse {
     0%, 100% {
         opacity: 1;
@@ -489,7 +462,7 @@
     animation: pulse 2s var(--ease-in-out) infinite;
 }
 
-/* 弹跳 */
+/* English comment. */
 @keyframes bounce {
     0%, 100% {
         transform: translateY(0);
@@ -503,7 +476,7 @@
     animation: bounce 1s var(--ease-bounce) infinite;
 }
 
-/* 闪烁 */
+/* English comment. */
 @keyframes twinkle {
     0%, 100% {
         opacity: 1;
@@ -517,7 +490,7 @@
     animation: twinkle 2s ease infinite;
 }
 
-/* 摇晃 */
+/* English comment. */
 @keyframes shake {
     0%, 100% {
         transform: translateX(0);
@@ -534,7 +507,7 @@
     animation: shake 0.6s var(--ease-out);
 }
 
-/* 旋转 */
+/* English comment. */
 @keyframes spin {
     from {
         transform: rotate(0deg);
@@ -548,7 +521,7 @@
     animation: spin 1s linear infinite;
 }
 
-/* 心跳 */
+/* English comment. */
 @keyframes heartbeat {
     0%, 100% {
         transform: scale(1);
@@ -571,7 +544,7 @@
     animation: heartbeat 1.5s var(--ease-in-out) infinite;
 }
 
-/* 涟漪 */
+/* English comment. */
 @keyframes ripple {
     0% {
         transform: scale(0);
@@ -583,9 +556,7 @@
     }
 }
 
-/* ====================
-   13. 骨架屏动画
-   ==================== */
+/* English comment. */
 
 @keyframes skeleton-loading {
     0% {
@@ -607,9 +578,7 @@
     animation: skeleton-loading 1.5s ease-in-out infinite;
 }
 
-/* ====================
-   14. 进度条动画
-   ==================== */
+/* English comment. */
 
 @keyframes progress-indeterminate {
     0% {
@@ -631,9 +600,7 @@
     animation: progress-indeterminate 1.5s var(--ease-in-out) infinite;
 }
 
-/* ====================
-   15. 按钮点击涟漪效果
-   ==================== */
+/* English comment. */
 
 .ripple-effect {
     position: relative;
@@ -657,11 +624,9 @@
     animation: ripple 0.6s var(--ease-out);
 }
 
-/* ====================
-   16. 悬停效果增强
-   ==================== */
+/* English comment. */
 
-/* 悬停上浮 */
+/* English comment. */
 .hover-lift {
     transition: transform var(--duration-fast) var(--ease-out),
                 box-shadow var(--duration-fast) var(--ease-out);
@@ -672,7 +637,7 @@
     box-shadow: var(--shadow-md);
 }
 
-/* 悬停发光 */
+/* English comment. */
 .hover-glow {
     transition: box-shadow var(--duration-fast) var(--ease-out);
 }
@@ -681,7 +646,7 @@
     box-shadow: var(--shadow-glow);
 }
 
-/* 悬停缩放 */
+/* English comment. */
 .hover-scale {
     transition: transform var(--duration-fast) var(--ease-out);
 }
@@ -690,9 +655,7 @@
     transform: scale(1.02);
 }
 
-/* ====================
-   17. 焦点动画
-   ==================== */
+/* English comment. */
 
 .focus-ring {
     transition: box-shadow var(--duration-fast) var(--ease-out);
@@ -702,23 +665,19 @@
     box-shadow: 0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-primary);
 }
 
-/* ====================
-   18. 状态过渡
-   ==================== */
+/* English comment. */
 
-/* 禁用状态过渡 */
+/* English comment. */
 .state-disabled {
     transition: opacity var(--duration-fast) var(--ease-out);
 }
 
-/* 激活状态过渡 */
+/* English comment. */
 .state-active {
     transition: all var(--duration-fast) var(--ease-out);
 }
 
-/* ====================
-   19. 硬件加速
-   ==================== */
+/* English comment. */
 
 .gpu-accelerated {
     will-change: transform, opacity;
@@ -726,9 +685,7 @@
     backface-visibility: hidden;
 }
 
-/* ====================
-   20. 减少动画模式 (无障碍)
-   ==================== */
+/* English comment. */
 
 @media (prefers-reduced-motion: reduce) {
     *,

@@ -20,17 +20,11 @@ const resolveShadowMapType = (type = DEFAULT_SHADOW_MAP_TYPE) => {
 };
 
 /**
- * Renderer 渲染器类
- *
- * @class Renderer
- * @description WebGL 渲染器的封装和管理
+ * English comment.
  */
 export class Renderer {
     /**
-     * 创建渲染器实例
-     *
-     * @param {Scene} scene - 场景实例
-     * @param {Object} options - 配置选项
+     * English comment.
      */
     constructor(scene, options = {}) {
         this.scene = scene;
@@ -42,34 +36,31 @@ export class Renderer {
             ...options
         };
 
-        // 创建 WebGL 渲染器
+        // English comment.
         this.instance = new THREE.WebGLRenderer(this.options);
 
-        // 设置渲染器大小
+        // English comment.
         this.resize();
 
-        // 设置像素比（限制最大値为 2，避免 4K/Retina 屏幕将渲染分辨率成倍增大导致帧率下降）
+        // English comment.
         this.instance.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // 设置色彩空间
+        // English comment.
         this.instance.outputColorSpace = THREE.SRGBColorSpace;
 
-        // 启用阴影
+        // English comment.
         this.instance.shadowMap.enabled = false;
         this.instance.shadowMap.type = DEFAULT_SHADOW_MAP_TYPE;
 
-        // 添加到容器
+        // English comment.
         this.scene.container.appendChild(this.instance.domElement);
 
-        // 监听窗口大小变化
+        // English comment.
         this.handleResize = this.resize.bind(this);
     }
 
     /**
-     * 启用阴影
-     *
-     * @param {boolean} enabled - 是否启用
-     * @param {number} type - 阴影类型
+     * English comment.
      */
     enableShadow(enabled = true, type = DEFAULT_SHADOW_MAP_TYPE) {
         this.instance.shadowMap.enabled = enabled;
@@ -77,21 +68,21 @@ export class Renderer {
     }
 
     /**
-     * 启用自动调整大小
+     * English comment.
      */
     enableResize() {
         window.addEventListener('resize', this.handleResize);
     }
 
     /**
-     * 禁用自动调整大小
+     * English comment.
      */
     disableResize() {
         window.removeEventListener('resize', this.handleResize);
     }
 
     /**
-     * 调整渲染器大小
+     * English comment.
      */
     resize() {
         const width = this.scene.container.clientWidth;
@@ -99,58 +90,50 @@ export class Renderer {
 
         this.instance.setSize(width, height);
 
-        // 更新相机
+        // English comment.
         if (this.scene.camera) {
             this.scene.camera.resize(width, height);
         }
     }
 
     /**
-     * 渲染场景
-     *
-     * @param {THREE.Scene} scene - Three.js 场景
-     * @param {THREE.Camera} camera - Three.js 相机
+     * English comment.
      */
     render(scene, camera) {
         this.instance.render(scene, camera);
     }
 
     /**
-     * 获取渲染器的 DOM 元素（canvas）
-     * @returns {HTMLCanvasElement|null}
+     * English comment.
      */
     getDomElement() {
         return this.instance?.domElement || null;
     }
 
     /**
-     * 设置背景色
-     *
-     * @param {string|number} color - 颜色值
+     * English comment.
      */
     setBackground(color) {
         this.instance.setClearColor(color);
     }
 
     /**
-     * 更新渲染器配置
-     *
-     * @param {Object} config - 配置选项
+     * English comment.
      */
     updateConfig(config = {}) {
         if (!config || typeof config !== 'object') return;
 
-        // 更新背景色
+        // English comment.
         if (config.clearColor !== undefined) {
             this.setBackground(config.clearColor);
         }
 
-        // 更新像素比
+        // English comment.
         if (config.pixelRatio !== undefined) {
             this.instance.setPixelRatio(config.pixelRatio);
         }
 
-        // 更新阴影设置
+        // English comment.
         if (config.shadowMap !== undefined) {
             if (config.shadowMap.enabled !== undefined) {
                 this.instance.shadowMap.enabled = config.shadowMap.enabled;
@@ -160,12 +143,12 @@ export class Renderer {
             }
         }
 
-        // 更新色彩空间
+        // English comment.
         if (config.outputColorSpace !== undefined) {
             this.instance.outputColorSpace = config.outputColorSpace;
         }
 
-        // 更新色调映射
+        // English comment.
         if (config.toneMapping !== undefined) {
             this.instance.toneMapping = config.toneMapping;
         }
@@ -176,9 +159,7 @@ export class Renderer {
     }
 
     /**
-     * 获取当前配置
-     *
-     * @returns {Object} 当前配置
+     * English comment.
      */
     getConfig() {
         return {
@@ -196,16 +177,16 @@ export class Renderer {
     }
 
     /**
-     * 销毁渲染器
+     * English comment.
      */
     dispose() {
-        // 移除事件监听
+        // English comment.
         this.disableResize();
 
-        // 销毁渲染器
+        // English comment.
         this.instance.dispose();
 
-        // 移除 DOM 元素
+        // English comment.
         if (this.instance.domElement.parentNode) {
             this.instance.domElement.parentNode.removeChild(this.instance.domElement);
         }

@@ -1,24 +1,7 @@
 import * as THREE from 'three';
 
 /**
- * 渐变材质预设
- * 
- * 特性：
- * - 双色渐变效果
- * - 基于 UV 坐标的颜色混合
- * - 简单的漫反射光照
- * - 支持自定义两种颜色
- * 
- * @param {Object} params - 材质参数
- * @param {string|number} params.color1 - 渐变起始颜色，默认 '#ff0000'
- * @param {string|number} params.color2 - 渐变结束颜色，默认 '#0000ff'
- * @returns {Object} 材质配置对象
- * 
- * @example
- * const config = createGradientMaterial({
- *     color1: '#ff0000',
- *     color2: '#0000ff'
- * });
+ * English comment.
  */
 export function createGradientMaterial(params = {}) {
     const {
@@ -44,14 +27,14 @@ export function createGradientMaterial(params = {}) {
             varying vec3 vNormal;
             
             void main() {
-                // 基于 UV 坐标的颜色混合
+                // English comment.
                 vec3 color = mix(color1, color2, vUv.y);
                 
-                // 简单的漫反射光照
+                // English comment.
                 vec3 light = normalize(vec3(1.0, 1.0, 1.0));
                 float dProd = max(0.0, dot(vNormal, light));
                 
-                // 环境光 + 漫反射光
+                // English comment.
                 vec3 finalColor = color * (0.3 + 0.7 * dProd);
                 
                 gl_FragColor = vec4(finalColor, 1.0);
@@ -66,8 +49,7 @@ export function createGradientMaterial(params = {}) {
 }
 
 /**
- * 获取材质的默认参数
- * @returns {Object} 默认参数对象
+ * English comment.
  */
 export function getGradientMaterialDefaults() {
     return {
@@ -77,7 +59,7 @@ export function getGradientMaterialDefaults() {
 }
 
 /**
- * 材质元数据
+ * English comment.
  */
 export const GradientMaterialMeta = {
     name: 'gradient',

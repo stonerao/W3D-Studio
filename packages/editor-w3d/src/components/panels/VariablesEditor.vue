@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="variables-editor">
-        <!-- 工具栏 -->
+        <!-- English comment. -->
         <div class="toolbar">
             <div class="toolbar-row">
                 <div class="toolbar-primary">
@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <!-- 搜索与过滤 -->
+        <!-- English comment. -->
         <div class="filter-box">
             <Input
                 v-model="searchKeyword"
@@ -54,7 +54,7 @@
             </div>
         </div>
 
-        <!-- 变量列表 -->
+        <!-- English comment. -->
         <div class="variable-list">
             <div v-if="filteredVariables.length === 0" class="empty-state">
                 <div class="empty-icon">
@@ -100,10 +100,10 @@
             </div>
         </div>
 
-        <!-- 变量编辑弹窗 -->
+        <!-- English comment. -->
         <Modal v-model="showEditModal" :title="isEditing ? '编辑变量' : '添加变量'" width="480px">
             <div class="edit-form">
-                <!-- 变量名 -->
+                <!-- English comment. -->
                 <div class="form-group">
                     <label>变量名 <span class="required">*</span></label>
                     <Input
@@ -114,7 +114,7 @@
                     <div v-if="nameError" class="error-text">{{ nameError }}</div>
                 </div>
 
-                <!-- 类型 -->
+                <!-- English comment. -->
                 <div class="form-group">
                     <label>类型 <span class="required">*</span></label>
                     <Select
@@ -124,7 +124,7 @@
                     />
                 </div>
 
-                <!-- 值编辑器 -->
+                <!-- English comment. -->
                 <div class="form-group">
                     <label>值</label>
                     <VariableValueEditor
@@ -133,7 +133,7 @@
                     />
                 </div>
 
-                <!-- 默认值 -->
+                <!-- English comment. -->
                 <div class="form-group">
                     <label>默认值</label>
                     <VariableValueEditor
@@ -142,7 +142,7 @@
                     />
                 </div>
 
-                <!-- 描述 -->
+                <!-- English comment. -->
                 <div class="form-group">
                     <label>描述</label>
                     <Input
@@ -151,7 +151,7 @@
                     />
                 </div>
 
-                <!-- 分组 -->
+                <!-- English comment. -->
                 <div class="form-group">
                     <label>分组</label>
                     <Input
@@ -181,7 +181,7 @@
             </template>
         </Modal>
 
-        <!-- 导入弹窗 -->
+        <!-- English comment. -->
         <Modal v-model="showImportModal" title="导入变量" width="500px">
             <div class="import-form">
                 <div class="form-group">
@@ -225,20 +225,20 @@ const variableStore = useVariableStore();
 const toast = useToast();
 const { confirm: showConfirm } = useConfirm();
 
-// 搜索
+// English comment.
 const searchKeyword = ref('');
 const typeFilter = ref('all');
 const groupFilter = ref('all');
 
-// 选中的变量
+// English comment.
 const selectedVariableId = ref(null);
 
-// 编辑弹窗
+// English comment.
 const showEditModal = ref(false);
 const isEditing = ref(false);
 const editingId = ref(null);
 
-// 编辑表单
+// English comment.
 const editForm = ref({
     name: '',
     type: VARIABLE_TYPES.NUMBER,
@@ -248,15 +248,15 @@ const editForm = ref({
     group: '默认'
 });
 
-// 名称错误
+// English comment.
 const nameError = ref('');
 
-// 导入弹窗
+// English comment.
 const showImportModal = ref(false);
 const importJson = ref('');
 const importMerge = ref(false);
 
-// 类型选项
+// English comment.
 const typeOptions = computed(() => {
     return Object.entries(VARIABLE_TYPE_CONFIG).map(([key, config]) => ({
         label: `${config.icon} ${config.label}`,
@@ -269,7 +269,7 @@ const typeFilterOptions = computed(() => [
     ...typeOptions.value
 ]);
 
-// 分组名称列表
+// English comment.
 const groupNames = computed(() => variableStore.groupNames);
 
 const groupFilterOptions = computed(() => [
@@ -286,7 +286,7 @@ const hasActiveFilters = computed(() => (
     groupFilter.value !== 'all'
 ));
 
-// 过滤后的变量列表
+// English comment.
 const filteredVariables = computed(() => {
     const keyword = searchKeyword.value.trim().toLowerCase();
     return [...variableStore.variables]
@@ -314,7 +314,7 @@ const clearFilters = () => {
     groupFilter.value = 'all';
 };
 
-// 获取类型图标
+// English comment.
 const getTypeIcon = (type) => {
     return VARIABLE_TYPE_CONFIG[type]?.icon || '';
 };
@@ -323,12 +323,12 @@ const getTypeIconClass = (type) => {
     return `variable-icon--${type || 'default'}`;
 };
 
-// 获取类型标签
+// English comment.
 const getTypeLabel = (type) => {
     return VARIABLE_TYPE_CONFIG[type]?.label || type;
 };
 
-// 格式化显示值
+// English comment.
 const formatValue = (value, type) => {
     if (value === null || value === undefined) return '(空)';
     const trimLongText = (text) => text.length > 160 ? `${text.slice(0, 157)}...` : text;
@@ -361,12 +361,12 @@ const formatTime = (timestamp) => {
     });
 };
 
-// 选中变量
+// English comment.
 const selectVariable = (id) => {
     selectedVariableId.value = id;
 };
 
-// 打开添加弹窗
+// English comment.
 const handleAddVariable = () => {
     isEditing.value = false;
     editingId.value = null;
@@ -382,7 +382,7 @@ const handleAddVariable = () => {
     showEditModal.value = true;
 };
 
-// 打开编辑弹窗
+// English comment.
 const openEditModal = (variable) => {
     isEditing.value = true;
     editingId.value = variable.id;
@@ -398,7 +398,7 @@ const openEditModal = (variable) => {
     showEditModal.value = true;
 };
 
-// 类型改变时重置值
+// English comment.
 const handleTypeChange = (newType) => {
     const defaultVal = variableStore.getDefaultValue(newType);
     editForm.value.value = defaultVal;
@@ -414,7 +414,7 @@ const handleReset = (variable) => {
     }
 };
 
-// 验证名称
+// English comment.
 const validateName = () => {
     const validation = variableStore.validateName(editForm.value.name);
     if (!validation.valid) {
@@ -431,7 +431,7 @@ const validateName = () => {
     return true;
 };
 
-// 保存变量
+// English comment.
 const handleSave = () => {
     if (!validateName()) return;
 
@@ -449,7 +449,7 @@ const handleSave = () => {
     }
 };
 
-// 删除变量
+// English comment.
 const handleDelete = async () => {
     if (!editingId.value) return;
 
@@ -466,7 +466,7 @@ const handleDelete = async () => {
     }
 };
 
-// 导出
+// English comment.
 const handleExport = () => {
     const json = variableStore.exportToJson();
     const blob = new Blob([json], { type: 'application/json' });
@@ -479,14 +479,14 @@ const handleExport = () => {
     toast.success('变量已导出');
 };
 
-// 打开导入弹窗
+// English comment.
 const handleImport = () => {
     importJson.value = '';
     importMerge.value = false;
     showImportModal.value = true;
 };
 
-// 确认导入
+// English comment.
 const confirmImport = () => {
     const result = variableStore.importFromJson(importJson.value, importMerge.value);
     if (result.success) {
@@ -497,7 +497,7 @@ const confirmImport = () => {
     }
 };
 
-// 监听名称输入，实时验证
+// English comment.
 watch(() => editForm.value.name, () => {
     if (editForm.value.name) {
         validateName();
@@ -814,7 +814,7 @@ watch(() => editForm.value.name, () => {
     line-height: 1.45;
 }
 
-/* 编辑表单 */
+/* English comment. */
 .edit-form {
     display: flex;
     flex-direction: column;
@@ -856,7 +856,7 @@ watch(() => editForm.value.name, () => {
     flex: 1;
 }
 
-/* 导入表单 */
+/* English comment. */
 .import-form {
     display: flex;
     flex-direction: column;

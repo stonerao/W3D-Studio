@@ -1,4 +1,4 @@
-export function createDefaultProjectData(name = '未命名项目') {
+export function createDefaultProjectData(name = 'Untitled project') {
     return {
         schemaVersion: 1,
         version: '1.0.0',

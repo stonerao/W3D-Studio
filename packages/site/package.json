@@ -4,6 +4,7 @@
   "private": true,
   "type": "module",
   "description": "Mogl 可视化平台网站与文档入口",
+  "license": "SEE LICENSE IN LICENSE",
   "scripts": {
     "dev": "vite --host",
     "build": "vite build",

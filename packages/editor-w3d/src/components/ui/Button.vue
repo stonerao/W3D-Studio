@@ -81,7 +81,7 @@ const handleClick = (event) => {
     transform: translateZ(0);
 }
 
-/* 按钮涟漪效果 */
+/* English comment. */
 .btn::before {
     content: '';
     position: absolute;
@@ -112,7 +112,7 @@ const handleClick = (event) => {
     pointer-events: none;
 }
 
-/* 尺寸 */
+/* English comment. */
 .btn-sm {
     height: 28px;
     padding: 0 var(--space-3);
@@ -131,7 +131,7 @@ const handleClick = (event) => {
     font-size: var(--font-size-md);
 }
 
-/* 变体 - 商业级样式 */
+/* English comment. */
 .btn-default {
     background-color: var(--color-bg-tertiary);
     border: 1px solid var(--color-border);
@@ -216,7 +216,7 @@ const handleClick = (event) => {
     background-color: var(--color-bg-active);
 }
 
-/* 块级按钮 */
+/* English comment. */
 .btn-block {
     width: 100%;
 }

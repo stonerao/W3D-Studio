@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="advanced-color-picker" ref="pickerRef">
-        <!-- 颜色预览触发器 -->
+        <!-- English comment. -->
         <div class="color-trigger" @click="togglePicker">
             <div 
                 class="color-preview-box" 
@@ -15,7 +15,7 @@
             </div>
         </div>
 
-        <!-- 颜色选择器弹出面板 -->
+        <!-- English comment. -->
         <Teleport to="body">
             <Transition name="picker-fade">
                 <div 
@@ -24,7 +24,7 @@
                     :style="panelStyle"
                     @click.stop
                 >
-                    <!-- 色相饱和度面板 -->
+                    <!-- English comment. -->
                     <div class="saturation-panel">
                         <div 
                             ref="saturationRef"
@@ -42,7 +42,7 @@
                         </div>
                     </div>
 
-                    <!-- 色相滑块 -->
+                    <!-- English comment. -->
                     <div class="hue-slider">
                         <div 
                             ref="hueRef"
@@ -57,7 +57,7 @@
                         </div>
                     </div>
 
-                    <!-- 颜色预览和输入 -->
+                    <!-- English comment. -->
                     <div class="color-info">
                         <div class="preview-section">
                             <div class="preview-colors">
@@ -129,7 +129,7 @@
                         </div>
                     </div>
 
-                    <!-- 预设颜色 -->
+                    <!-- English comment. -->
                     <div class="preset-colors">
                         <div class="preset-title">常用颜色</div>
                         <div class="preset-grid">
@@ -146,7 +146,7 @@
                         </div>
                     </div>
 
-                    <!-- 最近使用的颜色 -->
+                    <!-- English comment. -->
                     <div v-if="recentColors.length > 0" class="recent-colors">
                         <div class="preset-title">最近使用</div>
                         <div class="preset-grid">
@@ -166,7 +166,7 @@
             </Transition>
         </Teleport>
 
-        <!-- 点击遮罩层关闭 -->
+        <!-- English comment. -->
         <Teleport to="body">
             <div 
                 v-if="isOpen" 
@@ -193,7 +193,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'change']);
 
-// 状态
+// English comment.
 const isOpen = ref(false);
 const pickerRef = ref(null);
 const saturationRef = ref(null);
@@ -202,16 +202,16 @@ const hexInput = ref(props.modelValue);
 const originalColor = ref(props.modelValue);
 const panelStyle = ref({});
 
-// HSV 颜色空间
+// English comment.
 const hsv = ref({ h: 0, s: 1, v: 1 });
 
-// RGB 颜色空间
+// English comment.
 const rgb = computed(() => hsvToRgb(hsv.value.h, hsv.value.s, hsv.value.v));
 
-// 最近使用的颜色
+// English comment.
 const recentColors = ref([]);
 
-// 预设颜色
+// English comment.
 const presetColors = [
     '#ffffff', '#000000', '#808080', '#c0c0c0',
     '#ff0000', '#ff6600', '#ffcc00', '#ffff00',
@@ -222,26 +222,26 @@ const presetColors = [
     '#99ffcc', '#99ffff', '#99ccff', '#9999ff',
 ];
 
-// 色相颜色
+// English comment.
 const hueColor = computed(() => {
     const { r, g, b } = hsvToRgb(hsv.value.h, 1, 1);
     return `rgb(${r}, ${g}, ${b})`;
 });
 
-// 饱和度光标位置
+// English comment.
 const saturationCursorStyle = computed(() => ({
     left: `${hsv.value.s * 100}%`,
     top: `${(1 - hsv.value.v) * 100}%`
 }));
 
-// 监听 modelValue 变化
+// English comment.
 watch(() => props.modelValue, (newValue) => {
     hexInput.value = newValue;
     const { h, s, v } = hexToHsv(newValue);
     hsv.value = { h, s, v };
 }, { immediate: true });
 
-// 打开/关闭选择器
+// English comment.
 const togglePicker = () => {
     if (props.disabled) return;
     if (!isOpen.value) {
@@ -264,7 +264,7 @@ const closePicker = () => {
     emit('change', props.modelValue);
 };
 
-// 更新面板位置
+// English comment.
 const updatePanelPosition = () => {
     if (!pickerRef.value) return;
     const rect = pickerRef.value.getBoundingClientRect();
@@ -274,12 +274,12 @@ const updatePanelPosition = () => {
     let left = rect.left;
     let top = rect.bottom + 8;
     
-    // 检查是否超出右边界
+    // English comment.
     if (left + panelWidth > window.innerWidth) {
         left = window.innerWidth - panelWidth - 16;
     }
     
-    // 检查是否超出下边界
+    // English comment.
     if (top + panelHeight > window.innerHeight) {
         top = rect.top - panelHeight - 8;
     }
@@ -290,7 +290,7 @@ const updatePanelPosition = () => {
     };
 };
 
-// 饱和度拖拽
+// English comment.
 let isDraggingSaturation = false;
 
 const startSaturationDrag = (e) => {
@@ -329,7 +329,7 @@ const stopSaturationDrag = () => {
     document.removeEventListener('touchend', stopSaturationDrag);
 };
 
-// 色相拖拽
+// English comment.
 let isDraggingHue = false;
 
 const startHueDrag = (e) => {
@@ -363,14 +363,14 @@ const stopHueDrag = () => {
     document.removeEventListener('touchend', stopHueDrag);
 };
 
-// 更新颜色
+// English comment.
 const updateColor = () => {
     const hex = hsvToHex(hsv.value.h, hsv.value.s, hsv.value.v);
     hexInput.value = hex;
     emit('update:modelValue', hex);
 };
 
-// 处理 HEX 输入
+// English comment.
 const handleHexInput = (e) => {
     hexInput.value = e.target.value;
 };
@@ -390,7 +390,7 @@ const validateHexInput = () => {
     }
 };
 
-// 处理 RGB 输入
+// English comment.
 const handleRgbInput = (channel, e) => {
     let value = parseInt(e.target.value) || 0;
     value = Math.max(0, Math.min(255, value));
@@ -404,7 +404,7 @@ const handleRgbInput = (channel, e) => {
     emit('update:modelValue', hex);
 };
 
-// 选择预设颜色
+// English comment.
 const selectPreset = (color) => {
     emit('update:modelValue', color);
     const { h, s, v } = hexToHsv(color);
@@ -412,12 +412,12 @@ const selectPreset = (color) => {
     hexInput.value = color;
 };
 
-// 重置为原始颜色
+// English comment.
 const resetToOriginal = () => {
     selectPreset(originalColor.value);
 };
 
-// 添加到最近使用
+// English comment.
 const addToRecent = (color) => {
     if (!color || presetColors.includes(color)) return;
     
@@ -433,7 +433,7 @@ const addToRecent = (color) => {
     }
 };
 
-// 颜色转换函数
+// English comment.
 function hexToHsv(hex) {
     const { r, g, b } = hexToRgb(hex);
     return rgbToHsv(r, g, b);
@@ -509,7 +509,7 @@ function rgbToHex(r, g, b) {
     }).join('');
 }
 
-// 窗口大小变化时更新位置
+// English comment.
 const handleResize = () => {
     if (isOpen.value) {
         updatePanelPosition();
@@ -604,7 +604,7 @@ onUnmounted(() => {
     color: var(--color-primary);
 }
 
-/* 弹出面板 */
+/* English comment. */
 .picker-backdrop {
     position: fixed;
     inset: 0;
@@ -636,7 +636,7 @@ onUnmounted(() => {
     transform: translateY(-8px);
 }
 
-/* 饱和度面板 */
+/* English comment. */
 .saturation-panel {
     position: relative;
     width: 100%;
@@ -675,7 +675,7 @@ onUnmounted(() => {
     pointer-events: none;
 }
 
-/* 色相滑块 */
+/* English comment. */
 .hue-slider {
     padding: 0.25rem 0;
 }
@@ -710,7 +710,7 @@ onUnmounted(() => {
     pointer-events: none;
 }
 
-/* 颜色信息 */
+/* English comment. */
 .color-info {
     display: flex;
     gap: 0.75rem;
@@ -822,7 +822,7 @@ onUnmounted(() => {
     box-shadow: 0 0 0 2px rgba(0, 212, 255, 0.2);
 }
 
-/* 预设颜色 */
+/* English comment. */
 .preset-colors,
 .recent-colors {
     display: flex;

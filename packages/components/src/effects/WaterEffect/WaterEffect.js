@@ -2,10 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * WaterEffect 水面效果组件
- *
- * @class WaterEffect
- * @extends Component
+ * English comment.
  */
 export class WaterEffect extends Component {
     static defaultConfig = {

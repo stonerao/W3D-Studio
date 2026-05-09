@@ -55,7 +55,7 @@ const emit = defineEmits(['update:visible', 'select']);
 
 const menuRef = ref(null);
 
-// 菜单样式（位置）
+// English comment.
 const menuStyle = computed(() => {
     return {
         left: `${props.x}px`,
@@ -63,43 +63,43 @@ const menuStyle = computed(() => {
     };
 });
 
-// 处理菜单项点击
+// English comment.
 const handleItemClick = (item) => {
     if (item.disabled || item.divider) return;
 
     emit('select', item);
     emit('update:visible', false);
 
-    // 只有当 action 是函数时才调用
+    // English comment.
     if (item.action && typeof item.action === 'function') {
         item.action();
     }
 };
 
-// 点击外部关闭菜单
+// English comment.
 const handleClickOutside = (event) => {
     if (menuRef.value && !menuRef.value.contains(event.target)) {
         emit('update:visible', false);
     }
 };
 
-// 按 ESC 键关闭菜单
+// English comment.
 const handleEscape = (event) => {
     if (event.key === 'Escape') {
         emit('update:visible', false);
     }
 };
 
-// 监听 visible 变化
+// English comment.
 watch(() => props.visible, (newValue) => {
     if (newValue) {
-        // 菜单打开时，添加事件监听
+        // English comment.
         setTimeout(() => {
             document.addEventListener('click', handleClickOutside);
             document.addEventListener('keydown', handleEscape);
         }, 0);
     } else {
-        // 菜单关闭时，移除事件监听
+        // English comment.
         document.removeEventListener('click', handleClickOutside);
         document.removeEventListener('keydown', handleEscape);
     }
@@ -182,7 +182,7 @@ onUnmounted(() => {
     color: var(--color-text-tertiary);
 }
 
-/* 过渡动画 */
+/* English comment. */
 .context-menu-enter-active {
     transition: opacity 0.2s cubic-bezier(0.16, 1, 0.3, 1),
                 transform 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);

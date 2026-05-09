@@ -2,10 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * BoundingBoxHelper 包围盒辅助组件
- *
- * @class BoundingBoxHelper
- * @extends Component
+ * English comment.
  */
 export class BoundingBoxHelper extends Component {
     static defaultConfig = {
@@ -52,10 +49,10 @@ export class BoundingBoxHelper extends Component {
             this.add(this.helper);
         }
 
-        // 更新包围盒
+        // English comment.
         this.helper.setFromObject(target);
 
-        // 同步颜色
+        // English comment.
         if (this.config.color && this.helper.material?.color?.set) {
             this.helper.material.color.set(this.config.color);
         }

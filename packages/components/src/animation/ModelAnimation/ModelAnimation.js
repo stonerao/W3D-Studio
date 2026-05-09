@@ -1,11 +1,7 @@
 import { Component } from '@w3d/core';
 
 /**
- * ModelAnimation 模型动画组件
- *
- * @class ModelAnimation
- * @extends Component
- * @description 播放模型自带的动画
+ * English comment.
  */
 export class ModelAnimation extends Component {
     static defaultConfig = {
@@ -41,17 +37,16 @@ export class ModelAnimation extends Component {
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     updateConfig(newConfig) {
-        // 停止当前动画
+        // English comment.
         this.stop();
 
-        // 合并配置
+        // English comment.
         Object.assign(this.config, newConfig);
 
-        // 重新播放动画
+        // English comment.
         if (this.config.target) {
             this.playAnimation();
         }

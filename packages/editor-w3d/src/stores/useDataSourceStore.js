@@ -81,20 +81,19 @@ const normalizePublicDataSource = (source = {}, index = 0) => {
 const deepClone = (value) => JSON.parse(JSON.stringify(value));
 
 /**
- * 全局数据源配置 Store
- * 管理全局公共配置（前置URL、超时时间、公共Headers等）
+ * English comment.
  */
 export const useDataSourceStore = defineStore('dataSource', () => {
     const createDefaultGlobalConfig = () => ({
-        // HTTP 服务前置 URL
+        // English comment.
         baseUrl: 'http://localhost:3000/',
-        // WebSocket 服务地址
+        // English comment.
         websocketUrl: 'ws://localhost:3000/',
-        // MQTT Broker 地址（浏览器端通常使用 ws/wss）
+        // English comment.
         mqttUrl: 'ws://localhost:8083/mqtt',
-        // 超时时间（秒）
+        // English comment.
         timeout: 30,
-        // 公共请求头
+        // English comment.
         headers: []
     });
 
@@ -118,23 +117,23 @@ export const useDataSourceStore = defineStore('dataSource', () => {
         globalConfig.value.baseUrl = url;
     };
 
-    // ==================== 状态 ====================
+    // English comment.
 
     /**
-     * 全局公共配置
+     * English comment.
      */
     const globalConfig = ref(createDefaultGlobalConfig());
     const publicDataSources = ref([]);
 
-    // ==================== 计算属性 ====================
+    // English comment.
 
     /**
-     * 格式化的超时时间（毫秒）
+     * English comment.
      */
     const timeoutMs = computed(() => globalConfig.value.timeout * 1000);
 
     /**
-     * 公共请求头对象
+     * English comment.
      */
     const headersObject = computed(() => {
         const obj = {};
@@ -153,11 +152,10 @@ export const useDataSourceStore = defineStore('dataSource', () => {
         }));
     });
 
-    // ==================== 方法 ====================
+    // English comment.
 
     /**
-     * 更新全局配置
-     * @param {Object} updates - 更新内容
+     * English comment.
      */
     const updateGlobalConfig = (updates) => {
         globalConfig.value = {
@@ -167,61 +165,52 @@ export const useDataSourceStore = defineStore('dataSource', () => {
     };
 
     /**
-     * 更新前置 URL
-     * @param {string} url - 新的前置 URL
+     * English comment.
      */
     const setBaseUrl = (url) => {
         globalConfig.value.baseUrl = url;
     };
 
     /**
-     * 更新超时时间
-     * @param {number} seconds - 超时时间（秒）
+     * English comment.
      */
     const setTimeout = (seconds) => {
         globalConfig.value.timeout = seconds;
     };
 
     /**
-     * 更新公共请求头
-     * @param {Array} headers - 请求头数组 [{key, value}]
+     * English comment.
      */
     const setHeaders = (headers) => {
         globalConfig.value.headers = headers;
     };
 
     /**
-     * 添加公共请求头
-     * @param {string} key - Header 名称
-     * @param {string} value - Header 值
+     * English comment.
      */
     const addHeader = (key, value) => {
         globalConfig.value.headers.push({ key, value });
     };
 
     /**
-     * 移除公共请求头
-     * @param {number} index - 索引
+     * English comment.
      */
     const removeHeader = (index) => {
         globalConfig.value.headers.splice(index, 1);
     };
 
     /**
-     * 构建完整 URL
-     * @param {string} path - 请求路径
-     * @param {boolean} useGlobal - 是否使用全局配置
-     * @returns {string} 完整 URL
+     * English comment.
      */
     const buildFullUrl = (path, useGlobal = true, mode = 'http') => {
         if (!path) return '';
 
-        // 已经是完整 URL
+        // English comment.
         if (path.startsWith('http://') || path.startsWith('https://')) {
             return path;
         }
 
-        // 使用全局前置 URL
+        // English comment.
         const serviceUrl = getServiceUrlByMode(mode);
         if (useGlobal && serviceUrl) {
             const base = serviceUrl.replace(/\/+$/, '');
@@ -271,7 +260,7 @@ export const useDataSourceStore = defineStore('dataSource', () => {
     };
 
     /**
-     * 序列化（用于保存）
+     * English comment.
      */
     const serialize = () => {
         return {
@@ -285,8 +274,7 @@ export const useDataSourceStore = defineStore('dataSource', () => {
     };
 
     /**
-     * 反序列化（用于加载）
-     * @param {Object} data - 配置数据
+     * English comment.
      */
     const deserialize = (data) => {
         if (!data || typeof data !== 'object') {
@@ -309,7 +297,7 @@ export const useDataSourceStore = defineStore('dataSource', () => {
     };
 
     /**
-     * 重置为默认值
+     * English comment.
      */
     const reset = () => {
         globalConfig.value = createDefaultGlobalConfig();
@@ -317,16 +305,16 @@ export const useDataSourceStore = defineStore('dataSource', () => {
     };
 
     return {
-        // 状态
+        // English comment.
         globalConfig,
         publicDataSources,
 
-        // 计算属性
+        // English comment.
         timeoutMs,
         headersObject,
         publicDataSourceOptions,
 
-        // 方法
+        // English comment.
         updateGlobalConfig,
         setBaseUrl,
         setTimeout,

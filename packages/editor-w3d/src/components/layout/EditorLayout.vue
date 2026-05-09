@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="editor-layout flex flex-col w-full h-full">
-        <!-- 顶部工具栏 -->
+        <!-- English comment. -->
         <ErrorBoundary v-if="showToolbar">
             <TopToolbar
                 :project-id="projectId"
@@ -15,27 +15,27 @@
             />
         </ErrorBoundary>
 
-        <!-- 主内容区域：左-中-右三栏布局 -->
+        <!-- English comment. -->
         <div class="editor-main flex flex-1 overflow-hidden" :style="mainStyle">
-            <!-- 左侧面板 -->
+            <!-- English comment. -->
             <ErrorBoundary v-if="editorStore.showLeftPanel">
                 <LeftPanel />
             </ErrorBoundary>
 
-            <!-- 中间画布区域 -->
+            <!-- English comment. -->
             <div class="editor-main__center">
                 <ErrorBoundary>
                     <CenterCanvas class="editor-main__canvas" />
                 </ErrorBoundary>
             </div>
 
-            <!-- 右侧面板 -->
+            <!-- English comment. -->
             <ErrorBoundary v-if="editorStore.showRightPanel">
                 <RightPanel />
             </ErrorBoundary>
         </div>
 
-        <!-- Toast 和 ConfirmDialog 组件（嵌入使用时需要） -->
+        <!-- English comment. -->
         <Toast ref="toastRef" />
         <ConfirmDialog />
     </div>
@@ -113,7 +113,7 @@ const alarmStore = useAlarmStore();
 const { removeComponent, executeDataBinding, applyAllComponentVariableBindings } = useComponent();
 const toast = useToast();
 
-// Toast 组件引用（用于嵌入使用时初始化）
+// English comment.
 const toastRef = ref(null);
 
 let markDirtyTimer = null;
@@ -124,7 +124,7 @@ let panelResizeFollowUpFrame = null;
 const lastAppliedSignature = ref('');
 const lastEmittedSignature = ref('');
 
-// 标记是否正在应用外部数据，避免反序列化触发的 store 变化被误判为用户编辑
+// English comment.
 const isApplyingData = ref(false);
 
 const showToolbar = computed(() => props.showToolbar);
@@ -167,8 +167,7 @@ const resizeSceneToContainer = async () => {
 };
 
 /**
- * 构建数据签名（用于比较数据是否变化）
- * 只对编辑器关心的字段做签名，忽略外部系统附加的元字段（如 id/createdAt/updatedAt/savedAt 等）
+ * English comment.
  */
 const normalizeProjectDataForSignature = (raw) => {
     const data = raw && typeof raw === 'object' ? raw : {};
@@ -176,7 +175,7 @@ const normalizeProjectDataForSignature = (raw) => {
 
     const normalizeArray = (arr, key = 'id') => {
         if (!Array.isArray(arr)) return [];
-        // 仅用于签名比较：排序保证稳定性，避免因为顺序变化导致误判为变更
+        // English comment.
         const copy = [...arr];
         copy.sort((a, b) => {
             const av = a && typeof a === 'object' ? a[key] : a;
@@ -283,8 +282,8 @@ const applyProjectData = async (data, forceRestore = false) => {
     if (signature && signature === lastAppliedSignature.value && !forceRestore) {
         console.log('[EditorLayout] 数据未变化，跳过反序列化');
 
-        // 即使跳过反序列化，也要确保组件实例已恢复到场景中
-        // 这是为了处理场景重新初始化但数据未变化的情况
+        // English comment.
+        // English comment.
         if (sceneStore.sceneInstance && componentStore.components.length > 0) {
             const hasInstancesInScene = componentStore.components.some(c => c.instance);
             if (!hasInstancesInScene) {
@@ -298,19 +297,19 @@ const applyProjectData = async (data, forceRestore = false) => {
 
     console.log('[EditorLayout] 开始反序列化数据...');
 
-    // 标记正在应用外部数据，避免触发 dataUpdate
+    // English comment.
     isApplyingData.value = true;
 
     try {
         await projectStore.deserializeProject(data || {}, runtimeMode.value);
         lastAppliedSignature.value = signature;
-        // 同步更新 lastEmittedSignature，避免反序列化后的数据再次触发更新
+        // English comment.
         lastEmittedSignature.value = buildSignature(projectStore.serializeProject());
         projectStore.hasUnsavedChanges = false;
         console.log('[EditorLayout] 反序列化完成');
     } finally {
-        // 延迟重置标记，确保 watch 回调不会在反序列化后立即触发
-        // 注意：此延迟必须大于 markDirty 中的延迟(200ms)，以避免竞态条件
+        // English comment.
+        // English comment.
         setTimeout(() => {
             isApplyingData.value = false;
         }, 500);
@@ -325,7 +324,7 @@ const emitProjectData = (eventName) => {
 };
 
 const scheduleDataUpdate = () => {
-    // 如果正在应用外部数据，不触发 dataUpdate
+    // English comment.
     if (isApplyingData.value) return;
 
     if (emitDataTimer) clearTimeout(emitDataTimer);
@@ -334,7 +333,7 @@ const scheduleDataUpdate = () => {
     }, 300);
 };
 
-// 注册快捷键
+// English comment.
 onMounted(async () => {
     console.log('[EditorLayout] ========== EditorLayout 组件挂载 ==========');
     console.log('[EditorLayout] Props:', {
@@ -346,16 +345,16 @@ onMounted(async () => {
         showRightPanel: props.showRightPanel
     });
 
-    // 初始化 Toast 实例（嵌入使用时需要）
+    // English comment.
     if (toastRef.value) {
         toast.setToastInstance(toastRef.value);
     }
 
-    // 重置签名状态，确保每次挂载时数据能正确加载
+    // English comment.
     lastAppliedSignature.value = '';
     lastEmittedSignature.value = '';
 
-    // 重置 hasUnsavedChanges 状态，避免第二次打开时误触发确认对话框
+    // English comment.
     projectStore.hasUnsavedChanges = false;
 
     editorStore.setMode(props.readonly ? 'preview' : 'edit');
@@ -369,14 +368,14 @@ onMounted(async () => {
         showRightPanel: editorStore.showRightPanel
     });
 
-    // 强制应用项目数据
+    // English comment.
     console.log('[EditorLayout] 开始加载项目数据...');
     await applyProjectData(props.projectData || {});
     console.log('[EditorLayout] 项目数据加载完成');
     triggerRunOnLoadDataSources();
     resizeSceneToContainer();
 
-    // 撤回
+    // English comment.
     keyboard.register(SHORTCUTS.UNDO, async () => {
         if (historyStore.canUndo) {
             await historyStore.undo();
@@ -384,7 +383,7 @@ onMounted(async () => {
         }
     }, { description: '撤回上一步操作' });
 
-    // 重做
+    // English comment.
     keyboard.register(SHORTCUTS.REDO, async () => {
         if (historyStore.canRedo) {
             await historyStore.redo();
@@ -392,12 +391,12 @@ onMounted(async () => {
         }
     }, { description: '重做上一步操作' });
 
-    // 保存
+    // English comment.
     keyboard.register(SHORTCUTS.SAVE, () => {
         handleSave();
     }, { description: '保存项目' });
 
-    // 删除选中组件
+    // English comment.
     keyboard.register(SHORTCUTS.DELETE, () => {
         if (componentStore.selectedComponentId) {
             const component = componentStore.selectedComponent;
@@ -413,15 +412,15 @@ onMounted(async () => {
 
     console.log('[EditorLayout] Keyboard shortcuts registered');
 
-    // ===== 自动保存：监听场景/组件变化，节流后同步到页面状态 =====
+    // English comment.
     const markDirty = () => {
-        // 如果正在应用外部数据，不触发 dirty 标记
+        // English comment.
         if (isApplyingData.value) return;
 
         if (markDirtyTimer) clearTimeout(markDirtyTimer);
         markDirtyTimer = setTimeout(() => {
-            // 双重检查：延迟回调执行时再次检查 isApplyingData
-            // 避免 deserializeProject 期间的 updateComponentInstance 触发循环
+            // English comment.
+            // English comment.
             if (isApplyingData.value) return;
             projectStore.markAsUnsaved();
             scheduleDataUpdate();
@@ -585,7 +584,7 @@ const triggerRunOnLoadDataSources = () => {
     });
 };
 
-// 关闭编辑器
+// English comment.
 const handleClose = () => {
     emit('close');
 };
@@ -601,7 +600,7 @@ const getSerializedProjectData = () => {
 const normalizeComponentCommand = (command) => {
     if (!command || typeof command !== 'object') return null;
 
-    // 兼容旧结构：{ action: 'start'|'reset', componentId }
+    // English comment.
     if (typeof command.action === 'string' && !command.method) {
         return {
             method: command.action === 'reset' ? 'reset' : 'start',
@@ -788,7 +787,7 @@ const executeComponentCommand = (rawCommand = {}) => {
         return { success: false, reason: 'scene_not_initialized', method, componentId, componentType };
     }
 
-    // 构建 [name, component] 列表以支持按 name 匹配
+    // English comment.
     const entries = [];
     componentsMap.forEach((component, name) => {
         entries.push([name, component]);
@@ -846,7 +845,7 @@ const resetExplodedView = (componentId = '') => {
 };
 
 /**
- * 列出场景中所有组件的详细信息（调试用）
+ * English comment.
  */
 const listSceneComponents = () => {
     const sceneInstance = sceneStore.sceneInstance;
@@ -930,7 +929,7 @@ defineExpose({
     listSceneComponents
 });
 
-// 卸载时清理快捷键
+// English comment.
 onUnmounted(() => {
     keyboard.unregisterAll();
     if (markDirtyTimer) clearTimeout(markDirtyTimer);

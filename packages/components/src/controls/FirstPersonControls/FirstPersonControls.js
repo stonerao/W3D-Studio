@@ -4,11 +4,7 @@ import { CollisionDetector } from './CollisionDetector.js';
 import { getCameraModeManager } from '../shared/CameraModeManager.js';
 
 /**
- * FirstPersonControls 第一人称控制组件
- *
- * @class FirstPersonControls
- * @extends Component
- * @description 支持 WASD 移动、鼠标视角、碰撞检测、重力和跳跃
+ * English comment.
  */
 export class FirstPersonControls extends Component {
     static defaultConfig = {

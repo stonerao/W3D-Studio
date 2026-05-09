@@ -1,32 +1,24 @@
 import * as THREE from 'three';
 
 /**
- * AnimationManager 动画管理器
- *
- * @class AnimationManager
- * @description 动画的创建和管理
+ * English comment.
  */
 export class AnimationManager {
     /**
-     * 创建动画管理器实例
-     *
-     * @param {Scene} scene - 场景实例
+     * English comment.
      */
     constructor(scene) {
         this.scene = scene;
 
-        // 动画混合器
+        // English comment.
         this.mixers = new Map();
 
-        // 时钟
+        // English comment.
         this.clock = new THREE.Clock();
     }
 
     /**
-     * 创建动画混合器
-     *
-     * @param {THREE.Object3D} object - 3D 对象
-     * @returns {THREE.AnimationMixer} 动画混合器
+     * English comment.
      */
     createMixer(object) {
         const mixer = new THREE.AnimationMixer(object);
@@ -35,22 +27,14 @@ export class AnimationManager {
     }
 
     /**
-     * 获取动画混合器
-     *
-     * @param {THREE.Object3D} object - 3D 对象
-     * @returns {THREE.AnimationMixer|null} 动画混合器
+     * English comment.
      */
     getMixer(object) {
         return this.mixers.get(object.uuid) || null;
     }
 
     /**
-     * 播放动画
-     *
-     * @param {THREE.Object3D} object - 3D 对象
-     * @param {THREE.AnimationClip} clip - 动画剪辑
-     * @param {Object} options - 播放选项
-     * @returns {THREE.AnimationAction} 动画动作
+     * English comment.
      */
     play(object, clip, options = {}) {
         let mixer = this.getMixer(object);
@@ -61,7 +45,7 @@ export class AnimationManager {
 
         const action = mixer.clipAction(clip);
 
-        // 应用选项
+        // English comment.
         if (options.loop !== undefined) {
             action.setLoop(options.loop);
         }
@@ -78,9 +62,7 @@ export class AnimationManager {
     }
 
     /**
-     * 停止动画
-     *
-     * @param {THREE.Object3D} object - 3D 对象
+     * English comment.
      */
     stop(object) {
         const mixer = this.getMixer(object);
@@ -91,7 +73,7 @@ export class AnimationManager {
     }
 
     /**
-     * 更新动画
+     * English comment.
      */
     update() {
         const delta = this.clock.getDelta();
@@ -102,9 +84,7 @@ export class AnimationManager {
     }
 
     /**
-     * 移除动画混合器
-     *
-     * @param {THREE.Object3D} object - 3D 对象
+     * English comment.
      */
     remove(object) {
         const mixer = this.getMixer(object);
@@ -116,7 +96,7 @@ export class AnimationManager {
     }
 
     /**
-     * 销毁动画管理器
+     * English comment.
      */
     dispose() {
         this.mixers.forEach((mixer) => {

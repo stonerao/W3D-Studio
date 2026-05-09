@@ -2,10 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * AxesHelper 坐标轴辅助组件
- *
- * @class AxesHelper
- * @extends Component
+ * English comment.
  */
 export class AxesHelper extends Component {
     static defaultConfig = {

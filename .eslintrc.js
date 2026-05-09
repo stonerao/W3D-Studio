@@ -13,13 +13,13 @@ export default {
         sourceType: 'module'
     },
     rules: {
-        // 代码风格
+        // English comment.
         'indent': ['error', 4],
         'quotes': ['error', 'single'],
         'semi': ['error', 'always'],
         'comma-dangle': ['error', 'never'],
 
-        // 最佳实践
+        // English comment.
         'no-console': 'warn',
         'no-debugger': 'warn',
         'no-unused-vars': ['warn', {
@@ -33,7 +33,7 @@ export default {
         'arrow-spacing': 'error',
         'no-var': 'error',
 
-        // 其他
+        // English comment.
         'no-multiple-empty-lines': ['error', { max: 2, maxEOF: 1 }],
         'eol-last': ['error', 'always']
     }

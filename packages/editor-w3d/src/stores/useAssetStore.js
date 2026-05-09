@@ -21,23 +21,23 @@ export const useAssetStore = defineStore('asset', () => {
         }
     };
 
-    // 资源列表
+    // English comment.
     const assets = ref([]);
 
-    // 资源分类
+    // English comment.
     const assetCategories = ['model', 'splat', 'texture', 'hdr', 'geojson', 'image'];
 
-    // 当前选中的资源分类
+    // English comment.
     const selectedCategory = ref('model');
 
-    // 搜索关键词
+    // English comment.
     const searchKeyword = ref('');
     const selectedScope = ref('public');
 
-    // 资源计数器
+    // English comment.
     let assetCounter = 0;
 
-    // API 相关状态
+    // English comment.
     const loading = ref(false);
     const error = ref(null);
     const currentPage = ref(1);
@@ -46,7 +46,7 @@ export const useAssetStore = defineStore('asset', () => {
     const totalPages = ref(0);
     let fetchRequestToken = 0;
 
-    // 分类路径筛选
+    // English comment.
     const selectedPath = ref('');
 
     const normalizeForFuzzySearch = (value) => {
@@ -137,11 +137,11 @@ export const useAssetStore = defineStore('asset', () => {
         return '';
     };
 
-    // 根据分类过滤的资源
+    // English comment.
     const filteredAssets = computed(() => {
         let filtered = assets.value.filter((asset) => asset.category === selectedCategory.value);
 
-        // 搜索过滤
+        // English comment.
         if (searchKeyword.value) {
             filtered = filtered.filter(
                 (asset) => matchesKeywordFuzzy(searchKeyword.value, asset.name, asset.fileName)
@@ -151,12 +151,12 @@ export const useAssetStore = defineStore('asset', () => {
         return filtered;
     });
 
-    // 根据分类获取资源数量
+    // English comment.
     const getAssetCountByCategory = (category) => {
         return assets.value.filter((asset) => asset.category === category).length;
     };
 
-    // 添加资源
+    // English comment.
     const addAsset = (assetData) => {
         const asset = {
             id: `asset_${++assetCounter}`,
@@ -164,10 +164,10 @@ export const useAssetStore = defineStore('asset', () => {
             fileName: assetData.fileName || '',
             url: assetData.url || '',
             category: assetData.category || 'model',
-            type: assetData.type || '', // 文件类型：glb, gltf, jpg, png, hdr 等
-            size: assetData.size || 0, // 文件大小（字节）
-            thumbnail: assetData.thumbnail || '', // 缩略图 URL
-            metadata: assetData.metadata || {}, // 额外元数据
+            type: assetData.type || '', // English comment.
+            size: assetData.size || 0, // English comment.
+            thumbnail: assetData.thumbnail || '', // English comment.
+            metadata: assetData.metadata || {}, // English comment.
             createdAt: Date.now()
         };
 
@@ -175,7 +175,7 @@ export const useAssetStore = defineStore('asset', () => {
         return asset;
     };
 
-    // 删除资源
+    // English comment.
     const removeAsset = (assetId) => {
         const index = assets.value.findIndex((a) => a.id === assetId);
         if (index !== -1) {
@@ -186,7 +186,7 @@ export const useAssetStore = defineStore('asset', () => {
         return null;
     };
 
-    // 更新资源
+    // English comment.
     const updateAsset = (assetId, updates) => {
         const asset = assets.value.find((a) => a.id === assetId);
         if (asset) {
@@ -196,22 +196,22 @@ export const useAssetStore = defineStore('asset', () => {
         return null;
     };
 
-    // 根据 ID 获取资源
+    // English comment.
     const getAssetById = (assetId) => {
         return assets.value.find((a) => a.id === assetId) || null;
     };
 
-    // 根据 URL 获取资源
+    // English comment.
     const getAssetByUrl = (url) => {
         return assets.value.find((a) => a.url === url) || null;
     };
 
-    // 设置选中的分类
+    // English comment.
     const setSelectedCategory = (category) => {
         selectedCategory.value = category;
     };
 
-    // 设置搜索关键词
+    // English comment.
     const setSearchKeyword = (keyword) => {
         searchKeyword.value = keyword;
     };
@@ -220,20 +220,20 @@ export const useAssetStore = defineStore('asset', () => {
         selectedScope.value = ['project', 'public', 'all'].includes(scope) ? scope : 'public';
     };
 
-    // 清空所有资源
+    // English comment.
     const clearAssets = () => {
         assets.value = [];
         assetCounter = 0;
     };
 
-    // 批量添加资源
+    // English comment.
     const addAssets = (assetList) => {
         return assetList.map((assetData) => addAsset(assetData));
     };
 
-    // 初始化默认资源
+    // English comment.
     const initializeDefaultAssets = () => {
-        // 添加默认模型资源
+        // English comment.
         const defaultModels = [
             {
                 name: 'ShaderBall',
@@ -255,7 +255,7 @@ export const useAssetStore = defineStore('asset', () => {
             }
         ];
 
-        // 添加默认纹理资源
+        // English comment.
         const defaultTextures = [
             {
                 name: 'Blouberg Sunrise',
@@ -335,29 +335,29 @@ export const useAssetStore = defineStore('asset', () => {
     };
 
     /**
-     * 从 API 获取模型列表（兼容旧调用）
+     * English comment.
      */
     const fetchModelsFromAPI = async (params = {}) => {
         return await fetchAssetsFromAPI('model', params);
     };
 
     /**
-     * 设置当前页码
+     * English comment.
      */
     const setCurrentPage = (page) => {
         currentPage.value = page;
     };
 
     /**
-     * 设置每页数量
+     * English comment.
      */
     const setPageSize = (size) => {
         pageSize.value = size;
-        currentPage.value = 1; // 重置到第一页
+        currentPage.value = 1; // English comment.
     };
 
     /**
-     * 设置分类路径筛选
+     * English comment.
      */
     const setSelectedPath = (path) => {
         selectedPath.value = path;
@@ -378,7 +378,7 @@ export const useAssetStore = defineStore('asset', () => {
     };
 
     return {
-        // 状态
+        // English comment.
         assets,
         assetCategories,
         selectedCategory,
@@ -393,7 +393,7 @@ export const useAssetStore = defineStore('asset', () => {
         totalPages,
         selectedPath,
 
-        // 方法
+        // English comment.
         addAsset,
         removeAsset,
         updateAsset,

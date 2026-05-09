@@ -3,94 +3,88 @@ import * as THREE from 'three';
 import { Label3D } from '../../markers/Label3D/Label3D.js';
 
 /**
- * ImageMarker 图片点位组件
- *
- * @class ImageMarker
- * @extends Component
- * @description 在三维空间中展示图片点位，支持多状态图片切换和鼠标交互
+ * English comment.
  */
 export class ImageMarker extends Component {
     static defaultConfig = {
-        markers: [], // 点位数据数组
+        markers: [], // English comment.
         globalConfig: {
-            // 全局默认配置
+            // English comment.
             type: 'sprite', // 'sprite' | 'plane'
             size: 5,
             opacity: 1.0,
             color: '#ffffff',
-            sizeAttenuation: true // Sprite 大小是否随距离衰减
+            sizeAttenuation: true // English comment.
         }
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // 图片点位对象映射表 (id -> markerObject)
+        // English comment.
         this.imageMarkers = new Map();
 
-        // 图片点位数据映射表 (id -> markerData)
+        // English comment.
         this.markerDataMap = new Map();
 
-        // 标签对象映射表 (markerId -> labelSprite)
+        // English comment.
         this.markerLabels = new Map();
 
-        // 纹理缓存 (url -> texture)
+        // English comment.
         this.textureCache = new Map();
 
-        // 纹理加载器
+        // English comment.
         this.textureLoader = new THREE.TextureLoader();
 
-        // 鼠标交互相关
+        // English comment.
         this.raycaster = new THREE.Raycaster();
-        // 设置 Sprite 检测的阈值（像素）
+        // English comment.
         this.raycaster.params.Sprite = { threshold: 10 };
         this.mouse = new THREE.Vector2();
         this.hoveredMarker = null;
 
-        // 位置动画相关
+        // English comment.
         this.positionAnimations = new Map(); // markerId -> animationData
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 合并全局配置
+        // English comment.
         this.globalConfig = {
             ...this.constructor.defaultConfig.globalConfig,
             ...this.config.globalConfig
         };
 
-        // 创建所有图片点位
+        // English comment.
         if (this.config.markers && this.config.markers.length > 0) {
             for (const markerData of this.config.markers) {
                 await this.addMarker(markerData);
             }
         }
 
-        // 设置鼠标交互事件监听
+        // English comment.
         this.setupMouseEvents();
     }
 
-    // ==================== 纹理加载相关方法 ====================
+    // English comment.
 
     /**
-     * 加载纹理（带缓存）
-     * @param {string} url - 图片 URL
-     * @returns {Promise<THREE.Texture>}
+     * English comment.
      */
     async loadTexture(url) {
-        // 检查缓存
+        // English comment.
         if (this.textureCache.has(url)) {
             return this.textureCache.get(url);
         }
 
-        // 加载纹理
+        // English comment.
         return new Promise((resolve, reject) => {
             this.textureLoader.load(
                 url,
                 (texture) => {
-                    // 缓存纹理
+                    // English comment.
                     this.textureCache.set(url, texture);
                     resolve(texture);
                 },
@@ -103,12 +97,10 @@ export class ImageMarker extends Component {
         });
     }
 
-    // ==================== 点位创建和管理方法 ====================
+    // English comment.
 
     /**
-     * 创建图片点位
-     * @param {Object} markerData - 点位数据
-     * @returns {Promise<THREE.Object3D>}
+     * English comment.
      */
     async createMarker(markerData) {
         const {
@@ -126,13 +118,13 @@ export class ImageMarker extends Component {
             userData = {}
         } = markerData;
 
-        // 验证必需参数
+        // English comment.
         if (!id || !position || !images) {
             console.warn('ImageMarker: id, position, and images are required');
             return null;
         }
 
-        // 确定当前状态
+        // English comment.
         const currentState = state || Object.keys(images)[0];
         const imageUrl = images[currentState];
 
@@ -141,7 +133,7 @@ export class ImageMarker extends Component {
             return null;
         }
 
-        // 加载纹理
+        // English comment.
         let texture;
         try {
             texture = await this.loadTexture(imageUrl);
@@ -153,7 +145,7 @@ export class ImageMarker extends Component {
         let markerObject;
 
         if (type === 'sprite') {
-            // 创建 Sprite
+            // English comment.
             const material = new THREE.SpriteMaterial({
                 map: texture,
                 color: new THREE.Color(color),
@@ -165,7 +157,7 @@ export class ImageMarker extends Component {
             markerObject = new THREE.Sprite(material);
             markerObject.scale.set(size * scale.x, size * scale.y, 1);
         } else if (type === 'plane') {
-            // 创建 Plane
+            // English comment.
             const geometry = new THREE.PlaneGeometry(size * scale.x, size * scale.y);
             const material = new THREE.MeshBasicMaterial({
                 map: texture,
@@ -178,7 +170,7 @@ export class ImageMarker extends Component {
             markerObject = new THREE.Mesh(geometry, material);
         } else {
             console.warn(`ImageMarker: Unknown type "${type}", using sprite`);
-            // 默认使用 sprite
+            // English comment.
             const material = new THREE.SpriteMaterial({
                 map: texture,
                 color: new THREE.Color(color),
@@ -191,14 +183,14 @@ export class ImageMarker extends Component {
             markerObject.scale.set(size * scale.x, size * scale.y, 1);
         }
 
-        // 设置位置
+        // English comment.
         markerObject.position.set(
             position.x + offset.x,
             position.y + offset.y,
             position.z + offset.z
         );
 
-        // 存储用户数据
+        // English comment.
         markerObject.userData = {
             ...userData,
             markerId: id,
@@ -210,8 +202,7 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 添加图片点位
-     * @param {Object} markerData - 点位数据
+     * English comment.
      */
     async addMarker(markerData) {
         const { id, label } = markerData;
@@ -221,42 +212,40 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // 检查是否已存在
+        // English comment.
         if (this.imageMarkers.has(id)) {
             console.warn(`ImageMarker: Marker with id "${id}" already exists`);
             return;
         }
 
-        // 创建点位对象
+        // English comment.
         const markerObject = await this.createMarker(markerData);
 
         if (!markerObject) {
             return;
         }
 
-        // 添加到场景
+        // English comment.
         this.add(markerObject);
 
-        // 保存到映射表
+        // English comment.
         this.imageMarkers.set(id, markerObject);
 
-        // 保存点位数据
+        // English comment.
         const currentState = markerData.state || Object.keys(markerData.images)[0];
         this.markerDataMap.set(id, { ...markerData, state: currentState });
 
-        // 创建标签（如果配置了）
+        // English comment.
         if (label) {
             await this.createLabelForMarker(id, markerObject, label);
         }
 
-        // 触发事件
+        // English comment.
         this.emit('markerAdded', { markerId: id, markerData });
     }
 
     /**
-     * 更新点位状态（切换图片）
-     * @param {string} id - 点位 ID
-     * @param {string} newState - 新状态
+     * English comment.
      */
     async updateState(id, newState) {
         const markerObject = this.imageMarkers.get(id);
@@ -275,7 +264,7 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // 加载新纹理
+        // English comment.
         let texture;
         try {
             texture = await this.loadTexture(imageUrl);
@@ -284,25 +273,23 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // 更新材质纹理
+        // English comment.
         markerObject.material.map = texture;
         markerObject.material.needsUpdate = true;
 
-        // 保存旧状态
+        // English comment.
         const oldState = markerData.state;
 
-        // 更新数据
+        // English comment.
         markerData.state = newState;
         this.markerDataMap.set(id, markerData);
 
-        // 触发事件
+        // English comment.
         this.emit('markerStateChanged', { markerId: id, oldState, newState });
     }
 
     /**
-     * 更新点位配置
-     * @param {string} id - 点位 ID
-     * @param {Object} updates - 更新的配置
+     * English comment.
      */
     updateMarker(id, updates) {
         const markerObject = this.imageMarkers.get(id);
@@ -313,7 +300,7 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // 更新位置
+        // English comment.
         if (updates.position) {
             const offset = markerData.offset || { x: 0, y: 0, z: 0 };
             markerObject.position.set(
@@ -323,7 +310,7 @@ export class ImageMarker extends Component {
             );
         }
 
-        // 更新大小
+        // English comment.
         if (updates.size !== undefined) {
             const scale = markerData.scale || { x: 1, y: 1 };
             if (markerObject.isSprite) {
@@ -333,24 +320,23 @@ export class ImageMarker extends Component {
             }
         }
 
-        // 更新颜色
+        // English comment.
         if (updates.color) {
             markerObject.material.color.set(updates.color);
         }
 
-        // 更新透明度
+        // English comment.
         if (updates.opacity !== undefined) {
             markerObject.material.opacity = updates.opacity;
         }
 
-        // 更新数据
+        // English comment.
         Object.assign(markerData, updates);
         this.markerDataMap.set(id, markerData);
     }
 
     /**
-     * 移除点位
-     * @param {string} id - 点位 ID
+     * English comment.
      */
     removeMarker(id) {
         const markerObject = this.imageMarkers.get(id);
@@ -360,18 +346,18 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // 移除关联的标签
+        // English comment.
         this.removeLabelForMarker(id);
 
-        // 停止位置动画（如果有）
+        // English comment.
         if (this.positionAnimations.has(id)) {
             this.positionAnimations.delete(id);
         }
 
-        // 从场景中移除
+        // English comment.
         this.remove(markerObject);
 
-        // 释放资源
+        // English comment.
         if (markerObject.geometry) {
             markerObject.geometry.dispose();
         }
@@ -379,43 +365,40 @@ export class ImageMarker extends Component {
             markerObject.material.dispose();
         }
 
-        // 从映射表中移除
+        // English comment.
         this.imageMarkers.delete(id);
         this.markerDataMap.delete(id);
 
-        // 触发事件
+        // English comment.
         this.emit('markerRemoved', { markerId: id });
     }
 
     /**
-     * 获取点位数据
-     * @param {string} id - 点位 ID
-     * @returns {Object|null}
+     * English comment.
      */
     getMarker(id) {
         return this.markerDataMap.get(id) || null;
     }
 
     /**
-     * 获取所有点位数据
-     * @returns {Array}
+     * English comment.
      */
     getAllMarkers() {
         return Array.from(this.markerDataMap.values());
     }
 
     /**
-     * 清除所有点位
+     * English comment.
      */
     clearMarkers() {
         const ids = Array.from(this.imageMarkers.keys());
         ids.forEach((id) => this.removeMarker(id));
     }
 
-    // ==================== 鼠标交互相关方法 ====================
+    // English comment.
 
     /**
-     * 设置鼠标事件监听
+     * English comment.
      */
     setupMouseEvents() {
         if (!this.scene || !this.scene.renderer || !this.scene.renderer.domElement) {
@@ -427,11 +410,11 @@ export class ImageMarker extends Component {
 
         const domElement = this.scene.renderer.domElement;
 
-        // 绑定事件处理函数（保存引用以便后续移除）
+        // English comment.
         this.onMouseClick = this.handleMouseClick.bind(this);
         this.onMouseMove = this.handleMouseMove.bind(this);
 
-        // 添加事件监听
+        // English comment.
         domElement.addEventListener('click', this.onMouseClick);
         domElement.addEventListener('mousemove', this.onMouseMove);
 
@@ -439,7 +422,7 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 移除鼠标事件监听
+     * English comment.
      */
     removeMouseEvents() {
         if (!this.scene || !this.scene.renderer || !this.scene.renderer.domElement) {
@@ -448,7 +431,7 @@ export class ImageMarker extends Component {
 
         const domElement = this.scene.renderer.domElement;
 
-        // 移除事件监听
+        // English comment.
         if (this.onMouseClick) {
             domElement.removeEventListener('click', this.onMouseClick);
         }
@@ -458,8 +441,7 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 处理鼠标点击事件
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     handleMouseClick(event) {
         console.log('[ImageMarker] handleMouseClick called', {
@@ -477,7 +459,7 @@ export class ImageMarker extends Component {
 
             console.log('[ImageMarker] Emitting markerClick event:', { markerId, markerData });
 
-            // 触发点击事件
+            // English comment.
             this.emit('markerClick', {
                 markerId,
                 markerData,
@@ -489,19 +471,18 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 处理鼠标移动事件
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     handleMouseMove(event) {
         const intersectedMarker = this.getIntersectedMarker(event);
 
-        // 检查鼠标移入/移出
+        // English comment.
         if (intersectedMarker) {
             const markerId = intersectedMarker.userData.markerId;
 
-            // 如果是新的点位，触发移入事件
+            // English comment.
             if (!this.hoveredMarker || this.hoveredMarker.userData.markerId !== markerId) {
-                // 先触发之前点位的移出事件
+                // English comment.
                 if (this.hoveredMarker) {
                     const prevMarkerId = this.hoveredMarker.userData.markerId;
                     const prevMarkerData = this.markerDataMap.get(prevMarkerId);
@@ -513,7 +494,7 @@ export class ImageMarker extends Component {
                     });
                 }
 
-                // 触发新点位的移入事件
+                // English comment.
                 const markerData = this.markerDataMap.get(markerId);
                 this.emit('markerMouseEnter', {
                     markerId,
@@ -524,7 +505,7 @@ export class ImageMarker extends Component {
                 this.hoveredMarker = intersectedMarker;
             }
         } else {
-            // 鼠标不在任何点位上，触发移出事件
+            // English comment.
             if (this.hoveredMarker) {
                 const markerId = this.hoveredMarker.userData.markerId;
                 const markerData = this.markerDataMap.get(markerId);
@@ -541,9 +522,7 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 获取鼠标位置相交的点位
-     * @param {MouseEvent} event - 鼠标事件
-     * @returns {THREE.Object3D|null}
+     * English comment.
      */
     getIntersectedMarker(event) {
         if (!this.scene || !this.scene.camera || !this.scene.renderer) {
@@ -554,7 +533,7 @@ export class ImageMarker extends Component {
         const domElement = this.scene.renderer.domElement;
         const rect = domElement.getBoundingClientRect();
 
-        // 计算鼠标在 Three.js 坐标系中的位置（-1 到 1）
+        // English comment.
         this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
@@ -564,10 +543,10 @@ export class ImageMarker extends Component {
             rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
         });
 
-        // 更新射线
+        // English comment.
         this.raycaster.setFromCamera(this.mouse, this.scene.camera);
 
-        // 获取所有点位对象
+        // English comment.
         const markerObjects = Array.from(this.imageMarkers.values());
 
         console.log('[ImageMarker] Marker objects count:', markerObjects.length);
@@ -578,7 +557,7 @@ export class ImageMarker extends Component {
             return null;
         }
 
-        // 检测相交（不递归检测子对象，因为 Sprite 和 Plane 都是单个对象）
+        // English comment.
         const intersects = this.raycaster.intersectObjects(markerObjects, false);
 
         console.log('[ImageMarker] Intersects:', intersects);
@@ -586,7 +565,7 @@ export class ImageMarker extends Component {
 
         if (intersects.length > 0) {
             console.log('[ImageMarker] Found intersection:', intersects[0]);
-            // 返回相交的对象
+            // English comment.
             return intersects[0].object;
         }
 
@@ -594,13 +573,10 @@ export class ImageMarker extends Component {
         return null;
     }
 
-    // ==================== 位置更新相关方法 ====================
+    // English comment.
 
     /**
-     * 更新点位位置
-     * @param {string} id - 点位 ID
-     * @param {Object} newPosition - 新位置 {x, y, z}
-     * @param {Object} options - 动画选项 {duration, easing}
+     * English comment.
      */
     updatePosition(id, newPosition, options = {}) {
         const markerObject = this.imageMarkers.get(id);
@@ -614,19 +590,19 @@ export class ImageMarker extends Component {
         const { duration = 0, easing = 'linear' } = options;
 
         if (duration > 0) {
-            // 使用动画过渡
+            // English comment.
             this.animatePosition(id, markerObject, newPosition, duration, easing);
         } else {
-            // 立即更新位置
+            // English comment.
             markerObject.position.set(newPosition.x, newPosition.y, newPosition.z);
 
-            // 更新标签位置（如果有）
+            // English comment.
             this.updateLabelPosition(id, markerObject);
 
-            // 更新数据
+            // English comment.
             markerData.position = { ...newPosition };
 
-            // 触发事件
+            // English comment.
             this.emit('positionUpdated', {
                 markerId: id,
                 newPosition,
@@ -636,12 +612,7 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 动画更新位置
-     * @param {string} id - 点位 ID
-     * @param {THREE.Object3D} markerObject - 点位对象
-     * @param {Object} targetPosition - 目标位置
-     * @param {number} duration - 动画时长（毫秒）
-     * @param {string} easing - 缓动函数名称
+     * English comment.
      */
     animatePosition(id, markerObject, targetPosition, duration, easing) {
         const startPosition = {
@@ -652,7 +623,7 @@ export class ImageMarker extends Component {
 
         const startTime = Date.now();
 
-        // 保存动画数据
+        // English comment.
         this.positionAnimations.set(id, {
             startPosition,
             targetPosition,
@@ -663,10 +634,7 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 缓动函数
-     * @param {number} t - 进度 (0-1)
-     * @param {string} type - 缓动类型
-     * @returns {number}
+     * English comment.
      */
     easeFunction(t, type) {
         switch (type) {
@@ -682,13 +650,10 @@ export class ImageMarker extends Component {
         }
     }
 
-    // ==================== 标签相关方法 ====================
+    // English comment.
 
     /**
-     * 为点位创建标签
-     * @param {string} markerId - 点位 ID
-     * @param {THREE.Object3D} markerObject - 点位对象
-     * @param {Object} labelConfig - 标签配置
+     * English comment.
      */
     async createLabelForMarker(markerId, markerObject, labelConfig) {
         const {
@@ -709,7 +674,7 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // 创建 Label3D 实例（如果还没有）
+        // English comment.
         if (!this.labelComponent) {
             this.labelComponent = new Label3D(this.scene, {
                 globalConfig: {
@@ -720,24 +685,24 @@ export class ImageMarker extends Component {
                     borderWidth,
                     padding,
                     borderRadius,
-                    scale: 0.05, // 缩小标签以适应场景
+                    scale: 0.05, // English comment.
                     billboard: true,
                     depthTest: true,
                     sizeAttenuation: true
                 }
             });
-            // 将 Label3D 组件添加到场景
+            // English comment.
             this.add(this.labelComponent);
         }
 
-        // 计算标签位置（点位位置 + 偏移）
+        // English comment.
         const labelPosition = {
             x: markerObject.position.x + offset.x,
             y: markerObject.position.y + offset.y,
             z: markerObject.position.z + offset.z
         };
 
-        // 创建标签
+        // English comment.
         await this.labelComponent.createLabel({
             id: `marker-label-${markerId}`,
             label: text,
@@ -754,23 +719,21 @@ export class ImageMarker extends Component {
             }
         });
 
-        // 保存标签引用和配置
+        // English comment.
         this.markerLabels.set(markerId, {
             labelId: `marker-label-${markerId}`,
             offset,
             visible
         });
 
-        // 如果不可见，隐藏标签
+        // English comment.
         if (!visible) {
             this.labelComponent.hideLabel(`marker-label-${markerId}`);
         }
     }
 
     /**
-     * 更新点位标签
-     * @param {string} markerId - 点位 ID
-     * @param {Object} updates - 更新内容
+     * English comment.
      */
     async updateLabel(markerId, updates) {
         const labelInfo = this.markerLabels.get(markerId);
@@ -782,10 +745,10 @@ export class ImageMarker extends Component {
 
         const { labelId } = labelInfo;
 
-        // 更新标签
+        // English comment.
         await this.labelComponent.updateLabel(labelId, updates);
 
-        // 更新偏移量（如果有）
+        // English comment.
         if (updates.offset) {
             labelInfo.offset = updates.offset;
             const markerObject = this.imageMarkers.get(markerId);
@@ -796,9 +759,7 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 更新标签位置
-     * @param {string} markerId - 点位 ID
-     * @param {THREE.Object3D} markerObject - 点位对象
+     * English comment.
      */
     updateLabelPosition(markerId, markerObject) {
         const labelInfo = this.markerLabels.get(markerId);
@@ -809,20 +770,19 @@ export class ImageMarker extends Component {
 
         const { labelId, offset } = labelInfo;
 
-        // 计算新的标签位置
+        // English comment.
         const newPosition = {
             x: markerObject.position.x + offset.x,
             y: markerObject.position.y + offset.y,
             z: markerObject.position.z + offset.z
         };
 
-        // 更新标签位置
+        // English comment.
         this.labelComponent.updateLabel(labelId, { position: newPosition });
     }
 
     /**
-     * 显示点位标签
-     * @param {string} markerId - 点位 ID
+     * English comment.
      */
     showLabel(markerId) {
         const labelInfo = this.markerLabels.get(markerId);
@@ -837,8 +797,7 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 隐藏点位标签
-     * @param {string} markerId - 点位 ID
+     * English comment.
      */
     hideLabel(markerId) {
         const labelInfo = this.markerLabels.get(markerId);
@@ -853,8 +812,7 @@ export class ImageMarker extends Component {
     }
 
     /**
-     * 移除点位标签
-     * @param {string} markerId - 点位 ID
+     * English comment.
      */
     removeLabelForMarker(markerId) {
         const labelInfo = this.markerLabels.get(markerId);
@@ -867,14 +825,13 @@ export class ImageMarker extends Component {
         this.markerLabels.delete(markerId);
     }
 
-    // ==================== 生命周期方法 ====================
+    // English comment.
 
     /**
-     * 每帧更新
-     * @param {number} delta - 时间增量（秒）
+     * English comment.
      */
     onUpdate(delta) {
-        // 更新位置动画
+        // English comment.
         const now = Date.now();
         const completedAnimations = [];
 
@@ -883,10 +840,10 @@ export class ImageMarker extends Component {
             const elapsed = now - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // 应用缓动函数
+            // English comment.
             const easedProgress = this.easeFunction(progress, easing);
 
-            // 计算当前位置
+            // English comment.
             const markerObject = this.imageMarkers.get(markerId);
             if (markerObject) {
                 markerObject.position.x =
@@ -896,20 +853,20 @@ export class ImageMarker extends Component {
                 markerObject.position.z =
                     startPosition.z + (targetPosition.z - startPosition.z) * easedProgress;
 
-                // 更新标签位置
+                // English comment.
                 this.updateLabelPosition(markerId, markerObject);
 
-                // 动画完成
+                // English comment.
                 if (progress >= 1) {
                     completedAnimations.push(markerId);
 
-                    // 更新数据
+                    // English comment.
                     const markerData = this.markerDataMap.get(markerId);
                     if (markerData) {
                         markerData.position = { ...targetPosition };
                     }
 
-                    // 触发事件
+                    // English comment.
                     this.emit('positionUpdated', {
                         markerId,
                         newPosition: targetPosition,
@@ -919,41 +876,41 @@ export class ImageMarker extends Component {
             }
         });
 
-        // 清除已完成的动画
+        // English comment.
         completedAnimations.forEach((markerId) => {
             this.positionAnimations.delete(markerId);
         });
 
-        // 更新 Label3D 组件
+        // English comment.
         if (this.labelComponent && this.labelComponent.onUpdate) {
             this.labelComponent.onUpdate(delta);
         }
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 移除鼠标事件监听
+        // English comment.
         this.removeMouseEvents();
 
-        // 清除所有图片点位
+        // English comment.
         this.clearMarkers();
 
-        // 清除 Label3D 组件
+        // English comment.
         if (this.labelComponent) {
             this.labelComponent.onDispose();
             this.remove(this.labelComponent);
             this.labelComponent = null;
         }
 
-        // 清除纹理缓存
+        // English comment.
         this.textureCache.forEach((texture) => {
             texture.dispose();
         });
         this.textureCache.clear();
 
-        // 清除动画
+        // English comment.
         this.positionAnimations.clear();
     }
 }

@@ -2,15 +2,13 @@ import * as THREE from 'three';
 import { EventEmitter } from '@w3d/utils';
 
 /**
- * Component 组件基类
- * 所有组件统一继承此类，提供生命周期与事件能力。
+ * English comment.
  */
 export class Component extends THREE.Group {
     static defaultConfig = {};
 
     /**
-     * @param {Scene} scene - 场景实例
-     * @param {Object} config - 组件配置
+     * English comment.
      */
     constructor(scene, config = {}) {
         super();
@@ -24,7 +22,7 @@ export class Component extends THREE.Group {
         this.name = this.config.name || `component_${Date.now()}`;
         this.eventEmitter = new EventEmitter();
 
-        // 组件运行时渲染根节点，业务组件通常把对象挂到这里。
+        // English comment.
         this.componentScene = new THREE.Group();
         this.componentScene.name = `${this.name}_scene`;
         this.componentScene.visible = this.visible !== false;
@@ -90,10 +88,7 @@ export class Component extends THREE.Group {
     }
 
     /**
-     * 设置组件可见状态，并同步常见运行时根节点。
-     * @param {boolean} visible - 是否可见
-     * @param {{emit?: boolean}} options - 是否发出 show/hide/visibilityChange 事件
-     * @returns {boolean}
+     * English comment.
      */
     setVisible(visible = true, options = {}) {
         const nextVisible = visible !== false;
@@ -115,7 +110,7 @@ export class Component extends THREE.Group {
             }
         });
 
-        // 可见性变化时通知事件系统缓存失效
+        // English comment.
         if (prevVisible !== nextVisible) {
             this.scene?.eventSystem?.invalidateInteractiveCache?.();
         }
@@ -133,9 +128,7 @@ export class Component extends THREE.Group {
     }
 
     /**
-     * 切换可见状态。
-     * @param {boolean} forceVisible - 可选，强制设置可见状态
-     * @returns {boolean}
+     * English comment.
      */
     toggle(forceVisible) {
         if (typeof forceVisible === 'boolean') {
@@ -181,9 +174,7 @@ export class Component extends THREE.Group {
     }
 
     /**
-     * 获取可交互对象列表。
-     * 子类可重写以提供具体可交互对象。
-     * @returns {Array<THREE.Object3D>}
+     * English comment.
      */
     getInteractiveObjects() {
         return this.isMesh || this.isGroup ? [this] : [];

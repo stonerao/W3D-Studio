@@ -2,11 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * TextureLoader 纹理加载器组件
- *
- * @class TextureLoader
- * @extends Component
- * @description 加载纹理资源
+ * English comment.
  */
 export class TextureLoader extends Component {
     static defaultConfig = {
@@ -45,7 +41,7 @@ export class TextureLoader extends Component {
                 );
             });
 
-            // 应用配置
+            // English comment.
             this.applyConfig();
 
             this.emit('loadComplete', { texture: this.texture });

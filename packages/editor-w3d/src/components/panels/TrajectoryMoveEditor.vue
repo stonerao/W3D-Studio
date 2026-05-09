@@ -20,14 +20,14 @@
             <Button variant="outline" size="sm" @click="clearPoints">清空</Button>
         </div>
 
-        <!-- 拾取和更新按钮 -->
+        <!-- English comment. -->
         <div class="editor-actions">
             <Button size="sm" @click="startPick">拾取点位</Button>
             <Button size="sm" variant="outline" @click="stopPick">退出拾取</Button>
             <Button size="sm" variant="outline" @click="updateAnimation">更新动画</Button>
         </div>
 
-        <!-- 拾取坐标确认框 -->
+        <!-- English comment. -->
         <Modal
             v-model="showPickConfirm"
             title="确认拾取点位"
@@ -63,7 +63,7 @@
             </template>
         </Modal>
 
-        <!-- 轨迹编辑弹窗 -->
+        <!-- English comment. -->
         <Modal
             v-model="showEditor"
             title="轨迹点位编辑"
@@ -71,14 +71,14 @@
             @close="handleClose"
         >
             <div class="trajectory-modal-content">
-                <!-- 工具栏 -->
+                <!-- English comment. -->
                 <div class="toolbar">
                     <Button size="sm" @click="addPoint">添加点位</Button>
                     <Button size="sm" variant="outline" @click="reversePoints">反转顺序</Button>
                     <Button size="sm" variant="outline" @click="resetToDefault">重置默认</Button>
                 </div>
 
-                <!-- 点位列表 -->
+                <!-- English comment. -->
                 <div class="points-list">
                     <div v-if="editPoints.length === 0" class="empty-hint">
                         暂无轨迹点位，点击"添加点位"开始
@@ -147,7 +147,7 @@
                     </div>
                 </div>
 
-                <!-- 快速添加 -->
+                <!-- English comment. -->
                 <div class="quick-add">
                     <div class="quick-add-title">快速添加点位</div>
                     <div class="quick-add-inputs">
@@ -192,7 +192,7 @@ const quickX = ref(0);
 const quickY = ref(0);
 const quickZ = ref(0);
 
-// 获取组件配置
+// English comment.
 const component = computed(() => {
     return componentStore.components.find((c) => c.id === props.componentId);
 });
@@ -205,13 +205,13 @@ const points = computed(() => {
     return pts.map(normalizePoint);
 });
 
-// 默认轨迹数据
+// English comment.
 const defaultPoints = [
     { x: 0, y: 0, z: 0 },
     { x: -50, y: 50, z: 100 }
 ];
 
-// 规范化点位格式
+// English comment.
 function normalizePoint(point) {
     if (Array.isArray(point)) {
         return { x: point[0] || 0, y: point[1] || 0, z: point[2] || 0 };
@@ -223,14 +223,14 @@ function normalizePoint(point) {
     };
 }
 
-// 格式化点位显示
+// English comment.
 function formatPoint(point) {
     if (!point) return '(0, 0, 0)';
     const p = normalizePoint(point);
     return `(${p.x}, ${p.y}, ${p.z})`;
 }
 
-// 打开编辑器
+// English comment.
 function openEditor() {
     editPoints.value = points.value.length > 0
         ? points.value.map(p => ({ ...p }))
@@ -238,12 +238,12 @@ function openEditor() {
     showEditor.value = true;
 }
 
-// 关闭编辑器
+// English comment.
 function handleClose() {
     showEditor.value = false;
 }
 
-// 添加点位
+// English comment.
 function addPoint() {
     const lastPoint = editPoints.value[editPoints.value.length - 1];
     editPoints.value.push({
@@ -253,25 +253,25 @@ function addPoint() {
     });
 }
 
-// 快速添加点位
+// English comment.
 function quickAddPoint() {
     editPoints.value.push({
         x: quickX.value,
         y: quickY.value,
         z: quickZ.value
     });
-    // 重置快速添加输入
+    // English comment.
     quickX.value = 0;
     quickY.value = 0;
     quickZ.value = 0;
 }
 
-// 删除点位
+// English comment.
 function removePoint(index) {
     editPoints.value.splice(index, 1);
 }
 
-// 移动点位顺序
+// English comment.
 function movePoint(index, direction) {
     const newIndex = index + direction;
     if (newIndex < 0 || newIndex >= editPoints.value.length) return;
@@ -280,28 +280,28 @@ function movePoint(index, direction) {
     editPoints.value[newIndex] = temp;
 }
 
-// 更新点位坐标
+// English comment.
 function updatePointCoord(index, axis, value) {
     editPoints.value[index][axis] = Number(value) || 0;
 }
 
-// 反转点位顺序
+// English comment.
 function reversePoints() {
     editPoints.value.reverse();
 }
 
-// 重置为默认
+// English comment.
 function resetToDefault() {
     editPoints.value = defaultPoints.map(p => ({ ...p }));
 }
 
-// 清空点位
+// English comment.
 async function clearPoints() {
     await updateComponentConfig(props.componentId, { points: [] });
     toast.success('轨迹已清空');
 }
 
-// 保存点位
+// English comment.
 async function savePoints() {
     if (editPoints.value.length < 2) {
         toast.error('至少需要 2 个点位才能形成轨迹');
@@ -312,7 +312,7 @@ async function savePoints() {
     showEditor.value = false;
 }
 
-// ========== 拾取点位相关 ==========
+// English comment.
 
 const round4 = (v) => {
     const n = Number(v);
@@ -331,7 +331,7 @@ const ensureVec3 = (value, fallback = [0, 0, 0]) => {
     return [Number(value[0]) || fallback[0], Number(value[1]) || fallback[1], Number(value[2]) || fallback[2]];
 };
 
-// 拾取确认框显示状态
+// English comment.
 const showPickConfirm = computed({
     get: () => {
         const pc = componentStore.trajectoryPickConfirm;
@@ -342,25 +342,25 @@ const showPickConfirm = computed({
     }
 });
 
-// 拾取确认框中的坐标
+// English comment.
 const pickConfirmXyz = computed(() => {
     const pc = componentStore.trajectoryPickConfirm;
     const xyz = pc?.componentId === props.componentId ? pc?.xyz : null;
     return ensureVec3(xyz, [0, 0, 0]);
 });
 
-// 开始拾取
+// English comment.
 function startPick() {
     componentStore.startTrajectoryPicking(props.componentId);
     toast.info('请点击场景中的模型表面拾取点位');
 }
 
-// 停止拾取
+// English comment.
 function stopPick() {
     componentStore.stopTrajectoryPicking();
 }
 
-// 确认拾取
+// English comment.
 async function confirmPickConfirm() {
     const pc = componentStore.trajectoryPickConfirm;
     if (!pc?.visible) return;
@@ -379,19 +379,19 @@ async function confirmPickConfirm() {
     componentStore.clearTrajectoryPickConfirm();
 }
 
-// 取消拾取
+// English comment.
 function cancelPickConfirm() {
     componentStore.clearTrajectoryPickConfirm();
-    // 继续拾取模式
+    // English comment.
     componentStore.startTrajectoryPicking(props.componentId);
 }
 
-// 关闭拾取确认框
+// English comment.
 function handlePickConfirmClose() {
     cancelPickConfirm();
 }
 
-// 更新动画（重新初始化组件实例）
+// English comment.
 async function updateAnimation() {
     const comp = component.value;
     if (!comp?.instance) {
@@ -600,7 +600,7 @@ async function updateAnimation() {
     border-color: var(--color-primary);
 }
 
-/* 拾取确认框样式 */
+/* English comment. */
 .pick-confirm-content {
     display: flex;
     flex-direction: column;

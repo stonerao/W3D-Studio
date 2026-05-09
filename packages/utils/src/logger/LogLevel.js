@@ -1,7 +1,5 @@
 /**
- * LogLevel 日志级别
- *
- * @description 定义日志级别常量
+ * English comment.
  */
 export const LogLevel = {
     DEBUG: 'DEBUG',

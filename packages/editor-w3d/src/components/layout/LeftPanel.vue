@@ -31,6 +31,7 @@ import SceneTree from '../panels/SceneTree.vue';
 import VariablesEditor from '../panels/VariablesEditor.vue';
 import { useComponentStore } from '../../stores/useComponentStore';
 import { useEditorStore } from '../../stores/useEditorStore';
+import { useEditorI18n } from '../../i18n';
 
 const AVAILABLE_LEFT_PANEL_TABS = new Set(['components', 'tree', 'variables']);
 const normalizeLeftPanelTab = (tab) => AVAILABLE_LEFT_PANEL_TABS.has(tab) ? tab : 'components';
@@ -38,11 +39,12 @@ const normalizeLeftPanelTab = (tab) => AVAILABLE_LEFT_PANEL_TABS.has(tab) ? tab 
 const editorStore = useEditorStore();
 const activeTab = ref(normalizeLeftPanelTab(editorStore.activeLeftPanelTab));
 const componentStore = useComponentStore();
+const { t } = useEditorI18n();
 
 const tabs = computed(() => [
-    { key: 'components', label: '组件库', icon: 'icon-gongzuotaimorentubiao' },
-    { key: 'tree', label: '结构树', icon: 'icon-wenjianjia' },
-    { key: 'variables', label: '变量', icon: 'icon-yuanshujubianji' }
+    { key: 'components', label: t('panels.components'), icon: 'icon-gongzuotaimorentubiao' },
+    { key: 'tree', label: t('panels.sceneTree'), icon: 'icon-wenjianjia' },
+    { key: 'variables', label: t('panels.variables'), icon: 'icon-yuanshujubianji' }
 ]);
 
 const handleComponentAdded = () => {

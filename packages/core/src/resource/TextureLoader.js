@@ -1,16 +1,11 @@
 import * as THREE from 'three';
 
 /**
- * TextureLoader 纹理加载器
- *
- * @class TextureLoader
- * @description 纹理资源加载
+ * English comment.
  */
 export class TextureLoader {
     /**
-     * 创建纹理加载器实例
-     *
-     * @param {IndexedDBCache} indexedDBCache - IndexedDB 缓存实例（可选）
+     * English comment.
      */
     constructor(indexedDBCache = null) {
         this.loader = new THREE.TextureLoader();
@@ -18,14 +13,10 @@ export class TextureLoader {
     }
 
     /**
-     * 加载纹理
-     *
-     * @param {string} url - 纹理 URL
-     * @param {Function} onProgress - 进度回调
-     * @returns {Promise<THREE.Texture>} 纹理对象
+     * English comment.
      */
     async load(url, onProgress) {
-        // 尝试从 IndexedDB 缓存加载
+        // English comment.
         if (this.cache) {
             const cachedData = await this.cache.get(url);
             if (cachedData) {
@@ -33,12 +24,12 @@ export class TextureLoader {
             }
         }
 
-        // 从网络加载
+        // English comment.
         return new Promise((resolve, reject) => {
             this.loader.load(
                 url,
                 async (texture) => {
-                    // 缓存到 IndexedDB
+                    // English comment.
                     if (this.cache) {
                         await this._cacheTexture(url);
                     }
@@ -58,11 +49,7 @@ export class TextureLoader {
     }
 
     /**
-     * 批量加载纹理
-     *
-     * @param {Array<string>} urls - 纹理 URL 数组
-     * @param {Function} onProgress - 进度回调
-     * @returns {Promise<Array<THREE.Texture>>} 纹理数组
+     * English comment.
      */
     async loadMultiple(urls, onProgress) {
         const textures = [];
@@ -84,21 +71,15 @@ export class TextureLoader {
     }
 
     /**
-     * 从缓存加载纹理
-     *
-     * @private
-     * @param {string} url - 纹理 URL
-     * @param {ArrayBuffer} cachedData - 缓存的数据
-     * @param {Function} onProgress - 进度回调
-     * @returns {Promise<THREE.Texture>} 纹理对象
+     * English comment.
      */
     async _loadFromCache(url, cachedData, onProgress) {
-        // 模拟进度回调
+        // English comment.
         if (onProgress) {
             onProgress(1);
         }
 
-        // 将 ArrayBuffer 转换为 Blob
+        // English comment.
         const blob = new Blob([cachedData]);
         const objectURL = URL.createObjectURL(blob);
 
@@ -106,7 +87,7 @@ export class TextureLoader {
             this.loader.load(
                 objectURL,
                 (texture) => {
-                    // 释放对象 URL
+                    // English comment.
                     URL.revokeObjectURL(objectURL);
                     resolve(texture);
                 },
@@ -120,20 +101,16 @@ export class TextureLoader {
     }
 
     /**
-     * 缓存纹理到 IndexedDB
-     *
-     * @private
-     * @param {string} url - 纹理 URL
-     * @returns {Promise<void>}
+     * English comment.
      */
     async _cacheTexture(url) {
         try {
-            // 重新获取原始数据以缓存
+            // English comment.
             const response = await fetch(url);
             const arrayBuffer = await response.arrayBuffer();
             await this.cache.set(url, arrayBuffer, 'texture');
         } catch (error) {
-            // 缓存失败不影响主流程
+            // English comment.
             console.warn(`Failed to cache texture: ${url}`, error);
         }
     }

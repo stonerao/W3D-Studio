@@ -1,8 +1,5 @@
 /**
- * EditorActions - 编辑器操作服务
- * 提供统一的编辑器操作接口，供 AI 调用执行
- *
- * 所有操作方法都返回 { success: boolean, message: string, data?: any }
+ * English comment.
  */
 
 import { useComponentStore } from '../stores/useComponentStore';
@@ -14,17 +11,39 @@ import { useEditorStore } from '../stores/useEditorStore';
 import { useHistoryStore } from '../stores/useHistoryStore';
 import { syncGridHelper } from '../utils/sceneHelpers';
 
+const isPlainObject = (value) => (
+    value &&
+    typeof value === 'object' &&
+    !Array.isArray(value)
+);
+
+const deepMergeConfig = (target = {}, source = {}) => {
+    const result = { ...(isPlainObject(target) ? target : {}) };
+    Object.keys(source || {}).forEach((key) => {
+        const nextValue = source[key];
+        if (isPlainObject(nextValue)) {
+            result[key] = deepMergeConfig(result[key], nextValue);
+        } else {
+            result[key] = nextValue;
+        }
+    });
+    return result;
+};
+
+const FORBIDDEN_COMPONENT_METHODS = new Set([
+    'constructor',
+    'onMounted',
+    'onUnmounted',
+    'updateConfig',
+    'dispose'
+]);
+
 /**
- * 操作结果类型
- * @typedef {Object} ActionResult
- * @property {boolean} success - 操作是否成功
- * @property {string} message - 操作结果描述
- * @property {any} [data] - 返回的数据
+ * English comment.
  */
 
 /**
- * 编辑器操作服务
- * 封装所有可被 AI 调用的编辑器操作
+ * English comment.
  */
 class EditorActionsService {
     constructor() {
@@ -33,7 +52,7 @@ class EditorActionsService {
     }
 
     /**
-     * 初始化服务（延迟初始化 stores）
+     * English comment.
      */
     init() {
         if (this.initialized) return;
@@ -52,7 +71,7 @@ class EditorActionsService {
     }
 
     /**
-     * 确保已初始化
+     * English comment.
      */
     ensureInit() {
         if (!this.initialized) {
@@ -60,15 +79,10 @@ class EditorActionsService {
         }
     }
 
-    // ==================== 组件操作 ====================
+    // English comment.
 
     /**
-     * 添加组件到场景
-     * @param {Object} params
-     * @param {string} params.type - 组件类型
-     * @param {string} [params.name] - 组件名称
-     * @param {Object} [params.config] - 组件配置
-     * @returns {ActionResult}
+     * English comment.
      */
     async addComponent({ type, name, config = {} }) {
         this.ensureInit();
@@ -79,16 +93,16 @@ class EditorActionsService {
                 return { success: false, message: '场景未初始化' };
             }
 
-            // 生成组件名称
+            // English comment.
             const componentName = name || `${type}_${Date.now()}`;
 
-            // 添加到场景
+            // English comment.
             const instance = await scene.add(type, {
                 name: componentName,
                 ...config
             });
 
-            // 添加到组件存储
+            // English comment.
             const component = this.stores.component.addComponent({
                 type,
                 name: componentName,
@@ -96,7 +110,7 @@ class EditorActionsService {
                 instance
             });
 
-            // 将 store id 传播到场景实例的 config 中
+            // English comment.
             if (instance && component.id) {
                 if (!instance.config) instance.config = {};
                 instance.config.id = component.id;
@@ -113,10 +127,7 @@ class EditorActionsService {
     }
 
     /**
-     * 删除组件
-     * @param {Object} params
-     * @param {string} params.id - 组件 ID
-     * @returns {ActionResult}
+     * English comment.
      */
     async removeComponent({ id }) {
         this.ensureInit();
@@ -145,11 +156,7 @@ class EditorActionsService {
     }
 
     /**
-     * 更新组件配置
-     * @param {Object} params
-     * @param {string} params.id - 组件 ID
-     * @param {Object} params.config - 新配置
-     * @returns {ActionResult}
+     * English comment.
      */
     async updateComponentConfig({ id, config }) {
         this.ensureInit();
@@ -160,14 +167,14 @@ class EditorActionsService {
                 return { success: false, message: '组件不存在' };
             }
 
-            // 更新组件实例配置
+            // English comment.
             if (component.instance && typeof component.instance.updateConfig === 'function') {
-                component.instance.updateConfig(config);
+                await component.instance.updateConfig(config);
             }
 
-            // 更新存储中的配置
+            // English comment.
             this.stores.component.updateComponent(id, {
-                config: { ...component.config, ...config }
+                config: deepMergeConfig(component.config || {}, config || {})
             });
 
             return {
@@ -181,10 +188,46 @@ class EditorActionsService {
     }
 
     /**
-     * 选中组件
+     * Call a method exposed by a component instance.
      * @param {Object} params
-     * @param {string} params.id - 组件 ID
+     * @param {string} params.id
+     * @param {string} params.methodName
+     * @param {Array} [params.args]
      * @returns {ActionResult}
+     */
+    async callComponentMethod({ id, methodName, args = [] }) {
+        this.ensureInit();
+
+        try {
+            const component = this.stores.component.components.find(c => c.id === id);
+            if (!component) {
+                return { success: false, message: '组件不存在' };
+            }
+
+            const method = String(methodName || '').trim();
+            if (!method || method.startsWith('_') || FORBIDDEN_COMPONENT_METHODS.has(method)) {
+                return { success: false, message: `不允许调用组件方法: ${method || '(empty)'}` };
+            }
+
+            if (!component.instance || typeof component.instance[method] !== 'function') {
+                return { success: false, message: `组件不支持方法: ${method}` };
+            }
+
+            const methodArgs = Array.isArray(args) ? args : [args];
+            const data = await component.instance[method](...methodArgs);
+
+            return {
+                success: true,
+                message: `成功调用组件方法: ${component.name}.${method}`,
+                data
+            };
+        } catch (error) {
+            return { success: false, message: `调用组件方法失败: ${error.message}` };
+        }
+    }
+
+    /**
+     * English comment.
      */
     selectComponent({ id }) {
         this.ensureInit();
@@ -203,8 +246,7 @@ class EditorActionsService {
     }
 
     /**
-     * 取消选中
-     * @returns {ActionResult}
+     * English comment.
      */
     deselectComponent() {
         this.ensureInit();
@@ -213,11 +255,7 @@ class EditorActionsService {
     }
 
     /**
-     * 切换组件可见性
-     * @param {Object} params
-     * @param {string} params.id - 组件 ID
-     * @param {boolean} [params.visible] - 可见性（不传则切换）
-     * @returns {ActionResult}
+     * English comment.
      */
     toggleComponentVisibility({ id, visible }) {
         this.ensureInit();
@@ -242,10 +280,7 @@ class EditorActionsService {
     }
 
     /**
-     * 根据名称查找组件
-     * @param {Object} params
-     * @param {string} params.name - 组件名称
-     * @returns {ActionResult}
+     * English comment.
      */
     findComponentByName({ name }) {
         this.ensureInit();
@@ -268,10 +303,7 @@ class EditorActionsService {
     }
 
     /**
-     * 根据类型查找组件
-     * @param {Object} params
-     * @param {string} params.type - 组件类型
-     * @returns {ActionResult}
+     * English comment.
      */
     findComponentsByType({ type }) {
         this.ensureInit();
@@ -289,8 +321,7 @@ class EditorActionsService {
     }
 
     /**
-     * 获取所有组件列表
-     * @returns {ActionResult}
+     * English comment.
      */
     listComponents() {
         this.ensureInit();
@@ -311,14 +342,10 @@ class EditorActionsService {
         };
     }
 
-    // ==================== 场景操作 ====================
+    // English comment.
 
     /**
-     * 更新相机位置
-     * @param {Object} params
-     * @param {number[]} params.position - [x, y, z]
-     * @param {number[]} [params.lookAt] - [x, y, z]
-     * @returns {ActionResult}
+     * English comment.
      */
     updateCameraPosition({ position, lookAt }) {
         this.ensureInit();
@@ -341,15 +368,7 @@ class EditorActionsService {
     }
 
     /**
-     * 更新场景背景
-     * @param {Object} params
-     * @param {string} params.type - 'color' | 'gradient' | 'image' | 'hdr'
-     * @param {string} [params.color] - 纯色背景色
-     * @param {string} [params.gradientTop] - 渐变顶部色
-     * @param {string} [params.gradientBottom] - 渐变底部色
-     * @param {string} [params.imageUrl] - 图片 URL
-     * @param {string} [params.hdrUrl] - HDR 文件 URL
-     * @returns {ActionResult}
+     * English comment.
      */
     updateBackground({ type, color, gradientTop, gradientBottom, imageUrl, hdrUrl }) {
         this.ensureInit();
@@ -375,10 +394,7 @@ class EditorActionsService {
     }
 
     /**
-     * 切换网格显示
-     * @param {Object} params
-     * @param {boolean} params.enabled - 是否启用
-     * @returns {ActionResult}
+     * English comment.
      */
     async toggleGrid({ enabled }) {
         this.ensureInit();
@@ -407,11 +423,7 @@ class EditorActionsService {
     }
 
     /**
-     * 更新渲染器配置
-     * @param {Object} params
-     * @param {boolean} [params.shadowEnabled] - 是否启用阴影
-     * @param {boolean} [params.antialias] - 是否启用抗锯齿
-     * @returns {ActionResult}
+     * English comment.
      */
     updateRenderer({ shadowEnabled, antialias }) {
         this.ensureInit();
@@ -433,16 +445,10 @@ class EditorActionsService {
         }
     }
 
-    // ==================== 变量操作 ====================
+    // English comment.
 
     /**
-     * 创建变量
-     * @param {Object} params
-     * @param {string} params.name - 变量名
-     * @param {any} params.value - 变量值
-     * @param {string} [params.type] - 变量类型
-     * @param {string} [params.description] - 描述
-     * @returns {ActionResult}
+     * English comment.
      */
     createVariable({ name, value, type = 'string', description = '' }) {
         this.ensureInit();
@@ -470,11 +476,7 @@ class EditorActionsService {
     }
 
     /**
-     * 更新变量
-     * @param {Object} params
-     * @param {string} params.name - 变量名
-     * @param {any} params.value - 新值
-     * @returns {ActionResult}
+     * English comment.
      */
     updateVariable({ name, value }) {
         this.ensureInit();
@@ -492,10 +494,7 @@ class EditorActionsService {
     }
 
     /**
-     * 获取变量值
-     * @param {Object} params
-     * @param {string} params.name - 变量名
-     * @returns {ActionResult}
+     * English comment.
      */
     getVariable({ name }) {
         this.ensureInit();
@@ -513,8 +512,7 @@ class EditorActionsService {
     }
 
     /**
-     * 列出所有变量
-     * @returns {ActionResult}
+     * English comment.
      */
     listVariables() {
         this.ensureInit();
@@ -531,13 +529,10 @@ class EditorActionsService {
         };
     }
 
-    // ==================== 编辑器状态 ====================
+    // English comment.
 
     /**
-     * 切换编辑模式
-     * @param {Object} params
-     * @param {string} params.mode - 'edit' | 'preview'
-     * @returns {ActionResult}
+     * English comment.
      */
     setEditorMode({ mode }) {
         this.ensureInit();
@@ -555,11 +550,7 @@ class EditorActionsService {
     }
 
     /**
-     * 切换面板显示
-     * @param {Object} params
-     * @param {string} params.panel - 'left' | 'right'
-     * @param {boolean} [params.visible] - 是否显示
-     * @returns {ActionResult}
+     * English comment.
      */
     togglePanel({ panel, visible }) {
         this.ensureInit();
@@ -587,11 +578,10 @@ class EditorActionsService {
         };
     }
 
-    // ==================== 历史记录 ====================
+    // English comment.
 
     /**
-     * 撤销操作
-     * @returns {ActionResult}
+     * English comment.
      */
     undo() {
         this.ensureInit();
@@ -605,8 +595,7 @@ class EditorActionsService {
     }
 
     /**
-     * 重做操作
-     * @returns {ActionResult}
+     * English comment.
      */
     redo() {
         this.ensureInit();
@@ -619,11 +608,10 @@ class EditorActionsService {
         return { success: true, message: '已重做' };
     }
 
-    // ==================== 项目操作 ====================
+    // English comment.
 
     /**
-     * 保存项目
-     * @returns {ActionResult}
+     * English comment.
      */
     async saveProject() {
         this.ensureInit();
@@ -637,8 +625,7 @@ class EditorActionsService {
     }
 
     /**
-     * 获取项目信息
-     * @returns {ActionResult}
+     * English comment.
      */
     getProjectInfo() {
         this.ensureInit();
@@ -661,12 +648,10 @@ class EditorActionsService {
         };
     }
 
-    // ==================== 批量操作 ====================
+    // English comment.
 
     /**
-     * 执行多个操作
-     * @param {Array<{action: string, params: Object}>} operations - 操作列表
-     * @returns {ActionResult}
+     * English comment.
      */
     async executeMultiple(operations) {
         this.ensureInit();
@@ -702,15 +687,14 @@ class EditorActionsService {
         };
     }
 
-    // ==================== 获取可用操作列表 ====================
+    // English comment.
 
     /**
-     * 获取所有可用操作的描述
-     * @returns {Object}
+     * English comment.
      */
     getAvailableActions() {
         return {
-            // 组件操作
+            // English comment.
             addComponent: {
                 description: '添加组件到场景',
                 params: {
@@ -726,6 +710,10 @@ class EditorActionsService {
             updateComponentConfig: {
                 description: '更新组件配置',
                 params: { id: '组件 ID (必填)', config: '新配置 (必填)' }
+            },
+            callComponentMethod: {
+                description: '调用组件实例方法',
+                params: { id: '组件 ID (必填)', methodName: '方法名 (必填)', args: '参数数组 (可选)' }
             },
             selectComponent: {
                 description: '选中组件',
@@ -752,7 +740,7 @@ class EditorActionsService {
                 params: {}
             },
 
-            // 场景操作
+            // English comment.
             updateCameraPosition: {
                 description: '更新相机位置',
                 params: { position: '[x, y, z] (可选)', lookAt: '[x, y, z] (可选)' }
@@ -777,7 +765,7 @@ class EditorActionsService {
                 params: { shadowEnabled: '是否启用阴影 (可选)', antialias: '是否启用抗锯齿 (可选)' }
             },
 
-            // 变量操作
+            // English comment.
             createVariable: {
                 description: '创建变量',
                 params: { name: '变量名 (必填)', value: '值 (必填)', type: '类型 (可选)', description: '描述 (可选)' }
@@ -795,7 +783,7 @@ class EditorActionsService {
                 params: {}
             },
 
-            // 编辑器状态
+            // English comment.
             setEditorMode: {
                 description: '切换编辑模式',
                 params: { mode: 'edit/preview (必填)' }
@@ -805,7 +793,7 @@ class EditorActionsService {
                 params: { panel: 'left/right (必填)', visible: '是否显示 (可选)' }
             },
 
-            // 历史记录
+            // English comment.
             undo: {
                 description: '撤销操作',
                 params: {}
@@ -815,7 +803,7 @@ class EditorActionsService {
                 params: {}
             },
 
-            // 项目操作
+            // English comment.
             saveProject: {
                 description: '保存项目',
                 params: {}
@@ -825,7 +813,7 @@ class EditorActionsService {
                 params: {}
             },
 
-            // 批量操作
+            // English comment.
             executeMultiple: {
                 description: '执行多个操作',
                 params: { operations: '[{action, params}] 操作列表 (必填)' }
@@ -834,8 +822,8 @@ class EditorActionsService {
     }
 }
 
-// 导出单例
+// English comment.
 export const editorActions = new EditorActionsService();
 
-// 导出类（用于测试）
+// English comment.
 export { EditorActionsService };

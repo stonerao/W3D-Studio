@@ -9,26 +9,22 @@ import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 import * as THREE from 'three';
 
 /**
- * HDRLoader HDR 环境贴图加载器组件
- *
- * @class HDRLoader
- * @extends Component
- * @description 加载 HDR 环境贴图，支持强度控制和独立的环境/背景配置
+ * English comment.
  */
 export class HDRLoaderCom extends Component {
     static defaultConfig = {
         url: '',
         mapping: THREE.EquirectangularReflectionMapping,
-        asEnvironment: true,      // 是否作为环境贴图
-        asBackground: false,      // 是否作为背景贴图
-        intensity: 1.0,           // 环境贴图强度（默认 1.0）
-        backgroundIntensity: 1.0  // 背景贴图强度（默认 1.0）
+        asEnvironment: true,      // English comment.
+        asBackground: false,      // English comment.
+        intensity: 1.0,           // English comment.
+        backgroundIntensity: 1.0  // English comment.
     };
 
     async onMounted() {
         this.loader = new HDRLoader();
 
-        // 保存当前强度值
+        // English comment.
         this.currentIntensity = this.config.intensity;
         this.currentBackgroundIntensity = this.config.backgroundIntensity;
 
@@ -41,13 +37,13 @@ export class HDRLoaderCom extends Component {
             return;
         }
 
-        // 验证文件扩展名
+        // English comment.
         const url = this.config.url.toLowerCase();
         if (!url.endsWith('.hdr') && !url.endsWith('.exr')) {
             const error = new Error(`不支持的文件格式。请使用 .hdr 或 .exr 文件。当前文件: ${this.config.url}`);
             console.error('HDRLoader:', error.message);
             this.emit('loadError', { error });
-            // 清理场景中的环境贴图
+            // English comment.
             if (this.scene && this.scene.scene) {
                 if (this.config.asEnvironment) {
                     this.scene.scene.environment = null;
@@ -66,7 +62,7 @@ export class HDRLoaderCom extends Component {
                 this.loader.load(
                     this.config.url,
                     (texture) => {
-                        // 验证纹理是否加载成功
+                        // English comment.
                         if (!texture || !texture.image) {
                             reject(new Error('加载的纹理无效'));
                             return;
@@ -80,7 +76,7 @@ export class HDRLoaderCom extends Component {
                         }
                     },
                     (error) => {
-                        // 提供更友好的错误消息
+                        // English comment.
                         const errorMsg = error?.message || String(error);
                         if (errorMsg.includes('Bad File Format') || errorMsg.includes('bad initial token')) {
                             reject(new Error(`HDR 文件格式错误。请确保文件是有效的 .hdr 或 .exr 格式。URL: ${this.config.url}`));
@@ -93,24 +89,24 @@ export class HDRLoaderCom extends Component {
                 );
             });
 
-            // 验证纹理对象
+            // English comment.
             if (!this.texture || !this.texture.image) {
                 throw new Error('加载的 HDR 纹理无效');
             }
 
-            // 设置映射方式
+            // English comment.
             this.texture.mapping = this.config.mapping;
 
-            // 应用到场景
+            // English comment.
             if (this.config.asEnvironment) {
                 this.scene.scene.environment = this.texture;
-                // 设置环境贴图强度
+                // English comment.
                 this.applyEnvironmentIntensity(this.currentIntensity);
             }
 
             if (this.config.asBackground) {
                 this.scene.scene.background = this.texture;
-                // 设置背景贴图强度
+                // English comment.
                 this.applyBackgroundIntensity(this.currentBackgroundIntensity);
             }
 
@@ -120,7 +116,7 @@ export class HDRLoaderCom extends Component {
             console.error('HDRLoader: Failed to load HDR', error);
             this.emit('loadError', { error });
             
-            // 加载失败时清理纹理和场景引用
+            // English comment.
             if (this.texture) {
                 this.texture.dispose();
                 this.texture = null;
@@ -138,18 +134,16 @@ export class HDRLoaderCom extends Component {
     }
 
     /**
-     * 应用环境贴图强度
-     * @param {number} value - 强度值
-     * @private
+     * English comment.
      */
     applyEnvironmentIntensity(value) {
         if (!this.scene || !this.scene.scene) return;
 
-        // Three.js r155+ 支持 scene.environmentIntensity
+        // English comment.
         if ('environmentIntensity' in this.scene.scene) {
             this.scene.scene.environmentIntensity = value;
         } else {
-            // 降级方案：调整场景中所有材质的 envMapIntensity
+            // English comment.
             this.scene.scene.traverse((object) => {
                 if (object.isMesh && object.material) {
                     const materials = Array.isArray(object.material)
@@ -168,26 +162,23 @@ export class HDRLoaderCom extends Component {
     }
 
     /**
-     * 应用背景贴图强度
-     * @param {number} value - 强度值
-     * @private
+     * English comment.
      */
     applyBackgroundIntensity(value) {
         if (!this.scene || !this.scene.scene) return;
 
-        // Three.js r163+ 支持 scene.backgroundIntensity
+        // English comment.
         if ('backgroundIntensity' in this.scene.scene) {
             this.scene.scene.backgroundIntensity = value;
         } else {
-            // 降级方案：通过调整纹理的色彩空间或使用后处理
-            // 注意：这是一个简化的实现，实际效果可能有限
+            // English comment.
+            // English comment.
             console.warn('HDRLoader: backgroundIntensity 不被当前 Three.js 版本支持');
         }
     }
 
     /**
-     * 设置环境贴图强度
-     * @param {number} value - 强度值（0.0 - 5.0）
+     * English comment.
      */
     setIntensity(value) {
         if (typeof value !== 'number' || value < 0) {
@@ -204,8 +195,7 @@ export class HDRLoaderCom extends Component {
     }
 
     /**
-     * 设置背景贴图强度
-     * @param {number} value - 强度值（0.0 - 5.0）
+     * English comment.
      */
     setBackgroundIntensity(value) {
         if (typeof value !== 'number' || value < 0) {
@@ -222,8 +212,7 @@ export class HDRLoaderCom extends Component {
     }
 
     /**
-     * 切换是否作为环境贴图
-     * @param {boolean} enabled - 是否启用
+     * English comment.
      */
     setAsEnvironment(enabled) {
         if (!this.scene || !this.scene.scene) {
@@ -249,8 +238,7 @@ export class HDRLoaderCom extends Component {
     }
 
     /**
-     * 切换是否作为背景贴图
-     * @param {boolean} enabled - 是否启用
+     * English comment.
      */
     setAsBackground(enabled) {
         if (!this.scene || !this.scene.scene) {
@@ -276,32 +264,28 @@ export class HDRLoaderCom extends Component {
     }
 
     /**
-     * 获取当前环境贴图强度
-     * @returns {number} 当前强度值
+     * English comment.
      */
     getIntensity() {
         return this.currentIntensity;
     }
 
     /**
-     * 获取当前背景贴图强度
-     * @returns {number} 当前强度值
+     * English comment.
      */
     getBackgroundIntensity() {
         return this.currentBackgroundIntensity;
     }
 
     /**
-     * 获取纹理对象
-     * @returns {THREE.Texture} HDR 纹理
+     * English comment.
      */
     getTexture() {
         return this.texture;
     }
 
     /**
-     * 更新配置（支持动态更新）
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     async updateConfig(newConfig) {
         console.log(newConfig)
@@ -309,23 +293,23 @@ export class HDRLoaderCom extends Component {
         const oldAsEnvironment = this.config.asEnvironment;
         const oldAsBackground = this.config.asBackground;
 
-        // 合并新配置
+        // English comment.
         Object.assign(this.config, newConfig);
 
         const newUrl = this.config.url;
 
-        // URL 变化时重新加载 HDR
+        // English comment.
         if (newUrl && newUrl !== oldUrl) {
-            // 清理旧纹理
+            // English comment.
             if (this.texture) {
                 this.texture.dispose();
                 this.texture = null;
             }
 
-            // 重新加载
+            // English comment.
             await this.loadHDR();
         } else {
-            // URL 未变化，只更新其他配置
+            // English comment.
             if ('intensity' in newConfig && newConfig.intensity !== this.currentIntensity) {
                 this.setIntensity(newConfig.intensity);
             }
@@ -345,7 +329,7 @@ export class HDRLoaderCom extends Component {
     }
 
     onDispose() {
-        // 清理场景中的引用
+        // English comment.
         if (this.scene && this.scene.scene) {
             if (this.config.asEnvironment && this.scene.scene.environment === this.texture) {
                 this.scene.scene.environment = null;
@@ -355,17 +339,17 @@ export class HDRLoaderCom extends Component {
             }
         }
 
-        // 释放纹理资源
+        // English comment.
         if (this.texture) {
             this.texture.dispose();
             this.texture = null;
         }
 
-        // 清理加载器
+        // English comment.
         this.loader = null;
     }
 }
-// 兼容性导出：提供命名导出 `HDRLoader` 以匹配上层重导出
+// English comment.
 export { HDRLoaderCom as HDRLoader };
 
 export default HDRLoaderCom;

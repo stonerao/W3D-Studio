@@ -175,41 +175,41 @@ export const useComponentStore = defineStore('component', () => {
         payload: null
     });
 
-    // 组件列表（场景中已添加的组件）
+    // English comment.
     const components = ref([]);
     const serialVersion = ref(0);
 
-    // 选中的组件 ID
+    // English comment.
     const selectedComponentId = ref(null);
 
-    // 路侧设备管理：选中的设备（仅编辑器态，不参与项目持久化）
+    // English comment.
     const trafficSelectedDevice = ref(createTrafficSelectedDeviceState());
 
-    // 路侧设备管理：拾取坐标模式（仅编辑器态，不参与项目持久化）
+    // English comment.
     const trafficPicking = ref(createTrafficPickingState());
 
-    // 轨迹移动：拾取路线点位模式（仅编辑器态，不参与项目持久化）
+    // English comment.
     const trajectoryPicking = ref(createTrajectoryPickingState());
 
-    // 点位管理器：拾取点位模式（仅编辑器态，不参与项目持久化）
+    // English comment.
     const buildingPicking = ref(createBuildingPickingState());
 
-    // 路侧设备管理：拾取坐标确认（仅编辑器态，不参与项目持久化）
+    // English comment.
     const trafficPickConfirm = ref(createTrafficPickConfirmState());
 
-    // 轨迹移动：拾取坐标确认（仅编辑器态，不参与项目持久化）
+    // English comment.
     const trajectoryPickConfirm = ref(createTrajectoryPickConfirmState());
 
-    // 点位管理器：拾取坐标确认（仅编辑器态，不参与项目持久化）
+    // English comment.
     const buildingPickConfirm = ref(createBuildingPickConfirmState());
     const meshPicking = ref(createMeshPickingState());
     const meshPickResult = ref(createMeshPickResultState());
     const canvasSubSelection = ref(createCanvasSubSelectionState());
 
-    // 组件计数器（用于生成唯一 ID）
+    // English comment.
     let componentCounter = 0;
 
-    // 组件 Map，用于 O(1) ID 查找（与 components 数组保持同步）
+    // English comment.
     const componentMap = new Map();
 
     const getComponentById = (id) => componentMap.get(id) || null;
@@ -218,8 +218,8 @@ export const useComponentStore = defineStore('component', () => {
         serialVersion.value += 1;
     };
 
-    // ★ 返回响应式 Proxy 的组件引用（用于所有需要触发 UI 更新的变更操作）
-    //   componentMap 存 raw 引用仅做 O(1) 存在性判断；真正赋值走 Proxy 才能触发 computed/watcher。
+    // English comment.
+    // English comment.
     const getReactiveComponent = (id) => {
         if (!componentMap.has(id)) return null;
         return components.value.find((c) => c.id === id) || null;
@@ -356,29 +356,29 @@ export const useComponentStore = defineStore('component', () => {
         canvasSubSelection.value = createCanvasSubSelectionState();
     };
 
-    // id → index 快速映射，随 components 数组增删同步维护
+    // English comment.
     const componentIndexMap = new Map();
     const rebuildIndexMap = () => {
         componentIndexMap.clear();
         components.value.forEach((c, i) => componentIndexMap.set(c.id, i));
     };
 
-    // 支持自定义 raycast 的组件 id 集合（addComponent / removeComponent / updateComponentInstance 时维护）
+    // English comment.
     const raycastCapableIds = new Set();
 
-    // 获取选中的组件（O(1) 查找，通过 index 映射直接取 Proxy 引用）
+    // English comment.
     const selectedComponent = computed(() => {
         const id = selectedComponentId.value;
         if (!id) return null;
         if (!componentMap.has(id)) return null;
-        // 依赖 serialVersion 确保增删时重新计算
+        // English comment.
         void serialVersion.value;
         const idx = componentIndexMap.get(id);
         if (idx == null) return null;
         return components.value[idx] || null;
     });
 
-    // 添加组件（instance 使用 markRaw 避免 Three.js 对象被 Vue 深度代理）
+    // English comment.
     const addComponent = (componentData) => {
         const component = {
             id: `component_${++componentCounter}`,
@@ -390,15 +390,15 @@ export const useComponentStore = defineStore('component', () => {
             previewVisible: componentData.previewVisible !== false,
             variableBindings: componentData.variableBindings ? { ...componentData.variableBindings } : {},
             locked: false,
-            events: [], // 事件列表
-            dataBinding: normalizeDataBindingForStore(componentData.dataBinding), // 数据接入配置
+            events: [], // English comment.
+            dataBinding: normalizeDataBindingForStore(componentData.dataBinding), // English comment.
             createdAt: Date.now()
         };
 
         components.value.push(component);
         componentMap.set(component.id, component);
         componentIndexMap.set(component.id, components.value.length - 1);
-        // 标记 raycast 能力
+        // English comment.
         if (component.instance && typeof component.instance.raycast === 'function') {
             raycastCapableIds.add(component.id);
         }
@@ -406,7 +406,7 @@ export const useComponentStore = defineStore('component', () => {
         return component;
     };
 
-    // 删除组件
+    // English comment.
     const removeComponent = (componentId) => {
         const index = components.value.findIndex((c) => c.id === componentId);
         if (index !== -1) {
@@ -415,7 +415,7 @@ export const useComponentStore = defineStore('component', () => {
             componentMap.delete(componentId);
             componentIndexMap.delete(componentId);
             raycastCapableIds.delete(componentId);
-            // splice 改变了后续元素的索引，重建映射
+            // English comment.
             rebuildIndexMap();
             clearComponentLinkedEditorState(componentId);
             bumpSerialVersion();
@@ -425,9 +425,9 @@ export const useComponentStore = defineStore('component', () => {
         return null;
     };
 
-    // 更新组件配置
-    // ★ 使用 getReactiveComponent（Vue 响应式 Proxy）做 Object.assign，
-    //   确保 SET 走 Proxy 陷阱，触发 computed/watcher 依赖更新。
+    // English comment.
+    // English comment.
+    // English comment.
     const updateComponent = (componentId, updates) => {
         const component = getReactiveComponent(componentId);
         if (!component || !updates || typeof updates !== 'object') return null;
@@ -459,18 +459,18 @@ export const useComponentStore = defineStore('component', () => {
         componentMap.delete(componentId);
         component.id = nextId;
         Object.assign(component, rest);
-        componentMap.set(nextId, rawComponent); // componentMap 维护 raw 引用用于快速查找
+        componentMap.set(nextId, rawComponent); // English comment.
         replaceLinkedComponentId(componentId, nextId);
         bumpSerialVersion();
         return component;
     };
 
-    // 更新组件实例（markRaw 阻止 Vue 递归代理 Three.js 对象）
+    // English comment.
     const updateComponentInstance = (componentId, instance) => {
         const component = getReactiveComponent(componentId);
         if (component) {
             component.instance = instance ? markRaw(instance) : null;
-            // 更新 raycast 能力缓存
+            // English comment.
             if (instance && typeof instance.raycast === 'function') {
                 raycastCapableIds.add(componentId);
             } else {
@@ -482,7 +482,7 @@ export const useComponentStore = defineStore('component', () => {
         return null;
     };
 
-    // 选中组件
+    // English comment.
     const selectComponent = (componentId) => {
         const nextId = getComponentById(componentId) ? componentId : null;
         selectedComponentId.value = nextId;
@@ -491,13 +491,13 @@ export const useComponentStore = defineStore('component', () => {
         }
     };
 
-    // 取消选中
+    // English comment.
     const deselectComponent = () => {
         selectedComponentId.value = null;
         canvasSubSelection.value = createCanvasSubSelectionState();
     };
 
-    // ========== 路侧设备管理（编辑器态） ==========
+    // English comment.
 
     const setTrafficSelectedDevice = (componentId, deviceId) => {
         trafficSelectedDevice.value = {
@@ -532,7 +532,7 @@ export const useComponentStore = defineStore('component', () => {
         };
     };
 
-    // ========== 轨迹移动：路线拾取（编辑器态） ==========
+    // English comment.
 
     const startTrajectoryPicking = (componentId) => {
         stopAllPickings('trajectory');
@@ -566,7 +566,7 @@ export const useComponentStore = defineStore('component', () => {
         };
     };
 
-    // ========== 点位管理器：点位拾取（编辑器态） ==========
+    // English comment.
 
     const startBuildingPicking = (componentId, pointId = null) => {
         stopAllPickings('building');
@@ -622,7 +622,7 @@ export const useComponentStore = defineStore('component', () => {
         };
     };
 
-    // ========== Mesh 吸管拾取（编辑器态） ==========
+    // English comment.
 
     const startMeshPicking = (componentId, source = 'generic') => {
         stopAllPickings('mesh');
@@ -653,7 +653,7 @@ export const useComponentStore = defineStore('component', () => {
         meshPickResult.value = createMeshPickResultState();
     };
 
-    // 切换组件可见性
+    // English comment.
     const toggleComponentVisibility = (componentId) => {
         const component = getReactiveComponent(componentId);
         if (component) {
@@ -674,17 +674,17 @@ export const useComponentStore = defineStore('component', () => {
         return null;
     };
 
-    // 根据类型获取组件
+    // English comment.
     const getComponentsByType = (type) => {
         return components.value.filter((c) => c.type === type);
     };
 
-    // 根据名称获取组件
+    // English comment.
     const getComponentByName = (name) => {
         return components.value.find((c) => c.name === name);
     };
 
-    // 清空所有组件
+    // English comment.
     const clearComponents = () => {
         components.value = [];
         componentMap.clear();
@@ -697,9 +697,7 @@ export const useComponentStore = defineStore('component', () => {
     };
 
     /**
-     * 从项目数据恢复组件列表（保留原始 id）
-     * 同时同步内部计数器，避免后续 addComponent 产生 id 冲突。
-     * @param {Array} list - 组件列表
+     * English comment.
      */
     const hydrateComponents = (list) => {
         const sourceList = Array.isArray(list) ? list : [];
@@ -751,9 +749,9 @@ export const useComponentStore = defineStore('component', () => {
         bumpSerialVersion();
     };
 
-    // ========== 事件管理方法 ==========
+    // English comment.
 
-    // 添加事件到组件（★ 使用响应式代理确保 UI 立即感知变化）
+    // English comment.
     const addEvent = (componentId, event) => {
         const component = getReactiveComponent(componentId);
         if (!component || !event || typeof event !== 'object') return null;
@@ -775,7 +773,7 @@ export const useComponentStore = defineStore('component', () => {
         return nextEvent;
     };
 
-    // 移除组件的事件（★ 使用响应式代理确保 UI 立即感知变化）
+    // English comment.
     const removeEvent = (componentId, eventId) => {
         const component = getReactiveComponent(componentId);
         if (component && component.events) {
@@ -790,7 +788,7 @@ export const useComponentStore = defineStore('component', () => {
         return null;
     };
 
-    // 更新组件的事件（★ 使用响应式代理确保 handlerType 等切换时 UI 立即响应）
+    // English comment.
     const updateEvent = (componentId, eventId, updates) => {
         const component = getReactiveComponent(componentId);
         if (component && component.events) {
@@ -821,16 +819,16 @@ export const useComponentStore = defineStore('component', () => {
         return null;
     };
 
-    // 获取组件的所有事件
+    // English comment.
     const getComponentEvents = (componentId) => {
         const component = getComponentById(componentId);
         const source = Array.isArray(component?.events) ? component.events : [];
         return source.map((item) => ({ ...item }));
     };
 
-    // ========== 数据接入方法 ==========
+    // English comment.
 
-    // 更新组件的数据接入配置（支持多数据源）
+    // English comment.
     const updateDataBinding = (componentId, dataBinding) => {
         const component = getReactiveComponent(componentId);
         if (component) {
@@ -841,13 +839,13 @@ export const useComponentStore = defineStore('component', () => {
         return null;
     };
 
-    // 获取组件的数据接入配置
+    // English comment.
     const getDataBinding = (componentId) => {
         const component = getComponentById(componentId);
         return component?.dataBinding || null;
     };
 
-    // 添加数据源
+    // English comment.
     const addDataSource = (componentId, dataSource) => {
         const component = getReactiveComponent(componentId);
         if (!component || !dataSource || typeof dataSource !== 'object') return null;
@@ -872,7 +870,7 @@ export const useComponentStore = defineStore('component', () => {
         return component;
     };
 
-    // 更新数据源
+    // English comment.
     const updateDataSource = (componentId, sourceId, updates) => {
         const component = getReactiveComponent(componentId);
         if (component?.dataBinding?.sources) {
@@ -914,7 +912,7 @@ export const useComponentStore = defineStore('component', () => {
         return null;
     };
 
-    // 删除数据源
+    // English comment.
     const removeDataSource = (componentId, sourceId) => {
         const component = getReactiveComponent(componentId);
         if (component?.dataBinding?.sources) {
@@ -926,30 +924,30 @@ export const useComponentStore = defineStore('component', () => {
     };
 
     return {
-        // 状态
+        // English comment.
         components,
         serialVersion,
         selectedComponentId,
         selectedComponent,
         raycastCapableIds,
 
-        // 路侧设备管理（编辑器态）
+        // English comment.
         trafficSelectedDevice,
         trafficPicking,
         trafficPickConfirm,
 
-        // 轨迹移动拾取（编辑器态）
+        // English comment.
         trajectoryPicking,
         trajectoryPickConfirm,
 
-        // 点位管理器拾取（编辑器态）
+        // English comment.
         buildingPicking,
         buildingPickConfirm,
         meshPicking,
         meshPickResult,
         canvasSubSelection,
 
-        // 组件方法
+        // English comment.
         addComponent,
         removeComponent,
         updateComponent,
@@ -964,7 +962,7 @@ export const useComponentStore = defineStore('component', () => {
         clearComponents,
         hydrateComponents,
 
-        // 路侧设备管理方法（编辑器态）
+        // English comment.
         setTrafficSelectedDevice,
         clearTrafficSelectedDevice,
         startTrafficPicking,
@@ -972,13 +970,13 @@ export const useComponentStore = defineStore('component', () => {
         requestTrafficPickConfirm,
         clearTrafficPickConfirm,
 
-        // 轨迹移动拾取方法（编辑器态）
+        // English comment.
         startTrajectoryPicking,
         stopTrajectoryPicking,
         requestTrajectoryPickConfirm,
         clearTrajectoryPickConfirm,
 
-        // 点位管理器拾取方法（编辑器态）
+        // English comment.
         startBuildingPicking,
         stopBuildingPicking,
         requestBuildingPickConfirm,
@@ -990,13 +988,13 @@ export const useComponentStore = defineStore('component', () => {
         completeMeshPicking,
         clearMeshPickResult,
 
-        // 事件方法
+        // English comment.
         addEvent,
         removeEvent,
         updateEvent,
         getComponentEvents,
 
-        // 数据接入方法
+        // English comment.
         updateDataBinding,
         getDataBinding,
         addDataSource,

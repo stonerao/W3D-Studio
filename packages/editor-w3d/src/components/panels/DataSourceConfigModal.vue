@@ -7,7 +7,7 @@
         @close="handleClose"
     >
         <div class="data-source-form">
-            <!-- 数据源名称 -->
+            <!-- English comment. -->
             <div class="form-field">
                 <label class="form-label required">数据源名称</label>
                 <Input
@@ -16,7 +16,7 @@
                 />
             </div>
 
-            <!-- 请求地址 -->
+            <!-- English comment. -->
             <div class="form-field">
                 <label class="form-label required">请求地址</label>
                 <Input
@@ -28,7 +28,7 @@
                 </div>
             </div>
 
-            <!-- 请求方法 -->
+            <!-- English comment. -->
             <div class="form-field">
                 <label class="form-label">请求方法</label>
                 <Select
@@ -37,7 +37,7 @@
                 />
             </div>
 
-            <!-- 属性绑定 -->
+            <!-- English comment. -->
             <div class="form-field">
                 <label class="form-label required">绑定属性</label>
                 <Select
@@ -50,9 +50,9 @@
                 </div>
             </div>
 
-            <!-- 折叠面板 -->
+            <!-- English comment. -->
             <Accordion :items="accordionItems" :default-open="[]">
-                <!-- URL 参数 -->
+                <!-- English comment. -->
                 <template #params>
                     <KeyValueEditor
                         v-model="formData.params"
@@ -63,7 +63,7 @@
                     />
                 </template>
 
-                <!-- 请求头 -->
+                <!-- English comment. -->
                 <template #headers>
                     <KeyValueEditor
                         v-model="formData.headers"
@@ -74,7 +74,7 @@
                     />
                 </template>
 
-                <!-- 请求体 -->
+                <!-- English comment. -->
                 <template #body>
                     <div v-if="formData.method === 'POST'" class="body-editor">
                         <details class="lowcode-advanced-box">
@@ -92,7 +92,7 @@
                     </div>
                 </template>
 
-                <!-- 数据映射 -->
+                <!-- English comment. -->
                 <template #mapping>
                     <div class="mapping-editor">
                         <div class="mapping-hint">
@@ -105,7 +105,7 @@
                     </div>
                 </template>
 
-                <!-- 数据处理回调 -->
+                <!-- English comment. -->
                 <template #callback>
                     <div class="callback-editor">
                         <div class="callback-hint">
@@ -164,10 +164,10 @@ const props = defineProps({
 const emit = defineEmits(['update:modelValue', 'save']);
 const projectStore = useProjectStore();
 
-// 是否编辑模式
+// English comment.
 const isEditing = computed(() => !!props.dataSource?.id);
 
-// 表单数据
+// English comment.
 const formData = reactive({
     id: '',
     name: '',
@@ -181,13 +181,13 @@ const formData = reactive({
     callback: ''
 });
 
-// 请求方法选项
+// English comment.
 const methodOptions = [
     { label: 'GET', value: 'GET' },
     { label: 'POST', value: 'POST' }
 ];
 
-// 折叠面板配置
+// English comment.
 const accordionItems = [
     { key: 'params', title: 'URL 参数' },
     { key: 'headers', title: '请求头 (Headers)' },
@@ -196,7 +196,7 @@ const accordionItems = [
     { key: 'callback', title: '数据处理回调' }
 ];
 
-// 可绑定属性列表（根据组件类型动态生成）
+// English comment.
 const bindableProperties = computed(() => {
     const options = getBindablePropertyOptionsByType(props.componentType);
     return options.map((item) => ({
@@ -205,21 +205,21 @@ const bindableProperties = computed(() => {
     }));
 });
 
-// 表单验证
+// English comment.
 const isFormValid = computed(() => {
     return formData.name && formData.url && formData.targetProperty;
 });
 
-// 生成唯一 ID
+// English comment.
 const generateId = () => {
     return `ds_${Date.now()}_${Math.random().toString(36).substring(2, 9)}`;
 };
 
-// 监听弹窗打开，初始化表单
+// English comment.
 watch(() => props.modelValue, (visible) => {
     if (visible) {
         if (props.dataSource) {
-            // 编辑模式，加载现有数据
+            // English comment.
             Object.assign(formData, {
                 id: props.dataSource.id || generateId(),
                 name: props.dataSource.name || '',
@@ -233,7 +233,7 @@ watch(() => props.modelValue, (visible) => {
                 callback: props.dataSource.callback || ''
             });
         } else {
-            // 新增模式，重置表单
+            // English comment.
             Object.assign(formData, {
                 id: generateId(),
                 name: '',
@@ -250,7 +250,7 @@ watch(() => props.modelValue, (visible) => {
     }
 });
 
-// 保存
+// English comment.
 const handleSave = () => {
     if (!isFormValid.value) return;
 
@@ -271,7 +271,7 @@ const handleSave = () => {
     emit('update:modelValue', false);
 };
 
-// 关闭
+// English comment.
 const handleClose = () => {
     emit('update:modelValue', false);
 };

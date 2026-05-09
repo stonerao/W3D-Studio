@@ -1,6 +1,5 @@
 /**
- * @Author:
- * 路径组件方法集合
+ * English comment.
  */
 
 const VEC3_COM1 = new THREE.Vector3();
@@ -8,13 +7,8 @@ const VEC3_COM2 = new THREE.Vector3();
 const UP = new THREE.Vector3(0, 1, 0);
 
 /**
-* @description 设置曲线点位
-* @author
-* @date 2021-12-23
-* @param {Array} array 坐标数组
-* @param {Number} count 速度
-* @returns {Array} 曲线点位
-*/
+ * English comment.
+ */
 function getCurvePoints(array, dpi) {
     const paths = [];
     const res = {
@@ -48,25 +42,21 @@ function getCurvePoints(array, dpi) {
     return res;
 }
 
-// 判断3个点是否在一条直线
+// English comment.
 function arePointsCollinear(pointA, pointB, pointC) {
-    // 计算向量AB和AC
+    // English comment.
     const AB = new THREE.Vector3().subVectors(pointB, pointA);
     const AC = new THREE.Vector3().subVectors(pointC, pointA);
 
-    // 计算叉积
+    // English comment.
     const crossProduct = new THREE.Vector3().crossVectors(AB, AC);
 
-    // 如果叉积的长度为零，则点位于同一条直线上
+    // English comment.
     return crossProduct.length() === 0;
 }
 
 /**
- * @description 直线打点
- * @author
- * @date 2022-03-04
- * @param {array} arr
- * @returns {*}
+ * English comment.
  */
 function getTranformPath(arr, size = 1, isRadius = true) {
     let jj = 0;
@@ -78,7 +68,7 @@ function getTranformPath(arr, size = 1, isRadius = true) {
     let allLen = 0;
     const orIndexs = [0];
     if (isRadius) {
-        // 顶点圆角处理
+        // English comment.
         const arrs = [arr[0]];
         for (let i = 1; i < arr.length - 1; i++) {
             let pVec = VEC3_COM1.clone().copy(arr[i - 1]);
@@ -141,11 +131,8 @@ function getTranformPath(arr, size = 1, isRadius = true) {
 }
 
 /**
-* @description 点位数据处理
-* @author
-* @date 2022-01-06
-* @param {Object} config 配置项
-*/
+ * English comment.
+ */
 function handlePoints(config) {
     const {
         points = [], isCurve, dpi = 1, size, isRadius
@@ -165,11 +152,7 @@ function handlePoints(config) {
 }
 
 /**
- * @description 获取线上某比例点位
- * @author
- * @param {*} vecs 勾选线的点位
- * @param {boolean} isCurve 是否曲线
- * @param {*} raido 比例
+ * English comment.
  */
 function getLerpPosition(vecs, isCurve, raido) {
     raido = raido < 0 ? 0 : raido;
@@ -181,7 +164,7 @@ function getLerpPosition(vecs, isCurve, raido) {
         const  curve = new THREE.CatmullRomCurve3(path);
         return curve.getPointAt(raido);
     }
-    // 线段
+    // English comment.
     let allLen = 0;
     let aR = 0;
     const lenArry = [];
@@ -203,12 +186,7 @@ function getLerpPosition(vecs, isCurve, raido) {
 }
 
 /**
- * @description 根据前后点获取旋转四元数
- * @author
- * @param {*} pos 当前点
- * @param {*} nextPos 下一个点
- * @param {*} state 是否平面旋转
- * @returns {*}
+ * English comment.
  */
 function getRotaion(cPos, nPos, state = false) {
     const mtx = new THREE.Matrix4();

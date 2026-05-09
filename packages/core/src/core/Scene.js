@@ -11,33 +11,21 @@ import { IndexedDBCache } from '../resource/IndexedDBCache.js';
 import { LoaderManager } from '../resource/LoaderManager.js';
 
 /**
- * Scene 场景类
- *
- * @class Scene
- * @description 场景的创建、初始化和管理，是整个 SDK 的入口类
- *
- * @example
- * const scene = new Scene('#app')
- *     .camera({ position: [0, 100, 200] })
- *     .light('ambient', { color: '#fff', intensity: 0.8 })
- *     .init();
+ * English comment.
  */
 export class Scene {
     /**
-     * 创建场景实例
-     *
-     * @param {string|HTMLElement} container - 容器选择器或 DOM 元素
-     * @param {Object} options - 配置选项
+     * English comment.
      */
     constructor(container, options = {}) {
-        // 容器元素
+        // English comment.
         this.container =
             typeof container === 'string' ? document.querySelector(container) : container;
 
         if (!this.container) {
             throw new Error('Container not found');
         }
-        // 配置选项
+        // English comment.
         this.options = Object.assign(
             {
                 isRendering: true,
@@ -46,44 +34,42 @@ export class Scene {
             options
         );
 
-        // Three.js 场景
+        // English comment.
         this.scene = new THREE.Scene();
 
-        // 核心模块
+        // English comment.
         this.renderer = null;
         this.camera = null;
         this.controls = null;
         this.light = null;
 
-        // 管理器
+        // English comment.
         this.componentManager = new ComponentManager(this);
         this.eventSystem = new EventSystem(this);
         this.resourceManager = new ResourceManager(this);
         this.animationManager = new AnimationManager(this);
 
-        // IndexedDB 缓存管理器
+        // English comment.
         this.indexedDBCache = null;
         if (this.options.indexedDB) {
             this.indexedDBCache = new IndexedDBCache(this.options.indexedDB);
         }
 
-        // 全局加载器管理器（单例模式，所有组件共享）
+        // English comment.
         this.loaderManager = new LoaderManager(this.indexedDBCache, {
             dracoDecoderPath: this.options.dracoDecoderPath || '/draco/'
         });
 
-        // 状态
+        // English comment.
         this.isInitialized = false;
         this.isRunning = false;
 
-        // 动画帧 ID
+        // English comment.
         this.animationFrameId = null;
     }
 
     /**
-     * 初始化场景
-     *
-     * @returns {Scene} 返回自身，支持链式调用
+     * English comment.
      */
     async init() {
         if (this.isInitialized) {
@@ -91,49 +77,49 @@ export class Scene {
             return this;
         }
 
-        // 初始化 IndexedDB 缓存（如果启用）
+        // English comment.
         if (this.indexedDBCache) {
             await this.indexedDBCache.init();
         }
 
-        // 初始化渲染器
+        // English comment.
         if (!this.renderer) {
             this.renderer = new Renderer(this, this.options.renderer);
         }
 
-        // 初始化相机
+        // English comment.
         if (!this.camera) {
             this.camera = new Camera(this, this.options.camera);
         }
 
-        // 初始化控制器
+        // English comment.
         if (!this.controls) {
             this.controls = new Controls(this, this.options.controls);
         }
 
-        // 初始化灯光
+        // English comment.
         if (!this.light) {
             this.light = new Light(this, this.options.lights);
         }
 
-        // 初始化事件系统（在 renderer 创建后）
+        // English comment.
         this.eventSystem.init();
 
-        // ✅ 根据配置启用或禁用窗口大小自动调整
+        // English comment.
         if (this.options.isResize) {
             this.enableResize();
         }
 
-        // 标记为已初始化
+        // English comment.
         this.isInitialized = true;
 
-        // 开始渲染循环
+        // English comment.
         this.start();
         return this;
     }
 
     /**
-     * 启用窗口大小自动调整
+     * English comment.
      */
     enableResize() {
         if (this.renderer) {
@@ -142,7 +128,7 @@ export class Scene {
     }
 
     /**
-     * 禁用窗口大小自动调整
+     * English comment.
      */
     disableResize() {
         if (this.renderer) {
@@ -151,7 +137,7 @@ export class Scene {
     }
 
     /**
-     * 开始渲染循环
+     * English comment.
      */
     start() {
         if (this.isRunning) return;
@@ -161,8 +147,7 @@ export class Scene {
     }
 
     /**
-     * 渲染一帧（不改变渲染循环状态）
-     * 常用于截图/缩略图等需要“立即刷新一帧”的场景
+     * English comment.
      */
     renderOnce() {
         if (!this.renderer || !this.camera) return;
@@ -170,8 +155,7 @@ export class Scene {
     }
 
     /**
-     * 停止渲染循环（不销毁资源）
-     * 与 dispose() 不同，stop() 只停止渲染循环，保留所有场景资源
+     * English comment.
      */
     stop() {
         if (!this.isRunning) return;
@@ -184,9 +168,7 @@ export class Scene {
     }
 
     /**
-     * 暂停渲染循环
-     * 与 stop() 功能相同，提供语义化的别名
-     * @returns {boolean} 是否成功暂停
+     * English comment.
      */
     pause() {
         if (!this.isRunning) {
@@ -197,9 +179,7 @@ export class Scene {
     }
 
     /**
-     * 恢复渲染循环
-     * 与 start() 功能相同，提供语义化的别名
-     * @returns {boolean} 是否成功恢复
+     * English comment.
      */
     resume() {
         if (this.isRunning) {
@@ -214,14 +194,7 @@ export class Scene {
     }
 
     /**
-     * 更新场景配置（增量更新）
-     *
-     * @param {Object} config - 项目配置对象
-     * @param {Object} config.scene - 场景配置（包含 renderer, camera, controls, lighting, background 等）
-     * @param {Array} config.components - 组件列表
-     * @param {boolean} forceUpdate - 是否强制更新所有配置（默认 false，只更新变化的部分）
-     * @returns {Object} 更新结果，包含更新了哪些配置项
-     * @memberof Scene
+     * English comment.
      */
     update(config, forceUpdate = false) {
         if (!this.isInitialized) {
@@ -232,10 +205,10 @@ export class Scene {
         const { scene: sceneConfig = {}, components: componentsConfig = [] } = config || {};
         const updatedItems = [];
 
-        // 保存当前配置用于对比
+        // English comment.
         const currentConfig = this._currentConfig || {};
 
-        // 更新渲染器配置
+        // English comment.
         if (this.renderer && sceneConfig.renderer) {
             const shouldUpdateRenderer = forceUpdate ||
                 !this._deepEqual(currentConfig.renderer, sceneConfig.renderer);
@@ -246,7 +219,7 @@ export class Scene {
             }
         }
 
-        // 更新背景配置
+        // English comment.
         if (sceneConfig.background) {
             const shouldUpdateBackground = forceUpdate ||
                 !this._deepEqual(currentConfig.background, sceneConfig.background);
@@ -257,7 +230,7 @@ export class Scene {
             }
         }
 
-        // 更新相机配置
+        // English comment.
         if (this.camera && sceneConfig.camera) {
             const shouldUpdateCamera = forceUpdate ||
                 !this._deepEqual(currentConfig.camera, sceneConfig.camera);
@@ -268,7 +241,7 @@ export class Scene {
             }
         }
 
-        // 更新控制器配置
+        // English comment.
         if (this.controls && sceneConfig.controls) {
             const shouldUpdateControls = forceUpdate ||
                 !this._deepEqual(currentConfig.controls, sceneConfig.controls);
@@ -279,7 +252,7 @@ export class Scene {
             }
         }
 
-        // 更新灯光配置
+        // English comment.
         if (this.light && sceneConfig.lighting) {
             const shouldUpdateLighting = forceUpdate ||
                 !this._deepEqual(currentConfig.lighting, sceneConfig.lighting);
@@ -290,7 +263,7 @@ export class Scene {
             }
         }
 
-        // 更新组件（按 name 匹配实例，调用组件的 updateConfig）
+        // English comment.
         if (Array.isArray(componentsConfig)) {
             const shouldUpdateComponents = forceUpdate ||
                 !this._deepEqual(currentConfig.components, componentsConfig);
@@ -306,7 +279,7 @@ export class Scene {
             }
         }
 
-        // 保存当前配置用于下次对比
+        // English comment.
         this._currentConfig = {
             renderer: sceneConfig.renderer ? { ...sceneConfig.renderer } : currentConfig.renderer,
             background: sceneConfig.background ? { ...sceneConfig.background } : currentConfig.background,
@@ -330,12 +303,7 @@ export class Scene {
     }
 
     /**
-     * 增量更新组件（仅更新已存在的组件实例）
-     * - config.components 是一个数组，元素通常形如：{ id, name, type, config, visible, ... }
-     * - 通过 name 在 ComponentManager 中查找对应实例，执行 instance.updateConfig(component.config)
-     * @private
-     * @param {Array} componentsConfig - 组件配置数组
-     * @returns {{updatedCount:number, missingCount:number}}
+     * English comment.
      */
     _updateComponents(componentsConfig) {
         let updatedCount = 0;
@@ -348,14 +316,14 @@ export class Scene {
                 missingCount++;
                 continue;
             }
-            // 查找实例
+            // English comment.
             const instance = this.componentManager.get(name);
             if (!instance) {
                 missingCount++;
                 continue;
             }
 
-            // visible 作为运行时状态，直接同步到实例
+            // English comment.
             if (typeof componentData.visible === 'boolean') {
                 if (typeof instance.setVisible === 'function') {
                     instance.setVisible(componentData.visible, { emit: false });
@@ -386,28 +354,22 @@ export class Scene {
     }
 
     /**
-     * 更新背景配置
-     * @private
-     * @param {Object} backgroundConfig - 背景配置
+     * English comment.
      */
     _updateBackground(backgroundConfig) {
         if (!backgroundConfig) return;
 
-        // 更新背景色
+        // English comment.
         if (backgroundConfig.color !== undefined) {
             this.scene.background = new THREE.Color(backgroundConfig.color);
         }
 
-        // 如果有 HDR 环境贴图配置，可以在这里处理
+        // English comment.
         // if (backgroundConfig.environment) { ... }
     }
 
     /**
-     * 深度比较两个对象是否相等
-     * @private
-     * @param {any} a - 对象 A
-     * @param {any} b - 对象 B
-     * @returns {boolean} 是否相等
+     * English comment.
      */
     _deepEqual(a, b) {
         if (a === b) return true;
@@ -415,13 +377,13 @@ export class Scene {
         if (typeof a !== typeof b) return false;
         if (typeof a !== 'object') return a === b;
 
-        // 数组：元素数不同直接不等；内容用 JSON.stringify（组件配置数组通常较小）
+        // English comment.
         if (Array.isArray(a)) {
             if (!Array.isArray(b) || a.length !== b.length) return false;
             try { return JSON.stringify(a) === JSON.stringify(b); } catch { return false; }
         }
 
-        // 普通对象：浅层键值比较，避免对大对象整体序列化
+        // English comment.
         const keysA = Object.keys(a);
         const keysB = Object.keys(b);
         if (keysA.length !== keysB.length) return false;
@@ -430,7 +392,7 @@ export class Scene {
             const va = a[key];
             const vb = b[key];
             if (va === vb) continue;
-            // 嵌套对象/数组：允许递归一层
+            // English comment.
             if (va !== null && typeof va === 'object' && vb !== null && typeof vb === 'object') {
                 try { if (JSON.stringify(va) !== JSON.stringify(vb)) return false; } catch { return false; }
             } else {
@@ -441,8 +403,7 @@ export class Scene {
     }
 
     /**
-     * 获取当前场景配置
-     * @returns {Object} 当前场景配置
+     * English comment.
      */
     getConfig() {
         return {
@@ -454,36 +415,32 @@ export class Scene {
     }
 
     /**
-     * 动画循环
+     * English comment.
      */
     animate() {
         if (!this.isRunning) return;
 
         this.animationFrameId = requestAnimationFrame(() => this.animate());
 
-        // 更新动画管理器
+        // English comment.
         this.animationManager.update();
 
-        // 更新组件
+        // English comment.
         this.componentManager.update();
 
-        // 更新控制器
+        // English comment.
         if (this.controls) {
             this.controls.update();
         }
 
-        // 渲染场景
+        // English comment.
         if (this.renderer && this.camera && this.options.isRendering) {
             this.renderer.render(this.scene, this.camera.instance);
         }
     }
 
     /**
-     * 添加组件
-     *
-     * @param {string} componentName - 组件名称
-     * @param {Object} config - 组件配置
-     * @returns {Promise<Component>} 组件实例
+     * English comment.
      */
     async add(componentName, config = {}) {
         console.log('[Scene] 添加组件:', componentName, config);
@@ -491,75 +448,67 @@ export class Scene {
     }
 
     /**
-     * 获取组件
-     *
-     * @param {string} name - 组件名称
-     * @returns {Component|null} 组件实例
+     * English comment.
      */
     get(name) {
         return this.componentManager.get(name);
     }
 
     /**
-     * 移除组件
-     *
-     * @param {string} name - 组件名称
+     * English comment.
      */
     remove(name) {
         this.componentManager.remove(name);
     }
 
     /**
-     * 注册组件
-     *
-     * @param {string} name - 组件名称
-     * @param {Class} ComponentClass - 组件类
+     * English comment.
      */
     registerComponent(name, ComponentClass) {
         this.componentManager.register(name, ComponentClass);
     }
 
     /**
-     * 销毁场景
+     * English comment.
      */
     dispose() {
-        // 停止渲染
+        // English comment.
         this.stop();
 
-        // 禁用窗口大小自动调整
+        // English comment.
         this.disableResize();
 
-        // 销毁组件
+        // English comment.
         this.componentManager.dispose();
 
-        // 销毁事件系统
+        // English comment.
         this.eventSystem.dispose();
 
-        // 销毁资源管理器
+        // English comment.
         this.resourceManager.dispose();
 
-        // 销毁动画管理器
+        // English comment.
         this.animationManager.dispose();
 
-        // 销毁加载器管理器
+        // English comment.
         if (this.loaderManager) {
             this.loaderManager.dispose();
         }
 
-        // 关闭 IndexedDB 连接
+        // English comment.
         if (this.indexedDBCache) {
             this.indexedDBCache.close();
         }
 
-        // 销毁渲染器
+        // English comment.
         if (this.renderer) {
             this.renderer.dispose();
         }
 
-        // 清空场景
+        // English comment.
         this.scene.clear();
 
-        // 标记为未初始化
+        // English comment.
         this.isInitialized = false;
     }
 }

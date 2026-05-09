@@ -1,6 +1,5 @@
 /**
- * 组件注册表
- * 管理所有可用的 W3D 组件
+ * English comment.
  */
 
 import {
@@ -41,7 +40,7 @@ import {
 } from '@w3d/components';
 import { cloneGeojsonCityDemo } from '../mocks/geojsonCityDemo';
 
-// 组件注册表
+// English comment.
 const componentRegistry = new Map();
 
 const STOP_PROTOTYPE_CLASS_NAMES = new Set([
@@ -185,10 +184,7 @@ function extractWhitelistedBusinessMethods(ComponentClass) {
 }
 
 /**
- * 注册组件
- * @param {string} name - 组件名称
- * @param {Class} ComponentClass - 组件类
- * @param {Object} metadata - 组件元数据
+ * English comment.
  */
 export function registerComponent(name, ComponentClass, metadata = {}) {
     const explicitMethodDefinitions = [
@@ -225,16 +221,14 @@ export function registerComponent(name, ComponentClass, metadata = {}) {
             category: metadata.category || 'general',
             defaultConfig: metadata.defaultConfig || {},
             configSchema: metadata.configSchema || [],
-            methods, // 组件支持的可调用方法元数据
-            events: methods.map((item) => item.name) // 兼容旧逻辑
+            methods, // English comment.
+            events: methods.map((item) => item.name) // English comment.
         }
     });
 }
 
 /**
- * 获取组件
- * @param {string} name - 组件名称
- * @returns {Object|null} 组件信息
+ * English comment.
  */
 export function getComponent(name) {
     return componentRegistry.get(name) || null;
@@ -246,17 +240,14 @@ export function getComponentMethodDefinitions(name) {
 }
 
 /**
- * 获取所有组件
- * @returns {Array} 组件列表
+ * English comment.
  */
 export function getAllComponents() {
     return Array.from(componentRegistry.values());
 }
 
 /**
- * 根据分类获取组件
- * @param {string} category - 分类名称
- * @returns {Array} 组件列表
+ * English comment.
  */
 export function getComponentsByCategory(category) {
     return Array.from(componentRegistry.values()).filter(
@@ -265,32 +256,29 @@ export function getComponentsByCategory(category) {
 }
 
 /**
- * 检查组件是否已注册
- * @param {string} name - 组件名称
- * @returns {boolean}
+ * English comment.
  */
 export function hasComponent(name) {
     return componentRegistry.has(name);
 }
 
 /**
- * 注销组件
- * @param {string} name - 组件名称
+ * English comment.
  */
 export function unregisterComponent(name) {
     componentRegistry.delete(name);
 }
 
 /**
- * 清空注册表
+ * English comment.
  */
 export function clearRegistry() {
     componentRegistry.clear();
 }
 
-// 初始化默认组件
+// English comment.
 export function initializeDefaultComponents() {
-    // 注册 ModelLoader
+    // English comment.
     registerComponent('ModelLoader', ModelLoader, {
         displayName: '模型加载器',
         description: '加载 GLTF/GLB/FBX 格式的 3D 模型，支持动画和交互',
@@ -952,7 +940,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 GridHelper
+    // English comment.
     registerComponent('GridHelper', GridHelper, {
         displayName: '网格辅助',
         description: '显示网格辅助线',
@@ -999,7 +987,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 HDRLoader（主要用于全局背景/环境）
+    // English comment.
     registerComponent('HDRLoader', HDRLoader, {
         displayName: 'HDR 环境贴图',
         description: '加载 HDR 环境贴图，可作为 environment/background',
@@ -1062,7 +1050,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 TransformControls（编辑器变换 gizmo）
+    // English comment.
     registerComponent('TransformControls', TransformControls, {
         displayName: '变换控制器',
         description: '对选中的 3D 物体进行平移/旋转/缩放操作',
@@ -1092,7 +1080,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 BoundingBoxHelper（选中高亮）
+    // English comment.
     registerComponent('FlyControls', FlyControls, {
         displayName: '飞行相机',
         description: '自由飞行控制，相机激活后会自动关闭 Orbit 与其他相机模式',
@@ -1171,7 +1159,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 ParticleSystem
+    // English comment.
     registerComponent('ParticleSystem', ParticleSystem, {
         displayName: '粒子系统',
         description: '高级粒子系统，支持动态发射、物理效果、多种发射器形状',
@@ -1221,7 +1209,7 @@ export function initializeDefaultComponents() {
             { name: 'getStats', title: '获取统计', description: '返回粒子系统统计信息' }
         ],
         configSchema: [
-            // ━━ 预设 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // English comment.
             {
                 key: 'preset',
                 label: '效果预设',
@@ -1252,7 +1240,7 @@ export function initializeDefaultComponents() {
                 ]
             },
 
-            // ━━ 基础 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // English comment.
             {
                 key: 'position',
                 label: '位置',
@@ -1282,7 +1270,7 @@ export function initializeDefaultComponents() {
                 step: 0.1
             },
 
-            // ━━ 发射器 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // English comment.
             {
                 key: 'emitter.shape',
                 label: '发射器形状',
@@ -1370,7 +1358,7 @@ export function initializeDefaultComponents() {
                 description: '0=全部沿方向飞出，90=半球，180=全球'
             },
 
-            // ━━ 外观 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // English comment.
             {
                 key: 'size',
                 label: '起始大小',
@@ -1399,7 +1387,7 @@ export function initializeDefaultComponents() {
                 step: 0.05
             },
 
-            // ━━ 生命周期渐变 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // English comment.
             {
                 key: 'sizeEnd',
                 label: '结束大小',
@@ -1430,7 +1418,7 @@ export function initializeDefaultComponents() {
                 step: 0.05
             },
 
-            // ━━ 物理 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // English comment.
             {
                 key: 'speedCoefficient',
                 label: '速度系数',
@@ -1504,7 +1492,7 @@ export function initializeDefaultComponents() {
                 step: 10
             },
 
-            // ━━ 渲染 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // English comment.
             {
                 key: 'blending',
                 label: '混合模式',
@@ -1519,7 +1507,7 @@ export function initializeDefaultComponents() {
                 ]
             },
 
-            // ━━ 纹理 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+            // English comment.
             {
                 key: 'texture',
                 label: '粒子纹理',
@@ -1532,7 +1520,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 Heatmap
+    // English comment.
     registerComponent('Heatmap', Heatmap, {
         displayName: '热力图',
         description: '基于点位数据生成平面或模型表面热力贴图，支持颜色梯度、阈值和点位辅助显示',
@@ -1907,7 +1895,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 AreaBlock
+    // English comment.
     registerComponent('AreaBlock', AreaBlock, {
         displayName: '区域块',
         description: '在三维空间中展示区域块，支持墙壁、底部和边框渲染，带云雾 Shader 效果',
@@ -2074,7 +2062,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 PathAnimation
+    // English comment.
     registerComponent('PathAnimation', PathAnimation, {
         displayName: '路径动画',
         description: '沿路径移动的动画组件，支持循环、往返、缓动等',
@@ -2191,7 +2179,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 TrajectoryMove
+    // English comment.
     registerComponent('TrajectoryMove', TrajectoryMove, {
         displayName: '轨迹移动',
         description: '在编辑器中拾取点位作为路线，驱动物体（模型/图片）沿路线前进并始终朝向前方',
@@ -2316,7 +2304,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 MultiPathAnimation
+    // English comment.
     registerComponent('MultiPathAnimation', MultiPathAnimation, {
         displayName: '多轨迹路径动画',
         description: '支持加载模型并在多条路径上进行实例化渲染的动画组件',
@@ -2447,7 +2435,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 CameraTour
+    // English comment.
     registerComponent('CameraTour', CameraTour, {
         displayName: '定点漫游',
         description: '基于多个视角配置自动进行相机巡游，支持循环、暂停、恢复与动态切换视角列表',
@@ -2594,7 +2582,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 CameraJump
+    // English comment.
     registerComponent('CameraJump', CameraJump, {
         displayName: '视角跳转',
         description: '将相机跳转到指定 Mesh、标签或点位，支持距离、方向、速度与缓动配置',
@@ -2825,7 +2813,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 ModelAnimation
+    // English comment.
     registerComponent('ModelAnimation', ModelAnimation, {
         displayName: '模型动画',
         description: '播放模型自带的动画',
@@ -2868,7 +2856,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 MigrationLine
+    // English comment.
     registerComponent('MigrationLine', MigrationLine, {
         displayName: '迁移线',
         description: '在三维空间中展示从一个点到另一个点的动态迁移效果，支持纹理贴图和虚线流动',
@@ -3101,7 +3089,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 Label3D
+    // English comment.
     registerComponent('Label3D', Label3D, {
         displayName: '3D 标签',
         description: '在场景中通过 Sprite / Plane 渲染文字标签，支持弹窗列表管理',
@@ -3285,7 +3273,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 MarkArea
+    // English comment.
     registerComponent('MarkArea', MarkArea, {
         displayName: '标注区域',
         description: '在三维空间中显示平面标注区域',
@@ -3344,7 +3332,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 MarkLine
+    // English comment.
     registerComponent('MarkLine', MarkLine, {
         displayName: '标注线',
         description: '在三维空间中显示连接多点的线条',
@@ -3388,7 +3376,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 MarkPoint
+    // English comment.
     registerComponent('MarkPoint', MarkPoint, {
         displayName: '标注点',
         description: '在三维空间中显示点位标记',
@@ -3734,7 +3722,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 ExplodedView
+    // English comment.
     registerComponent('ExplodedView', ExplodedView, {
         displayName: '楼层爆炸图',
         description: '楼层爆炸视图效果，支持楼层选中、高亮、动画等功能',
@@ -3924,7 +3912,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 TrafficRoadsideDeviceManager
+    // English comment.
     registerComponent('DeviceExplodedView', DeviceExplodedView, {
         displayName: '设备爆炸图',
         description: '按设备树结构从中心点向外爆炸，距离中心越远偏移越大',
@@ -4740,7 +4728,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 BuildingEditor（点位管理器）
+    // English comment.
     registerComponent('BuildingEditor', BuildingEditor, {
         displayName: '点位管理器',
         description: '管理三维空间点位，支持手动添加、拾取添加、批量删除与坐标编辑',
@@ -4836,7 +4824,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 WeatherClouds（天气云层）
+    // English comment.
     registerComponent('WeatherClouds', WeatherClouds, {
         displayName: '天气云层',
         description: '基于程序噪声的动态天空云层，内置后期体积云和多层网格云层两种模式',
@@ -5144,7 +5132,7 @@ export function initializeDefaultComponents() {
         ]
     });
 
-    // 注册 WeatherLighting（区域气象与光照）
+    // English comment.
     registerComponent('WeatherLighting', WeatherLighting, {
         displayName: '气象与光照',
         description: '在线天气（≤30min）+ 手动天气切换 + 太阳位置光照 + 夜间路灯联动',
@@ -5505,6 +5493,6 @@ export function initializeDefaultComponents() {
     });
 }
 
-// 自动初始化
+// English comment.
 initializeDefaultComponents();
 

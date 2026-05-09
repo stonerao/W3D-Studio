@@ -2,30 +2,26 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * Pipeline 管道效果组件
- *
- * @class Pipeline
- * @extends Component
- * @description 根据路径点生成 3D 管道，支持进度控制和流光效果
+ * English comment.
  */
 export class Pipeline extends Component {
     static defaultConfig = {
-        pipelines: [], // 管道数据数组
+        pipelines: [], // English comment.
         globalConfig: {
-            // 全局默认配置
-            radius: 0.5, // 管道半径
-            color: '#00ff00', // 管道颜色
-            opacity: 0.8, // 透明度
-            segments: 64, // 管道分段数（影响平滑度）
-            radialSegments: 8, // 径向分段数
-            materialType: 'standard', // 材质类型: 'basic', 'standard', 'phong'
-            progress: 100, // 显示进度 (0-100)
+            // English comment.
+            radius: 0.5, // English comment.
+            color: '#00ff00', // English comment.
+            opacity: 0.8, // English comment.
+            segments: 64, // English comment.
+            radialSegments: 8, // English comment.
+            materialType: 'standard', // English comment.
+            progress: 100, // English comment.
             flow: {
-                enabled: false, // 是否启用流光效果
-                speed: 1.0, // 流光速度
-                color: '#ffffff', // 流光颜色
-                width: 0.2, // 流光宽度 (0-1)
-                intensity: 1.5 // 流光强度
+                enabled: false, // English comment.
+                speed: 1.0, // English comment.
+                color: '#ffffff', // English comment.
+                width: 0.2, // English comment.
+                intensity: 1.5 // English comment.
             }
         }
     };
@@ -33,27 +29,27 @@ export class Pipeline extends Component {
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // 管道对象映射表 (id -> pipelineObject)
+        // English comment.
         this.pipelines = new Map();
 
-        // 管道数据映射表 (id -> pipelineData)
+        // English comment.
         this.pipelineDataMap = new Map();
 
-        // 流光动画时间
+        // English comment.
         this.flowTime = 0;
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 合并全局配置
+        // English comment.
         this.globalConfig = {
             ...this.constructor.defaultConfig.globalConfig,
             ...this.config.globalConfig
         };
 
-        // 创建所有管道
+        // English comment.
         if (this.config.pipelines && this.config.pipelines.length > 0) {
             for (const pipelineData of this.config.pipelines) {
                 await this.addPipeline(pipelineData);
@@ -61,12 +57,10 @@ export class Pipeline extends Component {
         }
     }
 
-    // ==================== 管道创建相关方法 ====================
+    // English comment.
 
     /**
-     * 创建管道
-     * @param {Object} pipelineData - 管道数据
-     * @returns {THREE.Mesh|null}
+     * English comment.
      */
     createPipeline(pipelineData) {
         const {
@@ -82,32 +76,32 @@ export class Pipeline extends Component {
             flow
         } = pipelineData;
 
-        // 验证必需参数
+        // English comment.
         if (!id || !points || points.length < 2) {
             console.warn('Pipeline: id and at least 2 points are required');
             return null;
         }
 
-        // 创建路径曲线
+        // English comment.
         const pathPoints = points.map((p) => new THREE.Vector3(p.x, p.y, p.z));
         const curve = new THREE.CatmullRomCurve3(pathPoints);
 
-        // 创建管道几何体
+        // English comment.
         const geometry = new THREE.TubeGeometry(
             curve,
             segments || this.globalConfig.segments,
             radius || this.globalConfig.radius,
             radialSegments || this.globalConfig.radialSegments,
-            false // 不闭合
+            false // English comment.
         );
 
-        // 创建材质
+        // English comment.
         const material = this.createMaterial(pipelineData);
 
-        // 创建网格
+        // English comment.
         const mesh = new THREE.Mesh(geometry, material);
 
-        // 设置 userData
+        // English comment.
         mesh.userData = {
             pipelineId: id,
             isPipeline: true,
@@ -116,16 +110,14 @@ export class Pipeline extends Component {
             flow: flow || this.globalConfig.flow
         };
 
-        // 应用进度
+        // English comment.
         this.applyProgress(mesh, mesh.userData.progress);
 
         return mesh;
     }
 
     /**
-     * 创建材质
-     * @param {Object} pipelineData - 管道数据
-     * @returns {THREE.Material}
+     * English comment.
      */
     createMaterial(pipelineData) {
         const { color, opacity, materialType, flow } = pipelineData;
@@ -135,12 +127,12 @@ export class Pipeline extends Component {
         const finalMaterialType = materialType || this.globalConfig.materialType;
         const finalFlow = flow || this.globalConfig.flow;
 
-        // 如果启用流光效果，使用 ShaderMaterial
+        // English comment.
         if (finalFlow.enabled) {
             return this.createFlowMaterial(finalColor, finalOpacity, finalFlow);
         }
 
-        // 否则使用标准材质
+        // English comment.
         const materialConfig = {
             color: new THREE.Color(finalColor),
             transparent: finalOpacity < 1,
@@ -164,11 +156,7 @@ export class Pipeline extends Component {
     }
 
     /**
-     * 创建流光材质
-     * @param {string} color - 基础颜色
-     * @param {number} opacity - 透明度
-     * @param {Object} flowConfig - 流光配置
-     * @returns {THREE.ShaderMaterial}
+     * English comment.
      */
     createFlowMaterial(color, opacity, flowConfig) {
         const { speed, color: flowColor, width, intensity } = flowConfig;
@@ -209,20 +197,20 @@ export class Pipeline extends Component {
                 varying vec3 vPosition;
 
                 void main() {
-                    // 基础颜色
+                    // English comment.
                     vec3 color = baseColor;
 
-                    // 计算流光位置（沿 U 方向移动）
+                    // English comment.
                     float flowPos = mod(vUv.x + time * flowSpeed * 0.1, 1.0);
 
-                    // 计算流光强度（使用平滑的脉冲函数）
+                    // English comment.
                     float flowMask = smoothstep(0.0, flowWidth * 0.5, flowPos) *
                                      smoothstep(flowWidth, flowWidth * 0.5, flowPos);
 
-                    // 混合流光颜色
+                    // English comment.
                     color = mix(color, flowColor, flowMask * flowIntensity);
 
-                    // 添加边缘光效
+                    // English comment.
                     float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.0);
                     color += flowColor * fresnel * 0.3;
 
@@ -236,26 +224,23 @@ export class Pipeline extends Component {
     }
 
     /**
-     * 应用进度
-     * @param {THREE.Mesh} mesh - 管道网格
-     * @param {number} progress - 进度 (0-100)
+     * English comment.
      */
     applyProgress(mesh, progress) {
         const geometry = mesh.geometry;
         const totalVertices = geometry.attributes.position.count;
 
-        // 计算要显示的顶点数量
+        // English comment.
         const visibleVertices = Math.floor((totalVertices * progress) / 100);
 
-        // 设置绘制范围
+        // English comment.
         geometry.setDrawRange(0, visibleVertices);
     }
 
-    // ==================== 管道管理相关方法 ====================
+    // English comment.
 
     /**
-     * 添加管道
-     * @param {Object} pipelineData - 管道数据
+     * English comment.
      */
     async addPipeline(pipelineData) {
         const { id } = pipelineData;
@@ -265,40 +250,39 @@ export class Pipeline extends Component {
             return;
         }
 
-        // 检查是否已存在
+        // English comment.
         if (this.pipelines.has(id)) {
             console.warn(`Pipeline: Pipeline with id "${id}" already exists`);
             return;
         }
 
-        // 合并配置
+        // English comment.
         const finalData = {
             ...this.globalConfig,
             ...pipelineData,
             id
         };
 
-        // 创建管道对象
+        // English comment.
         const pipelineObject = this.createPipeline(finalData);
 
         if (!pipelineObject) {
             return;
         }
 
-        // 添加到场景
+        // English comment.
         this.add(pipelineObject);
 
-        // 保存到映射表
+        // English comment.
         this.pipelines.set(id, pipelineObject);
         this.pipelineDataMap.set(id, finalData);
 
-        // 触发事件
+        // English comment.
         this.emit('pipelineAdded', { pipelineId: id, pipelineData: finalData });
     }
 
     /**
-     * 移除管道
-     * @param {string} id - 管道 ID
+     * English comment.
      */
     removePipeline(id) {
         const pipelineObject = this.pipelines.get(id);
@@ -308,10 +292,10 @@ export class Pipeline extends Component {
             return;
         }
 
-        // 从场景中移除
+        // English comment.
         this.remove(pipelineObject);
 
-        // 释放资源
+        // English comment.
         if (pipelineObject.geometry) {
             pipelineObject.geometry.dispose();
         }
@@ -319,18 +303,16 @@ export class Pipeline extends Component {
             pipelineObject.material.dispose();
         }
 
-        // 从映射表中移除
+        // English comment.
         this.pipelines.delete(id);
         this.pipelineDataMap.delete(id);
 
-        // 触发事件
+        // English comment.
         this.emit('pipelineRemoved', { pipelineId: id });
     }
 
     /**
-     * 更新管道进度
-     * @param {string} id - 管道 ID
-     * @param {number} progress - 进度 (0-100)
+     * English comment.
      */
     updateProgress(id, progress) {
         const pipelineObject = this.pipelines.get(id);
@@ -341,17 +323,17 @@ export class Pipeline extends Component {
             return;
         }
 
-        // 限制进度范围
+        // English comment.
         const clampedProgress = Math.max(0, Math.min(100, progress));
 
-        // 应用进度
+        // English comment.
         this.applyProgress(pipelineObject, clampedProgress);
 
-        // 更新数据
+        // English comment.
         pipelineObject.userData.progress = clampedProgress;
         pipelineData.progress = clampedProgress;
 
-        // 触发事件
+        // English comment.
         this.emit('progressUpdated', {
             pipelineId: id,
             progress: clampedProgress
@@ -359,9 +341,7 @@ export class Pipeline extends Component {
     }
 
     /**
-     * 更新流光效果
-     * @param {string} id - 管道 ID
-     * @param {Object} flowConfig - 流光配置
+     * English comment.
      */
     updateFlow(id, flowConfig) {
         const pipelineObject = this.pipelines.get(id);
@@ -372,7 +352,7 @@ export class Pipeline extends Component {
             return;
         }
 
-        // 更新流光配置
+        // English comment.
         const newFlowConfig = {
             ...pipelineObject.userData.flow,
             ...flowConfig
@@ -381,7 +361,7 @@ export class Pipeline extends Component {
         pipelineObject.userData.flow = newFlowConfig;
         pipelineData.flow = newFlowConfig;
 
-        // 如果材质是 ShaderMaterial，更新 uniforms
+        // English comment.
         if (pipelineObject.material.uniforms) {
             const { speed, color, width, intensity } = newFlowConfig;
 
@@ -399,7 +379,7 @@ export class Pipeline extends Component {
             }
         }
 
-        // 触发事件
+        // English comment.
         this.emit('flowUpdated', {
             pipelineId: id,
             flowConfig: newFlowConfig
@@ -407,9 +387,7 @@ export class Pipeline extends Component {
     }
 
     /**
-     * 更新管道配置
-     * @param {string} id - 管道 ID
-     * @param {Object} updates - 更新内容
+     * English comment.
      */
     updatePipeline(id, updates) {
         const pipelineData = this.pipelineDataMap.get(id);
@@ -419,10 +397,10 @@ export class Pipeline extends Component {
             return;
         }
 
-        // 移除旧管道
+        // English comment.
         this.removePipeline(id);
 
-        // 创建新管道
+        // English comment.
         const newData = {
             ...pipelineData,
             ...updates,
@@ -433,24 +411,21 @@ export class Pipeline extends Component {
     }
 
     /**
-     * 获取管道数据
-     * @param {string} id - 管道 ID
-     * @returns {Object|null}
+     * English comment.
      */
     getPipeline(id) {
         return this.pipelineDataMap.get(id) || null;
     }
 
     /**
-     * 获取所有管道数据
-     * @returns {Array}
+     * English comment.
      */
     getAllPipelines() {
         return Array.from(this.pipelineDataMap.values());
     }
 
     /**
-     * 清除所有管道
+     * English comment.
      */
     clearPipelines() {
         const ids = Array.from(this.pipelines.keys());
@@ -459,17 +434,16 @@ export class Pipeline extends Component {
         this.emit('pipelinesCleared');
     }
 
-    // ==================== 生命周期方法 ====================
+    // English comment.
 
     /**
-     * 每帧更新
-     * @param {number} delta - 时间增量（秒）
+     * English comment.
      */
     onUpdate(delta) {
-        // 更新流光动画时间
+        // English comment.
         this.flowTime += delta;
 
-        // 更新所有启用流光效果的管道
+        // English comment.
         this.pipelines.forEach((pipelineObject) => {
             if (pipelineObject.userData.flow?.enabled && pipelineObject.material.uniforms) {
                 pipelineObject.material.uniforms.time.value = this.flowTime;
@@ -478,10 +452,10 @@ export class Pipeline extends Component {
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 清除所有管道
+        // English comment.
         this.clearPipelines();
     }
 }

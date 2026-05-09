@@ -40,17 +40,15 @@ const deepMerge = (target, source) => {
 };
 
 /**
- * ModelLoader 模型加载器组件
- *
- * 支持加载 GLTF / GLB / FBX 模型，并处理动画、交互、烘焙光照和材质配置。
+ * English comment.
  */
 export class ModelLoader extends Component {
     /**
-     * 默认配置
+     * English comment.
      */
     static defaultConfig = {
         url: '',
-        format: '', // 可选格式提示：glb / gltf / fbx。Blob URL 时建议显式传入
+        format: '', // English comment.
         scale: 1,
         sizeMode: 'scale',
         targetSize: 1,
@@ -73,17 +71,17 @@ export class ModelLoader extends Component {
             visibleNames: [],
             hiddenNames: []
         },
-        // 烘焙光照配置
+        // English comment.
         bakedLighting: {
-            enabled: false, // 是否启用烘焙光照
-            textureMapping: {}, // 物体名称到纹理路径的映射
-            mode: 'map', // 'map' 或 'lightMap'
-            intensity: 1.0, // 光照强度，仅 lightMap 模式生效
-            autoApply: true, // 模型加载完成后自动应用
+            enabled: false, // English comment.
+            textureMapping: {}, // English comment.
+            mode: 'map', // English comment.
+            intensity: 1.0, // English comment.
+            autoApply: true, // English comment.
             deferApply: false,
             deferDelay: 0,
             disableInEditor: false,
-            channel: 1 // UV 通道索引：0=UV1，1=UV2（烘焙贴图标准）
+            channel: 1 // English comment.
         },
         material: {
             'material_1': {
@@ -103,18 +101,18 @@ export class ModelLoader extends Component {
     };
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 初始化交互对象列表
+        // English comment.
         this.interactiveObjects = [];
 
-        // 初始化烘焙光照相关变量
+        // English comment.
         this.textureLoader = null;
         this.bakedTextureCache = new Map();
         this.bakedTextureLoadPromises = new Map();
         this.bakedMaterialCache = new Map();
-        this.originalMaterials = new Map(); // 保存原始材质用于恢复
+        this.originalMaterials = new Map(); // English comment.
         this.performanceOptimizationState = this.createPerformanceOptimizationState();
         this.optimizationDummy = new THREE.Object3D();
         this.performanceBatchState = null;
@@ -130,12 +128,12 @@ export class ModelLoader extends Component {
         this.pendingBakedLightingTimer = null;
         this.hasWarnedFreezeWithAnimations = false;
 
-        // 避免每个组件都创建独立的加载器，提高性能
+        // English comment.
         const loaderManager = this.scene?.loaderManager;
         if (loaderManager && typeof loaderManager.getModelLoader === 'function') {
             this.coreLoader = loaderManager.getModelLoader();
         } else {
-            // 回到独立的资源加载器，确保模型仍可正常加载
+            // English comment.
             this.coreLoader = new CoreModelLoader(this.scene?.indexedDBCache || null, {
                 dracoDecoderPath: this.config.dracoDecoderPath || '/draco/'
             });
@@ -151,23 +149,22 @@ export class ModelLoader extends Component {
 
         this.loadModel()
             .then(() => {
-                // 模型加载完成后的后续操作
-                // 设置交互对象
+                // English comment.
+                // English comment.
                 this.setupInteractiveObjects();
             })
             .catch((error) => {
-                // 这里只是确保 Promise rejection 被捕获，避免未处理的 rejection 警告
+                // English comment.
                 // eslint-disable-next-line no-console
                 console.error('ModelLoader: Model loading failed in onMounted', error);
             });
 
-        // onMounted 立即返回，不等待模型加载完成
-        // 这样 scene.add() 可以立即返回组件实例
+        // English comment.
+        // English comment.
     }
 
     /**
-     * 加载模型
-      *
+     * English comment.
      */
     async loadModel() {
         console.log('ModelLoader start');
@@ -222,7 +219,7 @@ export class ModelLoader extends Component {
 
             this.emit('loadStart', { url: requestUrl, progress: this.loadProgress });
 
-            // 使用 Core 加载器加载模型（自动棢测格式）
+            // English comment.
             const modelData = await this.coreLoader.load(
                 requestUrl,
                 (progress) => {
@@ -230,9 +227,9 @@ export class ModelLoader extends Component {
                         ? Math.min(1, Math.max(0, Number(progress)))
                         : 0;
                     this.loadProgress = nextProgress;
-                    // 触发加载进度事件（同时触发两个事件名以保持向后兼容）
+                    // English comment.
                     this.emit('loadProgress', { progress: nextProgress });
-                    this.emit('progress', { progress: nextProgress }); // 向后兼容
+                    this.emit('progress', { progress: nextProgress }); // English comment.
                 },
                 this.config.format || undefined
             );
@@ -269,13 +266,13 @@ export class ModelLoader extends Component {
 
             this.baseBounds = this.measureModelBounds();
 
-            // 应用变换
+            // English comment.
             this.applyTransform();
 
-            // 应用阴影
+            // English comment.
             this.applyShadow();
 
-            // 处理动画
+            // English comment.
             if (this.config.animations && this.animations.length > 0) {
                 this.setupAnimations(this.animations);
             }
@@ -288,11 +285,11 @@ export class ModelLoader extends Component {
             this.applySubtreeActivation();
             this.applyFreezeWorldMatrix();
 
-            // 触发加载完成事件（同时触发两个事件名以保持向后兼容）
+            // English comment.
             const loadCompleteData = {
                 modelData,
                 type: modelData.type,
-                gltf: this.gltf, // 向后兼容
+                gltf: this.gltf, // English comment.
                 model: this.model
             };
 
@@ -300,14 +297,14 @@ export class ModelLoader extends Component {
                 this.scheduleBakedLightingApply();
             }
             this.componentScene.add(this.model);
-            // 应用保存的材质和 Mesh 配置
+            // English comment.
             this.applyMeshAndMaterialConfig();
 
             this.isLoading = false;
             this.loadProgress = 1;
             this.loadError = null;
             this.emit('loadComplete', loadCompleteData);
-            this.emit('loaded', loadCompleteData); // 向后兼容
+            this.emit('loaded', loadCompleteData); // English comment.
         } catch (error) {
             if (loadVersion !== this.loadVersion || this.isDisposed) {
                 return;
@@ -323,27 +320,27 @@ export class ModelLoader extends Component {
                 format: this.config.format || null,
                 error: error?.message || String(error)
             });
-            // 触发加载错误事件（同时触发两个事件名以保持向后兼容）
+            // English comment.
             this.emit('loadError', { error });
-            this.emit('error', { error }); // 向后兼容
+            this.emit('error', { error }); // English comment.
         }
     }
 
     /**
-     * 应用变换
+     * English comment.
      */
     applyTransform() {
         if (!this.model) return;
 
-        // 缩放
+        // English comment.
         const scale = this.getResolvedModelScale();
         this.model.scale.set(scale, scale, scale);
 
-        // 位置
+        // English comment.
         const [x, y, z] = this.config.position;
         this.model.position.set(x, y, z);
 
-        // 旋转
+        // English comment.
         const [rx, ry, rz] = this.config.rotation;
         this.model.rotation.set(rx, ry, rz);
     }
@@ -391,7 +388,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 应用阴影
+     * English comment.
      */
     applyShadow() {
         if (!this.model) return;
@@ -405,9 +402,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 设置动画
-     *
-     * @param {Array} animations - 动画剪辑数组
+     * English comment.
      */
     setupAnimations(animations) {
         this.animations = animations;
@@ -416,26 +411,20 @@ export class ModelLoader extends Component {
         this.animationSpeed = 1.0;
         this.isAnimationPlaying = false;
 
-        // 触发动画加载完成事件
+        // English comment.
         this.emit('animationLoaded', {
             animations: this.getAnimationNames(),
             count: animations.length
         });
 
-        // 播放第一个动画（如果配置了自动播放）
+        // English comment.
         if (this.config.autoPlayAnimation && animations.length > 0) {
             this.playAnimation(0);
         }
     }
 
     /**
-     * 播放动画
-     *
-      *
-     * @param {Object} options - 播放选项
-     * @param {boolean} options.loop - 是否循环播放
-      *
-      *
+     * English comment.
      */
     playAnimation(index, options = {}) {
         if (!this.animations || !this.mixer) return;
@@ -463,7 +452,7 @@ export class ModelLoader extends Component {
 
         const action = this.mixer.clipAction(clip);
 
-        // 设置循环模式
+        // English comment.
         if (options.loop !== undefined) {
             action.setLoop(
                 options.loop ? THREE.LoopRepeat : THREE.LoopOnce,
@@ -473,10 +462,10 @@ export class ModelLoader extends Component {
             action.setLoop(THREE.LoopRepeat, Infinity);
         }
 
-        // 设置播放速度
+        // English comment.
         action.setEffectiveTimeScale(this.animationSpeed);
 
-        // 淡入效果
+        // English comment.
         const fadeInTime = options.fadeIn || 0.5;
         action.reset().fadeIn(fadeInTime).play();
 
@@ -489,7 +478,7 @@ export class ModelLoader extends Component {
             duration: clip.duration
         });
 
-        // 监听动画完成事件
+        // English comment.
         const onFinished = () => {
             this.emit('animationFinished', { name: clip.name });
             this.mixer.removeEventListener('finished', onFinished);
@@ -498,7 +487,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 暂停动画
+     * English comment.
      */
     pauseAnimation() {
         if (this.currentAction && this.isAnimationPlaying) {
@@ -509,7 +498,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 恢复动画
+     * English comment.
      */
     resumeAnimation() {
         if (this.currentAction && !this.isAnimationPlaying) {
@@ -520,7 +509,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 停止动画
+     * English comment.
      */
     stopAnimation() {
         if (this.currentAction) {
@@ -531,9 +520,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 设置动画播放速度
-     *
-      *
+     * English comment.
      */
     setAnimationSpeed(speed) {
         this.animationSpeed = speed;
@@ -543,9 +530,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     *
-     * @returns {Array<string>} 动画名称数组
+     * English comment.
      */
     getAnimationNames() {
         if (!this.animations) return [];
@@ -555,37 +540,28 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     *
-     * @returns {string|null} 当前动画名称
+     * English comment.
      */
     getCurrentAnimationName() {
         return this.currentAnimationName || null;
     }
 
     /**
-      *
-     *
-     * @returns {boolean} 是否正在播放
+     * English comment.
      */
     isPlaying() {
         return this.isAnimationPlaying;
     }
 
     /**
-     * 获取模型
-     *
-     * @returns {THREE.Group} 模型对象
+     * English comment.
      */
     getModel() {
         return this.model;
     }
 
     /**
-     * 通过名称查找 Mesh
-     *
-     * @param {string} name - Mesh 名称
-      *
+     * English comment.
      */
     getMeshByName(name) {
         const meshName = String(name || '').trim();
@@ -604,13 +580,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     *
-     * @param {Object} criteria - 查找条件
-     * @param {string} criteria.name - Mesh 名称
-     * @param {string} criteria.type - Mesh 类型
-      *
-      *
+     * English comment.
      */
     findMesh(criteria) {
         if (!this.model) {
@@ -646,9 +616,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     *
-     * @returns {Array<THREE.Mesh>} Mesh 对象数组
+     * English comment.
      */
     getAllMeshes() {
         if (!this.model) {
@@ -666,9 +634,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     *
-     * @returns {Array<string>} Mesh 名称数组
+     * English comment.
      */
     getMeshNames() {
         const meshes = this.getAllMeshes();
@@ -2133,8 +2099,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 设置交互对象
-      *
+     * English comment.
      */
     setupInteractiveObjects() {
         if (!this.model) {
@@ -2204,7 +2169,7 @@ export class ModelLoader extends Component {
                 mesh.userData.eventEmitter = this.eventEmitter;
             });
 
-            // 性能警告
+            // English comment.
             if (allMeshes.length > 50 || shouldLimit) {
                 // eslint-disable-next-line no-console
                 console.warn(
@@ -2231,12 +2196,12 @@ export class ModelLoader extends Component {
 
             this.interactiveObjects = foundMeshes;
 
-            // 为每个找到的 Mesh 附加事件发射器（关键修复！）
+            // English comment.
             this.interactiveObjects.forEach((mesh) => {
                 mesh.userData.eventEmitter = this.eventEmitter;
             });
 
-            // 警告未找到的 Mesh
+            // English comment.
             if (notFoundMeshes.length > 0) {
                 // eslint-disable-next-line no-console
                 console.warn(
@@ -2283,19 +2248,14 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 获取可交互的对象列表
-      *
-     *
-     * @returns {Array<THREE.Mesh>} 可交互的 Mesh 对象数组
+     * English comment.
      */
     getInteractiveObjects() {
         return this.interactiveObjects || [];
     }
 
     /**
-      *
-     *
-     * @param {boolean|string|Array<string>} meshes - 交互配置
+     * English comment.
      */
     setInteractiveMeshes(meshes) {
         this.config.interactiveMeshes = meshes;
@@ -2308,24 +2268,14 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     *
-     * @param {THREE.Mesh} mesh - 要检查的 Mesh
-      *
+     * English comment.
      */
     isMeshInteractive(mesh) {
         return this.interactiveObjects.includes(mesh);
     }
 
     /**
-     * 应用烘焙光照
-     * @param {Object} textureMapping - 物体名称到纹理路径的映射
-     * @param {Object} options - 选项
-      *
-      *
-      *
-      *
-      *
+     * English comment.
      */
     async applyBakedLighting(textureMapping = {}, options = {}) {
         if (this.shouldSkipBakedLightingInCurrentRuntime()) {
@@ -2343,13 +2293,13 @@ export class ModelLoader extends Component {
         const {
             mode = 'map',
             intensity = 1.0,
-            channel = this.config.bakedLighting.channel ?? 1, // 读取 channel 配置
-            flipY = this.config.bakedLighting.flipY ?? false, // 读取 flipY 配置
-            IndependentMaterial = this.config.bakedLighting.IndependentMaterial ?? true // 读取 IndependentMaterial 配置
+            channel = this.config.bakedLighting.channel ?? 1, // English comment.
+            flipY = this.config.bakedLighting.flipY ?? false, // English comment.
+            IndependentMaterial = this.config.bakedLighting.IndependentMaterial ?? true // English comment.
         } = options;
 
         try {
-            // 初始化纹理加载器
+            // English comment.
             if (!this.textureLoader) {
                 this.textureLoader = new THREE.TextureLoader();
             }
@@ -2357,7 +2307,7 @@ export class ModelLoader extends Component {
             const meshes = this.getMeshListSnapshot();
             const applyTasks = [];
 
-            // 遍历扢有网格，应用烘焙贴图（支持层级匹配）
+            // English comment.
             for (const mesh of meshes) {
                 const meshName = mesh.name;
                 let texturePath = null;
@@ -2435,7 +2385,7 @@ export class ModelLoader extends Component {
                 this.syncPerformanceBatchMatrices(false);
             }
 
-            // 触发烘焙光照应用事件
+            // English comment.
             this.emit('bakedLightingApplied', { appliedCount, mode, intensity });
         } catch (error) {
             // eslint-disable-next-line no-console
@@ -2445,15 +2395,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 加载并应用烘焙纹理到网格
-     * @param {THREE.Mesh} mesh - 目标网格
-     * @param {string} texturePath - 纹理路径
-     * @param {string} mode - 应用模式
-     * @param {number} intensity - 光照强度
-     * @param {string} matchSource - 匹配来源描述
-     * @param {number} channel - UV 通道索引
-      *
-     * @param {number} IndependentMaterial - 是否独立材质
+     * English comment.
      */
     async loadBakeTexture(texturePath, flipY = false) {
         if (this.bakedTextureCache.has(texturePath)) {
@@ -2534,13 +2476,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 将纹理应用到网格
-     * @param {THREE.Mesh} mesh - 目标网格
-     * @param {THREE.Texture} texture - 纹理
-     * @param {string} mode - 应用模式
-     * @param {number} intensity - 光照强度
-      *
-     * @param {number} IndependentMaterial - 是否独立材质
+     * English comment.
      */
     applyTextureToMesh({ mesh, texture, texturePath, mode, intensity, channel = 1, IndependentMaterial }) {
         if (!this.originalMaterials.has(mesh.uuid)) {
@@ -2563,8 +2499,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 更新烘焙强度
-      *
+     * English comment.
      */
     updateBakedIntensity(intensity) {
         if (!this.model) return;
@@ -2582,7 +2517,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 移除烘焙光照
+     * English comment.
      */
     removeBakedLighting() {
         if (!this.model) return;
@@ -2597,7 +2532,7 @@ export class ModelLoader extends Component {
             }
         });
 
-        // 清空原始材质缓存
+        // English comment.
         this.originalMaterials.clear();
         this.bakedMaterialCache.forEach((material) => material?.dispose?.());
         this.bakedMaterialCache.clear();
@@ -2607,14 +2542,12 @@ export class ModelLoader extends Component {
             this.syncPerformanceBatchMatrices(false);
         }
 
-        // 触发烘焙光照移除事件
+        // English comment.
         this.emit('bakedLightingRemoved', { removedCount });
     }
 
     /**
-     * 处理烘焙光照配置更新
-     * @param {Object} bakedLightingConfig - 烘焙光照配置
-     * @returns {Promise<void>}
+     * English comment.
      */
     async handleBakedLightingConfigUpdate(bakedLightingConfig) {
         if (!this.model) {
@@ -2633,7 +2566,7 @@ export class ModelLoader extends Component {
         // eslint-disable-next-line no-console
         console.log('[ModelLoader] 更新烘焙光照配置:', bakedLightingConfig);
 
-        // 如果禁用了烘焙光照，移除现有烘焙效果
+        // English comment.
         if (!bakedLightingConfig.enabled) {
             this.removeBakedLighting();
             // eslint-disable-next-line no-console
@@ -2645,7 +2578,7 @@ export class ModelLoader extends Component {
 
         this.removeBakedLighting();
 
-        // 应用新的烘焙光照
+        // English comment.
         try {
             await this.applyBakedLighting(textureMapping || {}, {
                 mode: mode || 'bake',
@@ -2658,7 +2591,7 @@ export class ModelLoader extends Component {
             // eslint-disable-next-line no-console
             console.log('[ModelLoader] 烘焙光照配置已更新并应用');
 
-            // 触发配置更新事件
+            // English comment.
             this.emit('bakedLightingConfigUpdated', bakedLightingConfig);
         } catch (error) {
             // eslint-disable-next-line no-console
@@ -2668,10 +2601,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 解析目标对象（支持多种输入格式）
-      *
-     * @returns {THREE.Object3D|null} 解析后的对象
-     * @private
+     * English comment.
      */
     _resolveTarget(target) {
         if (!this.model) {
@@ -2680,7 +2610,7 @@ export class ModelLoader extends Component {
             return null;
         }
 
-        // 如果是字符串，过名称查找
+        // English comment.
         if (typeof target === 'string') {
             let foundObject = null;
             this.model.traverse((child) => {
@@ -2697,7 +2627,7 @@ export class ModelLoader extends Component {
             return foundObject;
         }
 
-        // 如果是对象，直接返回
+        // English comment.
         if (target && (target.isMesh || target.isGroup || target.isObject3D)) {
             return target;
         }
@@ -2708,10 +2638,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     * @param {THREE.Object3D} targetObject - 目标对象
-     * @returns {Array<THREE.Mesh>} Mesh 数组
-     * @private
+     * English comment.
      */
     _collectMeshes(targetObject) {
         const meshes = [];
@@ -2731,12 +2658,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-      *
-     * @param {Object} options - 配置选项
-      *
-      *
-     * @returns {Object} 操作结果 { success: boolean, affectedCount: number, message: string }
+     * English comment.
      */
     enableBaking(target, options = {}) {
         const { lightMapIntensity = 1.0, mode = 'lightMap' } = options;
@@ -2771,7 +2693,7 @@ export class ModelLoader extends Component {
                 return;
             }
 
-            // 棢查是否已经加载了纹理
+            // English comment.
             if (!this.bakedTextureCache.has(texturePath)) {
                 // eslint-disable-next-line no-console
                 console.warn(`ModelLoader: 烘焙贴图 "${texturePath}" 尚未加载，请先调用 applyBakedLighting()`);
@@ -2780,12 +2702,12 @@ export class ModelLoader extends Component {
 
             const texture = this.bakedTextureCache.get(texturePath);
 
-            // 保存原始材质（如果还未保存）
+            // English comment.
             if (!this.originalMaterials.has(mesh.uuid)) {
                 this.originalMaterials.set(mesh.uuid, mesh.material.clone());
             }
 
-            // 应用烘焙贴图
+            // English comment.
             if (mode === 'lightMap') {
                 mesh.material.lightMap = texture;
                 mesh.material.lightMapIntensity = lightMapIntensity;
@@ -2812,9 +2734,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-      *
-     * @returns {Object} 操作结果 { success: boolean, affectedCount: number, message: string }
+     * English comment.
      */
     disableBaking(target) {
         const targetObject = this._resolveTarget(target);
@@ -2839,20 +2759,20 @@ export class ModelLoader extends Component {
         let disabledCount = 0;
 
         meshes.forEach((mesh) => {
-            // 恢复原始材质
+            // English comment.
             const originalMaterial = this.originalMaterials.get(mesh.uuid);
 
             if (originalMaterial) {
-                // 释放当前材质
+                // English comment.
                 if (mesh.material && mesh.material !== originalMaterial) {
                     mesh.material.dispose();
                 }
 
-                // 恢复原始材质
+                // English comment.
                 mesh.material = originalMaterial;
                 mesh.material.needsUpdate = true;
 
-                // 从缓存中移除
+                // English comment.
                 this.originalMaterials.delete(mesh.uuid);
 
                 disabledCount++;
@@ -2874,11 +2794,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-      *
-     * @param {Object} options - 更新选项
-     * @param {number} options.lightMapIntensity - 新的烘焙贴图强度
-     * @returns {Object} 操作结果 { success: boolean, affectedCount: number, message: string }
+     * English comment.
      */
     updateBaking(target, options = {}) {
         const { lightMapIntensity } = options;
@@ -2940,19 +2856,19 @@ export class ModelLoader extends Component {
      * @returns {Promise<void>}
      */
     async updateConfig(newConfig) {
-        // 保存旧的 URL 用于比较
+        // English comment.
         const oldUrl = this.config.url;
         const oldPerformanceMode = this.isPerformanceModeEnabled();
         const previousBakedLightingConfig = deepMerge({}, this.config.bakedLighting || {});
 
-        // 合并配置
+        // English comment.
         this.config = deepMerge(this.config, newConfig || {});
 
         if (newConfig.material !== undefined || newConfig.mesh !== undefined) {
             this.applyMeshAndMaterialConfig();
         }
 
-        // 如果更新了烘焙光照配置，应用烘焙光照
+        // English comment.
         if (newConfig.bakedLighting !== undefined) {
             await this.handleBakedLightingConfigUpdate(
                 deepMerge(previousBakedLightingConfig, newConfig.bakedLighting || {})
@@ -2987,13 +2903,13 @@ export class ModelLoader extends Component {
             this.performanceOptimizationState = this.createPerformanceOptimizationState();
             this.rebuildMeshCache();
 
-            // 清理动画
+            // English comment.
             if (this.mixer) {
                 this.scene.animationManager.remove(previousModel);
                 this.mixer = null;
             }
 
-            // 重新加载模型
+            // English comment.
             await this.loadModel();
         } else {
             if (
@@ -3032,7 +2948,7 @@ export class ModelLoader extends Component {
             }
         }
 
-        // 触发配置更新事件
+        // English comment.
         this.emit('configUpdated', this.config);
     }
 
@@ -3081,8 +2997,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 获取模型几何统计信息
-     * @returns {{vertices:number, triangles:number}|null}
+     * English comment.
      */
     getGeometryStats() {
         if (!this.model) return null;
@@ -3130,7 +3045,7 @@ export class ModelLoader extends Component {
 
 
     /**
-     * 应用保存的材质和 Mesh 配置
+     * English comment.
      */
     applyMeshAndMaterialConfig() {
         if (!this.model) return;
@@ -3138,13 +3053,13 @@ export class ModelLoader extends Component {
         const { material: materialConfig, mesh: meshConfig } = this.config;
         const meshNameMap = this.meshNameMapCache;
 
-        // 应用 Mesh 配置
+        // English comment.
         if (meshConfig && typeof meshConfig === 'object') {
             Object.entries(meshConfig).forEach(([meshName, config]) => {
                 const mesh = meshNameMap.get(meshName);
                 if (!mesh) return;
 
-                // 应用位置
+                // English comment.
                 if (config.position) {
                     mesh.position.set(
                         config.position.x ?? mesh.position.x,
@@ -3153,7 +3068,7 @@ export class ModelLoader extends Component {
                     );
                 }
 
-                // 应用旋转
+                // English comment.
                 if (config.rotation) {
                     mesh.rotation.set(
                         config.rotation.x ?? mesh.rotation.x,
@@ -3162,7 +3077,7 @@ export class ModelLoader extends Component {
                     );
                 }
 
-                // 应用缩放
+                // English comment.
                 if (config.scale) {
                     mesh.scale.set(
                         config.scale.x ?? mesh.scale.x,
@@ -3179,14 +3094,14 @@ export class ModelLoader extends Component {
                     }
                 }
 
-                // 如果指定了材质名称，应用材质配置
+                // English comment.
                 if (config.material && materialConfig && materialConfig[config.material]) {
                     this.applyMaterialToMesh(mesh, materialConfig[config.material]);
                 }
             });
         }
 
-        // 如果没有指定 Mesh 的材质关联，但有材质配置，尝试按名称匹配
+        // English comment.
         if (materialConfig && typeof materialConfig === 'object') {
             this.getAllMeshes().forEach((child) => {
                 if (!child.material) return;
@@ -3250,9 +3165,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 将材质配置应用到 Mesh
-     * @param {THREE.Mesh} mesh - 目标 Mesh
-     * @param {Object} materialConfig - 材质配置
+     * English comment.
      */
     applyMaterialToMesh(mesh, materialConfig) {
         if (!mesh || !mesh.material) return;
@@ -3646,9 +3559,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     * @param {string} meshName - Mesh 名称
-      *
+     * English comment.
      */
     updateMeshMaterial(meshName, materialProps) {
         if (isPlainObject(meshName) && materialProps === undefined) {
@@ -3677,14 +3588,12 @@ export class ModelLoader extends Component {
             this.syncPerformanceBatchMatrices(true, [record]);
         }
 
-        // 触发事件
+        // English comment.
         this.emit('meshMaterialUpdated', { meshName, materialProps });
     }
 
     /**
-     *
-     * @param {string} meshName - Mesh 名称
-      *
+     * English comment.
      */
     updateMeshTransform(meshName, transform) {
         if (isPlainObject(meshName) && transform === undefined) {
@@ -3704,14 +3613,12 @@ export class ModelLoader extends Component {
             this.syncPerformanceBatchMatrices(true, [record]);
         }
 
-        // 触发事件
+        // English comment.
         this.emit('meshTransformUpdated', { meshName, transform });
     }
 
     /**
-      *
-     * @param {string} meshName - Mesh 名称
-      *
+     * English comment.
      */
     getMeshMaterialProps(meshName) {
         const mesh = this.getMeshByName(meshName);
@@ -3746,9 +3653,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     * @param {string} meshName - Mesh 名称
-      *
+     * English comment.
      */
     getMeshTransform(meshName) {
         const mesh = this.getMeshByName(meshName);
@@ -3776,8 +3681,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     * @returns {Array} Mesh 信息数组
+     * English comment.
      */
     getMeshesInfo() {
         if (!this.model) return [];
@@ -3809,9 +3713,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     * @param {string} meshName - Mesh 名称
-     * @param {boolean} visible - 是否可见
+     * English comment.
      */
     setMeshVisibility(meshName, visible) {
         if (isPlainObject(meshName) && visible === undefined) {
@@ -3911,21 +3813,19 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     * @param {string} meshName - Mesh 名称
-     * @param {string} color - 高亮颜色
+     * English comment.
      */
     highlightMesh(meshName, color = '#ffff00') {
         const mesh = this.getMeshByName(meshName);
         if (!mesh || !mesh.material) return;
 
-        // 保存原始颜色
+        // English comment.
         if (!mesh.userData._originalColor) {
             mesh.userData._originalColor = mesh.material.color.clone();
             mesh.userData._originalEmissive = mesh.material.emissive?.clone();
         }
 
-        // 设置高亮
+        // English comment.
         if (mesh.material.emissive) {
             mesh.material.emissive = new THREE.Color(color);
             mesh.material.emissiveIntensity = 0.3;
@@ -3991,14 +3891,13 @@ export class ModelLoader extends Component {
     }
 
     /**
-     * 取消 Mesh 高亮
-     * @param {string} meshName - Mesh 名称
+     * English comment.
      */
     unhighlightMesh(meshName) {
         const mesh = this.getMeshByName(meshName);
         if (!mesh || !mesh.material) return;
 
-        // 恢复原始颜色
+        // English comment.
         if (mesh.userData._originalColor) {
             mesh.material.color = mesh.userData._originalColor;
             delete mesh.userData._originalColor;
@@ -4061,8 +3960,7 @@ export class ModelLoader extends Component {
     }
 
     /**
-      *
-     * @param {string|Array<string>} meshNames - 要显示的 Mesh 名称
+     * English comment.
      */
     isolateMesh(meshNames) {
         if (isPlainObject(meshNames)) {
@@ -4158,7 +4056,7 @@ export class ModelLoader extends Component {
             this.scene.animationManager.remove(this.model);
         }
 
-        // 清理烘焙光照资源
+        // English comment.
         if (this.bakedTextureCache) {
             this.bakedTextureCache.forEach((texture) => {
                 texture.dispose();

@@ -1,11 +1,5 @@
 /**
- * MeshLineGeometry - 基于 THREE.MeshLine (MIT) 适配 Three.js 0.180
- *
- * 原始项目: https://github.com/spite/THREE.MeshLine
- * 原始作者: Jaume Sanchez Elias (MIT License)
- *
- * 核心原理: 将线条的每个点复制为两个顶点（上/下），通过 previous/next 属性
- * 在顶点着色器中计算法线方向，生成 billboard 三角形带，实现任意宽度线条。
+ * English comment.
  */
 
 import * as THREE from 'three';
@@ -30,11 +24,11 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
 
         this.widthCallback = null;
 
-        // 用于 raycast
+        // English comment.
         this.matrixWorld = new THREE.Matrix4();
     }
 
-    // ---- 兼容旧 API 的 getter ----
+    // English comment.
 
     get geometry() {
         return this;
@@ -54,14 +48,14 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
         this.setPoints(value, this.widthCallback);
     }
 
-    // ---- 核心方法 ----
+    // English comment.
 
     setMatrixWorld(matrixWorld) {
         this.matrixWorld = matrixWorld;
     }
 
     /**
-     * 从 BufferGeometry 设置点（兼容旧 API）
+     * English comment.
      */
     setGeometry(g, c) {
         this._geometry = g;
@@ -69,9 +63,7 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
     }
 
     /**
-     * 设置线条点位
-     * @param {Float32Array|Array|Array<THREE.Vector3>} points - 点列表
-     * @param {Function} [wcb] - 宽度回调 (p: 0~1) => width
+     * English comment.
      */
     setPoints(points, wcb) {
         if (!(points instanceof Float32Array) && !(points instanceof Array)) {
@@ -122,7 +114,7 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
     }
 
     /**
-     * 构建所有 buffer attribute（previous, next, side, width, uv, index, counters）
+     * English comment.
      */
     process() {
         const l = this.positions.length / 6;
@@ -136,7 +128,7 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
 
         let w, v;
 
-        // 初始 previous
+        // English comment.
         if (this.compareV3(0, l - 1)) {
             v = this.copyV3(l - 2);
         } else {
@@ -168,7 +160,7 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
                 this.previous.push(v[0], v[1], v[2]);
                 this.previous.push(v[0], v[1], v[2]);
 
-                // indices - 两个三角形
+                // English comment.
                 const n = j * 2;
                 this.indices_array.push(n, n + 1, n + 2);
                 this.indices_array.push(n + 2, n + 1, n + 3);
@@ -181,7 +173,7 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
             }
         }
 
-        // 末尾 next
+        // English comment.
         if (this.compareV3(l - 1, 0)) {
             v = this.copyV3(1);
         } else {
@@ -190,7 +182,7 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
         this.next.push(v[0], v[1], v[2]);
         this.next.push(v[0], v[1], v[2]);
 
-        // 写入 buffer attributes
+        // English comment.
         if (
             !this._attributes ||
             this._attributes.position.count !== this.positions.length
@@ -237,8 +229,7 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
     }
 
     /**
-     * 快速推进线条：移除最旧的点，添加新点
-     * 适合实时轨迹效果
+     * English comment.
      */
     advance(position) {
         const positions = this._attributes.position.array;

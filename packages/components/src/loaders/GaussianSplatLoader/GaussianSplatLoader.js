@@ -96,7 +96,7 @@ export class GaussianSplatLoader extends Component {
         const renderer = this.scene?.renderer?.instance;
         const camera = this.scene?.camera?.instance;
         if (!renderer || !camera) return;
-        // Drive viewer.update() every frame — including during loading.
+        // English comment.
         // callbackMesh.onBeforeRender also triggers this during the render pass,
         // but calling it here in the update phase is more robust: it guarantees
         // init() runs, uniforms are computed, and the sort worker receives camera
@@ -147,7 +147,7 @@ export class GaussianSplatLoader extends Component {
             // SceneRevealMode.Instant skips the gradual distance-based fade-in
             // (vColor.a *= distanceLoadFadeInFactor in the vertex shader).
             // With Default mode, visibleRegionFadeStartRadius starts at 0 and
-            // grows at rate 0.012/frame — splats > 0.75 units from scene center
+            // English comment.
             // are completely transparent for the first ~381 frames (~6 seconds
             // at 60fps). In an editor context, show all splats immediately.
             sceneRevealMode: SceneRevealMode.Instant,
@@ -685,7 +685,7 @@ export class GaussianSplatLoader extends Component {
     onDispose() {
         // Synchronously detach the DropInViewer from the scene graph BEFORE
         // Component.dispose() traverses componentScene to dispose child
-        // geometry / material – the library's own dispose() handles those.
+        // English comment.
         if (this.dropInViewer) {
             if (this.dropInViewer.parent) {
                 this.dropInViewer.parent.remove(this.dropInViewer);

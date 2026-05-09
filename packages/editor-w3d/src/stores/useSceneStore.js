@@ -6,19 +6,19 @@ export const useSceneStore = defineStore('scene', () => {
         enabled: true,
         effect: 'spinner'
     });
-    // 场景实例（使用 shallowRef 避免 Vue 深度代理 Three.js 对象树）
+    // English comment.
     const sceneInstance = shallowRef(null);
     const configVersion = ref(0);
 
-    // 场景配置
+    // English comment.
     const sceneConfig = reactive({
-        // 渲染器配置
+        // English comment.
         renderer: {
             antialias: true,
             outputColorSpace: 'srgb',
             shadowEnabled: true
         },
-        // 相机配置
+        // English comment.
         camera: {
             type: 'perspective', // 'perspective' | 'orthographic'
             fov: 45,
@@ -28,7 +28,7 @@ export const useSceneStore = defineStore('scene', () => {
             lookAt: [0, 0, 0]
         },
 
-        // 控制器配置（OrbitControls）
+        // English comment.
         controls: {
             enableDamping: true,
             dampingFactor: 0.05,
@@ -40,7 +40,7 @@ export const useSceneStore = defineStore('scene', () => {
             minDistance: 1,
             maxDistance: 1000
         },
-        // 光照配置
+        // English comment.
         lighting: {
             ambient: {
                 enabled: true,
@@ -55,7 +55,7 @@ export const useSceneStore = defineStore('scene', () => {
                 castShadow: true
             }
         },
-        // 背景配置
+        // English comment.
         background: {
             type: 'color', // 'color' | 'gradient' | 'image' | 'hdr'
             color: '#151a2b',
@@ -64,7 +64,7 @@ export const useSceneStore = defineStore('scene', () => {
             imageUrl: '',
             hdrUrl: '/textures/blouberg_sunrise_2_1k.hdr'
         },
-        // 辅助显示
+        // English comment.
         helpers: {
             grid: {
                 enabled: true,
@@ -83,14 +83,14 @@ export const useSceneStore = defineStore('scene', () => {
         }
     });
 
-    // 场景状态
+    // English comment.
     const sceneState = reactive({
         initialized: false,
         loading: false,
         error: null
     });
 
-    // 设置场景实例（markRaw 阻止 Vue 递归代理 Three.js 内部属性）
+    // English comment.
     const setSceneInstance = (instance) => {
         sceneInstance.value = instance ? markRaw(instance) : null;
         sceneState.initialized = !!instance;
@@ -100,12 +100,12 @@ export const useSceneStore = defineStore('scene', () => {
         configVersion.value += 1;
     };
 
-    // 更新渲染器配置
+    // English comment.
     const updateRendererConfig = (config) => {
         Object.assign(sceneConfig.renderer, config);
         bumpConfigVersion();
         if (sceneInstance.value) {
-            // 应用配置到场景
+            // English comment.
             if (typeof sceneInstance.value.renderer?.updateConfig === 'function') {
                 sceneInstance.value.renderer.updateConfig(sceneConfig.renderer);
             }
@@ -116,7 +116,7 @@ export const useSceneStore = defineStore('scene', () => {
         }
     };
 
-    // 更新相机配置
+    // English comment.
     const updateCameraConfig = (config) => {
         Object.assign(sceneConfig.camera, config);
         bumpConfigVersion();
@@ -124,12 +124,12 @@ export const useSceneStore = defineStore('scene', () => {
         const scene = sceneInstance.value;
         if (!scene?.camera) return;
 
-        // 通过 SDK Camera wrapper 应用配置（避免直接写 three instance）
+        // English comment.
         if (typeof scene.camera.updateConfig === 'function') {
             scene.camera.updateConfig(sceneConfig.camera);
         }
 
-        // lookAt 同步到 controls.target
+        // English comment.
         if (config.lookAt && scene.controls?.updateConfig) {
             const [lx, ly, lz] = sceneConfig.camera.lookAt || [0, 0, 0];
             scene.controls.updateConfig({
@@ -139,14 +139,14 @@ export const useSceneStore = defineStore('scene', () => {
         }
     };
 
-    // 更新光照配置
+    // English comment.
     const updateLightingConfig = (config) => {
         Object.assign(sceneConfig.lighting, config);
         bumpConfigVersion();
-        // 光照更新需要重新创建光源，这部分在 useScene 中处理
+        // English comment.
     };
 
-    // 更新控制器配置
+    // English comment.
     const updateControlsConfig = (config) => {
         Object.assign(sceneConfig.controls, config);
         bumpConfigVersion();
@@ -154,7 +154,7 @@ export const useSceneStore = defineStore('scene', () => {
         const scene = sceneInstance.value;
         if (!scene?.controls) return;
 
-        // 保护：min/max 关系
+        // English comment.
         if (
             typeof sceneConfig.controls.minDistance === 'number' &&
             typeof sceneConfig.controls.maxDistance === 'number' &&
@@ -163,12 +163,12 @@ export const useSceneStore = defineStore('scene', () => {
             sceneConfig.controls.maxDistance = sceneConfig.controls.minDistance;
         }
 
-        // 通过 SDK Controls wrapper 应用配置
+        // English comment.
         const runtimeControlsConfig = {
             ...sceneConfig.controls
         };
 
-        // 若未显式传 target，则与 camera.lookAt 保持一致
+        // English comment.
         if (!runtimeControlsConfig.target && sceneConfig.camera?.lookAt) {
             const [x, y, z] = sceneConfig.camera.lookAt;
             runtimeControlsConfig.target = { x, y, z };
@@ -181,21 +181,21 @@ export const useSceneStore = defineStore('scene', () => {
         }
     };
 
-    // 更新背景配置
+    // English comment.
     const updateBackgroundConfig = (config) => {
         Object.assign(sceneConfig.background, config);
         bumpConfigVersion();
-        // 背景更新在 useScene 中处理
+        // English comment.
     };
 
-    // 更新辅助显示配置
+    // English comment.
     const updateHelpersConfig = (config) => {
         Object.assign(sceneConfig.helpers, config);
         bumpConfigVersion();
-        // 辅助显示更新在 useScene 中处理
+        // English comment.
     };
 
-    // 设置加载状态
+    // English comment.
     const setLoading = (loading) => {
         sceneState.loading = loading;
     };
@@ -209,12 +209,12 @@ export const useSceneStore = defineStore('scene', () => {
         bumpConfigVersion();
     };
 
-    // 设置错误
+    // English comment.
     const setError = (error) => {
         sceneState.error = error;
     };
 
-    // 重置场景
+    // English comment.
     const resetScene = () => {
         if (sceneInstance.value) {
             sceneInstance.value.dispose();
@@ -226,13 +226,13 @@ export const useSceneStore = defineStore('scene', () => {
     };
 
     return {
-        // 状态
+        // English comment.
         sceneInstance,
         configVersion,
         sceneConfig,
         sceneState,
 
-        // 方法
+        // English comment.
         setSceneInstance,
         updateRendererConfig,
         updateCameraConfig,

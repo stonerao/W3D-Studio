@@ -3,10 +3,7 @@ import { FlyControls as ThreeFlyControls } from 'three/examples/jsm/controls/Fly
 import { getCameraModeManager } from '../shared/CameraModeManager.js';
 
 /**
- * FlyControls 飞行控制组件
- *
- * @class FlyControls
- * @extends Component
+ * English comment.
  */
 export class FlyControls extends Component {
     static defaultConfig = {

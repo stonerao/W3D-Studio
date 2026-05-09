@@ -1,8 +1,5 @@
 /**
- * ProgressTracker 进度跟踪器
- *
- * @class ProgressTracker
- * @description 资源加载进度跟踪
+ * English comment.
  */
 export class ProgressTracker {
     constructor() {
@@ -12,10 +9,7 @@ export class ProgressTracker {
     }
 
     /**
-     * 添加项目
-     *
-     * @param {string} id - 项目 ID
-     * @param {number} size - 大小
+     * English comment.
      */
     addItem(id, size = 1) {
         this.items.set(id, { size, loaded: 0 });
@@ -23,10 +17,7 @@ export class ProgressTracker {
     }
 
     /**
-     * 更新进度
-     *
-     * @param {string} id - 项目 ID
-     * @param {number} loaded - 已加载大小
+     * English comment.
      */
     updateProgress(id, loaded) {
         const item = this.items.get(id);
@@ -38,16 +29,14 @@ export class ProgressTracker {
     }
 
     /**
-     * 获取总进度
-     *
-     * @returns {number} 进度 (0-1)
+     * English comment.
      */
     getProgress() {
         return this.total > 0 ? this.loaded / this.total : 0;
     }
 
     /**
-     * 重置
+     * English comment.
      */
     reset() {
         this.total = 0;

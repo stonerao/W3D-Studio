@@ -1,14 +1,9 @@
 /**
- * ColorUtils 颜色工具
- *
- * @description 颜色处理相关的工具函数
+ * English comment.
  */
 export class ColorUtils {
     /**
-     * 十六进制转 RGB
-     *
-     * @param {string} hex - 十六进制颜色
-     * @returns {Object} RGB 对象 {r, g, b}
+     * English comment.
      */
     static hexToRgb(hex) {
         const result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -22,12 +17,7 @@ export class ColorUtils {
     }
 
     /**
-     * RGB 转十六进制
-     *
-     * @param {number} r - 红色 (0-255)
-     * @param {number} g - 绿色 (0-255)
-     * @param {number} b - 蓝色 (0-255)
-     * @returns {string} 十六进制颜色
+     * English comment.
      */
     static rgbToHex(r, g, b) {
         return (
@@ -42,12 +32,7 @@ export class ColorUtils {
     }
 
     /**
-     * 颜色插值
-     *
-     * @param {string} color1 - 颜色1
-     * @param {string} color2 - 颜色2
-     * @param {number} t - 插值系数 (0-1)
-     * @returns {string} 插值后的颜色
+     * English comment.
      */
     static lerp(color1, color2, t) {
         const c1 = this.hexToRgb(color1);

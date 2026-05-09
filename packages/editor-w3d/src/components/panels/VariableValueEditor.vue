@@ -207,7 +207,7 @@ const parseJsonValue = (text) => {
         const parsed = JSON.parse(text);
         emit('update:modelValue', parsed);
     } catch {
-        // 保持原值
+        // English comment.
     }
 };
 

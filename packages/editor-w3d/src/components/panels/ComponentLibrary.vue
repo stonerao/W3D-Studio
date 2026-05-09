@@ -4,7 +4,7 @@
             <Input
                 v-model="searchKeyword"
                 class="component-search"
-                placeholder="搜索组件..."
+                :placeholder="t('componentLibrary.searchPlaceholder')"
             />
 
             <div class="category-strip">
@@ -20,10 +20,10 @@
             </div>
         </div>
 
-        <!-- 组件列表 -->
+        <!-- English comment. -->
         <div class="component-list">
             <div v-if="filteredComponents.length === 0" class="empty-state">
-                <div class="empty-text">暂无组件</div>
+                <div class="empty-text">{{ t('componentLibrary.empty') }}</div>
             </div>
 
             <div
@@ -35,16 +35,18 @@
                 @contextmenu.prevent="handleShowContextMenu($event, comp)"
                 draggable="true"
                 @dragstart="handleDragStart($event, comp)"
-                :title="!canAddComponent(comp.type) ? `场景中已存在 ${comp.displayName}` : ''"
+                :title="!canAddComponent(comp.type) ? t('componentLibrary.alreadyExistsTitle', { name: getComponentName(comp) }) : ''"
             >
                 <div class="component-info">
                     <div class="component-card__header">
                         <div class="component-name">
-                            {{ comp.displayName }}
+                            {{ getComponentName(comp) }}
                         </div>
-                        <span v-if="!canAddComponent(comp.type)" class="exists-badge">已存在</span>
+                        <span v-if="!canAddComponent(comp.type)" class="exists-badge">
+                            {{ t('componentLibrary.exists') }}
+                        </span>
                     </div>
-                    <div class="component-desc">{{ comp.description }}</div>
+                    <div class="component-desc">{{ getComponentDescription(comp) }}</div>
                     <div class="component-meta-row">
                         <span v-if="comp.category" class="component-category">
                             {{ getCategoryLabel(comp.category) }}
@@ -55,7 +57,7 @@
             </div>
         </div>
 
-        <!-- 右键菜单 -->
+        <!-- English comment. -->
         <ContextMenu
             v-model:visible="contextMenu.visible"
             :x="contextMenu.x"
@@ -76,9 +78,10 @@ import { useComponent } from '../../composables/useComponent';
 import { useComponentStore } from '../../stores/useComponentStore';
 import { useConfirm } from '../../composables/useConfirm';
 import { useToast } from '../../composables/useToast';
+import { useEditorI18n } from '../../i18n';
 import { getEnabledComponents, componentCategories } from '../../config/components';
 
-// 需要唯一性约束的组件类型
+// English comment.
 const UNIQUE_COMPONENTS = ['GridHelper', 'HDRLoader', 'WeatherLighting', 'WeatherClouds'];
 
 const emit = defineEmits(['component-added']);
@@ -86,43 +89,44 @@ const emit = defineEmits(['component-added']);
 const componentStore = useComponentStore();
 const { alert: showAlert } = useConfirm();
 const toast = useToast();
+const { t, te } = useEditorI18n();
 
-// 搜索关键词
+// English comment.
 const searchKeyword = ref('');
 
-// 选中的分类
+// English comment.
 const selectedCategory = ref('all');
 
-// 分类列表
+// English comment.
 const categories = computed(() => {
     return [
-        { key: 'all', label: '全部' },
+        { key: 'all', label: t('componentLibrary.all') },
         ...componentCategories.map((cat) => ({
             key: cat.key,
-            label: cat.label
+            label: getCategoryLabel(cat.key)
         }))
     ];
 });
 
-// 可用组件列表
+// English comment.
 const availableComponents = computed(() => getEnabledComponents());
 
-// 过滤后的组件列表
+// English comment.
 const filteredComponents = computed(() => {
     let filtered = availableComponents.value;
 
-    // 分类过滤
+    // English comment.
     if (selectedCategory.value !== 'all') {
         filtered = filtered.filter((comp) => comp.category === selectedCategory.value);
     }
 
-    // 搜索过滤
+    // English comment.
     if (searchKeyword.value) {
         const keyword = searchKeyword.value.toLowerCase();
         filtered = filtered.filter(
             (comp) =>
-                comp.displayName.toLowerCase().includes(keyword) ||
-                comp.description.toLowerCase().includes(keyword) ||
+                getComponentName(comp).toLowerCase().includes(keyword) ||
+                getComponentDescription(comp).toLowerCase().includes(keyword) ||
                 comp.type.toLowerCase().includes(keyword)
         );
     }
@@ -130,11 +134,11 @@ const filteredComponents = computed(() => {
     return filtered;
 });
 
-// 使用组件管理
+// English comment.
 const { addComponent } = useComponent();
 
 /**
- * 检查组件是否已存在（用于唯一性约束）
+ * English comment.
  */
 const isComponentExist = (type) => {
     if (!UNIQUE_COMPONENTS.includes(type)) {
@@ -144,13 +148,13 @@ const isComponentExist = (type) => {
 };
 
 /**
- * 检查组件是否可以添加
+ * English comment.
  */
 const canAddComponent = (type) => {
     return !isComponentExist(type);
 };
 
-// 右键菜单状态
+// English comment.
 const contextMenu = ref({
     visible: false,
     x: 0,
@@ -158,14 +162,14 @@ const contextMenu = ref({
     component: null
 });
 
-// 右键菜单项
+// English comment.
 const contextMenuItems = computed(() => {
     if (!contextMenu.value.component) return [];
 
     return [
         {
             icon: 'plus',
-            label: '添加到场景',
+            label: t('componentLibrary.addToScene'),
             action: 'add'
         },
         {
@@ -173,30 +177,40 @@ const contextMenuItems = computed(() => {
         },
         {
             icon: 'info',
-            label: '查看详情',
+            label: t('componentLibrary.viewDetails'),
             action: 'info',
-            disabled: true // 暂未实现
+            disabled: true // English comment.
         }
     ];
 });
 
 /**
- * 获取分类标签
+ * English comment.
  */
 const getCategoryLabel = (categoryKey) => {
-    const category = componentCategories.find((cat) => cat.key === categoryKey);
-    return category ? category.label : categoryKey;
+    const key = `componentLibrary.categories.${categoryKey}`;
+    return te(key) ? t(key) : categoryKey;
+};
+
+const getComponentName = (component) => {
+    const key = `componentLibrary.components.${component.type}.name`;
+    return te(key) ? t(key) : (component.displayName || component.type);
+};
+
+const getComponentDescription = (component) => {
+    const key = `componentLibrary.components.${component.type}.description`;
+    return te(key) ? t(key) : (component.description || '');
 };
 
 /**
- * 添加组件
+ * English comment.
  */
 const handleAddComponent = async (type) => {
-    // 检查唯一性约束
+    // English comment.
     if (!canAddComponent(type)) {
         const componentInfo = getEnabledComponents().find(c => c.type === type);
-        const displayName = componentInfo?.displayName || type;
-        toast.warning(`场景中已存在 ${displayName}，该组件只能添加一个实例`);
+        const displayName = componentInfo ? getComponentName(componentInfo) : type;
+        toast.warning(t('componentLibrary.alreadyExistsWarning', { name: displayName }));
         return;
     }
 
@@ -205,22 +219,22 @@ const handleAddComponent = async (type) => {
         emit('component-added', component);
     } catch (error) {
         console.error('Failed to add component:', error);
-        toast.error(`添加组件失败: ${error.message}`);
+        toast.error(t('componentLibrary.addFailed', { message: error.message }));
     }
 };
 
 /**
- * 拖拽开始
+ * English comment.
  */
 const handleDragStart = (event, comp) => {
     event.dataTransfer.effectAllowed = 'copy';
     event.dataTransfer.setData('component-type', comp.type);
-    event.dataTransfer.setData('component-name', comp.displayName);
+    event.dataTransfer.setData('component-name', getComponentName(comp));
 
-    // 拖拽预览（最小实现）
+    // English comment.
     try {
         const preview = document.createElement('div');
-        preview.textContent = comp.displayName || comp.type;
+        preview.textContent = getComponentName(comp) || comp.type;
         preview.style.position = 'fixed';
         preview.style.top = '-1000px';
         preview.style.left = '-1000px';
@@ -242,7 +256,7 @@ const handleDragStart = (event, comp) => {
 };
 
 /**
- * 显示右键菜单
+ * English comment.
  */
 const handleShowContextMenu = (event, comp) => {
     contextMenu.value = {
@@ -254,7 +268,7 @@ const handleShowContextMenu = (event, comp) => {
 };
 
 /**
- * 处理右键菜单选择
+ * English comment.
  */
 const handleContextMenuSelect = (item) => {
     const comp = contextMenu.value.component;
@@ -265,28 +279,20 @@ const handleContextMenuSelect = (item) => {
             handleAddComponent(comp.type);
             break;
         case 'info':
-            // TODO: 显示组件详情
-            showAlert(`名称：${comp.displayName}\n类型：${comp.type}\n描述：${comp.description}`, { title: '组件详情' });
+            // English comment.
+            showAlert(t('componentLibrary.detailsMessage', {
+                name: getComponentName(comp),
+                type: comp.type,
+                description: getComponentDescription(comp)
+            }), { title: t('componentLibrary.detailsTitle') });
             break;
     }
 };
 
 /**
- * 添加测试模型
+ * English comment.
  */
-/* const addTestModel = async () => {
-    try {
-        const component = await addComponent('ModelLoader', {
-            url: '/models/ShaderBall.glb',
-            position: [0, 0, 0],
-            scale: 1
-        });
-        emit('component-added', component);
-    } catch (error) {
-        console.error('Failed to add test model:', error);
-        alert(`添加测试模型失败: ${error.message}`);
-    }
-}; */
+/* English comment. */
 </script>
 
 <style scoped>

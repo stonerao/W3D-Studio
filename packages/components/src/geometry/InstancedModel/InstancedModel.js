@@ -9,7 +9,7 @@ export class InstancedModel extends Component {
         positions: [],
         rotations: [],
         scales: [],
-        instancesData: null, // 实例数据数组，格式：[{ position, rotation, scale }, ...]
+        instancesData: null, // English comment.
         normalColor: 0x00ff00,
         hoverColor: 0xffff00,
         clickedColor: 0xff0000,
@@ -77,7 +77,7 @@ export class InstancedModel extends Component {
             return;
         }
 
-        // 如果提供了 instancesData，使用它来设置实例数据
+        // English comment.
         if (this.config.instancesData && Array.isArray(this.config.instancesData)) {
             this.setInstancesData(this.config.instancesData);
         }
@@ -136,14 +136,14 @@ export class InstancedModel extends Component {
     generateInstancePositions() {
         const { layout, instanceCount, gridSize, spacing, positions } = this.config;
 
-        // 如果是自定义布局且已经提供了位置数据，则不生成
+        // English comment.
         if (layout === 'custom' && positions.length > 0) {
-            // 确保旋转和缩放数组也有默认值
+            // English comment.
             this.ensureTransformArrays();
             return;
         }
 
-        // 重置变换数组
+        // English comment.
         this.config.positions = [];
         this.config.rotations = [];
         this.config.scales = [];
@@ -158,13 +158,13 @@ export class InstancedModel extends Component {
                 const x = (col - cols / 2) * spacing.x;
                 const z = (row - rows / 2) * spacing.z;
 
-                // 添加位置
+                // English comment.
                 this.config.positions.push({ x, y: 0, z });
 
-                // 添加默认旋转
+                // English comment.
                 this.config.rotations.push({ x: 0, y: 0, z: 0 });
 
-                // 添加默认缩放
+                // English comment.
                 this.config.scales.push({ x: 1, y: 1, z: 1 });
             }
         } else if (layout === 'random') {
@@ -172,17 +172,17 @@ export class InstancedModel extends Component {
                 const x = (Math.random() - 0.5) * gridSize.x;
                 const z = (Math.random() - 0.5) * gridSize.z;
 
-                // 添加位置
+                // English comment.
                 this.config.positions.push({ x, y: 0, z });
 
-                // 添加随机旋转（可选）
+                // English comment.
                 this.config.rotations.push({
                     x: 0,
                     y: Math.random() * Math.PI * 2,
                     z: 0
                 });
 
-                // 添加随机缩放（可选，范围 0.8 - 1.2）
+                // English comment.
                 const randomScale = 0.8 + Math.random() * 0.4;
                 this.config.scales.push({
                     x: randomScale,
@@ -194,52 +194,46 @@ export class InstancedModel extends Component {
     }
 
     /**
-     * 确保变换数组（位置、旋转、缩放）都有足够的元素
-     * 如果某些数组长度不足，用默认值填充
+     * English comment.
      */
     ensureTransformArrays() {
         const { instanceCount } = this.config;
 
-        // 确保位置数组
+        // English comment.
         while (this.config.positions.length < instanceCount) {
             this.config.positions.push({ x: 0, y: 0, z: 0 });
         }
 
-        // 确保旋转数组
+        // English comment.
         while (this.config.rotations.length < instanceCount) {
             this.config.rotations.push({ x: 0, y: 0, z: 0 });
         }
 
-        // 确保缩放数组
+        // English comment.
         while (this.config.scales.length < instanceCount) {
             this.config.scales.push({ x: 1, y: 1, z: 1 });
         }
     }
 
     /**
-     * 从实例数据数组设置变换
-     * @param {Array} instancesData - 实例数据数组，每个元素包含 { position, rotation, scale }
-     * 示例：[
-     *   { position: {x:0, y:0, z:0}, rotation: {x:0, y:0, z:0}, scale: {x:1, y:1, z:1} },
-     *   { position: {x:10, y:0, z:0}, rotation: {x:0, y:Math.PI/4, z:0}, scale: {x:1.5, y:1.5, z:1.5} }
-     * ]
+     * English comment.
      */
     setInstancesData(instancesData) {
         if (!Array.isArray(instancesData) || instancesData.length === 0) {
             return;
         }
 
-        // 更新实例数量
+        // English comment.
         this.config.instanceCount = instancesData.length;
 
-        // 重置数组
+        // English comment.
         this.config.positions = [];
         this.config.rotations = [];
         this.config.scales = [];
 
-        // 从数据中提取位置、旋转、缩放
+        // English comment.
         instancesData.forEach((data) => {
-            // 位置
+            // English comment.
             const pos = data.position || { x: 0, y: 0, z: 0 };
             this.config.positions.push({
                 x: pos.x || 0,
@@ -247,7 +241,7 @@ export class InstancedModel extends Component {
                 z: pos.z || 0
             });
 
-            // 旋转
+            // English comment.
             const rot = data.rotation || { x: 0, y: 0, z: 0 };
             this.config.rotations.push({
                 x: rot.x || 0,
@@ -255,14 +249,14 @@ export class InstancedModel extends Component {
                 z: rot.z || 0
             });
 
-            // 缩放（支持统一缩放或分量缩放）
+            // English comment.
             let scl;
             if (data.scale !== undefined) {
                 if (typeof data.scale === 'number') {
-                    // 统一缩放
+                    // English comment.
                     scl = { x: data.scale, y: data.scale, z: data.scale };
                 } else {
-                    // 分量缩放
+                    // English comment.
                     scl = {
                         x: data.scale.x || 1,
                         y: data.scale.y || 1,
@@ -275,7 +269,7 @@ export class InstancedModel extends Component {
             this.config.scales.push(scl);
         });
 
-        // 设置为自定义布局
+        // English comment.
         this.config.layout = 'custom';
     }
 

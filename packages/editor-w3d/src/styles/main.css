@@ -1,16 +1,16 @@
-/* 导入 TailwindCSS */
+/* English comment. */
 @import './tailwind.css';
 
-/* 导入 CSS 变量 */
+/* English comment. */
 @import './variables.css';
 
-/* 导入动画系统 */
+/* English comment. */
 @import './animations.css';
 
-/* 导入编辑器样式 */
+/* English comment. */
 @import './editor.css';
 
-/* 全局样式 */
+/* English comment. */
 body {
     margin: 0;
     padding: 0;

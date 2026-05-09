@@ -3,8 +3,7 @@ import { Scene } from '@w3d/core';
 import { getAllComponents } from '../utils/componentRegistry';
 
 /**
- * 场景公共逻辑
- * 提取编辑模式和预览模式共用的方法
+ * English comment.
  */
 
 const HDR_COMPONENT_NAME = '__hdr_background__';
@@ -13,9 +12,7 @@ const MANAGED_BACKGROUND_TEXTURE_KEY = '__managed_background_texture__';
 const BACKGROUND_APPLY_TOKEN_KEY = '__background_apply_token__';
 
 /**
- * 清理 HDR 背景组件
- * @param {Scene} scene - 场景实例
- * @param {string} hdrComponentName - HDR 组件实例 name
+ * English comment.
  */
 export const clearHDRBackground = (scene, hdrComponentName = HDR_COMPONENT_NAME) => {
     const namesToRemove = new Set([HDR_COMPONENT_NAME, hdrComponentName].filter(Boolean));
@@ -35,8 +32,7 @@ export const clearHDRBackground = (scene, hdrComponentName = HDR_COMPONENT_NAME)
 };
 
 /**
- * 清理编辑器受管背景纹理（渐变/图片）
- * @param {Scene} scene - 场景实例
+ * English comment.
  */
 export const disposeManagedBackground = (scene) => {
     const threeScene = scene?.scene;
@@ -94,10 +90,7 @@ const patchSceneDisposeForBackground = (scene) => {
 };
 
 /**
- * 创建渐变纹理
- * @param {string} topColor - 顶部颜色
- * @param {string} bottomColor - 底部颜色
- * @returns {THREE.CanvasTexture|null} 纹理对象
+ * English comment.
  */
 export const createGradientTexture = (topColor, bottomColor) => {
     const canvas = document.createElement('canvas');
@@ -119,8 +112,7 @@ export const createGradientTexture = (topColor, bottomColor) => {
 };
 
 /**
- * 注册所有组件到场景
- * @param {Scene} scene - 场景实例
+ * English comment.
  */
 export const registerAllComponents = (scene) => {
     const components = getAllComponents();
@@ -130,10 +122,7 @@ export const registerAllComponents = (scene) => {
 };
 
 /**
- * 应用场景背景（优先使用 SDK LoaderManager / Scene.add）
- * @param {Scene} scene - 场景实例
- * @param {Object} background - 背景配置
- * @param {string} hdrComponentName - HDR 组件实例 name（可选，用于区分编辑/预览模式）
+ * English comment.
  */
 export const applyBackground = async (scene, background, hdrComponentName = HDR_COMPONENT_NAME) => {
     if (!scene || !background) return;
@@ -214,15 +203,13 @@ export const applyBackground = async (scene, background, hdrComponentName = HDR_
 };
 
 /**
- * 构建场景配置对象
- * @param {Object} sceneConfig - 场景配置
- * @returns {Object} 用于创建 Scene 的配置
+ * English comment.
  */
 export const buildSceneOptions = (sceneConfig) => {
     const { renderer, camera, controls } = sceneConfig;
 
     return {
-        // Scene 全局选项（对齐 @w3d/core Scene.constructor 默认字段）
+        // English comment.
         isRendering: sceneConfig?.isRendering ?? true,
         isResize: sceneConfig?.isResize ?? true,
         indexedDB: sceneConfig?.indexedDB,
@@ -261,17 +248,13 @@ export const buildSceneOptions = (sceneConfig) => {
             }
         },
 
-        // Light.updateConfig 使用的是 sceneConfig.lighting（Scene.init 会创建 this.light）
+        // English comment.
         lights: sceneConfig?.lighting
     };
 };
 
 /**
- * 创建并初始化 Scene（对齐 SDK 约定流程）
- * - new Scene(container, buildSceneOptions(sceneConfig))
- * - 注册组件（确保 HDRLoader 等可用）
- * - await scene.init()（内部会按 isResize 自动 enableResize，并 start 渲染）
- * - 应用 lighting / shadow / background
+ * English comment.
  */
 export const createAndInitScene = async ({
     container,
@@ -290,12 +273,12 @@ export const createAndInitScene = async ({
 
     await scene.init();
 
-    // 初始光照：使用 Light.updateConfig（与 Scene.update 行为一致）
+    // English comment.
     if (sceneConfig?.lighting && scene.light?.updateConfig) {
         scene.light.updateConfig(sceneConfig.lighting);
     }
 
-    // 初始阴影：Renderer.enableShadow
+    // English comment.
     if (sceneConfig?.renderer?.shadowEnabled) {
         scene.renderer?.enableShadow?.(true);
     }

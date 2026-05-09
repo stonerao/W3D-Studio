@@ -1,11 +1,5 @@
 /**
- * MeshLineRaycast - 基于 THREE.MeshLine (MIT) 适配 Three.js 0.180
- *
- * 原始项目: https://github.com/spite/THREE.MeshLine
- * 原始作者: Jaume Sanchez Elias (MIT License)
- *
- * 为 MeshLine 构建的 Mesh 提供 raycast 支持。
- * 用法: mesh.raycast = MeshLineRaycast;
+ * English comment.
  */
 
 import * as THREE from 'three';
@@ -18,7 +12,7 @@ export function MeshLineRaycast(raycaster, intersects) {
 
     const geometry = this.geometry;
 
-    // 先用 boundingSphere 快速排除
+    // English comment.
     if (!geometry.boundingSphere) geometry.computeBoundingSphere();
     sphere.copy(geometry.boundingSphere);
     sphere.applyMatrix4(this.matrixWorld);
@@ -73,7 +67,7 @@ export function MeshLineRaycast(raycaster, intersects) {
                 object: this,
             });
 
-            // 只取第一个交点
+            // English comment.
             i = l;
         }
     }

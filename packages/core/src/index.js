@@ -5,32 +5,28 @@
  * @FilePath: \vfd-viewer\packages\core\src\index.js
  */
 /**
- * @w3d/core - W3D WebGL 3D 渲染引擎核心包
- *
- * @version 2.0.0
- * @author W3D Team
- * @license MIT
+ * English comment.
  */
 import * as THREE from 'three';
 
-// 核心模块
+// English comment.
 export { Scene } from './core/Scene.js';
 export { Renderer } from './core/Renderer.js';
 export { Camera } from './core/Camera.js';
 export { Controls } from './core/Controls.js';
 export { Light } from './core/Light.js';
 
-// 组件系统
+// English comment.
 export { Component } from './component/Component.js';
 export { ComponentManager } from './component/ComponentManager.js';
 export { LifecycleManager } from './component/LifecycleManager.js';
 
-// 事件系统
+// English comment.
 export { EventSystem } from './event/EventSystem.js';
 export { Raycaster } from './event/Raycaster.js';
 export { EventTypes } from './event/EventTypes.js';
 
-// 资源管理
+// English comment.
 export { ResourceManager } from './resource/ResourceManager.js';
 export { TextureLoader } from './resource/TextureLoader.js';
 export { ModelLoader } from './resource/ModelLoader.js';
@@ -38,14 +34,14 @@ export { CacheManager } from './resource/CacheManager.js';
 export { IndexedDBCache } from './resource/IndexedDBCache.js';
 export { LoaderManager } from './resource/LoaderManager.js';
 
-// 动画系统
+// English comment.
 export { AnimationManager } from './animation/AnimationManager.js';
 export { Tween } from './animation/Tween.js';
 
-// 配置
+// English comment.
 export { defaultConfig } from './config/defaultConfig.js';
 export * from './config/constants.js';
 
-// 默认导出
+// English comment.
 export { Scene as default } from './core/Scene.js';
 export { THREE };

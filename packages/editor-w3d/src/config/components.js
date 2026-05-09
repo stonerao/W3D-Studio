@@ -1,6 +1,5 @@
 /**
- * 可用组件配置
- * 定义编辑器中可以使用的所有组件
+ * English comment.
  */
 
 export const availableComponents = [
@@ -8,7 +7,7 @@ export const availableComponents = [
         type: 'ModelLoader',
         displayName: '模型加载器',
         description: '加载 GLTF/GLB/FBX 格式的 3D 模型',
-        // icon: '🎨',
+        // English comment.
         category: 'loaders',
         enabled: true
     },
@@ -30,7 +29,7 @@ export const availableComponents = [
         type: 'GridHelper',
         displayName: '网格辅助',
         description: '显示网格辅助线',
-        // icon: '📐',
+        // English comment.
         category: 'helpers',
         enabled: true
     },
@@ -38,7 +37,7 @@ export const availableComponents = [
         type: 'HDRLoader',
         displayName: 'HDR 环境贴图',
         description: '加载 HDR 环境贴图，可作为 environment/background',
-        // icon: '🌅',
+        // English comment.
         category: 'loaders',
         enabled: true
     },
@@ -46,7 +45,7 @@ export const availableComponents = [
         type: 'ParticleSystem',
         displayName: '粒子系统',
         description: '高级粒子系统，支持动态发射、物理效果',
-        // icon: '✨',
+        // English comment.
         category: 'effects',
         enabled: true
     },
@@ -57,21 +56,21 @@ export const availableComponents = [
         category: 'effects',
         enabled: true
     },
-    // 区域组件
+    // English comment.
     {
         type: 'AreaBlock',
         displayName: '区域块',
         description: '在三维空间中展示区域块，支持墙壁、底部和边框渲染，带云雾 Shader 效果',
-        // icon: '🏢',
+        // English comment.
         category: 'markers',
         enabled: true
     },
-    // 动画组件
+    // English comment.
     {
         type: 'PathAnimation',
         displayName: '路径动画',
         description: '沿路径移动的动画组件，支持循环、往返、缓动等',
-        // icon: '🛤️',
+        // English comment.
         category: 'animations',
         enabled: true
     },
@@ -79,7 +78,7 @@ export const availableComponents = [
         type: 'MultiPathAnimation',
         displayName: '多轨迹路径动画',
         description: '支持加载模型并在多条路径上进行实例化渲染的动画组件',
-        // icon: '🚗',
+        // English comment.
         category: 'animations',
         enabled: true
     },
@@ -136,7 +135,7 @@ export const availableComponents = [
         type: 'ModelAnimation',
         displayName: '模型动画',
         description: '播放模型自带的动画',
-        // icon: '🎬',
+        // English comment.
         category: 'animations',
         enabled: true
     },
@@ -144,16 +143,16 @@ export const availableComponents = [
         type: 'MigrationLine',
         displayName: '迁移线',
         description: '在三维空间中展示从一个点到另一个点的动态迁移效果',
-        // icon: '➡️',
+        // English comment.
         category: 'animations',
         enabled: true
     },
-    // 标注组件
+    // English comment.
     {
         type: 'Label3D',
         displayName: '3D 标签',
         description: '使用 Canvas 生成文字纹理，通过 Sprite 渲染到三维场景中',
-        // icon: '🏷️',
+        // English comment.
         category: 'markers',
         enabled: true
     },
@@ -161,7 +160,7 @@ export const availableComponents = [
         type: 'MarkArea',
         displayName: '标注区域',
         description: '在三维空间中显示平面标注区域',
-        // icon: '⬜',
+        // English comment.
         category: 'markers',
         enabled: true
     },
@@ -169,7 +168,7 @@ export const availableComponents = [
         type: 'MarkLine',
         displayName: '标注线',
         description: '在三维空间中显示连接多点的线条',
-        // icon: '📏',
+        // English comment.
         category: 'markers',
         enabled: true
     },
@@ -177,11 +176,11 @@ export const availableComponents = [
         type: 'MarkPoint',
         displayName: '标注点',
         description: '在三维空间中显示点位标记',
-        // icon: '📍',
+        // English comment.
         category: 'markers',
         enabled: true
     },
-    // 爆炸图组件
+    // English comment.
     {
         type: 'PointTypeMarkerManager',
         displayName: '多类型点位管理',
@@ -200,11 +199,11 @@ export const availableComponents = [
         type: 'ExplodedView',
         displayName: '楼层爆炸图',
         description: '楼层爆炸视图效果，支持楼层选中、高亮、动画等功能',
-        // icon: '🏗️',
+        // English comment.
         category: 'effects',
         enabled: true
     },
-    // 区域气象与光照
+    // English comment.
     {
         type: 'WeatherLighting',
         displayName: '气象与光照',
@@ -212,7 +211,7 @@ export const availableComponents = [
         category: 'effects',
         enabled: true
     },
-    // 智能交通组件
+    // English comment.
     {
         type: 'TrafficRoadsideDeviceManager',
         displayName: '路侧设备管理',
@@ -220,11 +219,11 @@ export const availableComponents = [
         category: 'traffic',
         enabled: true
     }
-    // BuildingEditor 已移除：点位管理器现在作为项目级别的数据管理功能，不再是场景组件
+    // English comment.
 ];
 
 /**
- * 组件分类
+ * English comment.
  */
 export const componentCategories = [
     {
@@ -278,26 +277,21 @@ export const componentCategories = [
 ];
 
 /**
- * 根据分类获取组件
- * @param {string} category - 分类 key
- * @returns {Array} 组件列表
+ * English comment.
  */
 export function getComponentsByCategory(category) {
     return availableComponents.filter((comp) => comp.category === category && comp.enabled && comp.type !== 'PathAnimation');
 }
 
 /**
- * 获取所有启用的组件
- * @returns {Array} 组件列表
+ * English comment.
  */
 export function getEnabledComponents() {
     return availableComponents.filter((comp) => comp.enabled && comp.type !== 'PathAnimation');
 }
 
 /**
- * 根据类型获取组件配置
- * @param {string} type - 组件类型
- * @returns {Object|null} 组件配置
+ * English comment.
  */
 export function getComponentConfig(type) {
     return availableComponents.find((comp) => comp.type === type) || null;

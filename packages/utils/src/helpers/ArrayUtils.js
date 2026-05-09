@@ -1,25 +1,16 @@
 /**
- * ArrayUtils 数组工具
- *
- * @description 数组操作相关的工具函数
+ * English comment.
  */
 export class ArrayUtils {
     /**
-     * 数组去重
-     *
-     * @param {Array} arr - 数组
-     * @returns {Array} 去重后的数组
+     * English comment.
      */
     static unique(arr) {
         return [...new Set(arr)];
     }
 
     /**
-     * 数组扁平化
-     *
-     * @param {Array} arr - 数组
-     * @param {number} depth - 深度
-     * @returns {Array} 扁平化后的数组
+     * English comment.
      */
     static flatten(arr, depth = 1) {
         return depth > 0
@@ -31,11 +22,7 @@ export class ArrayUtils {
     }
 
     /**
-     * 数组分块
-     *
-     * @param {Array} arr - 数组
-     * @param {number} size - 块大小
-     * @returns {Array} 分块后的数组
+     * English comment.
      */
     static chunk(arr, size) {
         const chunks = [];
@@ -46,10 +33,7 @@ export class ArrayUtils {
     }
 
     /**
-     * 随机打乱数组
-     *
-     * @param {Array} arr - 数组
-     * @returns {Array} 打乱后的数组
+     * English comment.
      */
     static shuffle(arr) {
         const result = [...arr];

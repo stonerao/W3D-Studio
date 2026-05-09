@@ -3,12 +3,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 /**
- * TrajectoryMove 轨迹移动组件
- *
- * - points: [[x,y,z], ...] 或 [{x,y,z}, ...]
- * - assetType: 'model' | 'image'
- * - modelUrl / imageUrl: 资源路径
- * - 始终沿切线方向朝前，并叠加 rotation (弧度) 偏移
+ * English comment.
  */
 export class TrajectoryMove extends Component {
     static defaultConfig = {
@@ -16,7 +11,7 @@ export class TrajectoryMove extends Component {
         modelUrl: '',
         imageUrl: '',
 
-        // 模型自适应大小（仅 assetType=model 生效）
+        // English comment.
         fitEnabled: true,
         fitSize: 1,
         modelScale: 1,
@@ -26,11 +21,11 @@ export class TrajectoryMove extends Component {
         loop: true,
         autoStart: true,
 
-        // 位移/旋转偏移（弧度）
+        // English comment.
         position: [0, 0, 0],
         rotation: [0, 0, 0],
 
-        // 资源自身缩放
+        // English comment.
         scale: [1, 1, 1]
     };
 
@@ -197,7 +192,7 @@ export class TrajectoryMove extends Component {
     applyModelScaleAndFit() {
         if (!this.assetRoot) return;
 
-        // 1) 先做“范围内自适应大小”：让模型最大边 = fitSize（默认1）
+        // English comment.
         if (this.config.fitEnabled !== false) {
             const target = Number(this.config.fitSize);
             const targetSize = Number.isFinite(target) && target > 0 ? target : 1;
@@ -212,7 +207,7 @@ export class TrajectoryMove extends Component {
             }
         }
 
-        // 2) 再叠加用户设置的 modelScale（默认1）
+        // English comment.
         const modelScale = Number(this.config.modelScale);
         const s = Number.isFinite(modelScale) && modelScale > 0 ? modelScale : 1;
         this.assetRoot.scale.multiplyScalar(s);
@@ -225,7 +220,7 @@ export class TrajectoryMove extends Component {
             this.moverGroup.remove(this.assetRoot);
         } catch {}
 
-        // 尽量释放材质/几何体/纹理
+        // English comment.
         const disposeMaterial = (mat) => {
             if (!mat) return;
             try {
@@ -275,7 +270,7 @@ export class TrajectoryMove extends Component {
         const point = this.curve.getPointAt(t, this._tmpVec3A);
         const tangent = this.curve.getTangentAt(t, this._tmpVec3B).normalize();
 
-        // 位置偏移
+        // English comment.
         const offset = this.config.position;
         if (Array.isArray(offset) && offset.length >= 3) {
             point.x += Number(offset[0]) || 0;
@@ -285,13 +280,13 @@ export class TrajectoryMove extends Component {
 
         this.moverGroup.position.copy(point);
 
-        // 朝向：沿切线（始终朝前）
+        // English comment.
         if (tangent.lengthSq() > 1e-8) {
-            // 计算一个稳定的 lookAt
+            // English comment.
             const lookTarget = point.clone().add(tangent);
             this.moverGroup.lookAt(lookTarget);
 
-            // 叠加 rotation 偏移（弧度）
+            // English comment.
             const rot = this.config.rotation;
             if (Array.isArray(rot) && rot.length >= 3) {
                 this._tmpEuler.set(Number(rot[0]) || 0, Number(rot[1]) || 0, Number(rot[2]) || 0);
@@ -341,10 +336,10 @@ export class TrajectoryMove extends Component {
         this.stop();
         Object.assign(this.config, newConfig);
 
-        // 清理并重建
+        // English comment.
         this.onDispose();
 
-        // 重新创建 group（onDispose 会 remove）
+        // English comment.
         this.moverGroup = new THREE.Group();
         this.componentScene.add(this.moverGroup);
 

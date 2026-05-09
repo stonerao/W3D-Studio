@@ -1,11 +1,7 @@
 import { EventEmitter } from './EventEmitter.js';
 
 /**
- * EventBus 全局事件总线
- *
- * @class EventBus
- * @extends EventEmitter
- * @description 全局事件总线，单例模式
+ * English comment.
  */
 class EventBus extends EventEmitter {
     constructor() {
@@ -13,5 +9,5 @@ class EventBus extends EventEmitter {
     }
 }
 
-// 导出单例
+// English comment.
 export default new EventBus();

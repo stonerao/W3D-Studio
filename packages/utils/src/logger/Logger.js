@@ -1,17 +1,11 @@
 import { LogLevel } from './LogLevel.js';
 
 /**
- * Logger 日志类
- *
- * @class Logger
- * @description 日志记录工具
+ * English comment.
  */
 export class Logger {
     /**
-     * 创建日志实例
-     *
-     * @param {string} name - 日志名称
-     * @param {string} level - 日志级别
+     * English comment.
      */
     constructor(name = 'W3D', level = LogLevel.INFO) {
         this.name = name;
@@ -20,10 +14,7 @@ export class Logger {
     }
 
     /**
-     * 检查日志级别
-     *
-     * @param {string} level - 日志级别
-     * @returns {boolean} 是否应该输出
+     * English comment.
      */
     shouldLog(level) {
         if (!this.enabled) return false;
@@ -33,11 +24,7 @@ export class Logger {
     }
 
     /**
-     * 格式化日志消息
-     *
-     * @param {string} level - 日志级别
-     * @param {*} args - 日志参数
-     * @returns {Array} 格式化后的参数
+     * English comment.
      */
     format(level, ...args) {
         const timestamp = new Date().toISOString();
@@ -46,9 +33,7 @@ export class Logger {
     }
 
     /**
-     * 调试日志
-     *
-     * @param {*} args - 日志参数
+     * English comment.
      */
     debug(...args) {
         if (this.shouldLog(LogLevel.DEBUG)) {
@@ -57,9 +42,7 @@ export class Logger {
     }
 
     /**
-     * 信息日志
-     *
-     * @param {*} args - 日志参数
+     * English comment.
      */
     info(...args) {
         if (this.shouldLog(LogLevel.INFO)) {
@@ -68,9 +51,7 @@ export class Logger {
     }
 
     /**
-     * 警告日志
-     *
-     * @param {*} args - 日志参数
+     * English comment.
      */
     warn(...args) {
         if (this.shouldLog(LogLevel.WARN)) {
@@ -79,9 +60,7 @@ export class Logger {
     }
 
     /**
-     * 错误日志
-     *
-     * @param {*} args - 日志参数
+     * English comment.
      */
     error(...args) {
         if (this.shouldLog(LogLevel.ERROR)) {
@@ -90,23 +69,21 @@ export class Logger {
     }
 
     /**
-     * 设置日志级别
-     *
-     * @param {string} level - 日志级别
+     * English comment.
      */
     setLevel(level) {
         this.level = level;
     }
 
     /**
-     * 启用日志
+     * English comment.
      */
     enable() {
         this.enabled = true;
     }
 
     /**
-     * 禁用日志
+     * English comment.
      */
     disable() {
         this.enabled = false;

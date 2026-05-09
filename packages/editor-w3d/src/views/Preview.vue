@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="preview-page">
-        <!-- 顶部工具栏 -->
+        <!-- English comment. -->
         <!-- <div v-if="showToolbar" class="preview-toolbar">
             <div class="toolbar-left">
                 <span class="project-name">{{ projectName }}</span>
@@ -10,7 +10,7 @@
             </div>
         </div> -->
 
-        <!-- 3D 画布区域 -->
+        <!-- English comment. -->
         <div class="preview-canvas">
             <div ref="canvasContainer" class="canvas-container"></div>
 
@@ -48,7 +48,7 @@
 
             <CameraVideoModal :state="cameraVideoModalState" @close="closeCameraVideoModal" />
 
-            <!-- 加载状态 -->
+            <!-- English comment. -->
             <div v-if="isLoading" class="loading-overlay">
                 <div class="loading-spinner">
                     <div class="spinner"></div>
@@ -56,7 +56,7 @@
                 </div>
             </div>
 
-            <!-- 错误状态 -->
+            <!-- English comment. -->
             <div v-if="errorMessage" class="error-overlay">
                 <div class="error-content">
                     <div class="text-4xl mb-4"></div>
@@ -106,9 +106,7 @@ const props = defineProps({
         default: true
     },
     /**
-     * 是否启用三维场景内的交互事件（点击、悬停等）。
-     * 设为 false 时，EventSystem 将静默忽略所有交互事件。
-     * 用于编辑模式下禁止三维对象的事件触发。
+     * English comment.
      */
     interactiveEnabled: {
         type: Boolean,
@@ -116,7 +114,7 @@ const props = defineProps({
     }
 });
 
-// 画布容器
+// English comment.
 const canvasContainer = ref(null);
 
 // Store
@@ -129,7 +127,7 @@ const toast = useToast();
 const { executeDataBinding, applyAllComponentVariableBindings } = useComponent();
 const toastRef = ref(null);
 
-// 场景管理
+// English comment.
 const {
     initPreviewScene,
     disposePreviewScene,
@@ -141,15 +139,15 @@ const {
 const alarmRuntime = useAlarmRuntime();
 const cameraPointRuntime = useCameraPointRuntime();
 
-// 用于防止重复加载的签名
+// English comment.
 const lastLoadedSignature = ref('');
-// 标记是否正在加载，避免重入
+// English comment.
 const isLoadingProject = ref(false);
 let pendingProjectReload = false;
 let currentLoadToken = 0;
 const runOnLoadTimerIds = new Set();
 
-// 状态
+// English comment.
 const projectName = ref('');
 const isLoading = ref(true);
 const errorMessage = ref('');
@@ -203,7 +201,7 @@ const triggerAlarmRequestsAfterSceneReady = async (token = currentLoadToken) => 
     });
 };
 
-// 监听 interactiveEnabled 变化，同步到核心 EventSystem
+// English comment.
 watch(
     () => props.interactiveEnabled,
     (enabled) => {
@@ -241,7 +239,7 @@ watch(
 );
 
 /**
- * 构建数据签名，用于判断数据是否真正变化
+ * English comment.
  */
 const buildSignature = (data) => {
     try {
@@ -306,7 +304,7 @@ const executeVariableCommand = (command = {}) => {
 };
 
 /**
- * 加载工程数据
+ * English comment.
  */
 const loadProject = async () => {
     if (isLoadingProject.value) {
@@ -326,16 +324,16 @@ const loadProject = async () => {
         errorMessage.value = '';
         clearRunOnLoadTimers();
 
-        // 清理旧场景，避免重复初始化
+        // English comment.
         disposePreviewScene();
 
         await projectStore.deserializeProject(props.projectData || {}, 'preview');
         if (!isCurrentLoad(token)) return;
 
-        // 记录已加载的数据签名
+        // English comment.
         lastLoadedSignature.value = signature;
 
-        // 获取项目名称
+        // English comment.
         projectName.value = projectStore.projectName || '未命名项目';
 
         console.log('[Preview] 项目数据已加载:', {
@@ -344,7 +342,7 @@ const loadProject = async () => {
             sceneConfig: sceneStore.sceneConfig
         });
 
-        // 初始化场景（initScene 内部会在 Scene 就绪后自动执行“待处理的运行时恢复”）
+        // English comment.
         const scene = await initializeScene();
         if (!isCurrentLoad(token)) {
             if (sceneStore.sceneInstance === scene) {
@@ -402,7 +400,7 @@ const triggerRunOnLoadDataSources = (token = currentLoadToken) => {
 };
 
 /**
- * 初始化场景
+ * English comment.
  */
 const initializeScene = async () => {
     if (!canvasContainer.value) {
@@ -410,10 +408,10 @@ const initializeScene = async () => {
     }
 
     try {
-        // 使用 usePreviewScene 初始化场景
+        // English comment.
         const scene = await initPreviewScene(canvasContainer.value, { isControls: isControls.value });
 
-        // 初始化后立即同步 interactiveEnabled 到 EventSystem
+        // English comment.
         if (scene?.eventSystem) {
             scene.eventSystem.enabled = props.interactiveEnabled;
         }
@@ -429,7 +427,7 @@ const initializeScene = async () => {
 
 
 /**
- * 清理场景
+ * English comment.
  */
 const cleanup = () => {
     console.log('[Preview] 清理场景资源');
@@ -439,7 +437,7 @@ const cleanup = () => {
     disposePreviewScene();
 };
 
-// 组件挂载时加载工程
+// English comment.
 onMounted(() => {
     alarmStore.setAutoEvaluationEnabled(true, { clearActiveAlarms: false });
     if (toastRef.value) {
@@ -449,8 +447,8 @@ onMounted(() => {
     void loadProject();
 });
 
-// 注意：移除了 deep watch，避免编辑状态下频繁触发更新
-// 父组件需要在适当时机（如点击"编辑三维"、"保存"）调用 refresh() 方法手动触发更新
+// English comment.
+// English comment.
 watch(
     () => props.projectData,
     (nextValue, previousValue) => {
@@ -487,28 +485,23 @@ watch(
     { deep: true }
 );
 
-// 组件卸载时清理场景
+// English comment.
 onUnmounted(() => {
     alarmStore.setAutoEvaluationEnabled(false);
     cleanup();
 });
 
 /**
- * 强制刷新预览
- * 供父组件在需要时调用（如保存、编辑三维按钮点击时）
+ * English comment.
  */
 const refresh = () => {
-    // 重置签名以强制重新加载
+    // English comment.
     lastLoadedSignature.value = '';
     void loadProject();
 };
 
 /**
- * 增量更新场景配置
- * 不重新初始化场景，只更新变化的配置项
- * @param {Object} projectData - 项目数据
- * @param {boolean} forceUpdate - 是否强制更新所有配置
- * @returns {Promise<Object>} 更新结果
+ * English comment.
  */
 const updateScene = async (projectData, forceUpdate = false) => {
     if (!sceneStore.sceneInstance) {
@@ -518,10 +511,10 @@ const updateScene = async (projectData, forceUpdate = false) => {
 
     console.log('[Preview] 执行增量更新', { forceUpdate });
 
-    // 调用 usePreviewScene 的 update 方法进行增量更新
+    // English comment.
     const result = await updatePreviewScene(projectData, forceUpdate);
 
-    // 更新已加载的数据签名
+    // English comment.
     if (result.success && result.updatedItems?.length > 0) {
         lastLoadedSignature.value = buildSignature(projectData);
     }
@@ -530,9 +523,7 @@ const updateScene = async (projectData, forceUpdate = false) => {
 };
 
 /**
- * 暂停预览场景
- * 当切换到编辑模式时调用，停止渲染循环但保留场景状态
- * @returns {boolean} 是否成功暂停
+ * English comment.
  */
 const pause = () => {
     console.log('[Preview] 暂停场景渲染');
@@ -540,9 +531,7 @@ const pause = () => {
 };
 
 /**
- * 恢复预览场景
- * 当从编辑模式切换回预览模式时调用
- * @returns {boolean} 是否成功恢复
+ * English comment.
  */
 const resume = () => {
     console.log('[Preview] 恢复场景渲染');
@@ -550,16 +539,14 @@ const resume = () => {
 };
 
 /**
- * 检查场景是否正在运行
- * @returns {boolean} 是否正在运行
+ * English comment.
  */
 const isRunning = () => {
     return isSceneRunning();
 };
 
 /**
- * 获取场景实例
- * @returns {Scene|null} 场景实例
+ * English comment.
  */
 const getSceneInstance = () => {
     return sceneStore.sceneInstance;
@@ -755,7 +742,7 @@ const executeComponentCommand = (rawCommand = {}) => {
 };
 
 /**
- * 列出场景中所有组件的详细信息（调试用）
+ * English comment.
  */
 const listSceneComponents = () => {
     const sceneInstance = sceneStore.sceneInstance;
@@ -828,9 +815,9 @@ const listSceneComponents = () => {
     return { success: true, components: result };
 };
 
-// 暴露方法供父组件调用
+// English comment.
 defineExpose({
-    // 加载和刷新
+    // English comment.
     refresh,
     loadProject,
     updateScene,
@@ -838,11 +825,11 @@ defineExpose({
     executeComponentCommand,
     executeVariableCommand,
     listSceneComponents,
-    // 暂停/恢复控制
+    // English comment.
     pause,
     resume,
     isRunning,
-    // 直接暴露场景实例（兼容旧的调用方式）
+    // English comment.
     get sceneInstance() {
         return sceneStore.sceneInstance;
     }

@@ -7,42 +7,50 @@
         @dragleave="handleDragLeave"
         @drop="handleDrop"
     >
-        <!-- 3D 场景容器 -->
+        <!-- English comment. -->
         <div ref="canvasRef" class="w-full h-full"></div>
 
-        <!-- 拖拽覆盖层（最小视觉反馈） -->
+        <!-- English comment. -->
         <div v-if="dragOverlayVisible" class="drag-overlay">
-            <div class="drag-overlay__title">释放以添加</div>
+            <div class="drag-overlay__title">{{ t('canvas.releaseToAdd') }}</div>
             <div class="drag-overlay__sub">{{ dragOverlayText }}</div>
         </div>
 
-        <!-- 路侧设备：拾取状态浮条（拾取中/等待确认） -->
+        <!-- English comment. -->
         <div v-if="trafficPickBarVisible" class="traffic-pick-bar">
             <div class="traffic-pick-bar__text">
                 <div class="traffic-pick-bar__title">{{ trafficPickBarTitle }}</div>
                 <div class="traffic-pick-bar__sub">{{ trafficPickBarSub }}</div>
             </div>
             <div class="traffic-pick-bar__actions">
-                <Button size="sm" variant="outline" @click="handleTrafficPickCancel">取消</Button>
+                <Button size="sm" variant="outline" @click="handleTrafficPickCancel">
+                    {{ t('canvas.cancel') }}
+                </Button>
                 <Button
                     v-if="trafficPickBarCanRepick"
                     size="sm"
                     variant="primary"
                     @click="handleTrafficRepick"
                 >
-                    重新拾取
+                    {{ t('canvas.repick') }}
                 </Button>
             </div>
         </div>
 
-        <!-- 轨迹移动：拾取路线点位浮条 -->
+        <!-- English comment. -->
         <div v-if="trajectoryPickBarVisible" class="traffic-pick-bar">
             <div class="traffic-pick-bar__text">
-                <div class="traffic-pick-bar__title">轨迹拾取中：{{ trajectoryPickComponentName }}</div>
-                <div class="traffic-pick-bar__sub">点击场景取点（Esc 可取消），已添加 {{ trajectoryPickPointCount }} 个点</div>
+                <div class="traffic-pick-bar__title">
+                    {{ t('canvas.trajectoryPickingTitle', { name: trajectoryPickComponentName }) }}
+                </div>
+                <div class="traffic-pick-bar__sub">
+                    {{ t('canvas.trajectoryPickingSub', { count: trajectoryPickPointCount }) }}
+                </div>
             </div>
             <div class="traffic-pick-bar__actions">
-                <Button size="sm" variant="outline" @click="handleTrajectoryPickStop">结束</Button>
+                <Button size="sm" variant="outline" @click="handleTrajectoryPickStop">
+                    {{ t('canvas.finish') }}
+                </Button>
             </div>
         </div>
 
@@ -52,7 +60,9 @@
                 <div class="traffic-pick-bar__sub">{{ meshPickBarSub }}</div>
             </div>
             <div class="traffic-pick-bar__actions">
-                <Button size="sm" variant="outline" @click="handleMeshPickCancel">取消</Button>
+                <Button size="sm" variant="outline" @click="handleMeshPickCancel">
+                    {{ t('canvas.cancel') }}
+                </Button>
             </div>
         </div>
 
@@ -71,7 +81,7 @@
             <div class="alarm-runtime-modal__panel">
                 <div class="alarm-runtime-modal__header">
                     <div>
-                        <div class="alarm-runtime-modal__eyebrow">告警提示</div>
+                        <div class="alarm-runtime-modal__eyebrow">{{ t('canvas.alarmPrompt') }}</div>
                         <div class="alarm-runtime-modal__title">{{ alarmModalState.title }}</div>
                     </div>
                     <button class="alarm-runtime-modal__close" type="button" @click="closeAlarmModal">×</button>
@@ -79,16 +89,18 @@
                 <div class="alarm-runtime-modal__body">
                     <div class="alarm-runtime-modal__message">{{ alarmModalState.message }}</div>
                     <div v-if="alarmModalState.severity" class="alarm-runtime-modal__severity">
-                        等级：{{ alarmModalState.severity }}
+                        {{ t('canvas.severity', { severity: alarmModalState.severity }) }}
                     </div>
                 </div>
                 <div class="alarm-runtime-modal__footer">
-                    <Button size="sm" variant="outline" @click="closeAlarmModal">关闭</Button>
+                    <Button size="sm" variant="outline" @click="closeAlarmModal">
+                        {{ t('canvas.close') }}
+                    </Button>
                 </div>
             </div>
         </div>
 
-        <!-- 加载提示 -->
+        <!-- English comment. -->
         <div
             v-if="canvasLoadingVisible"
             class="canvas-loading-overlay"
@@ -114,25 +126,25 @@
             </div>
         </div>
 
-        <!-- 错误提示 -->
+        <!-- English comment. -->
         <div
             v-if="sceneError"
             class="absolute inset-0 flex items-center justify-center bg-red-50 bg-opacity-90 z-10"
         >
             <div class="text-center">
                 <div class="text-6xl mb-4"></div>
-                <div class="text-lg font-medium text-red-700 mb-2">场景初始化失败</div>
+                <div class="text-lg font-medium text-red-700 mb-2">{{ t('canvas.sceneInitFailed') }}</div>
                 <div class="text-sm text-red-600">{{ sceneError }}</div>
                 <button
                     class="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
                     @click="retryInit"
                 >
-                    重试
+                    {{ t('canvas.retry') }}
                 </button>
             </div>
         </div>
 
-        <!-- 变换工具栏 -->
+        <!-- English comment. -->
         <div
             v-if="sceneInitialized && !canvasLoadingVisible && isTransformable"
             class="transform-toolbar"
@@ -143,8 +155,8 @@
                 :class="{ active: transformMode === 'translate' }"
                 :disabled="isSelectedLocked"
                 @click="setTransformMode('translate')"
-                title="移动 (W)"
-                aria-label="移动 (W)"
+                :title="t('canvas.moveTitle')"
+                :aria-label="t('canvas.moveTitle')"
             >
                 <i class="sico icon-move transform-btn__icon" aria-hidden="true"></i>
             </button>
@@ -154,8 +166,8 @@
                 :class="{ active: transformMode === 'rotate' }"
                 :disabled="isSelectedLocked"
                 @click="setTransformMode('rotate')"
-                title="旋转 (E)"
-                aria-label="旋转 (E)"
+                :title="t('canvas.rotateTitle')"
+                :aria-label="t('canvas.rotateTitle')"
             >
                 <i class="sico icon-yulanxuanzhuan transform-btn__icon" aria-hidden="true"></i>
             </button>
@@ -165,20 +177,20 @@
                 :class="{ active: transformMode === 'scale' }"
                 :disabled="isSelectedLocked"
                 @click="setTransformMode('scale')"
-                title="缩放 (R)"
-                aria-label="缩放 (R)"
+                :title="t('canvas.scaleTitle')"
+                :aria-label="t('canvas.scaleTitle')"
             >
                 <i class="sico icon-iconset0442 transform-btn__icon" aria-hidden="true"></i>
             </button>
         </div>
 
-        <!-- 场景信息显示 -->
+        <!-- English comment. -->
         <div
             v-if="sceneInitialized && !canvasLoadingVisible"
             class="canvas-status-chip"
         >
             <span>FPS {{ fps }}</span>
-            <span>组件 {{ components.length }}</span>
+            <span>{{ t('canvas.componentsCount', { count: components.length }) }}</span>
         </div>
 
         <ContextMenu
@@ -214,16 +226,18 @@ import { useDiagnosticsStore } from '../../stores/useDiagnosticsStore';
 import Button from '../ui/Button.vue';
 import ContextMenu from '../ui/ContextMenu.vue';
 import { useToast } from '../../composables/useToast';
+import { useEditorI18n } from '../../i18n';
 
 const canvasRef = ref(null);
 const fps = ref(60);
+const { t } = useEditorI18n();
 const DEFAULT_SCENE_STATE = Object.freeze({
     initialized: false,
     loading: false,
     error: null
 });
 
-// 使用场景管理
+// English comment.
 const sceneStore = useSceneStore();
 const sceneApi = useScene();
 const sceneState = computed(() => sceneApi?.sceneState || sceneStore.sceneState || DEFAULT_SCENE_STATE);
@@ -246,7 +260,7 @@ const alarmModalState = alarmRuntime.alarmModalState;
 const closeAlarmModal = alarmRuntime.closeAlarmModal;
 const largeSceneRuntime = useLargeSceneRuntime();
 
-// 使用组件管理
+// English comment.
 const {
     components,
     addComponent,
@@ -313,7 +327,7 @@ const setModelLoadState = (componentId, patch = {}) => {
     const current = modelLoadStates.get(componentId) || {};
     modelLoadStates.set(componentId, {
         componentId,
-        name: component.name || component.config?.name || '模型',
+        name: component.name || component.config?.name || t('canvas.modelFallbackName'),
         loading: false,
         progress: 0,
         ...current,
@@ -339,7 +353,7 @@ const syncModelLoadStateFromInstance = (component) => {
     setModelLoadState(component.id, {
         loading: true,
         progress: normalizeLoadProgress(instance.loadProgress),
-        name: component.name || component.config?.name || '模型'
+        name: component.name || component.config?.name || t('canvas.modelFallbackName')
     });
 };
 
@@ -374,7 +388,7 @@ const bindModelLoadEvents = (component) => {
             setModelLoadState(component.id, {
                 loading: true,
                 progress: normalizeLoadProgress(payload.progress),
-                name: component.name || component.config?.name || '模型'
+                name: component.name || component.config?.name || t('canvas.modelFallbackName')
             });
         },
         handleLoadProgress: (payload = {}) => {
@@ -426,17 +440,20 @@ const clearModelLoadEventBindings = () => {
 const modelLoadingVisible = computed(() => modelLoadingState.value.active);
 const canvasLoadingVisible = computed(() => sceneLoadingVisible.value || modelLoadingVisible.value);
 const canvasLoadingTitle = computed(() => {
-    if (sceneLoadingVisible.value) return '场景加载中...';
+    if (sceneLoadingVisible.value) return t('canvas.sceneLoading');
 
     const state = modelLoadingState.value;
     const progress = normalizeLoadProgress(state.progress);
     const progressText = progress > 0 && progress < 1 ? ` ${Math.round(progress * 100)}%` : '';
 
     if (state.count > 1) {
-        return `模型加载中（${state.count} 个）...${progressText}`;
+        return t('canvas.modelLoadingCount', { count: state.count, progress: progressText });
     }
 
-    return `${state.name || '模型'} 加载中...${progressText}`;
+    return t('canvas.modelLoadingNamed', {
+        name: state.name || t('canvas.modelFallbackName'),
+        progress: progressText
+    });
 });
 
 const canvasContextMenu = ref({
@@ -546,7 +563,7 @@ const createMarkerPointForComponent = (component, position) => {
     };
 };
 
-// ===== 拖拽创建组件（组件库/资源库 -> 画布） =====
+// English comment.
 const dragOverlayVisible = ref(false);
 const dragOverlayText = ref('');
 
@@ -574,10 +591,10 @@ const updateDragOverlay = (event) => {
         if (hasSupportedModelFiles(dt.files)) {
             const count = dt.files?.length || 0;
             dragOverlayText.value = count > 1
-                ? `本地模型文件（${count} 个文件）`
-                : '本地模型文件';
+                ? t('canvas.localModelFilesCount', { count })
+                : t('canvas.localModelFiles');
         } else {
-            dragOverlayText.value = '释放后检测模型文件（GLB / GLTF / FBX）';
+            dragOverlayText.value = t('canvas.localModelDropHint');
         }
         return;
     }
@@ -588,12 +605,12 @@ const updateDragOverlay = (event) => {
     }
     if (assetUrl) {
         dragOverlayText.value = assetType === 'model'
-            ? `模型：${assetUrl}`
+            ? t('canvas.modelAsset', { url: assetUrl })
             : assetType === 'splat'
-                ? `泼溅：${assetUrl}`
+                ? t('canvas.splatAsset', { url: assetUrl })
                 : assetType === 'geojson'
                     ? `GeoJSON：${assetUrl}`
-                : `资源：${assetUrl}`;
+                : t('canvas.resourceAsset', { url: assetUrl });
     }
 };
 
@@ -616,13 +633,13 @@ const getDropWorldPoint = (event) => {
     const raycaster = scene?.eventSystem?.raycaster;
     if (!scene || !raycaster) return null;
 
-    // 先尝试命中场景物体表面
+    // English comment.
     const intersects = getScenePickHits(event);
     if (intersects.length > 0 && intersects[0]?.point) {
         return intersects[0].point;
     }
 
-    // 空白区域：回落到 y=0 平面（SDK Raycaster 内部实现）
+    // English comment.
     return raycaster.intersectGround?.(event) || null;
 };
 
@@ -781,7 +798,7 @@ const getScenePickHits = (event) => {
     const runtimeHits = [];
     const runtimeHitComponentIds = new Set();
 
-    // 仅遍历已标记具有自定义 raycast 能力的组件（由 store 维护缓存）
+    // English comment.
     const capableIds = componentStore.raycastCapableIds;
     for (const component of componentStore.components || []) {
         if (!capableIds.has(component.id)) continue;
@@ -884,7 +901,9 @@ const canvasContextMenuItems = computed(() => {
     if (component.type === 'ModelLoader') {
         return [
             {
-                label: context.meshName ? `选择 Mesh：${context.meshName}` : '选择 Mesh',
+                label: context.meshName
+                    ? t('canvas.selectMeshNamed', { name: context.meshName })
+                    : t('canvas.selectMesh'),
                 action: 'selectMesh',
                 disabled: component.visible === false
             }
@@ -894,12 +913,12 @@ const canvasContextMenuItems = computed(() => {
     if (MARKER_CONTEXT_TYPES.has(component.type)) {
         return [
             {
-                label: '快速添加点位',
+                label: t('canvas.quickAddPoint'),
                 action: 'quickAddMarkerPoint',
                 disabled: isCanvasContextComponentLocked.value || !context.worldPoint
             },
             {
-                label: '删除点位',
+                label: t('canvas.deletePoint'),
                 action: 'deleteMarkerPoint',
                 disabled: isCanvasContextComponentLocked.value || !canvasContextTargetPointId.value
             }
@@ -973,23 +992,23 @@ const selectModelMeshFromContext = (context) => {
             ...(context.meshMeta || {})
         });
         componentStore.completeMeshPicking(component.id, context.meshName, 'model-loader-editor', context.meshMeta || {});
-        toast.success(`已选择 Mesh：${context.meshName}`);
+        toast.success(t('canvas.meshSelected', { name: context.meshName }));
         return;
     }
 
     componentStore.startMeshPicking(component.id, 'model-loader-editor');
-    toast.info('请点击场景中的模型 Mesh 进行选择');
+    toast.info(t('canvas.pickMeshHint'));
 };
 
 const quickAddMarkerPointFromContext = async (context) => {
     const component = componentStore.getComponentById(context.componentId);
     if (!component || !MARKER_CONTEXT_TYPES.has(component.type)) return;
     if (isEditMode.value && component.locked) {
-        toast.warning('组件已锁定，无法新增点位');
+        toast.warning(t('canvas.lockedCannotAddPoint'));
         return;
     }
     if (!context.worldPoint) {
-        toast.warning('未获取到有效坐标，无法新增点位');
+        toast.warning(t('canvas.invalidPoint'));
         return;
     }
 
@@ -1000,27 +1019,27 @@ const quickAddMarkerPointFromContext = async (context) => {
         componentType: component.type
     });
     selectComponent(component.id);
-    toast.success('已新增点位');
+    toast.success(t('canvas.pointAdded'));
 };
 
 const deleteMarkerPointFromContext = async (context) => {
     const component = componentStore.getComponentById(context.componentId);
     if (!component || !MARKER_CONTEXT_TYPES.has(component.type)) return;
     if (isEditMode.value && component.locked) {
-        toast.warning('组件已锁定，无法删除点位');
+        toast.warning(t('canvas.lockedCannotDeletePoint'));
         return;
     }
 
     const pointId = canvasContextTargetPointId.value;
     if (!pointId) {
-        toast.warning('请先右键命中或选中一个点位');
+        toast.warning(t('canvas.selectPointFirst'));
         return;
     }
 
     const points = getComponentPoints(component);
     const nextPoints = points.filter((point) => String(point?.id || '') !== pointId);
     if (nextPoints.length === points.length) {
-        toast.warning('点位不存在或已被删除');
+        toast.warning(t('canvas.pointNotFound'));
         componentStore.clearCanvasSubSelection(component.id);
         return;
     }
@@ -1028,7 +1047,7 @@ const deleteMarkerPointFromContext = async (context) => {
     await updateComponentConfig(component.id, { points: nextPoints });
     componentStore.clearCanvasSubSelection(component.id);
     selectComponent(component.id);
-    toast.success('已删除点位');
+    toast.success(t('canvas.pointDeleted'));
 };
 
 const handleCanvasContextAction = async (item) => {
@@ -1049,7 +1068,7 @@ const handleCanvasContextAction = async (item) => {
         }
     } catch (error) {
         console.error('[CenterCanvas] canvas context action failed:', error);
-        toast.error(error?.message || '快捷操作失败');
+        toast.error(error?.message || t('canvas.quickActionFailed'));
     }
 };
 
@@ -1064,11 +1083,11 @@ const handleDragOver = (event) => {
     if (!isSupportedDrag(event)) return;
     event.preventDefault();
     event.dataTransfer.dropEffect = 'copy';
-    // dragenter 已设置 overlay，这里只需 preventDefault 即可
+    // English comment.
 };
 
 const handleDragLeave = (event) => {
-    // 仅当真正离开画布容器时关闭（避免子元素触发抖动）
+    // English comment.
     if (!event.currentTarget?.contains(event.relatedTarget)) {
         dragOverlayVisible.value = false;
         dragOverlayText.value = '';
@@ -1092,7 +1111,7 @@ const handleDrop = async (event) => {
     if (!shouldUseOriginPosition) {
         const point = getDropWorldPoint(event);
         if (!point) {
-            toast.warning('场景未初始化，无法在画布中放置组件');
+            toast.warning(t('canvas.sceneNotReadyDrop'));
             return;
         }
         position = [round4(point.x), round4(point.y), round4(point.z)];
@@ -1102,12 +1121,12 @@ const handleDrop = async (event) => {
         if (isPotentialFileDrag(event)) {
             const localAsset = createLocalModelAssetFromDataTransfer(dt);
             if (!localAsset) {
-                toast.warning('请拖入 .glb、.gltf 或 .fbx 模型文件');
+                toast.warning(t('canvas.unsupportedLocalModelFile'));
                 return;
             }
 
             const created = await addComponent('ModelLoader', {
-                name: localAsset.name || '本地模型',
+                name: localAsset.name || t('canvas.localModelName'),
                 url: localAsset.url,
                 format: localAsset.format,
                 sourceType: localAsset.sourceType,
@@ -1120,13 +1139,15 @@ const handleDrop = async (event) => {
                 position
             });
 
-            toast.success(`已加载本地模型：${localAsset.fileName || created?.name || 'ModelLoader'}`);
+            toast.success(t('canvas.localModelLoaded', {
+                name: localAsset.fileName || created?.name || 'ModelLoader'
+            }));
             return;
         }
 
         if (compType) {
             const created = await addComponent(compType, { position });
-            toast.success(`已添加组件：${created?.name || compType}`);
+            toast.success(t('canvas.componentAdded', { name: created?.name || compType }));
             return;
         }
 
@@ -1137,7 +1158,7 @@ const handleDrop = async (event) => {
                     ...(assetFormat ? { format: assetFormat } : {}),
                     position
                 });
-                toast.success(`已添加模型：${created?.name || 'ModelLoader'}`);
+                toast.success(t('canvas.modelAdded', { name: created?.name || 'ModelLoader' }));
                 return;
             }
 
@@ -1149,7 +1170,7 @@ const handleDrop = async (event) => {
                     gpuAcceleratedSort: false,
                     sharedMemoryForWorkers: false
                 });
-                toast.success(`已添加高斯泼溅：${created?.name || 'GaussianSplatLoader'}`);
+                toast.success(t('canvas.splatAdded', { name: created?.name || 'GaussianSplatLoader' }));
                 return;
             }
 
@@ -1160,18 +1181,18 @@ const handleDrop = async (event) => {
                     data: null,
                     position
                 });
-                toast.success(`已添加数据城市：${created?.name || 'GeoJSONLoader'}`);
+                toast.success(t('canvas.dataCityAdded', { name: created?.name || 'GeoJSONLoader' }));
                 return;
             }
 
             if (assetType) {
-                toast.warning('仅支持拖拽“模型”“泼溅”或“GeoJSON”资源到画布');
+                toast.warning(t('canvas.unsupportedDropAsset'));
                 return;
             }
         }
     } catch (error) {
         console.error('Drop create component failed:', error);
-        toast.error(`拖拽创建失败: ${error.message}`);
+        toast.error(t('canvas.dropCreateFailed', { message: error.message }));
     }
 };
 
@@ -1213,20 +1234,20 @@ const trafficPickDeviceName = computed(() => {
 
 const trafficPickBarTitle = computed(() => {
     if (trafficPickContext.value.state === 'picking') {
-        return `拾取中：${trafficPickDeviceName.value}`;
+        return t('canvas.trafficPickingTitle', { name: trafficPickDeviceName.value });
     }
     if (trafficPickContext.value.state === 'confirm') {
-        return `已拾取：${trafficPickDeviceName.value}`;
+        return t('canvas.trafficPickedTitle', { name: trafficPickDeviceName.value });
     }
     return '';
 });
 
 const trafficPickBarSub = computed(() => {
     if (trafficPickContext.value.state === 'picking') {
-        return '点击模型或高斯泼溅表面取点（Esc 可取消）';
+        return t('canvas.trafficPickSurfaceHint');
     }
     if (trafficPickContext.value.state === 'confirm') {
-        return '等待确认写入坐标（可重新拾取）';
+        return t('canvas.trafficPickConfirmHint');
     }
     return '';
 });
@@ -1247,7 +1268,7 @@ const handleTrafficRepick = () => {
     componentStore.startTrafficPicking(componentId, deviceId);
 };
 
-// ===== 轨迹移动：拾取路线点位（编辑器态） =====
+// English comment.
 const trajectoryPickBarVisible = computed(() => {
     return !!componentStore.trajectoryPicking?.active;
 });
@@ -1279,17 +1300,19 @@ const meshPickBarTitle = computed(() => {
     const componentId = meshPickContext.value?.componentId;
     const component = componentId ? componentStore.getComponentById(componentId) : null;
     const name = component?.name || componentId || '';
-    const prefix = meshPickContext.value?.source === 'event-target' ? '事件目标拾取中' : '吸管拾取中';
+    const prefix = meshPickContext.value?.source === 'event-target'
+        ? t('canvas.meshPickEventTarget')
+        : t('canvas.meshPickEyedropper');
     return name ? `${prefix}：${name}` : prefix;
 });
 
-const meshPickBarSub = computed(() => '点击场景中的模型 Mesh 进行选择（Esc 可取消）');
+const meshPickBarSub = computed(() => t('canvas.meshPickSub'));
 
 const handleMeshPickCancel = () => {
     componentStore.stopMeshPicking();
 };
 
-// 支持变换操作的组件类型
+// English comment.
 const TRANSFORMABLE_TYPES = [
     'ModelLoader',
     'GaussianSplatLoader',
@@ -1310,7 +1333,7 @@ const TRANSFORMABLE_TYPES = [
     'TrafficRoadsideDeviceManager'
 ];
 
-// TransformControls 实例
+// English comment.
 let transformControls = null;
 let isTransformDragging = false;
 const TRANSFORM_CONTROLS_NAME = '__editor_transform_controls__';
@@ -1318,14 +1341,14 @@ let canvasEl = null;
 let handleCanvasClick = null;
 let handleCanvasContextMenuBound = null;
 
-// 当前变换模式: 'translate' | 'rotate' | 'scale'
+// English comment.
 const transformMode = ref('translate');
 
-// FPS 计算
+// English comment.
 let lastTime = performance.now();
 let frames = 0;
 
-// 计算当前选中的组件
+// English comment.
 const selectedComponent = computed(() => componentStore.selectedComponent);
 const diagnosticsComponents = computed(() => Array.isArray(componentStore.components) ? componentStore.components : []);
 const isEditMode = computed(() => editorStore.mode === 'edit');
@@ -1408,7 +1431,7 @@ watch(fps, () => {
     updateDiagnosticsSnapshot();
 }, { immediate: true });
 
-// 判断当前选中组件是否支持变换
+// English comment.
 const isTransformable = computed(() => {
     if (!selectedComponent.value) return false;
     if (selectedComponent.value.type === 'TrafficRoadsideDeviceManager') {
@@ -1418,7 +1441,7 @@ const isTransformable = computed(() => {
     return TRANSFORMABLE_TYPES.includes(selectedComponent.value.type);
 });
 
-// 监听选中组件变化，更新 TransformControls
+// English comment.
 watch(selectedComponent, (newComp, oldComp) => {
     if (!transformControls) return;
 
@@ -1460,7 +1483,7 @@ onUnmounted(() => {
 });
 
 /**
- * 初始化场景
+ * English comment.
  */
 const initializeScene = async () => {
     console.log('[CenterCanvas] ========== 开始初始化场景 ==========');
@@ -1471,7 +1494,7 @@ const initializeScene = async () => {
         return;
     }
 
-    // 检查容器尺寸
+    // English comment.
     const rect = canvasRef.value.getBoundingClientRect();
     console.log('[CenterCanvas] 容器尺寸:', {
         width: rect.width,
@@ -1489,7 +1512,7 @@ const initializeScene = async () => {
         const scene = await initScene(canvasRef.value);
         console.log('[CenterCanvas] ✅ initScene 完成，scene:', scene);
 
-        // 检查场景关键对象
+        // English comment.
         console.log('[CenterCanvas] 场景关键对象检查:', {
             hasScene: !!scene,
             hasRenderer: !!scene?.renderer,
@@ -1498,28 +1521,28 @@ const initializeScene = async () => {
             rendererDomElement: !!scene?.renderer?.getDomElement?.()
         });
 
-        // 恢复上次保存的相机视角
+        // English comment.
         console.log('[CenterCanvas] 恢复相机视角...');
         restoreCameraView(scene);
         updateDiagnosticsSnapshot();
 
-        // 兼容：对已存在的实例补打拾取标记（避免热更新/旧项目加载后无法拾取）
+        // English comment.
         const componentsWithInstance = (componentStore.components || []).filter(c => c?.id && c?.instance);
         console.log('[CenterCanvas] 补充拾取标记，已有实例的组件数:', componentsWithInstance.length);
         componentsWithInstance.forEach((c) => {
             tagInstanceForPicking(c.id, c.instance);
         });
 
-        // 点击画布拾取选中
+        // English comment.
         canvasEl = scene?.renderer?.getDomElement?.() || null;
         if (canvasEl) {
             handleCanvasClick = async (event) => {
-                // 如果正在拖拽 TransformControls，不触发选择
+                // English comment.
                 if (transformControls && isTransformDragging) return;
 
                 const intersects = getScenePickHits(event);
 
-                // 轨迹移动：拾取路线点位（优先处理，从 ModelLoader 模型表面取点）
+                // English comment.
                 if (componentStore.trajectoryPicking?.active) {
                     const pickCompId = componentStore.trajectoryPicking.componentId;
                     const pickComp = componentStore.getComponentById(pickCompId);
@@ -1528,13 +1551,13 @@ const initializeScene = async () => {
                         for (const hit of intersects) {
                             const hitCompId = findComponentIdFromObject(hit.object);
 
-                            // 允许从模型或高斯泼溅表面近似取点
+                            // English comment.
                             if (!isSurfacePickTarget(hitCompId, getPickingMetadataFromObject(hit.object))) continue;
                             if (!hit?.point) continue;
 
                             const nextXyz = [round4(hit.point.x), round4(hit.point.y), round4(hit.point.z)];
 
-                            // 拾取结束后弹出确认框
+                            // English comment.
                             componentStore.stopTrajectoryPicking();
                             componentStore.requestTrajectoryPickConfirm(pickCompId, nextXyz);
                             selectComponent(pickCompId);
@@ -1542,10 +1565,10 @@ const initializeScene = async () => {
                         }
                     }
 
-                    // 没拾取到有效点则继续走普通选择逻辑
+                    // English comment.
                 }
 
-                // 路侧设备：拾取坐标模式（优先处理，不改变组件选中逻辑）
+                // English comment.
                 if (componentStore.trafficPicking?.active) {
                     const pickCompId = componentStore.trafficPicking.componentId;
                     const pickDeviceId = componentStore.trafficPicking.deviceId;
@@ -1555,14 +1578,14 @@ const initializeScene = async () => {
                         for (const hit of intersects) {
                             const hitCompId = findComponentIdFromObject(hit.object);
 
-                            // 允许从模型或高斯泼溅表面近似取点
+                            // English comment.
                             if (!isSurfacePickTarget(hitCompId, getPickingMetadataFromObject(hit.object))) continue;
                             if (!hit?.point) continue;
 
                             const round4 = (n) => Math.round(n * 10000) / 10000;
                             const nextXyz = [round4(hit.point.x), round4(hit.point.y), round4(hit.point.z)];
 
-                            // 拾取结束先弹确认框，确认后再写回 xyz
+                            // English comment.
                             componentStore.stopTrafficPicking();
                             componentStore.requestTrafficPickConfirm(pickCompId, pickDeviceId, nextXyz);
                             componentStore.setTrafficSelectedDevice(pickCompId, pickDeviceId);
@@ -1571,16 +1594,16 @@ const initializeScene = async () => {
                         }
                     }
 
-                    // 没拾取到有效点则继续走普通选择逻辑
+                    // English comment.
                 }
 
-                // 点位管理器：拾取点位（优先处理，从 ModelLoader 模型表面取点）
+                // English comment.
                 if (componentStore.buildingPicking?.active) {
                     const pickCompId = componentStore.buildingPicking.componentId;
                     const pickPointId = componentStore.buildingPicking.pointId || null;
 
-                    // 支持固定标识符 '__building_manager__'（新的纯数据管理模式）
-                    // 以及可复用该链路的组件（如 BuildingEditor / Label3D / MigrationLine / AreaBlock）
+                    // English comment.
+                    // English comment.
                     const pickComp = componentStore.getComponentById(pickCompId);
                     const isReusablePickType = pickComp && ['BuildingEditor', 'Label3D', 'MigrationLine', 'AreaBlock', 'MultiPathAnimation', 'PointTypeMarkerManager', 'CameraPointManager'].includes(pickComp.type);
                     const isValidPicking = pickCompId === '__building_manager__' || isReusablePickType;
@@ -1589,17 +1612,17 @@ const initializeScene = async () => {
                         for (const hit of intersects) {
                             const hitCompId = findComponentIdFromObject(hit.object);
 
-                            // 允许从模型或高斯泼溅表面近似取点
+                            // English comment.
                             if (!isSurfacePickTarget(hitCompId, getPickingMetadataFromObject(hit.object))) continue;
                             if (!hit?.point) continue;
 
                             const nextXyz = [round4(hit.point.x), round4(hit.point.y), round4(hit.point.z)];
 
-                            // 拾取结束后弹出确认框
+                            // English comment.
                             componentStore.stopBuildingPicking();
                             componentStore.requestBuildingPickConfirm(pickCompId, nextXyz, pickPointId);
 
-                            // 只有在是真实组件时才选中
+                            // English comment.
                             if (pickComp) {
                                 selectComponent(pickCompId);
                             }
@@ -1607,7 +1630,7 @@ const initializeScene = async () => {
                         }
                     }
 
-                    // 没拾取到有效点则继续走普通选择逻辑
+                    // English comment.
                 }
 
                 if (componentStore.meshPicking?.active) {
@@ -1670,20 +1693,20 @@ const initializeScene = async () => {
             canvasEl.addEventListener('contextmenu', handleCanvasContextMenuBound);
         }
 
-        // 初始化 TransformControls
+        // English comment.
         await initTransformControls(scene);
 
-        // 设置动画循环
+        // English comment.
         console.log('[CenterCanvas] 设置动画循环...');
         setupAnimationLoop(scene);
 
-        // 监听相机变化，自动保存视角
+        // English comment.
         console.log('[CenterCanvas] 设置相机保存监听...');
         setupCameraSaveListener(scene);
 
         console.log('[CenterCanvas] ========== ✅ 场景初始化完成 ==========');
 
-        // 最终检查：确认渲染器已启动
+        // English comment.
         setTimeout(() => {
             console.log('[CenterCanvas] 延迟检查 - 渲染器状态:', {
                 sceneStarted: scene?.isRunning,
@@ -1698,7 +1721,7 @@ const initializeScene = async () => {
 };
 
 /**
- * 初始化 TransformControls
+ * English comment.
  */
 const initTransformControls = async (scene) => {
     if (!scene || !canvasEl) {
@@ -1720,7 +1743,7 @@ const initTransformControls = async (scene) => {
         return;
     }
 
-    // 避免 gizmo 参与拾取
+    // English comment.
     try {
         const control = transformControls?.getControl?.();
         const helper = control?.getHelper?.();
@@ -1734,25 +1757,25 @@ const initTransformControls = async (scene) => {
         }
     } catch {}
 
-    // 监听拖拽状态
+    // English comment.
     transformControls.on?.('dragging-changed', ({ dragging }) => {
         isTransformDragging = !!dragging;
     });
 
-    // 监听变换改变事件，更新组件配置
+    // English comment.
     transformControls.on?.('object-change', () => {
         syncTransformToConfig();
         refreshSelectionHighlight(selectedComponent.value?.id);
     });
 
-    // 监听键盘事件切换模式
+    // English comment.
     window.addEventListener('keydown', handleKeyDown);
 
     console.log(' TransformControls initialized (SDK)');
 };
 
 /**
- * 将 TransformControls 附加到组件
+ * English comment.
  */
 const attachTransformControls = (component) => {
     if (!transformControls || !component) return;
@@ -1762,7 +1785,7 @@ const attachTransformControls = (component) => {
     }
 
     const instance = component.instance;
-    // 获取组件的 3D 对象根节点
+    // English comment.
     let root = null;
 
     if (component.type === 'TrafficRoadsideDeviceManager') {
@@ -1788,7 +1811,7 @@ const attachTransformControls = (component) => {
 };
 
 /**
- * 从组件分离 TransformControls
+ * English comment.
  */
 const detachTransformControls = () => {
     if (!transformControls) return;
@@ -1796,7 +1819,7 @@ const detachTransformControls = () => {
 };
 
 /**
- * 同步变换到组件配置
+ * English comment.
  */
 const syncTransformToConfig = () => {
     const obj = transformControls?.getAttachedObject?.();
@@ -1809,7 +1832,7 @@ const syncTransformToConfig = () => {
         return;
     }
 
-    // 获取位置、旋转、缩放
+    // English comment.
     const position = [obj.position.x, obj.position.y, obj.position.z];
     const rotation = comp.type === 'GaussianSplatLoader'
         ? [obj.rotation.x, obj.rotation.y, obj.rotation.z]
@@ -1818,9 +1841,9 @@ const syncTransformToConfig = () => {
             obj.rotation.y * (180 / Math.PI),
             obj.rotation.z * (180 / Math.PI)
         ];
-    const scale = obj.scale.x; // 假设统一缩放
+    const scale = obj.scale.x; // English comment.
 
-    // 路侧设备：写回到选中 device
+    // English comment.
     if (comp.type === 'TrafficRoadsideDeviceManager') {
         const selected = componentStore.trafficSelectedDevice;
         const deviceId = selected?.componentId === comp.id ? selected.deviceId : null;
@@ -1849,7 +1872,7 @@ const syncTransformToConfig = () => {
         }
     }
 
-    // 默认：更新组件自身 position/rotation/scale（只更新 store，不重建实例）
+    // English comment.
     componentStore.updateComponent(comp.id, {
         config: {
             ...comp.config,
@@ -1861,7 +1884,7 @@ const syncTransformToConfig = () => {
 };
 
 /**
- * 处理键盘事件
+ * English comment.
  */
 const handleKeyDown = (event) => {
     if (!transformControls) return;
@@ -1881,7 +1904,7 @@ const handleKeyDown = (event) => {
             transformControls.setMode('scale');
             break;
         case 'escape':
-            // 优先取消路侧设备拾取/确认
+            // English comment.
             if (componentStore.trafficPicking?.active || componentStore.trafficPickConfirm?.visible) {
                 handleTrafficPickCancel();
                 return;
@@ -1905,7 +1928,7 @@ const handleKeyDown = (event) => {
 };
 
 /**
- * 设置动画循环
+ * English comment.
  */
 const setupAnimationLoop = (scene) => {
     const originalAnimate = scene.animate.bind(scene);
@@ -1913,7 +1936,7 @@ const setupAnimationLoop = (scene) => {
     scene.animate = function () {
         originalAnimate();
 
-        // 计算 FPS
+        // English comment.
         frames++;
         const currentTime = performance.now();
         if (currentTime >= lastTime + 1000) {
@@ -1925,7 +1948,7 @@ const setupAnimationLoop = (scene) => {
 };
 
 /**
- * 重试初始化
+ * English comment.
  */
 const retryInit = async () => {
     cleanup();
@@ -1939,15 +1962,15 @@ const disposeEditorRuntimes = () => {
 };
 
 /**
- * 清理资源
+ * English comment.
  */
 const cleanup = () => {
     console.log('Cleaning up scene...');
 
-    // 清理键盘事件监听
+    // English comment.
     window.removeEventListener('keydown', handleKeyDown);
 
-    // 清理 TransformControls
+    // English comment.
     isTransformDragging = false;
     if (transformControls) {
         try {
@@ -1980,7 +2003,7 @@ const cleanup = () => {
 };
 
 /**
- * 设置变换模式
+ * English comment.
  */
 const setTransformMode = (mode) => {
     if (!transformControls) return;
@@ -1990,7 +2013,7 @@ const setTransformMode = (mode) => {
 };
 
 /**
- * 保存相机视角到 localStorage
+ * English comment.
  */
 const saveCameraView = (scene) => {
     const cameraConfig = scene?.camera?.getConfig?.();
@@ -2047,7 +2070,7 @@ const getCameraViewFromSettings = () => {
 };
 
 /**
- * 从 localStorage 恢复相机视角
+ * English comment.
  */
 const restoreCameraView = (scene) => {
     if (!scene?.camera?.updateConfig || !scene?.controls?.updateConfig) {
@@ -2059,7 +2082,7 @@ const restoreCameraView = (scene) => {
         const settingsView = getCameraViewFromSettings();
         let cameraView = settingsView;
 
-        // 兜底：若设置中没有有效相机参数，再尝试历史 localStorage
+        // English comment.
         if (!cameraView) {
             const savedView = localStorage.getItem('editor_camera_view');
             if (!savedView) {
@@ -2069,14 +2092,14 @@ const restoreCameraView = (scene) => {
             cameraView = JSON.parse(savedView);
         }
 
-        // 恢复相机位置
+        // English comment.
         if (cameraView.position) {
             scene.camera.updateConfig({
                 position: [cameraView.position.x, cameraView.position.y, cameraView.position.z]
             });
         }
 
-        // 恢复控制器目标点（同时同步到 camera.lookAt）
+        // English comment.
         if (cameraView.target) {
             const target = {
                 x: cameraView.target.x,
@@ -2096,22 +2119,22 @@ const restoreCameraView = (scene) => {
 };
 
 /**
- * 监听相机变化并自动保存
+ * English comment.
  */
 let cameraSaveTimeout = null;
 const setupCameraSaveListener = (scene) => {
     if (!scene?.controls?.addEventListener) return;
 
-    // 监听控制器变化事件（OrbitControls 的 'change' 事件）
+    // English comment.
     const handleControlsChange = () => {
-        // 使用防抖，避免频繁保存
+        // English comment.
         if (cameraSaveTimeout) {
             clearTimeout(cameraSaveTimeout);
         }
 
         cameraSaveTimeout = setTimeout(() => {
             saveCameraView(scene);
-        }, 500); // 500ms 防抖
+        }, 500); // English comment.
     };
 
     scene.controls.addEventListener('change', handleControlsChange);
@@ -2119,7 +2142,7 @@ const setupCameraSaveListener = (scene) => {
     console.log('[CenterCanvas]  相机视角自动保存已启用');
 };
 
-// 暴露方法给父组件使用
+// English comment.
 defineExpose({
     transformMode,
     setTransformMode
@@ -2449,7 +2472,7 @@ defineExpose({
     }
 }
 
-/* 变换工具栏样式 */
+/* English comment. */
 .transform-toolbar {
     position: absolute;
     top: 14px;

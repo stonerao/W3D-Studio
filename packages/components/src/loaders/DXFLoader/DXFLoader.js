@@ -2,47 +2,29 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * DXFLoader DXF 文件加载器组件
- *
- * @class DXFLoader
- * @extends Component
- * @description 加载和渲染 DXF 文件，支持 2D CAD 图纸显示
- * 使用 dxf-viewer 库 (https://github.com/vagran/dxf-viewer)
- *
- * @example
- * // 加载 DXF 文件
- * const dxfViewer = await scene.add('DXFLoader', {
- *     name: 'cad-drawing',
- *     url: '/models/demo.dxf',
- *     position: [0, 0, 0]
- * });
- *
- * // 监听加载进度
- * dxfViewer.on('loadProgress', (event) => {
- *     console.log('Loading:', event.progress * 100 + '%');
- * });
+ * English comment.
  */
 export class DXFLoader extends Component {
     /**
-     * 默认配置
+     * English comment.
      */
     static defaultConfig = {
         url: '',
         position: [0, 0, 0],
         rotation: [0, 0, 0],
         scale: 1,
-        // DXF 特定配置
-        fonts: null, // 字体文件 URL 数组，用于文本渲染
-        clearColor: new THREE.Color('#000000'), // 背景颜色
-        clearAlpha: 0, // 背景透明度
-        autoResize: false, // 是否自动调整大小
-        colorCorrection: true, // 是否进行颜色校正
-        // 显示选项
+        // English comment.
+        fonts: null, // English comment.
+        clearColor: new THREE.Color('#000000'), // English comment.
+        clearAlpha: 0, // English comment.
+        autoResize: false, // English comment.
+        colorCorrection: true, // English comment.
+        // English comment.
         showLayers: true,
-        visibleLayers: null, // null 表示显示所有图层，或者传入图层名称数组
-        // 交互选项
+        visibleLayers: null, // English comment.
+        // English comment.
         enableInteraction: true,
-        // 查看器选项
+        // English comment.
         canvasAlpha: true,
         canvasPremultipliedAlpha: false,
         antialias: true,
@@ -50,20 +32,20 @@ export class DXFLoader extends Component {
     };
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 初始化变量
+        // English comment.
         this.dxfData = null;
         this.viewer = null;
         this.dxfGroup = null;
         this.interactiveObjects = [];
         this.layersMap = new Map();
 
-        // 异步加载 DXF 文件
+        // English comment.
         this.loadDXF()
             .then(() => {
-                // DXF 加载完成后的后续操作
+                // English comment.
                 this.setupInteractiveObjects();
             })
             .catch((error) => {
@@ -73,7 +55,7 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 加载 DXF 文件
+     * English comment.
      */
     async loadDXF() {
         if (!this.config.url) {
@@ -83,10 +65,10 @@ export class DXFLoader extends Component {
         }
 
         try {
-            // 触发加载开始事件
+            // English comment.
             this.emit('loadStart', { url: this.config.url });
 
-            // 使用 fetch 加载 DXF 文件内容
+            // English comment.
             // eslint-disable-next-line no-undef
             const response = await fetch(this.config.url);
             if (!response.ok) {
@@ -95,10 +77,10 @@ export class DXFLoader extends Component {
 
             const dxfString = await response.text();
 
-            // 触发进度事件
+            // English comment.
             this.emit('loadProgress', { progress: 0.5 });
 
-            // 使用 dxf-parser 解析 DXF
+            // English comment.
             const { default: DxfParser } = await import('dxf-parser');
             const parser = new DxfParser();
             this.dxfData = parser.parseSync(dxfString);
@@ -110,21 +92,21 @@ export class DXFLoader extends Component {
             // eslint-disable-next-line no-console
             console.log('DXF parsed successfully:', this.dxfData);
 
-            // 触发进度事件
+            // English comment.
             this.emit('loadProgress', { progress: 0.75 });
 
-            // 创建 Three.js 几何体
+            // English comment.
             this.createGeometry();
 
-            // 应用变换
+            // English comment.
             this.applyTransform();
 
-            // 处理图层可见性
+            // English comment.
             if (this.config.visibleLayers) {
                 this.setVisibleLayers(this.config.visibleLayers);
             }
 
-            /* 初始化位置 */
+            /* English comment. */
             const box = new THREE.Box3().setFromObject(this.dxfGroup);
             this.dxfGroup.position.set(
                 -box.min.x - (box.max.x - box.min.x) / 2,
@@ -132,10 +114,10 @@ export class DXFLoader extends Component {
                 -box.min.z - (box.max.z - box.min.z) / 2
             );
 
-            // 触发进度事件
+            // English comment.
             this.emit('loadProgress', { progress: 1.0 });
 
-            // 触发加载完成事件
+            // English comment.
             this.emit('loadComplete', {
                 dxfData: this.dxfData
             });
@@ -148,7 +130,7 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 创建 Three.js 几何体
+     * English comment.
      */
     createGeometry() {
         if (!this.dxfData) {
@@ -156,24 +138,24 @@ export class DXFLoader extends Component {
         }
 
         try {
-            // 创建一个组来容纳 DXF 内容
+            // English comment.
             this.dxfGroup = new THREE.Group();
             this.dxfGroup.name = 'DXF_Content';
 
-            // 获取图层信息
+            // English comment.
             if (this.dxfData.tables && this.dxfData.tables.layer) {
                 Object.keys(this.dxfData.tables.layer.layers).forEach((layerName) => {
                     const layer = this.dxfData.tables.layer.layers[layerName];
                     this.layersMap.set(layerName, {
                         name: layerName,
                         displayName: layerName,
-                        color: layer.color || 7, // 默认白色
+                        color: layer.color || 7, // English comment.
                         visible: true
                     });
                 });
             }
 
-            // 处理实体
+            // English comment.
             if (this.dxfData.entities && this.dxfData.entities.length > 0) {
                 this.dxfData.entities.forEach((entity) => {
                     const object = this.createEntityObject(entity);
@@ -183,9 +165,9 @@ export class DXFLoader extends Component {
                 });
             }
 
-            // 添加到组件场景
+            // English comment.
             this.add(this.dxfGroup);
-            // 计算this.dxfGroup的box大小
+            // English comment.
             this.dxfGroup.updateMatrixWorld();
             this.dxfGroup.geometryBBox = new THREE.Box3().setFromObject(this.dxfGroup);
             this.dxfGroup.geometryCenter = this.dxfGroup.geometryBBox.getCenter(
@@ -206,7 +188,7 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 根据 DXF 实体创建 Three.js 对象
+     * English comment.
      */
     createEntityObject(entity) {
         try {
@@ -230,7 +212,7 @@ export class DXFLoader extends Component {
                 object = this.createSpline(entity);
                 break;
             default:
-                // 暂不支持的实体类型
+                // English comment.
                 break;
             }
 
@@ -247,7 +229,7 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 创建线段
+     * English comment.
      */
     createLine(entity) {
         const points = [];
@@ -267,7 +249,7 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 创建多段线
+     * English comment.
      */
     createPolyline(entity) {
         const points = [];
@@ -275,7 +257,7 @@ export class DXFLoader extends Component {
             points.push(new THREE.Vector3(vertex.x, vertex.y, vertex.z || 0));
         });
 
-        // 如果是闭合的多段线，添加第一个点到末尾
+        // English comment.
         if (entity.shape && points.length > 0) {
             points.push(points[0].clone());
         }
@@ -289,7 +271,7 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 创建圆
+     * English comment.
      */
     createCircle(entity) {
         const curve = new THREE.EllipseCurve(
@@ -316,7 +298,7 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 创建圆弧
+     * English comment.
      */
     createArc(entity) {
         const curve = new THREE.EllipseCurve(
@@ -343,7 +325,7 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 创建样条曲线
+     * English comment.
      */
     createSpline(entity) {
         if (!entity.controlPoints || entity.controlPoints.length < 2) {
@@ -363,57 +345,57 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 获取实体颜色
+     * English comment.
      */
     getEntityColor(entity) {
-        // AutoCAD 颜色索引表（简化版）
+        // English comment.
         const autocadColors = {
-            1: 0xff0000, // 红色
-            2: 0xffff00, // 黄色
-            3: 0x00ff00, // 绿色
-            4: 0x00ffff, // 青色
-            5: 0x0000ff, // 蓝色
-            6: 0xff00ff, // 洋红
-            7: 0xffffff, // 白色
-            8: 0x808080, // 灰色
-            9: 0xc0c0c0 // 浅灰色
+            1: 0xff0000, // English comment.
+            2: 0xffff00, // English comment.
+            3: 0x00ff00, // English comment.
+            4: 0x00ffff, // English comment.
+            5: 0x0000ff, // English comment.
+            6: 0xff00ff, // English comment.
+            7: 0xffffff, // English comment.
+            8: 0x808080, // English comment.
+            9: 0xc0c0c0 // English comment.
         };
 
         if (entity.color !== undefined && entity.color !== 256) {
-            // 256 表示使用图层颜色
+            // English comment.
             return autocadColors[entity.color] || 0xffffff;
         }
 
-        // 使用图层颜色
+        // English comment.
         if (entity.layer && this.layersMap.has(entity.layer)) {
             const layerColor = this.layersMap.get(entity.layer).color;
             return autocadColors[layerColor] || 0xffffff;
         }
 
-        return 0xffffff; // 默认白色
+        return 0xffffff; // English comment.
     }
 
     /**
-     * 应用变换（位置、旋转、缩放）
+     * English comment.
      */
     applyTransform() {
         if (!this.dxfGroup) {
             return;
         }
 
-        // 应用位置
+        // English comment.
         if (this.config.position) {
             const [x, y, z] = this.config.position;
             this.dxfGroup.position.set(x, y, z);
         }
 
-        // 应用旋转
+        // English comment.
         if (this.config.rotation) {
             const [x, y, z] = this.config.rotation;
             this.dxfGroup.rotation.set(x, y, z);
         }
 
-        // 应用缩放
+        // English comment.
         if (this.config.scale) {
             const scale = this.config.scale;
             if (typeof scale === 'number') {
@@ -426,8 +408,7 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 设置可见图层
-     * @param {Array<string>} layerNames - 图层名称数组
+     * English comment.
      */
     setVisibleLayers(layerNames) {
         if (!this.dxfGroup) {
@@ -444,34 +425,30 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 获取所有图层名称
-     * @returns {Array<string>} 图层名称数组
+     * English comment.
      */
     getLayers() {
         return Array.from(this.layersMap.keys());
     }
 
     /**
-     * 获取图层详细信息
-     * @returns {Array<{name: string, displayName: string, color: number}>} 图层信息数组
+     * English comment.
      */
     getLayersInfo() {
         return Array.from(this.layersMap.values());
     }
 
     /**
-     * 显示/隐藏图层
-     * @param {string} layerName - 图层名称
-     * @param {boolean} visible - 是否可见
+     * English comment.
      */
     setLayerVisible(layerName, visible) {
-        // 更新本地图层映射
+        // English comment.
         const layerInfo = this.layersMap.get(layerName);
         if (layerInfo) {
             layerInfo.visible = visible;
         }
 
-        // 更新组件场景中的对象可见性
+        // English comment.
         if (this.dxfGroup) {
             this.dxfGroup.traverse((object) => {
                 if (object.userData && object.userData.layer === layerName) {
@@ -482,14 +459,14 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 设置交互对象
+     * English comment.
      */
     setupInteractiveObjects() {
         if (!this.config.enableInteraction || !this.dxfGroup) {
             return;
         }
 
-        // 收集所有可交互的对象
+        // English comment.
         this.interactiveObjects = [];
         this.dxfGroup.traverse((object) => {
             if (object.isMesh || object.isLine) {
@@ -499,21 +476,20 @@ export class DXFLoader extends Component {
     }
 
     /**
-     * 获取可交互对象列表
-     * @returns {Array} 可交互对象数组
+     * English comment.
      */
     getInteractiveObjects() {
         return this.interactiveObjects;
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
-        // 清理 DXF 数据
+        // English comment.
         this.dxfData = null;
 
-        // 清理几何体和材质
+        // English comment.
         if (this.dxfGroup) {
             this.dxfGroup.traverse((object) => {
                 if (object.geometry) {
@@ -530,10 +506,10 @@ export class DXFLoader extends Component {
             this.dxfGroup = null;
         }
 
-        // 清理图层映射
+        // English comment.
         this.layersMap.clear();
 
-        // 清理交互对象
+        // English comment.
         this.interactiveObjects = [];
     }
 }

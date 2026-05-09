@@ -6,63 +6,19 @@ import {
 } from '../../material/ShaderMaterial/presets/index.js';
 
 /**
- * Mesh 几何体组件
- *
- * @class Mesh
- * @extends Component
- * @description 创建各种基础几何体的组件，支持多种几何体类型和材质配置
- *
- * 支持的几何体类型：
- * - Plane（平面）
- * - Box（立方体）
- * - Sphere（球体）
- * - Cylinder（圆柱体）
- * - Cone（圆锥体）
- * - Torus（圆环）
- * - TorusKnot（圆环结）
- * - Dodecahedron（十二面体）
- * - Icosahedron（二十面体）
- * - Octahedron（八面体）
- * - Tetrahedron（四面体）
- *
- * @example
- * // 创建立方体
- * const box = await scene.add('Mesh', {
- *     type: 'Box',
- *     width: 2,
- *     height: 2,
- *     depth: 2,
- *     material: {
- *         color: '#00ff00',
- *         wireframe: false
- *     }
- * });
- *
- * @example
- * // 创建球体
- * const sphere = await scene.add('Mesh', {
- *     type: 'Sphere',
- *     radius: 1,
- *     widthSegments: 32,
- *     heightSegments: 32,
- *     material: {
- *         color: '#ff0000',
- *         metalness: 0.5,
- *         roughness: 0.5
- *     }
- * });
+ * English comment.
  */
 export class Mesh extends Component {
     static defaultConfig = {
-        // 几何体类型
+        // English comment.
         type: 'Box',
 
-        // 通用参数
+        // English comment.
         position: [0, 0, 0],
         rotation: [0, 0, 0],
         scale: [1, 1, 1],
 
-        // Box 参数
+        // English comment.
         width: 1,
         height: 1,
         depth: 1,
@@ -70,7 +26,7 @@ export class Mesh extends Component {
         heightSegments: 1,
         depthSegments: 1,
 
-        // Sphere 参数
+        // English comment.
         radius: 1,
         // widthSegments: 32,
         // heightSegments: 32,
@@ -79,7 +35,7 @@ export class Mesh extends Component {
         sphereThetaStart: 0,
         sphereThetaLength: Math.PI,
 
-        // Cylinder 参数
+        // English comment.
         radiusTop: 1,
         radiusBottom: 1,
         // height: 1,
@@ -89,7 +45,7 @@ export class Mesh extends Component {
         thetaStart: 0,
         thetaLength: Math.PI * 2,
 
-        // Cone 参数
+        // English comment.
         // radius: 1,
         // height: 1,
         // radialSegments: 32,
@@ -98,20 +54,20 @@ export class Mesh extends Component {
         // thetaStart: 0,
         // thetaLength: Math.PI * 2,
 
-        // Plane 参数
+        // English comment.
         // width: 1,
         // height: 1,
         // widthSegments: 1,
         // heightSegments: 1,
 
-        // Torus 参数
+        // English comment.
         // radius: 1,
         tube: 0.4,
         // radialSegments: 16,
         tubularSegments: 100,
         arc: Math.PI * 2,
 
-        // TorusKnot 参数
+        // English comment.
         // radius: 1,
         // tube: 0.4,
         // tubularSegments: 64,
@@ -119,17 +75,17 @@ export class Mesh extends Component {
         p: 2,
         q: 3,
 
-        // Polyhedron 参数（十二面体、二十面体等）
+        // English comment.
         // radius: 1,
         detail: 0,
 
-        // 材质类型：'standard' 或 'shader'
+        // English comment.
         materialType: 'standard',
 
-        // 着色器预设（当 materialType 为 'shader' 时使用）
+        // English comment.
         shaderPreset: 'basicColor',
 
-        // 标准材质配置（当 materialType 为 'standard' 时使用）
+        // English comment.
         material: {
             color: '#00ff00',
             wireframe: false,
@@ -142,38 +98,38 @@ export class Mesh extends Component {
             side: THREE.FrontSide // FrontSide, BackSide, DoubleSide
         },
 
-        // 着色器材质 uniform 参数（当 materialType 为 'shader' 时使用）
+        // English comment.
         shaderUniforms: {
-            // 根据不同预设提供对应的参数
+            // English comment.
             // basicColor: { color: '#00ff00' }
             // gradient: { color1: '#ff0000', color2: '#0000ff' }
             // animated: { color: '#00ff00', speed: 1.0 }
             // diffusion: { uBaseColor: '#3319cc', uSpeed: 1.0, uIntensity: 1.0 }
         },
 
-        // 阴影
+        // English comment.
         castShadow: true,
         receiveShadow: true
     };
 
     /**
-     * 组件创建时调用
+     * English comment.
      */
     onCreate() {
         console.log(`[Mesh] 创建几何体组件: ${this.config.type}`);
 
         try {
-            // 创建几何体
+            // English comment.
             this.geometry = this.createGeometry();
 
-            // 创建材质
+            // English comment.
             this.material = this.createMaterial();
 
-            // 创建网格
+            // English comment.
             this.mesh = new THREE.Mesh(this.geometry, this.material);
             this.mesh.name = this.config.name || `mesh_${this.config.type}`;
 
-            // 添加到组件场景
+            // English comment.
             this.componentScene.add(this.mesh);
 
             console.log(`[Mesh] 几何体创建成功: ${this.config.type}`);
@@ -184,22 +140,22 @@ export class Mesh extends Component {
     }
 
     /**
-     * 组件挂载完成时调用
+     * English comment.
      */
     onMounted() {
-        // 设置位置
+        // English comment.
         if (this.config.position) {
             const [x, y, z] = this.config.position;
             this.mesh.position.set(x, y, z);
         }
 
-        // 设置旋转
+        // English comment.
         if (this.config.rotation) {
             const [x, y, z] = this.config.rotation;
             this.mesh.rotation.set(x, y, z);
         }
 
-        // 设置缩放
+        // English comment.
         if (this.config.scale) {
             if (Array.isArray(this.config.scale)) {
                 const [x, y, z] = this.config.scale;
@@ -209,7 +165,7 @@ export class Mesh extends Component {
             }
         }
 
-        // 设置阴影
+        // English comment.
         this.mesh.castShadow = this.config.castShadow;
         this.mesh.receiveShadow = this.config.receiveShadow;
 
@@ -217,11 +173,10 @@ export class Mesh extends Component {
     }
 
     /**
-     * 每帧更新（用于着色器动画）
-     * @param {number} delta - 时间增量
+     * English comment.
      */
     onUpdate(delta) {
-        // 如果使用着色器材质，更新时间 uniform
+        // English comment.
         if (this.config.materialType === 'shader' && this.material && this.material.uniforms) {
             if (this.material.uniforms.time) {
                 this.shaderTime = (this.shaderTime || 0) + delta;
@@ -231,8 +186,7 @@ export class Mesh extends Component {
     }
 
     /**
-     * 创建几何体
-     * @returns {THREE.BufferGeometry}
+     * English comment.
      */
     createGeometry() {
         const { type } = this.config;
@@ -328,8 +282,7 @@ export class Mesh extends Component {
     }
 
     /**
-     * 创建材质
-     * @returns {THREE.Material}
+     * English comment.
      */
     createMaterial() {
         const { materialType } = this.config;
@@ -342,8 +295,7 @@ export class Mesh extends Component {
     }
 
     /**
-     * 创建标准材质
-     * @returns {THREE.MeshStandardMaterial}
+     * English comment.
      */
     createStandardMaterial() {
         const mat = this.config.material;
@@ -362,13 +314,12 @@ export class Mesh extends Component {
     }
 
     /**
-     * 创建着色器材质
-     * @returns {THREE.ShaderMaterial}
+     * English comment.
      */
     createShaderMaterial() {
         const { shaderPreset, shaderUniforms } = this.config;
 
-        // 获取预设材质配置
+        // English comment.
         const presetConfig = createPresetMaterial(shaderPreset, shaderUniforms || {});
 
         if (!presetConfig) {
@@ -378,7 +329,7 @@ export class Mesh extends Component {
             return this.createStandardMaterial();
         }
 
-        // 创建着色器材质
+        // English comment.
         const material = new THREE.ShaderMaterial({
             vertexShader: presetConfig.vertexShader,
             fragmentShader: presetConfig.fragmentShader,
@@ -390,26 +341,25 @@ export class Mesh extends Component {
             depthWrite: presetConfig.depthWrite !== undefined ? presetConfig.depthWrite : true
         });
 
-        // 保存时间引用（用于动画材质）
+        // English comment.
         this.shaderTime = 0;
 
         return material;
     }
 
     /**
-     * 更新几何体参数
-     * @param {Object} params - 新的参数
+     * English comment.
      */
     updateGeometry(params) {
-        // 更新配置
+        // English comment.
         Object.assign(this.config, params);
 
-        // 销毁旧几何体
+        // English comment.
         if (this.geometry) {
             this.geometry.dispose();
         }
 
-        // 创建新几何体
+        // English comment.
         this.geometry = this.createGeometry();
         this.mesh.geometry = this.geometry;
 
@@ -417,17 +367,16 @@ export class Mesh extends Component {
     }
 
     /**
-     * 更新材质参数
-     * @param {Object} params - 新的材质参数
+     * English comment.
      */
     updateMaterial(params) {
         const { materialType } = this.config;
 
         if (materialType === 'shader') {
-            // 更新着色器材质参数
+            // English comment.
             this.updateShaderMaterial(params);
         } else {
-            // 更新标准材质参数
+            // English comment.
             this.updateStandardMaterial(params);
         }
 
@@ -435,26 +384,25 @@ export class Mesh extends Component {
     }
 
     /**
-     * 更新标准材质参数
-     * @param {Object} params - 新的材质参数
+     * English comment.
      */
     updateStandardMaterial(params) {
-        // 检查材质是否存在
+        // English comment.
         if (!this.material) {
             console.warn('[Mesh] 材质未初始化,无法更新');
             return;
         }
 
-        // 检查材质类型
+        // English comment.
         if (!(this.material instanceof THREE.MeshStandardMaterial)) {
             console.warn('[Mesh] 当前材质不是 MeshStandardMaterial,无法更新标准材质参数');
             return;
         }
 
-        // 更新配置对象
+        // English comment.
         Object.assign(this.config.material, params);
 
-        // 逐个更新材质属性 (不使用 Object.assign,因为 Three.js Material 对象可能被冻结)
+        // English comment.
         if (params.color !== undefined) {
             this.material.color.set(params.color);
         }
@@ -483,15 +431,14 @@ export class Mesh extends Component {
             this.material.side = params.side;
         }
 
-        // 标记材质需要更新
+        // English comment.
         this.material.needsUpdate = true;
 
         console.log('[Mesh] 标准材质参数已更新:', params);
     }
 
     /**
-     * 更新着色器材质参数
-     * @param {Object} params - 新的 uniform 参数
+     * English comment.
      */
     updateShaderMaterial(params) {
         Object.assign(this.config.shaderUniforms, params);
@@ -501,11 +448,11 @@ export class Mesh extends Component {
             return;
         }
 
-        // 更新 uniform 值
+        // English comment.
         Object.keys(params).forEach((key) => {
             if (this.material.uniforms[key]) {
                 const value = params[key];
-                // 如果是颜色值，转换为 THREE.Color
+                // English comment.
                 if (
                     typeof value === 'string' &&
                     (value.startsWith('#') || value.startsWith('rgb'))
@@ -521,9 +468,7 @@ export class Mesh extends Component {
     }
 
     /**
-     * 切换材质类型
-     * @param {string} materialType - 材质类型：'standard' 或 'shader'
-     * @param {Object} options - 额外选项
+     * English comment.
      */
     switchMaterialType(materialType, options = {}) {
         if (this.config.materialType === materialType) {
@@ -531,7 +476,7 @@ export class Mesh extends Component {
             return;
         }
 
-        // 更新配置
+        // English comment.
         this.config.materialType = materialType;
 
         if (materialType === 'shader' && options.shaderPreset) {
@@ -545,12 +490,12 @@ export class Mesh extends Component {
             };
         }
 
-        // 销毁旧材质
+        // English comment.
         if (this.material) {
             this.material.dispose();
         }
 
-        // 创建新材质
+        // English comment.
         this.material = this.createMaterial();
         this.mesh.material = this.material;
 
@@ -558,9 +503,7 @@ export class Mesh extends Component {
     }
 
     /**
-     * 更新着色器预设
-     * @param {string} preset - 预设名称
-     * @param {Object} uniforms - uniform 参数
+     * English comment.
      */
     updateShaderPreset(preset, uniforms = {}) {
         if (this.config.materialType !== 'shader') {
@@ -571,12 +514,12 @@ export class Mesh extends Component {
         this.config.shaderPreset = preset;
         this.config.shaderUniforms = { ...this.config.shaderUniforms, ...uniforms };
 
-        // 销毁旧材质
+        // English comment.
         if (this.material) {
             this.material.dispose();
         }
 
-        // 创建新材质
+        // English comment.
         this.material = this.createShaderMaterial();
         this.mesh.material = this.material;
 
@@ -584,24 +527,24 @@ export class Mesh extends Component {
     }
 
     /**
-     * 组件销毁时调用
+     * English comment.
      */
     onDispose() {
         console.log('[Mesh] 销毁几何体组件');
 
-        // 清理几何体
+        // English comment.
         if (this.geometry) {
             this.geometry.dispose();
             this.geometry = null;
         }
 
-        // 清理材质
+        // English comment.
         if (this.material) {
             this.material.dispose();
             this.material = null;
         }
 
-        // 清理网格
+        // English comment.
         if (this.mesh) {
             this.componentScene.remove(this.mesh);
             this.mesh = null;
@@ -609,8 +552,7 @@ export class Mesh extends Component {
     }
 
     /**
-     * 获取可交互的对象列表
-     * @returns {Array<THREE.Object3D>}
+     * English comment.
      */
     getInteractiveObjects() {
         return this.mesh ? [this.mesh] : [];

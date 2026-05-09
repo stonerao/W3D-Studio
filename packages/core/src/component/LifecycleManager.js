@@ -1,15 +1,12 @@
 /**
- * LifecycleManager 生命周期管理器
- *
- * @class LifecycleManager
- * @description 管理组件的生命周期钩子
+ * English comment.
  */
 export class LifecycleManager {
     /**
-     * 创建生命周期管理器实例
+     * English comment.
      */
     constructor() {
-        // 生命周期钩子队列
+        // English comment.
         this.hooks = {
             onCreate: [],
             onBeforeMount: [],
@@ -21,10 +18,7 @@ export class LifecycleManager {
     }
 
     /**
-     * 注册生命周期钩子
-     *
-     * @param {string} hookName - 钩子名称
-     * @param {Function} handler - 处理函数
+     * English comment.
      */
     registerHook(hookName, handler) {
         if (!this.hooks[hookName]) {
@@ -36,11 +30,7 @@ export class LifecycleManager {
     }
 
     /**
-     * 调用生命周期钩子
-     *
-     * @param {string} hookName - 钩子名称
-     * @param {*} context - 上下文
-     * @param {Array} args - 参数
+     * English comment.
      */
     callHook(hookName, context, ...args) {
         if (!this.hooks[hookName]) {
@@ -57,10 +47,7 @@ export class LifecycleManager {
     }
 
     /**
-     * 移除生命周期钩子
-     *
-     * @param {string} hookName - 钩子名称
-     * @param {Function} handler - 处理函数
+     * English comment.
      */
     removeHook(hookName, handler) {
         if (!this.hooks[hookName]) {
@@ -74,7 +61,7 @@ export class LifecycleManager {
     }
 
     /**
-     * 清空所有钩子
+     * English comment.
      */
     clear() {
         Object.keys(this.hooks).forEach((key) => {

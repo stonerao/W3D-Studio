@@ -2,66 +2,42 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * ExtrudedPolygon 拉伸多边形组件
- *
- * @class ExtrudedPolygon
- * @extends Component
- * @description 根据点位数据生成二维多边形平面，并进行垂直拉伸形成三维立体物体
- *
- * 支持侧面和正面独立配置纹理或颜色渐变
- *
- * @example
- * const polygon = await scene.add('ExtrudedPolygon', {
- *     points: [[0, 0], [10, 0], [10, 10], [0, 10]],
- *     height: 5,
- *     side: {
- *         textureUrl: '/images/side.jpg',
- *         textureRepeat: [2, 1],
- *         useGradient: true,
- *         bottomColor: 0x00ff00,
- *         topColor: 0x0000ff
- *     },
- *     face: {
- *         textureUrl: '/images/face.jpg',
- *         textureRepeat: [2, 2],
- *         color: 0xff0000
- *     }
- * });
+ * English comment.
  */
 export class ExtrudedPolygon extends Component {
     static defaultConfig = {
-        // 点位数据（必需）
-        points: [], // 格式: [[x1, y1], [x2, y2], ...] 或 [[x1, 0, z1], [x2, 0, z2], ...]
+        // English comment.
+        points: [], // English comment.
 
-        // 拉伸高度
+        // English comment.
         height: 10,
 
-        // 侧面配置（拉伸的垂直面）
+        // English comment.
         side: {
-            // 纹理配置
-            textureUrl: null, // 侧面纹理图片路径
-            textureRepeat: [1, 1], // 侧面纹理重复次数 [U, V]
+            // English comment.
+            textureUrl: null, // English comment.
+            textureRepeat: [1, 1], // English comment.
 
-            // 颜色渐变配置
-            useGradient: true, // 是否启用侧面渐变
-            bottomColor: 0x00ff00, // 侧面底部颜色
-            topColor: 0x0000ff // 侧面顶部颜色
+            // English comment.
+            useGradient: true, // English comment.
+            bottomColor: 0x00ff00, // English comment.
+            topColor: 0x0000ff // English comment.
         },
 
-        // 正面配置（底部和顶部的 2D 多边形平面）
+        // English comment.
         face: {
-            // 纹理配置
-            textureUrl: null, // 正面纹理图片路径
-            textureRepeat: [1, 1], // 正面纹理重复次数 [U, V]
+            // English comment.
+            textureUrl: null, // English comment.
+            textureRepeat: [1, 1], // English comment.
 
-            // 颜色配置
-            useGradient: false, // 是否启用正面渐变
-            bottomColor: 0xff0000, // 正面底部颜色（或纯色）
-            topColor: 0xffff00, // 正面顶部颜色
-            gradientAngle: 0 // 正面渐变角度（度），0° = 垂直，90° = 水平
+            // English comment.
+            useGradient: false, // English comment.
+            bottomColor: 0xff0000, // English comment.
+            topColor: 0xffff00, // English comment.
+            gradientAngle: 0 // English comment.
         },
 
-        // 材质配置
+        // English comment.
         material: {
             side: THREE.DoubleSide,
             transparent: false,
@@ -69,16 +45,16 @@ export class ExtrudedPolygon extends Component {
             wireframe: false
         },
 
-        // 拉伸配置
+        // English comment.
         extrudeSettings: {
-            depth: 10, // 拉伸深度（与 height 参数关联）
-            bevelEnabled: false, // 是否启用斜角
+            depth: 10, // English comment.
+            bevelEnabled: false, // English comment.
             bevelThickness: 0,
             bevelSize: 0,
             bevelSegments: 1
         },
 
-        // 位置和旋转
+        // English comment.
         position: [0, 0, 0],
         rotation: [0, 0, 0],
         scale: [1, 1, 1]
@@ -87,89 +63,87 @@ export class ExtrudedPolygon extends Component {
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // 几何体和材质
+        // English comment.
         this.geometry = null;
-        this.materials = []; // 材质数组 [侧面材质, 正面材质]
+        this.materials = []; // English comment.
         this.mesh = null;
 
-        // 纹理加载器
+        // English comment.
         this.textureLoader = new THREE.TextureLoader();
 
-        // 纹理对象
-        this.sideTexture = null; // 侧面纹理
-        this.faceTexture = null; // 正面纹理
+        // English comment.
+        this.sideTexture = null; // English comment.
+        this.faceTexture = null; // English comment.
 
-        // 缓存标准化后的点位数据和几何体元数据
+        // English comment.
         this.normalizedPoints = null;
-        this.sideVertexCount = 0; // 侧面顶点数量
-        this.bottomVertexOffset = 0; // 底面顶点偏移
-        this.topVertexOffset = 0; // 顶面顶点偏移
+        this.sideVertexCount = 0; // English comment.
+        this.bottomVertexOffset = 0; // English comment.
+        this.topVertexOffset = 0; // English comment.
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 验证点位数据
+        // English comment.
         if (!this.config.points || this.config.points.length < 3) {
             console.error('ExtrudedPolygon: At least 3 points are required');
             return;
         }
 
-        // 创建拉伸多边形
+        // English comment.
         await this.createExtrudedPolygon();
 
-        // 应用位置、旋转、缩放
+        // English comment.
         this.applyTransform();
     }
 
     /**
-     * 创建拉伸多边形
+     * English comment.
      */
     async createExtrudedPolygon() {
-        // 创建几何体
+        // English comment.
         this.geometry = this.createGeometry();
 
-        // 创建材质
+        // English comment.
         await this.createMaterials();
 
-        // 创建网格
+        // English comment.
         this.mesh = new THREE.Mesh(this.geometry, this.materials);
         this.add(this.mesh);
 
-        // 如果侧面或正面启用了渐变，应用顶点颜色
+        // English comment.
         if (this.config.side.useGradient || this.config.face.useGradient) {
             this.applyGradient();
         }
     }
 
     /**
-     * 创建拉伸几何体
-     * 使用自定义算法实现拉伸，确保正确的 UV 映射和法线方向
-     * @returns {THREE.BufferGeometry}
+     * English comment.
      */
     createGeometry() {
         const points = this.config.points;
         const height = this.config.height;
 
-        // 标准化点位数据为 {x, z} 格式并缓存
+        // English comment.
         this.normalizedPoints = this.normalizePoints(points);
 
-        // 创建 THREE.Shape 用于三角化
+        // English comment.
         const shape = new THREE.Shape();
         shape.moveTo(this.normalizedPoints[0].x, this.normalizedPoints[0].z);
         for (let i = 1; i < this.normalizedPoints.length; i++) {
             shape.lineTo(this.normalizedPoints[i].x, this.normalizedPoints[i].z);
         }
 
-        // 使用 ShapeGeometry 进行三角化
+        // English comment.
         const shapeGeometry = new THREE.ShapeGeometry(shape);
 
-        // 提取三角化后的顶点和索引
+        // English comment.
         const shapePositions = shapeGeometry.attributes.position.array;
         const shapeIndices = shapeGeometry.index ? shapeGeometry.index.array : null;
 
-        // 构建完整的几何体数据
+        // English comment.
         const geometryData = this.buildExtrudedGeometry(
             this.normalizedPoints,
             shapePositions,
@@ -177,13 +151,13 @@ export class ExtrudedPolygon extends Component {
             height
         );
 
-        // 缓存顶点偏移信息，用于高度更新优化
+        // English comment.
         this.sideVertexCount = this.normalizedPoints.length * 4;
         this.bottomVertexOffset = this.sideVertexCount;
         const bottomFaceVertexCount = shapePositions.length / 3;
         this.topVertexOffset = this.bottomVertexOffset + bottomFaceVertexCount;
 
-        // 创建 BufferGeometry
+        // English comment.
         const geometry = new THREE.BufferGeometry();
         geometry.setAttribute(
             'position',
@@ -193,34 +167,32 @@ export class ExtrudedPolygon extends Component {
         geometry.setAttribute('uv', new THREE.Float32BufferAttribute(geometryData.uvs, 2));
         geometry.setIndex(geometryData.indices);
 
-        // 设置材质组
-        geometry.addGroup(0, geometryData.sideIndicesCount, 0); // 侧面使用材质索引 0
+        // English comment.
+        geometry.addGroup(0, geometryData.sideIndicesCount, 0); // English comment.
         geometry.addGroup(
             geometryData.sideIndicesCount,
             geometryData.faceIndicesCount,
             1
-        ); // 底面和顶面使用材质索引 1
+        ); // English comment.
 
-        // 清理临时几何体
+        // English comment.
         shapeGeometry.dispose();
 
         return geometry;
     }
 
     /**
-     * 标准化点位数据为 {x, z} 格式
-     * @param {Array} points - 原始点位数据
-     * @returns {Array} 标准化后的点位数组
+     * English comment.
      */
     normalizePoints(points) {
         const normalized = [];
         for (let i = 0; i < points.length; i++) {
             const point = points[i];
             if (point.length === 2) {
-                // 2D 格式: [x, z]
+                // English comment.
                 normalized.push({ x: point[0], z: point[1] });
             } else {
-                // 3D 格式: [x, y, z]，使用 x 和 z
+                // English comment.
                 normalized.push({ x: point[0], z: point[2] || 0 });
             }
         }
@@ -228,12 +200,7 @@ export class ExtrudedPolygon extends Component {
     }
 
     /**
-     * 构建拉伸几何体的顶点、法线、UV 和索引数据
-     * @param {Array} normalizedPoints - 标准化后的点位数组 [{x, z}, ...]
-     * @param {Array} shapePositions - 三角化后的形状顶点数组
-     * @param {Array} shapeIndices - 三角化后的形状索引数组
-     * @param {number} height - 拉伸高度
-     * @returns {Object} 包含 positions, normals, uvs, indices 的对象
+     * English comment.
      */
     buildExtrudedGeometry(normalizedPoints, shapePositions, shapeIndices, height) {
         const positions = [];
@@ -241,15 +208,15 @@ export class ExtrudedPolygon extends Component {
         const uvs = [];
         const indices = [];
 
-        // 计算多边形的边界框（用于 UV 映射）
+        // English comment.
         const bounds = this.calculateBounds(normalizedPoints);
 
-        // 计算多边形的周长（用于侧面 UV 映射）
+        // English comment.
         const perimeter = this.calculatePerimeter(normalizedPoints);
 
         let vertexOffset = 0;
 
-        // ========== 1. 生成侧面（Side Faces）==========
+        // English comment.
         const sideData = this.buildSideFaces(normalizedPoints, height, perimeter);
         positions.push(...sideData.positions);
         normals.push(...sideData.normals);
@@ -259,22 +226,22 @@ export class ExtrudedPolygon extends Component {
 
         const sideIndicesCount = sideData.indices.length;
 
-        // ========== 2. 生成底面（Bottom Face）==========
+        // English comment.
         const bottomData = this.buildBottomFace(shapePositions, shapeIndices, bounds);
         positions.push(...bottomData.positions);
         normals.push(...bottomData.normals);
         uvs.push(...bottomData.uvs);
-        // 调整索引偏移
+        // English comment.
         const bottomIndices = bottomData.indices.map((idx) => idx + vertexOffset);
         indices.push(...bottomIndices);
         vertexOffset += bottomData.vertexCount;
 
-        // ========== 3. 生成顶面（Top Face）==========
+        // English comment.
         const topData = this.buildTopFace(shapePositions, shapeIndices, bounds, height);
         positions.push(...topData.positions);
         normals.push(...topData.normals);
         uvs.push(...topData.uvs);
-        // 调整索引偏移
+        // English comment.
         const topIndices = topData.indices.map((idx) => idx + vertexOffset);
         indices.push(...topIndices);
 
@@ -291,9 +258,7 @@ export class ExtrudedPolygon extends Component {
     }
 
     /**
-     * 计算多边形的边界框
-     * @param {Array} points - 点位数组 [{x, z}, ...]
-     * @returns {Object} {minX, maxX, minZ, maxZ, width, height}
+     * English comment.
      */
     calculateBounds(points) {
         let minX = Infinity,
@@ -319,9 +284,7 @@ export class ExtrudedPolygon extends Component {
     }
 
     /**
-     * 计算多边形的周长
-     * @param {Array} points - 点位数组 [{x, z}, ...]
-     * @returns {number} 周长
+     * English comment.
      */
     calculatePerimeter(points) {
         let perimeter = 0;
@@ -336,11 +299,7 @@ export class ExtrudedPolygon extends Component {
     }
 
     /**
-     * 构建侧面几何数据
-     * @param {Array} points - 点位数组 [{x, z}, ...]
-     * @param {number} height - 拉伸高度
-     * @param {number} perimeter - 多边形周长
-     * @returns {Object} {positions, normals, uvs, indices, vertexCount}
+     * English comment.
      */
     buildSideFaces(points, height, perimeter) {
         const positions = [];
@@ -354,43 +313,43 @@ export class ExtrudedPolygon extends Component {
             const p1 = points[i];
             const p2 = points[(i + 1) % points.length];
 
-            // 计算边的长度
+            // English comment.
             const dx = p2.x - p1.x;
             const dz = p2.z - p1.z;
             const edgeLength = Math.sqrt(dx * dx + dz * dz);
 
-            // 计算法线方向（垂直于边，朝外）
+            // English comment.
             const nx = -dz / edgeLength;
             const nz = dx / edgeLength;
 
-            // UV 坐标
+            // English comment.
             const u1 = accumulatedLength / perimeter;
             const u2 = (accumulatedLength + edgeLength) / perimeter;
 
-            // 当前边的顶点索引
+            // English comment.
             const baseIndex = i * 4;
 
-            // 底部左顶点
+            // English comment.
             positions.push(p1.x, 0, p1.z);
             normals.push(nx, 0, nz);
             uvs.push(u1, 0.0);
 
-            // 底部右顶点
+            // English comment.
             positions.push(p2.x, 0, p2.z);
             normals.push(nx, 0, nz);
             uvs.push(u2, 0.0);
 
-            // 顶部右顶点
+            // English comment.
             positions.push(p2.x, height, p2.z);
             normals.push(nx, 0, nz);
             uvs.push(u2, 1.0);
 
-            // 顶部左顶点
+            // English comment.
             positions.push(p1.x, height, p1.z);
             normals.push(nx, 0, nz);
             uvs.push(u1, 1.0);
 
-            // 两个三角形（逆时针顺序，法线朝外）
+            // English comment.
             indices.push(baseIndex + 0, baseIndex + 1, baseIndex + 2);
             indices.push(baseIndex + 0, baseIndex + 2, baseIndex + 3);
 
@@ -407,11 +366,7 @@ export class ExtrudedPolygon extends Component {
     }
 
     /**
-     * 构建底面几何数据
-     * @param {Array} shapePositions - 三角化后的形状顶点数组
-     * @param {Array} shapeIndices - 三角化后的形状索引数组
-     * @param {Object} bounds - 边界框信息
-     * @returns {Object} {positions, normals, uvs, indices, vertexCount}
+     * English comment.
      */
     buildBottomFace(shapePositions, shapeIndices, bounds) {
         const positions = [];
@@ -419,31 +374,31 @@ export class ExtrudedPolygon extends Component {
         const uvs = [];
         const indices = [];
 
-        // 遍历三角化后的顶点
+        // English comment.
         const vertexCount = shapePositions.length / 3;
         for (let i = 0; i < vertexCount; i++) {
             const x = shapePositions[i * 3];
-            const z = shapePositions[i * 3 + 1]; // ShapeGeometry 使用 xy 平面，我们映射到 xz
+            const z = shapePositions[i * 3 + 1]; // English comment.
 
-            // 位置：y = 0（底面）
+            // English comment.
             positions.push(x, 0, z);
 
-            // 法线：朝下（-y）
+            // English comment.
             normals.push(0, -1, 0);
 
-            // UV：顶视图投影
+            // English comment.
             const u = bounds.width > 0 ? (x - bounds.minX) / bounds.width : 0.5;
             const v = bounds.height > 0 ? (z - bounds.minZ) / bounds.height : 0.5;
             uvs.push(u, v);
         }
 
-        // 索引：需要反转顺序使法线朝下
+        // English comment.
         if (shapeIndices) {
             for (let i = 0; i < shapeIndices.length; i += 3) {
                 indices.push(shapeIndices[i + 2], shapeIndices[i + 1], shapeIndices[i + 0]);
             }
         } else {
-            // 如果没有索引，按顺序创建
+            // English comment.
             for (let i = 0; i < vertexCount; i += 3) {
                 indices.push(i + 2, i + 1, i + 0);
             }
@@ -459,12 +414,7 @@ export class ExtrudedPolygon extends Component {
     }
 
     /**
-     * 构建顶面几何数据
-     * @param {Array} shapePositions - 三角化后的形状顶点数组
-     * @param {Array} shapeIndices - 三角化后的形状索引数组
-     * @param {Object} bounds - 边界框信息
-     * @param {number} height - 拉伸高度
-     * @returns {Object} {positions, normals, uvs, indices, vertexCount}
+     * English comment.
      */
     buildTopFace(shapePositions, shapeIndices, bounds, height) {
         const positions = [];
@@ -472,25 +422,25 @@ export class ExtrudedPolygon extends Component {
         const uvs = [];
         const indices = [];
 
-        // 遍历三角化后的顶点
+        // English comment.
         const vertexCount = shapePositions.length / 3;
         for (let i = 0; i < vertexCount; i++) {
             const x = shapePositions[i * 3];
             const z = shapePositions[i * 3 + 1];
 
-            // 位置：y = height（顶面）
+            // English comment.
             positions.push(x, height, z);
 
-            // 法线：朝上（+y）
+            // English comment.
             normals.push(0, 1, 0);
 
-            // UV：顶视图投影（与底面相同）
+            // English comment.
             const u = bounds.width > 0 ? (x - bounds.minX) / bounds.width : 0.5;
             const v = bounds.height > 0 ? (z - bounds.minZ) / bounds.height : 0.5;
             uvs.push(u, v);
         }
 
-        // 索引：保持原顺序使法线朝上
+        // English comment.
         if (shapeIndices) {
             indices.push(...shapeIndices);
         } else {
@@ -509,26 +459,18 @@ export class ExtrudedPolygon extends Component {
     }
 
     /**
-     * 创建材质
-     *
-     * THREE.ExtrudeGeometry 的材质组结构：
-     * - 材质索引 0: 侧面（拉伸的垂直面 - side faces）
-     * - 材质索引 1: 正面（底部和顶部的 2D 多边形平面 - lid/cap faces）
-     *
-     * 新的材质应用规则：
-     * - 侧面：支持纹理贴图或颜色渐变
-     * - 正面：支持纹理贴图或颜色渐变/纯色
+     * English comment.
      */
     async createMaterials() {
         const materialConfig = this.config.material;
         const sideConfig = this.config.side;
         const faceConfig = this.config.face;
 
-        // ========== 侧面材质（拉伸的垂直面）==========
+        // English comment.
         let sideMaterial;
 
         if (sideConfig.textureUrl) {
-            // 模式 A：纹理贴图
+            // English comment.
             try {
                 this.sideTexture = await this.loadTexture(sideConfig.textureUrl);
                 this.sideTexture.wrapS = THREE.RepeatWrapping;
@@ -544,13 +486,13 @@ export class ExtrudedPolygon extends Component {
                     transparent: materialConfig.transparent,
                     opacity: materialConfig.opacity,
                     wireframe: materialConfig.wireframe,
-                    vertexColors: false // 使用纹理时不启用顶点颜色
+                    vertexColors: false // English comment.
                 });
             } catch (error) {
                 console.warn(
                     'ExtrudedPolygon: Failed to load side texture, using gradient instead'
                 );
-                // 纹理加载失败，回退到渐变模式
+                // English comment.
                 sideMaterial = new THREE.MeshStandardMaterial({
                     color: sideConfig.useGradient ? 0xffffff : sideConfig.bottomColor,
                     side: materialConfig.side,
@@ -561,22 +503,22 @@ export class ExtrudedPolygon extends Component {
                 });
             }
         } else {
-            // 模式 B：颜色渐变或纯色
+            // English comment.
             sideMaterial = new THREE.MeshStandardMaterial({
                 color: sideConfig.useGradient ? 0xffffff : sideConfig.bottomColor,
                 side: materialConfig.side,
                 transparent: materialConfig.transparent,
                 opacity: materialConfig.opacity,
                 wireframe: materialConfig.wireframe,
-                vertexColors: sideConfig.useGradient // 启用渐变时使用顶点颜色
+                vertexColors: sideConfig.useGradient // English comment.
             });
         }
 
-        // ========== 正面材质（底部和顶部的 2D 多边形平面）==========
+        // English comment.
         let faceMaterial;
 
         if (faceConfig.textureUrl) {
-            // 模式 A：纹理贴图
+            // English comment.
             try {
                 this.faceTexture = await this.loadTexture(faceConfig.textureUrl);
                 this.faceTexture.wrapS = THREE.RepeatWrapping;
@@ -592,11 +534,11 @@ export class ExtrudedPolygon extends Component {
                     transparent: materialConfig.transparent,
                     opacity: materialConfig.opacity,
                     wireframe: materialConfig.wireframe,
-                    vertexColors: false // 使用纹理时不启用顶点颜色
+                    vertexColors: false // English comment.
                 });
             } catch (error) {
                 console.warn('ExtrudedPolygon: Failed to load face texture, using color instead');
-                // 纹理加载失败，回退到颜色模式
+                // English comment.
                 faceMaterial = new THREE.MeshStandardMaterial({
                     color: faceConfig.useGradient ? 0xffffff : faceConfig.bottomColor,
                     side: materialConfig.side,
@@ -607,26 +549,24 @@ export class ExtrudedPolygon extends Component {
                 });
             }
         } else {
-            // 模式 B：颜色渐变或纯色
+            // English comment.
             faceMaterial = new THREE.MeshStandardMaterial({
                 color: faceConfig.useGradient ? 0xffffff : faceConfig.bottomColor,
                 side: materialConfig.side,
                 transparent: materialConfig.transparent,
                 opacity: materialConfig.opacity,
                 wireframe: materialConfig.wireframe,
-                vertexColors: faceConfig.useGradient // 启用渐变时使用顶点颜色
+                vertexColors: faceConfig.useGradient // English comment.
             });
         }
 
-        // 材质数组顺序：[侧面材质, 正面材质]
-        // 对应 ExtrudeGeometry 的材质组索引：[0: 侧面, 1: 正面（底部和顶部）]
+        // English comment.
+        // English comment.
         this.materials = [sideMaterial, faceMaterial];
     }
 
     /**
-     * 加载纹理
-     * @param {string} url - 纹理 URL
-     * @returns {Promise<THREE.Texture>}
+     * English comment.
      */
     loadTexture(url) {
         return new Promise((resolve, reject) => {
@@ -645,11 +585,7 @@ export class ExtrudedPolygon extends Component {
     }
 
     /**
-     * 应用颜色渐变
-     *
-     * 支持侧面和正面的独立渐变配置
-     * - 侧面渐变：基于 Y 轴方向（垂直渐变）
-     * - 正面渐变：基于指定角度的方向渐变，支持旋转
+     * English comment.
      */
     applyGradient() {
         if (!this.geometry) return;
@@ -657,7 +593,7 @@ export class ExtrudedPolygon extends Component {
         const positionAttribute = this.geometry.attributes.position;
         const colors = [];
 
-        // 获取所有坐标的边界
+        // English comment.
         let minX = Infinity,
             maxX = -Infinity;
         let minY = Infinity,
@@ -681,18 +617,18 @@ export class ExtrudedPolygon extends Component {
         const rangeX = maxX - minX;
         const rangeZ = maxZ - minZ;
 
-        // 侧面渐变颜色
+        // English comment.
         const sideBottomColor = new THREE.Color(this.config.side.bottomColor);
         const sideTopColor = new THREE.Color(this.config.side.topColor);
 
-        // 正面渐变颜色
+        // English comment.
         const faceBottomColor = new THREE.Color(this.config.face.bottomColor);
         const faceTopColor = new THREE.Color(this.config.face.topColor);
 
-        // 正面渐变角度（转换为弧度）
+        // English comment.
         const angleRad = (this.config.face.gradientAngle * Math.PI) / 180;
 
-        // 为每个顶点计算颜色
+        // English comment.
         const epsilon = 0.001;
         for (let i = 0; i < positionAttribute.count; i++) {
             const x = positionAttribute.getX(i);
@@ -701,31 +637,31 @@ export class ExtrudedPolygon extends Component {
 
             let color;
 
-            // 判断顶点是否在正面（底部或顶部）
+            // English comment.
             const isBottomFace = Math.abs(y - minY) < epsilon;
             const isTopFace = Math.abs(y - maxY) < epsilon;
             const isFace = isBottomFace || isTopFace;
 
             if (isFace && this.config.face.useGradient) {
-                // 正面渐变：根据角度计算渐变方向
-                // 归一化 X 和 Z 坐标到 [0, 1]
+                // English comment.
+                // English comment.
                 const normX = rangeX > 0 ? (x - minX) / rangeX : 0.5;
                 const normZ = rangeZ > 0 ? (z - minZ) / rangeZ : 0.5;
 
-                // 根据角度计算渐变插值因子
-                // 0° = 沿 Z 轴（垂直），90° = 沿 X 轴（水平）
+                // English comment.
+                // English comment.
                 const t = Math.cos(angleRad) * normZ + Math.sin(angleRad) * normX;
 
-                // 限制 t 在 [0, 1] 范围内
+                // English comment.
                 const clampedT = Math.max(0, Math.min(1, t));
 
                 color = new THREE.Color().lerpColors(faceBottomColor, faceTopColor, clampedT);
             } else if (!isFace && this.config.side.useGradient) {
-                // 侧面渐变：基于 Y 轴方向
+                // English comment.
                 const t = rangeY > 0 ? (y - minY) / rangeY : 0;
                 color = new THREE.Color().lerpColors(sideBottomColor, sideTopColor, t);
             } else {
-                // 使用纯色
+                // English comment.
                 if (isFace) {
                     color = new THREE.Color(this.config.face.bottomColor);
                 } else {
@@ -736,86 +672,83 @@ export class ExtrudedPolygon extends Component {
             colors.push(color.r, color.g, color.b);
         }
 
-        // 添加颜色属性
+        // English comment.
         this.geometry.setAttribute('color', new THREE.Float32BufferAttribute(colors, 3));
     }
 
     /**
-     * 应用变换（位置、旋转、缩放）
+     * English comment.
      */
     applyTransform() {
         if (!this.mesh) return;
 
-        // 应用位置
+        // English comment.
         if (this.config.position) {
             this.position.set(...this.config.position);
         }
 
-        // 应用旋转
+        // English comment.
         if (this.config.rotation) {
             this.rotation.set(...this.config.rotation);
         }
 
-        // 应用缩放
+        // English comment.
         if (this.config.scale) {
             this.scale.set(...this.config.scale);
         }
     }
 
     /**
-     * 优化的高度更新方法
-     * 仅更新受高度影响的顶点位置，避免重新创建整个几何体
-     * @param {number} newHeight - 新的拉伸高度
+     * English comment.
      */
     updateHeight(newHeight) {
         if (!this.geometry || !this.normalizedPoints) {
-            // 如果几何体未初始化，使用完整更新
+            // English comment.
             this.config.height = newHeight;
             return;
         }
 
-        // 更新配置
+        // English comment.
         this.config.height = newHeight;
 
         const positions = this.geometry.attributes.position.array;
 
-        // 1. 更新侧面的顶部顶点（每条边有4个顶点，索引2和3是顶部顶点）
+        // English comment.
         for (let i = 0; i < this.normalizedPoints.length; i++) {
-            // 每条边的顶点索引
+            // English comment.
             const baseIndex = i * 4;
 
-            // 顶部右顶点 (索引 2)
+            // English comment.
             const topRightIndex = (baseIndex + 2) * 3;
-            positions[topRightIndex + 1] = newHeight; // 更新 y 坐标
+            positions[topRightIndex + 1] = newHeight; // English comment.
 
-            // 顶部左顶点 (索引 3)
+            // English comment.
             const topLeftIndex = (baseIndex + 3) * 3;
-            positions[topLeftIndex + 1] = newHeight; // 更新 y 坐标
+            positions[topLeftIndex + 1] = newHeight; // English comment.
         }
 
-        // 2. 更新顶面的所有顶点
-        // 顶面顶点从 topVertexOffset 开始
+        // English comment.
+        // English comment.
         const topFaceVertexCount = this.geometry.attributes.position.count - this.topVertexOffset;
         for (let i = 0; i < topFaceVertexCount; i++) {
             const vertexIndex = (this.topVertexOffset + i) * 3;
-            positions[vertexIndex + 1] = newHeight; // 更新 y 坐标
+            positions[vertexIndex + 1] = newHeight; // English comment.
         }
 
-        // 标记位置属性需要更新
+        // English comment.
         this.geometry.attributes.position.needsUpdate = true;
 
-        // 如果启用了渐变，需要重新应用（因为颜色可能基于高度）
+        // English comment.
         if (this.config.side.useGradient || this.config.face.useGradient) {
             this.applyGradient();
         }
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     async updateConfig(newConfig) {
-        // 检查是否只更新高度，如果是则使用优化方法
+        // English comment.
         const isOnlyHeightUpdate =
             newConfig.height !== undefined &&
             Object.keys(newConfig).length === 1 &&
@@ -823,12 +756,12 @@ export class ExtrudedPolygon extends Component {
             this.normalizedPoints;
 
         if (isOnlyHeightUpdate) {
-            // 使用优化的高度更新方法
+            // English comment.
             this.updateHeight(newConfig.height);
             return;
         }
 
-        // 深度合并配置（支持嵌套对象）
+        // English comment.
         if (newConfig.side) {
             this.config.side = { ...this.config.side, ...newConfig.side };
         }
@@ -839,17 +772,17 @@ export class ExtrudedPolygon extends Component {
             this.config.material = { ...this.config.material, ...newConfig.material };
         }
 
-        // 合并其他配置
+        // English comment.
         this.config = { ...this.config, ...newConfig };
 
-        // 移除旧的网格
+        // English comment.
         if (this.mesh) {
             this.remove(this.mesh);
             this.mesh.geometry.dispose();
             this.materials.forEach((mat) => mat.dispose());
         }
 
-        // 清理旧纹理
+        // English comment.
         if (this.sideTexture) {
             this.sideTexture.dispose();
             this.sideTexture = null;
@@ -859,22 +792,22 @@ export class ExtrudedPolygon extends Component {
             this.faceTexture = null;
         }
 
-        // 重新创建
+        // English comment.
         await this.createExtrudedPolygon();
         this.applyTransform();
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDestroy() {
-        // 清理几何体
+        // English comment.
         if (this.geometry) {
             this.geometry.dispose();
             this.geometry = null;
         }
 
-        // 清理材质
+        // English comment.
         this.materials.forEach((material) => {
             if (material.map) {
                 material.map.dispose();
@@ -883,7 +816,7 @@ export class ExtrudedPolygon extends Component {
         });
         this.materials = [];
 
-        // 清理纹理
+        // English comment.
         if (this.sideTexture) {
             this.sideTexture.dispose();
             this.sideTexture = null;
@@ -893,7 +826,7 @@ export class ExtrudedPolygon extends Component {
             this.faceTexture = null;
         }
 
-        // 移除网格
+        // English comment.
         if (this.mesh) {
             this.remove(this.mesh);
             this.mesh = null;

@@ -1,10 +1,8 @@
 /**
- * 默认配置
- *
- * @description 定义 SDK 的默认配置选项
+ * English comment.
  */
 export const defaultConfig = {
-    // 渲染器配置
+    // English comment.
     renderer: {
         antialias: true,
         alpha: false,
@@ -15,7 +13,7 @@ export const defaultConfig = {
         }
     },
 
-    // 相机配置
+    // English comment.
     camera: {
         fov: 45,
         near: 0.1,
@@ -24,7 +22,7 @@ export const defaultConfig = {
         lookAt: [0, 0, 0]
     },
 
-    // 控制器配置
+    // English comment.
     controls: {
         enableDamping: true,
         dampingFactor: 0.05,
@@ -37,7 +35,7 @@ export const defaultConfig = {
         maxDistance: 1000
     },
 
-    // 灯光配置
+    // English comment.
     lights: {
         ambient: {
             color: '#ffffff',
@@ -51,19 +49,19 @@ export const defaultConfig = {
         }
     },
 
-    // 场景配置
+    // English comment.
     scene: {
         background: null,
         fog: null
     },
 
-    // 性能配置
+    // English comment.
     performance: {
         maxFPS: 60,
         enableStats: false
     },
 
-    // IndexedDB 缓存配置
+    // English comment.
     indexedDB: {
         enabled: false,
         dbName: 'W3DCache',

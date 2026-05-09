@@ -386,7 +386,7 @@ export const useVariableStore = defineStore('variable', () => {
         const parsed = parseExpression(expression);
         if (!parsed.includes('${') && !parsed.includes('{{')) {
             try {
-                // 兼容旧编辑器表达式能力；仅对用户配置表达式执行。
+                // English comment.
                 // eslint-disable-next-line no-new-func
                 return new Function(`return (${parsed})`)();
             } catch {

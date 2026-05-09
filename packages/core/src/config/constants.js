@@ -1,32 +1,30 @@
 /**
- * 常量定义
- *
- * @description 定义 SDK 中使用的常量
+ * English comment.
  */
 
-// 版本信息
+// English comment.
 export const VERSION = '2.0.0';
 
-// 构建信息
+// English comment.
 export const BUILD_DATE = '2025-10-09';
 
-// 渲染模式
+// English comment.
 export const RenderMode = {
     NORMAL: 'normal',
     WIREFRAME: 'wireframe',
     POINTS: 'points'
 };
 
-// 阴影类型
+// English comment.
 export const ShadowType = {
     BASIC: 'BasicShadowMap',
     PCF: 'PCFShadowMap',
-    // 兼容旧项目；Three r184 下由 Renderer 映射为 PCFShadowMap。
+    // English comment.
     PCF_SOFT: 'PCFSoftShadowMap',
     VSM: 'VSMShadowMap'
 };
 
-// 纹理过滤
+// English comment.
 export const TextureFilter = {
     NEAREST: 'NearestFilter',
     LINEAR: 'LinearFilter',
@@ -36,14 +34,14 @@ export const TextureFilter = {
     LINEAR_MIPMAP_LINEAR: 'LinearMipmapLinearFilter'
 };
 
-// 纹理包裹
+// English comment.
 export const TextureWrap = {
     REPEAT: 'RepeatWrapping',
     CLAMP: 'ClampToEdgeWrapping',
     MIRROR: 'MirroredRepeatWrapping'
 };
 
-// 混合模式
+// English comment.
 export const BlendMode = {
     NORMAL: 'NormalBlending',
     ADDITIVE: 'AdditiveBlending',
@@ -51,7 +49,7 @@ export const BlendMode = {
     MULTIPLY: 'MultiplyBlending'
 };
 
-// 组件状态
+// English comment.
 export const ComponentState = {
     CREATED: 'created',
     MOUNTED: 'mounted',
@@ -59,7 +57,7 @@ export const ComponentState = {
     DISPOSED: 'disposed'
 };
 
-// 资源类型
+// English comment.
 export const ResourceType = {
     TEXTURE: 'texture',
     MODEL: 'model',
@@ -68,7 +66,7 @@ export const ResourceType = {
     JSON: 'json'
 };
 
-// 动画循环模式
+// English comment.
 export const LoopMode = {
     ONCE: 'LoopOnce',
     REPEAT: 'LoopRepeat',

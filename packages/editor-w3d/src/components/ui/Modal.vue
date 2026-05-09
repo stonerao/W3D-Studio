@@ -8,7 +8,7 @@
                     :style="modalStyle"
                     @click.stop
                 >
-                    <!-- 模态框头部 -->
+                    <!-- English comment. -->
                     <div
                         class="modal-header"
                         @mousedown="startDrag"
@@ -24,12 +24,12 @@
                         </button>
                     </div>
 
-                    <!-- 模态框内容 -->
+                    <!-- English comment. -->
                     <div class="modal-body">
                         <slot></slot>
                     </div>
 
-                    <!-- 模态框底部 -->
+                    <!-- English comment. -->
                     <div v-if="$slots.footer" class="modal-footer">
                         <slot name="footer"></slot>
                     </div>
@@ -79,7 +79,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'close']);
 
-// 拖拽相关状态
+// English comment.
 const isDragging = ref(false);
 const isDraggable = computed(() => props.draggable);
 const dragStartX = ref(0);
@@ -102,7 +102,7 @@ const containerClass = computed(() => {
     };
 });
 
-// 计算模态框样式
+// English comment.
 const modalStyle = computed(() => {
     const style = {
         width: props.width
@@ -115,7 +115,7 @@ const modalStyle = computed(() => {
     return style;
 });
 
-// 开始拖拽
+// English comment.
 const startDrag = (event) => {
     if (!isDraggable.value) return;
 
@@ -128,11 +128,11 @@ const startDrag = (event) => {
     document.addEventListener('mousemove', onDrag);
     document.addEventListener('mouseup', stopDrag);
 
-    // 防止文本选择
+    // English comment.
     event.preventDefault();
 };
 
-// 拖拽中
+// English comment.
 const onDrag = (event) => {
     if (!isDragging.value) return;
 
@@ -143,20 +143,20 @@ const onDrag = (event) => {
     modalY.value = initialY.value + deltaY;
 };
 
-// 停止拖拽
+// English comment.
 const stopDrag = () => {
     isDragging.value = false;
     document.removeEventListener('mousemove', onDrag);
     document.removeEventListener('mouseup', stopDrag);
 };
 
-// 重置位置
+// English comment.
 const resetPosition = () => {
     modalX.value = 0;
     modalY.value = 0;
 };
 
-// 监听模态框打开/关闭，重置位置
+// English comment.
 watch(() => props.modelValue, (newValue) => {
     if (newValue) {
         resetPosition();
@@ -174,7 +174,7 @@ const handleOverlayClick = () => {
     }
 };
 
-// 清理事件监听
+// English comment.
 onUnmounted(() => {
     document.removeEventListener('mousemove', onDrag);
     document.removeEventListener('mouseup', stopDrag);
@@ -212,9 +212,9 @@ onUnmounted(() => {
     display: flex;
     flex-direction: column;
     border: 1px solid var(--color-border);
-    /* 毛玻璃效果 */
+    /* English comment. */
     backdrop-filter: blur(20px);
-    /* 硬件加速 */
+    /* English comment. */
     will-change: transform, opacity;
     transform: translateZ(0);
 }
@@ -273,7 +273,7 @@ onUnmounted(() => {
     gap: 0.5rem;
 }
 
-/* 过渡动画 - 使用新动画系统 */
+/* English comment. */
 .modal-enter-active,
 .modal-leave-active {
     transition: opacity var(--duration-slow, 300ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));

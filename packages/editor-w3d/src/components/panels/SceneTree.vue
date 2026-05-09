@@ -1,6 +1,6 @@
 ﻿<template>
     <div class="scene-tree">
-        <!-- 工具栏 -->
+        <!-- English comment. -->
         <div class="toolbar">
             <div class="toolbar-label">场景结构</div>
             <div class="toolbar-actions">
@@ -23,7 +23,7 @@
             </div>
         </div>
 
-        <!-- 树形列表 -->
+        <!-- English comment. -->
         <div class="tree-container">
             <div v-if="components.length === 0" class="empty-state">
                 <div class="empty-icon">
@@ -36,7 +36,7 @@
             </div>
 
             <div v-else class="tree-list" ref="scrollContainerRef" @scroll="onVirtualScroll">
-                <!-- 虚拟滚动：仅渲染可视区域内的节点 -->
+                <!-- English comment. -->
                 <div :style="{ height: totalHeight + 'px', position: 'relative' }">
                     <div :style="{ transform: `translateY(${offsetY}px)` }">
                         <TreeNode
@@ -50,7 +50,7 @@
                         >
                             <template #actions>
                         <div class="node-actions">
-                            <!-- 可见性切换 -->
+                            <!-- English comment. -->
                             <button
                                 class="action-btn"
                                 :class="{ active: entry.component.visible }"
@@ -67,7 +67,7 @@
                                 </svg>
                             </button>
 
-                            <!-- 锁定切换 -->
+                            <!-- English comment. -->
                             <button
                                 class="action-btn"
                                 :class="{ active: entry.component.locked }"
@@ -84,7 +84,7 @@
                                 </svg>
                             </button>
 
-                            <!-- 更多操作 -->
+                            <!-- English comment. -->
                             <button
                                 class="action-btn"
                                 @click.stop="handleShowMenu(entry.component.id, $event)"
@@ -104,7 +104,7 @@
             </div>
         </div>
 
-        <!-- 右键菜单 -->
+        <!-- English comment. -->
         <ContextMenu
             v-model:visible="contextMenu.visible"
             :x="contextMenu.x"
@@ -125,18 +125,18 @@ import { getComponent } from '../../utils/componentRegistry';
 
 const emit = defineEmits(['component-selected', 'component-deleted']);
 
-// 使用组件管理
+// English comment.
 const componentStore = useComponentStore();
 const { selectComponent, removeComponent, toggleComponentVisibility, renameComponent, duplicateComponent, clearAllComponents } = useComponent();
 
-// 直接从 store 获取响应式数据
+// English comment.
 const components = computed(() => componentStore.components || []);
 const selectedComponent = computed(() => componentStore.selectedComponent);
 const selectedComponentId = computed(() => selectedComponent.value?.id || null);
 
-// ========== 虚拟滚动 ==========
-const ITEM_HEIGHT = 32; // 每个 TreeNode 的固定高度（px）
-const OVERSCAN = 5;     // 上下各多渲染的缓冲行数
+// English comment.
+const ITEM_HEIGHT = 32; // English comment.
+const OVERSCAN = 5;     // English comment.
 const scrollContainerRef = ref(null);
 const scrollTop = ref(0);
 const containerHeight = ref(300);
@@ -170,7 +170,7 @@ onUnmounted(() => {
     resizeObserver?.disconnect();
 });
 
-// 选中组件变化时自动滚动到可视区域
+// English comment.
 watch(selectedComponentId, (id) => {
     if (!id || !scrollContainerRef.value) return;
     const idx = treeNodes.value.findIndex((n) => n.component.id === id);
@@ -185,10 +185,10 @@ watch(selectedComponentId, (id) => {
     }
 });
 
-// 展开的节点集合
+// English comment.
 const expandedNodes = ref(new Set());
 
-// 右键菜单状态
+// English comment.
 const contextMenu = ref({
     visible: false,
     x: 0,
@@ -196,7 +196,7 @@ const contextMenu = ref({
     componentId: null
 });
 
-// 右键菜单项
+// English comment.
 const contextMenuItems = computed(() => {
     const componentList = components.value || [];
     const component = componentList.find((c) => c.id === contextMenu.value.componentId);
@@ -241,7 +241,7 @@ const contextMenuItems = computed(() => {
 });
 
 /**
- * 格式化节点数据
+ * English comment.
  */
 const formatNodeData = (comp) => {
     const metadata = getComponent(comp.type)?.metadata;
@@ -249,7 +249,7 @@ const formatNodeData = (comp) => {
         id: comp.id,
         label: comp.name || metadata?.displayName || comp.type,
         icon: getComponentIcon(comp.type),
-        children: [] // 暂不支持子节点
+        children: [] // English comment.
     };
 };
 
@@ -259,7 +259,7 @@ const treeNodes = computed(() => components.value.map((component) => ({
 })));
 
 /**
- * 获取组件图标
+ * English comment.
  */
 const getComponentIcon = (type) => {
     const iconMap = {
@@ -290,7 +290,7 @@ const getComponentIcon = (type) => {
 };
 
 /**
- * 展开/折叠节点
+ * English comment.
  */
 const handleToggle = (nodeId) => {
     if (expandedNodes.value.has(nodeId)) {
@@ -301,7 +301,7 @@ const handleToggle = (nodeId) => {
 };
 
 /**
- * 选中节点
+ * English comment.
  */
 const handleSelect = (componentId) => {
     selectComponent(componentId);
@@ -309,14 +309,14 @@ const handleSelect = (componentId) => {
 };
 
 /**
- * 切换可见性
+ * English comment.
  */
 const handleToggleVisibility = (componentId) => {
     toggleComponentVisibility(componentId);
 };
 
 /**
- * 切换锁定状态
+ * English comment.
  */
 const handleToggleLock = (componentId) => {
     const componentList = components.value || [];
@@ -329,7 +329,7 @@ const handleToggleLock = (componentId) => {
 };
 
 /**
- * 显示右键菜单
+ * English comment.
  */
 const handleShowMenu = (componentId, event) => {
     contextMenu.value = {
@@ -339,21 +339,21 @@ const handleShowMenu = (componentId, event) => {
         componentId
     };
 
-    // 点击其他地方关闭菜单
+    // English comment.
     setTimeout(() => {
         document.addEventListener('click', hideContextMenu, { once: true });
     }, 0);
 };
 
 /**
- * 隐藏右键菜单
+ * English comment.
  */
 const hideContextMenu = () => {
     contextMenu.value.visible = false;
 };
 
 /**
- * 处理右键菜单选择
+ * English comment.
  */
 const handleContextMenuSelect = (item) => {
     const componentId = contextMenu.value.componentId;
@@ -378,7 +378,7 @@ const handleContextMenuSelect = (item) => {
 };
 
 /**
- * 重命名
+ * English comment.
  */
 const handleRename = async () => {
     const componentId = contextMenu.value.componentId;
@@ -393,7 +393,7 @@ const handleRename = async () => {
 };
 
 /**
- * 复制
+ * English comment.
  */
 const handleDuplicate = async () => {
     const componentId = contextMenu.value.componentId;
@@ -405,7 +405,7 @@ const handleDuplicate = async () => {
 };
 
 /**
- * 删除
+ * English comment.
  */
 const handleDelete = () => {
     const componentId = contextMenu.value.componentId;
@@ -426,7 +426,7 @@ const handleDelete = () => {
 };
 
 /**
- * 展开全部
+ * English comment.
  */
 const expandAll = () => {
     const componentList = components.value || [];
@@ -436,14 +436,14 @@ const expandAll = () => {
 };
 
 /**
- * 折叠全部
+ * English comment.
  */
 const collapseAll = () => {
     expandedNodes.value.clear();
 };
 
 /**
- * 清空场景
+ * English comment.
  */
 const clearAll = () => {
     if (confirm('确定要清空场景中的所有未锁定组件吗？')) {

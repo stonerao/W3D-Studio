@@ -10,10 +10,10 @@ export default defineConfig({
         }
     },
     test: {
-        // 测试环境
+        // English comment.
         environment: 'jsdom',
 
-        // 覆盖率
+        // English comment.
         coverage: {
             provider: 'v8',
             reporter: ['text', 'json', 'html'],
@@ -28,19 +28,19 @@ export default defineConfig({
             ]
         },
 
-        // 全局变量
+        // English comment.
         globals: true,
 
-        // 测试文件匹配
+        // English comment.
         include: ['packages/**/*.{test,spec}.{js,ts}'],
 
-        // 超时时间
+        // English comment.
         testTimeout: 10000,
 
-        // 并发
+        // English comment.
         threads: true,
 
-        // 监听模式
+        // English comment.
         watch: false
     }
 });

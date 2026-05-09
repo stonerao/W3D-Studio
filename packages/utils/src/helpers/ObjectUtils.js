@@ -1,14 +1,9 @@
 /**
- * ObjectUtils 对象工具
- *
- * @description 对象操作相关的工具函数
+ * English comment.
  */
 export class ObjectUtils {
     /**
-     * 深度克隆
-     *
-     * @param {*} obj - 对象
-     * @returns {*} 克隆后的对象
+     * English comment.
      */
     static deepClone(obj) {
         if (obj === null || typeof obj !== 'object') return obj;
@@ -25,11 +20,7 @@ export class ObjectUtils {
     }
 
     /**
-     * 深度合并
-     *
-     * @param {Object} target - 目标对象
-     * @param {Object} source - 源对象
-     * @returns {Object} 合并后的对象
+     * English comment.
      */
     static deepMerge(target, source) {
         const output = Object.assign({}, target);
@@ -52,10 +43,7 @@ export class ObjectUtils {
     }
 
     /**
-     * 判断是否为对象
-     *
-     * @param {*} item - 项目
-     * @returns {boolean} 是否为对象
+     * English comment.
      */
     static isObject(item) {
         return item && typeof item === 'object' && !Array.isArray(item);

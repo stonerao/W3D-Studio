@@ -1,0 +1,277 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - generic "History actions" [ref=e7]:
+      - button "↶" [disabled]:
+        - generic: ↶
+      - button "↷" [disabled]:
+        - generic: ↷
+    - generic [ref=e9]:
+      - button "Save" [ref=e10] [cursor=pointer]:
+        - generic [ref=e11]: Save
+      - button "Close" [ref=e12] [cursor=pointer]:
+        - generic [ref=e13]: Close
+    - generic [ref=e14]:
+      - generic [ref=e16]: 未命名项目
+      - generic [ref=e17]: Waiting to save
+    - generic [ref=e18]:
+      - generic [ref=e19]:
+        - generic [ref=e20]: Language
+        - combobox "Language" [ref=e21]:
+          - option "English" [selected]
+          - option "Chinese"
+      - button "Camera" [ref=e22] [cursor=pointer]:
+        - generic [ref=e23]: Camera
+      - button "Points" [ref=e24] [cursor=pointer]:
+        - generic [ref=e25]: Points
+      - generic "Panel display" [ref=e26]:
+        - button "Left" [ref=e27] [cursor=pointer]:
+          - generic [ref=e28]: Left
+        - button "Right" [ref=e29] [cursor=pointer]:
+          - generic [ref=e30]: Right
+      - button "Preview" [ref=e31] [cursor=pointer]:
+        - generic [ref=e32]: Preview
+      - button "⚙" [ref=e33] [cursor=pointer]:
+        - generic [ref=e34]: ⚙
+  - generic [ref=e35]:
+    - generic [ref=e36]:
+      - generic [ref=e39]:
+        - button "组件库" [ref=e40] [cursor=pointer]:
+          - generic [ref=e42]: 
+          - generic [ref=e43]: 组件库
+        - button "结构树" [ref=e44] [cursor=pointer]:
+          - generic [ref=e46]: 
+          - generic [ref=e47]: 结构树
+        - button "变量" [ref=e48] [cursor=pointer]:
+          - generic [ref=e50]: 
+          - generic [ref=e51]: 变量
+      - generic [ref=e53]:
+        - generic [ref=e323]:
+          - generic [ref=e324]:
+            - textbox "Search components..." [ref=e326]
+            - generic [ref=e327]:
+              - button "All" [ref=e328] [cursor=pointer]
+              - button "Loaders" [ref=e329] [cursor=pointer]
+              - button "Helpers" [ref=e330] [cursor=pointer]
+              - button "Lights" [ref=e331] [cursor=pointer]
+              - button "Effects" [ref=e332] [cursor=pointer]
+              - button "Animations" [ref=e333] [cursor=pointer]
+              - button "Camera controls" [ref=e334] [cursor=pointer]
+              - button "Markers" [ref=e335] [cursor=pointer]
+              - button "Traffic" [ref=e336] [cursor=pointer]
+          - generic [ref=e337]:
+            - generic [ref=e339] [cursor=pointer]:
+              - generic [ref=e341]: Model loader
+              - generic [ref=e342]: Load 3D models in GLTF, GLB, or FBX format.
+              - generic [ref=e343]:
+                - generic [ref=e344]: Loaders
+                - generic [ref=e345]: ModelLoader
+            - generic [ref=e347] [cursor=pointer]:
+              - generic [ref=e349]: Data city
+              - generic [ref=e350]: Load GeoJSON city or administrative boundaries and generate an interactive 3D data city.
+              - generic [ref=e351]:
+                - generic [ref=e352]: Loaders
+                - generic [ref=e353]: GeoJSONLoader
+            - generic [ref=e355] [cursor=pointer]:
+              - generic [ref=e357]: Grid helper
+              - generic [ref=e358]: Display a grid helper in the scene.
+              - generic [ref=e359]:
+                - generic [ref=e360]: Helpers
+                - generic [ref=e361]: GridHelper
+            - generic [ref=e363] [cursor=pointer]:
+              - generic [ref=e365]: HDR environment map
+              - generic [ref=e366]: Load an HDR environment map for the scene environment or background.
+              - generic [ref=e367]:
+                - generic [ref=e368]: Loaders
+                - generic [ref=e369]: HDRLoader
+            - generic [ref=e371] [cursor=pointer]:
+              - generic [ref=e373]: Particle system
+              - generic [ref=e374]: Advanced particle system with dynamic emission and physics effects.
+              - generic [ref=e375]:
+                - generic [ref=e376]: Effects
+                - generic [ref=e377]: ParticleSystem
+            - generic [ref=e379] [cursor=pointer]:
+              - generic [ref=e381]: Heatmap
+              - generic [ref=e382]: Render a soft glowing heat distribution from point data.
+              - generic [ref=e383]:
+                - generic [ref=e384]: Effects
+                - generic [ref=e385]: Heatmap
+            - generic [ref=e387] [cursor=pointer]:
+              - generic [ref=e389]: Area block
+              - generic [ref=e390]: Display 3D area blocks with walls, bases, borders, and cloud shader effects.
+              - generic [ref=e391]:
+                - generic [ref=e392]: Markers
+                - generic [ref=e393]: AreaBlock
+            - generic [ref=e395] [cursor=pointer]:
+              - generic [ref=e397]: Multi-path animation
+              - generic [ref=e398]: Load models and render instances moving along multiple paths.
+              - generic [ref=e399]:
+                - generic [ref=e400]: Animations
+                - generic [ref=e401]: MultiPathAnimation
+            - generic [ref=e403] [cursor=pointer]:
+              - generic [ref=e405]: Camera tour
+              - generic [ref=e406]: Run automated camera tours from multiple view presets.
+              - generic [ref=e407]:
+                - generic [ref=e408]: Animations
+                - generic [ref=e409]: CameraTour
+            - generic [ref=e411] [cursor=pointer]:
+              - generic [ref=e413]: Device exploded view
+              - generic [ref=e414]: Explode device structures outward from a center point.
+              - generic [ref=e415]:
+                - generic [ref=e416]: Effects
+                - generic [ref=e417]: DeviceExplodedView
+            - generic [ref=e419] [cursor=pointer]:
+              - generic [ref=e421]: Post processing
+              - generic [ref=e422]: Manage Bloom, SSR, GTAO, SAO, SSAO, Pixel, DOF, Sobel, FXAA, and other effects.
+              - generic [ref=e423]:
+                - generic [ref=e424]: Effects
+                - generic [ref=e425]: PostProcessing
+            - generic [ref=e427] [cursor=pointer]:
+              - generic [ref=e429]: Weather clouds
+              - generic [ref=e430]: Dynamic sky cloud effects with volumetric and multi-layer mesh cloud modes.
+              - generic [ref=e431]:
+                - generic [ref=e432]: Effects
+                - generic [ref=e433]: WeatherClouds
+            - generic [ref=e435] [cursor=pointer]:
+              - generic [ref=e437]: Fly controls
+              - generic [ref=e438]: Free-flight camera control mode.
+              - generic [ref=e439]:
+                - generic [ref=e440]: Camera controls
+                - generic [ref=e441]: FlyControls
+            - generic [ref=e443] [cursor=pointer]:
+              - generic [ref=e445]: First-person controls
+              - generic [ref=e446]: First-person camera control mode.
+              - generic [ref=e447]:
+                - generic [ref=e448]: Camera controls
+                - generic [ref=e449]: FirstPersonControls
+            - generic [ref=e451] [cursor=pointer]:
+              - generic [ref=e453]: Camera jump
+              - generic [ref=e454]: Jump the camera to a specified mesh, label, or point.
+              - generic [ref=e455]:
+                - generic [ref=e456]: Animations
+                - generic [ref=e457]: CameraJump
+            - generic [ref=e459] [cursor=pointer]:
+              - generic [ref=e461]: Model animation
+              - generic [ref=e462]: Play animations embedded in a model.
+              - generic [ref=e463]:
+                - generic [ref=e464]: Animations
+                - generic [ref=e465]: ModelAnimation
+            - generic [ref=e467] [cursor=pointer]:
+              - generic [ref=e469]: Migration line
+              - generic [ref=e470]: Display animated migration effects between points in 3D space.
+              - generic [ref=e471]:
+                - generic [ref=e472]: Animations
+                - generic [ref=e473]: MigrationLine
+            - generic [ref=e475] [cursor=pointer]:
+              - generic [ref=e477]: 3D label
+              - generic [ref=e478]: Render text as Canvas textures and display them as sprites in the 3D scene.
+              - generic [ref=e479]:
+                - generic [ref=e480]: Markers
+                - generic [ref=e481]: Label3D
+            - generic [ref=e483] [cursor=pointer]:
+              - generic [ref=e485]: Marked area
+              - generic [ref=e486]: Display a planar marked area in 3D space.
+              - generic [ref=e487]:
+                - generic [ref=e488]: Markers
+                - generic [ref=e489]: MarkArea
+            - generic [ref=e491] [cursor=pointer]:
+              - generic [ref=e493]: Marked line
+              - generic [ref=e494]: Display a line connecting multiple points in 3D space.
+              - generic [ref=e495]:
+                - generic [ref=e496]: Markers
+                - generic [ref=e497]: MarkLine
+            - generic [ref=e499] [cursor=pointer]:
+              - generic [ref=e501]: Marked point
+              - generic [ref=e502]: Display point markers in 3D space.
+              - generic [ref=e503]:
+                - generic [ref=e504]: Markers
+                - generic [ref=e505]: MarkPoint
+            - generic [ref=e507] [cursor=pointer]:
+              - generic [ref=e509]: Multi-type point manager
+              - generic [ref=e510]: Manage model and image point types with instanced rendering optimization.
+              - generic [ref=e511]:
+                - generic [ref=e512]: Markers
+                - generic [ref=e513]: PointTypeMarkerManager
+            - generic [ref=e515] [cursor=pointer]:
+              - generic [ref=e517]: Camera point
+              - generic [ref=e518]: Manage camera points in the scene with externally configured point styles.
+              - generic [ref=e519]:
+                - generic [ref=e520]: Markers
+                - generic [ref=e521]: CameraPointManager
+            - generic [ref=e523] [cursor=pointer]:
+              - generic [ref=e525]: Floor exploded view
+              - generic [ref=e526]: Floor exploded-view effect with floor selection, highlighting, and animation.
+              - generic [ref=e527]:
+                - generic [ref=e528]: Effects
+                - generic [ref=e529]: ExplodedView
+            - generic [ref=e531] [cursor=pointer]:
+              - generic [ref=e533]: Weather and lighting
+              - generic [ref=e534]: Online weather, manual weather switching, sun-position lighting, and night road-light linkage.
+              - generic [ref=e535]:
+                - generic [ref=e536]: Effects
+                - generic [ref=e537]: WeatherLighting
+            - generic [ref=e539] [cursor=pointer]:
+              - generic [ref=e541]: Roadside device manager
+              - generic [ref=e542]: Manage road networks, road facilities, poles, and mounted roadside devices.
+              - generic [ref=e543]:
+                - generic [ref=e544]: Traffic
+                - generic [ref=e545]: TrafficRoadsideDeviceManager
+        - text:    
+    - generic [ref=e282]:
+      - generic [ref=e283]: FPS 236
+      - generic [ref=e284]: 组件 0
+    - generic [ref=e285]:
+      - generic [ref=e286]:
+        - generic [ref=e288]:
+          - generic [ref=e289]: 检查器
+          - generic [ref=e290]: AI
+        - generic [ref=e547]:
+          - generic [ref=e548]:
+            - generic [ref=e549]:
+              - generic [ref=e550]: 三维 AI
+              - generic [ref=e551]: 未配置 API Key
+            - button "清空" [disabled]
+          - generic [ref=e552]:
+            - generic [ref=e553]:
+              - generic [ref=e554]: 供应商
+              - combobox [ref=e555]:
+                - option "DeepSeek" [selected]
+                - option "OpenAI 兼容"
+                - option "自定义"
+            - generic [ref=e556]:
+              - generic [ref=e557]: API Base URL
+              - textbox "https://api.deepseek.com" [ref=e558]
+            - generic [ref=e559]:
+              - generic [ref=e560]: Model
+              - textbox "deepseek-v4-flash" [ref=e561]
+            - generic [ref=e562]:
+              - generic [ref=e563]: API Key
+              - generic [ref=e564]:
+                - textbox "sk-..." [ref=e565]
+                - button "显示" [ref=e566] [cursor=pointer]
+                - button "清除" [disabled]
+          - generic [ref=e567]:
+            - button "概括当前场景" [disabled]
+            - button "添加模型加载器" [disabled]
+            - button "把选中组件移动到原点" [disabled]
+          - generic [ref=e569]: 输入需求后，AI 会结合当前场景组件给出回复；低风险操作会自动执行，需要确认的操作会停留等待。
+          - generic [ref=e570]:
+            - textbox "例如：添加一个模型加载器并放到原点" [disabled]
+            - generic [ref=e571]:
+              - generic [ref=e572]: 请先配置供应商、Model 和 API Key
+              - button "发送" [disabled]
+      - generic [ref=e302]:
+        - button "属性" [ref=e303] [cursor=pointer]:
+          - generic [ref=e305]: 
+          - generic [ref=e306]: 属性
+        - button "事件" [ref=e307] [cursor=pointer]:
+          - generic [ref=e309]: 
+          - generic [ref=e310]: 事件
+        - button "数据" [ref=e311] [cursor=pointer]:
+          - generic [ref=e313]: 
+          - generic [ref=e314]: 数据
+        - button "设置" [ref=e315] [cursor=pointer]:
+          - generic [ref=e317]: 
+          - generic [ref=e318]: 设置
+        - button "AI" [ref=e319] [cursor=pointer]:
+          - generic [ref=e321]: 
+          - generic [ref=e322]: AI

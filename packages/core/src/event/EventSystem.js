@@ -2,42 +2,34 @@ import { Raycaster } from './Raycaster.js';
 import { EventTypes } from './EventTypes.js';
 
 /**
- * EventSystem 事件系统
- *
- * @class EventSystem
- * @description 事件分发和射线拾取
+ * English comment.
  */
 export class EventSystem {
     /**
-     * 创建事件系统实例
-     *
-     * @param {Scene} scene - 场景实例
+     * English comment.
      */
     constructor(scene) {
         this.scene = scene;
 
-        // 射线拾取器
+        // English comment.
         this.raycaster = new Raycaster(scene);
 
-        // 事件监听器
+        // English comment.
         this.listeners = new Map();
 
-        // 当前悬停的对象
+        // English comment.
         this.hoveredObject = null;
         this.hoveredEventData = null;
 
-        // 初始化状态
+        // English comment.
         this.isInitialized = false;
 
         /**
-         * 事件系统启用开关
-         * 设为 false 时，所有交互事件（click, dblclick, hover 等）将被静默忽略，
-         * 不执行射线检测也不分发事件。用于编辑模式下禁用三维场景内的交互。
-         * @type {boolean}
+         * English comment.
          */
         this.enabled = true;
 
-        // 绑定事件处理函数
+        // English comment.
         this.handleClick = this.onClick.bind(this);
         this.handleMouseMove = this.onMouseMove.bind(this);
         this.handleMouseDown = this.onMouseDown.bind(this);
@@ -45,27 +37,27 @@ export class EventSystem {
         this.handleDoubleClick = this.onDoubleClick.bind(this);
         this.handleContextMenu = this.onContextMenu.bind(this);
 
-        // mousemove RAF 节流：避免每帧多次射线检测
+        // English comment.
         this._mouseMoveRafId = null;
         this._pendingMouseMoveEvent = null;
 
-        // 交互对象缓存（脏标记模式，组件增删时失效）
+        // English comment.
         this._interactiveCache = null;
         this._interactiveCacheDirty = true;
 
-        // 注意：不在构造函数中调用 init()，等待 renderer 创建后再调用
+        // English comment.
     }
 
     /**
-     * 初始化事件监听
+     * English comment.
      */
     init() {
-        // 检查是否已经初始化
+        // English comment.
         if (this.isInitialized) {
             return;
         }
 
-        // 检查 renderer 是否可用
+        // English comment.
         if (!this.scene.renderer || !this.scene.renderer.instance) {
             console.warn('EventSystem: Renderer not available, skipping initialization');
             return;
@@ -84,16 +76,14 @@ export class EventSystem {
     }
 
     /**
-     * 标记交互对象缓存过期（组件增删 / 可见性变化时调用）
+     * English comment.
      */
     invalidateInteractiveCache() {
         this._interactiveCacheDirty = true;
     }
 
     /**
-     * 收集所有可交互的对象（带脏标记缓存，避免每次事件都重新遍历）
-     *
-     * @returns {Array<THREE.Object3D>} 可交互的对象数组
+     * English comment.
      */
     getInteractiveObjects() {
         if (!this._interactiveCacheDirty && this._interactiveCache) {
@@ -102,7 +92,7 @@ export class EventSystem {
 
         const interactiveObjects = [];
 
-        // 遍历场景中的所有组件
+        // English comment.
         this.scene.componentManager.components.forEach((component) => {
             if (component.visible === false || component.isDisposed) return;
             if (component.getInteractiveObjects) {
@@ -166,9 +156,7 @@ export class EventSystem {
     }
 
     /**
-     * 点击事件处理
-     *
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     onClick(event) {
         event.preventDefault();
@@ -181,16 +169,14 @@ export class EventSystem {
     }
 
     /**
-     * 鼠标移动事件处理（RAF 节流，每帧最多执行一次射线检测）
-     *
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     onMouseMove(event) {
         if (!this.enabled) return;
-        // 始终保存最新事件，下一帧使用最新位置
+        // English comment.
         this._pendingMouseMoveEvent = event;
 
-        // 本帧已安排处理则跳过，实现节流
+        // English comment.
         if (this._mouseMoveRafId !== null) return;
 
         this._mouseMoveRafId = requestAnimationFrame(() => {
@@ -202,9 +188,7 @@ export class EventSystem {
     }
 
     /**
-     * 鼠标移动的实际处理逻辑（由 onMouseMove 通过 RAF 调度）
-     *
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     _processMouseMove(event) {
         const interactiveObjects = this.getInteractiveObjects();
@@ -214,9 +198,9 @@ export class EventSystem {
             const eventData = this.createPointerEventData(EventTypes.MOUSE_MOVE, event, intersects[0]);
             const object = eventData.object;
 
-            // 处理悬停进入
+            // English comment.
             if (this.hoveredObject !== object) {
-                // 悬停离开
+                // English comment.
                 if (this.hoveredObject) {
                     this.emit(EventTypes.MOUSE_LEAVE, {
                         ...(this.hoveredEventData || {}),
@@ -226,7 +210,7 @@ export class EventSystem {
                     });
                 }
 
-                // 悬停进入
+                // English comment.
                 this.hoveredObject = object;
                 this.hoveredEventData = eventData;
                 this.emit(EventTypes.MOUSE_ENTER, {
@@ -236,10 +220,10 @@ export class EventSystem {
                 });
             }
 
-            // 悬停移动
+            // English comment.
             this.emit(EventTypes.MOUSE_MOVE, eventData);
         } else {
-            // 鼠标离开所有对象
+            // English comment.
             if (this.hoveredObject) {
                 this.emit(EventTypes.MOUSE_LEAVE, {
                     ...(this.hoveredEventData || {}),
@@ -254,9 +238,7 @@ export class EventSystem {
     }
 
     /**
-     * 鼠标按下事件处理
-     *
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     onMouseDown(event) {
         if (!this.enabled) return;
@@ -269,9 +251,7 @@ export class EventSystem {
     }
 
     /**
-     * 鼠标抬起事件处理
-     *
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     onMouseUp(event) {
         if (!this.enabled) return;
@@ -284,9 +264,7 @@ export class EventSystem {
     }
 
     /**
-     * 双击事件处理
-     *
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     onDoubleClick(event) {
         if (!this.enabled) return;
@@ -299,15 +277,13 @@ export class EventSystem {
     }
 
     /**
-     * 右键菜单事件处理
-     *
-     * @param {MouseEvent} event - 鼠标事件
+     * English comment.
      */
     onContextMenu(event) {
         event.preventDefault();
         if (!this.enabled) return;
 
-        // 优先检测可交互对象
+        // English comment.
         const interactiveObjects = this.getInteractiveObjects();
         const interactiveIntersects = this.raycaster.raycast(event, interactiveObjects);
 
@@ -316,14 +292,14 @@ export class EventSystem {
             return;
         }
 
-        // 如果没有点击到可交互对象，检测所有场景对象（仅可见的）
-        // 这样可以获取正确的 3D 位置用于添加新点位
+        // English comment.
+        // English comment.
         const allObjects = this.scene.scene.children;
         const allIntersects = this.raycaster.raycast(event, allObjects);
 
-        // 过滤出第一个可见的交点
+        // English comment.
         const visibleIntersect = allIntersects.find(intersect => {
-            // 递归检查对象及其所有父对象的可见性
+            // English comment.
             let obj = intersect.object;
             while (obj) {
                 if (obj.visible === false) {
@@ -337,37 +313,31 @@ export class EventSystem {
         if (visibleIntersect) {
             this.emit(EventTypes.CONTEXT_MENU, {
                 type: EventTypes.CONTEXT_MENU,
-                object: null, // 表示不是可交互对象
-                point: visibleIntersect.point, // 但提供 3D 位置
+                object: null, // English comment.
+                point: visibleIntersect.point, // English comment.
                 event
             });
         }
     }
 
     /**
-     * 触发事件
-     *
-     * @param {string} eventType - 事件类型
-     * @param {Object} eventData - 事件数据
+     * English comment.
      */
     emit(eventType, eventData) {
-        // 触发全局事件
+        // English comment.
         const globalListeners = this.listeners.get(eventType) || [];
         globalListeners.forEach((listener) => {
             listener(eventData);
         });
 
-        // 触发对象事件
+        // English comment.
         if (eventData.object && eventData.object.userData.eventEmitter) {
             eventData.object.userData.eventEmitter.emit(eventType, eventData);
         }
     }
 
     /**
-     * 监听事件
-     *
-     * @param {string} eventType - 事件类型
-     * @param {Function} listener - 事件监听器
+     * English comment.
      */
     on(eventType, listener) {
         if (!this.listeners.has(eventType)) {
@@ -378,10 +348,7 @@ export class EventSystem {
     }
 
     /**
-     * 移除事件监听
-     *
-     * @param {string} eventType - 事件类型
-     * @param {Function} listener - 事件监听器
+     * English comment.
      */
     off(eventType, listener) {
         const listeners = this.listeners.get(eventType);
@@ -395,17 +362,17 @@ export class EventSystem {
     }
 
     /**
-     * 销毁事件系统
+     * English comment.
      */
     dispose() {
-        // 取消待处理的 mousemove RAF，防止销毁后回调仍执行
+        // English comment.
         if (this._mouseMoveRafId !== null) {
             cancelAnimationFrame(this._mouseMoveRafId);
             this._mouseMoveRafId = null;
         }
         this._pendingMouseMoveEvent = null;
 
-        // 只有在已初始化且 renderer 存在时才移除事件监听器
+        // English comment.
         if (this.isInitialized && this.scene.renderer && this.scene.renderer.instance) {
             const canvas = this.scene.renderer.instance.domElement;
 

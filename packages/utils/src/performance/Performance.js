@@ -1,8 +1,5 @@
 /**
- * Performance 性能监控
- *
- * @class Performance
- * @description 性能监控工具
+ * English comment.
  */
 export class Performance {
     constructor() {
@@ -11,21 +8,14 @@ export class Performance {
     }
 
     /**
-     * 标记时间点
-     *
-     * @param {string} name - 标记名称
+     * English comment.
      */
     mark(name) {
         this.marks.set(name, performance.now());
     }
 
     /**
-     * 测量时间差
-     *
-     * @param {string} name - 测量名称
-     * @param {string} startMark - 开始标记
-     * @param {string} endMark - 结束标记
-     * @returns {number} 时间差（毫秒）
+     * English comment.
      */
     measure(name, startMark, endMark) {
         const start = this.marks.get(startMark);
@@ -41,17 +31,14 @@ export class Performance {
     }
 
     /**
-     * 获取测量结果
-     *
-     * @param {string} name - 测量名称
-     * @returns {number} 时间（毫秒）
+     * English comment.
      */
     getMeasure(name) {
         return this.measures.get(name) || 0;
     }
 
     /**
-     * 清除所有标记和测量
+     * English comment.
      */
     clear() {
         this.marks.clear();

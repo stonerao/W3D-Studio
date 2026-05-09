@@ -10,10 +10,10 @@ import { useToast } from '../composables/useToast';
 import { useEventSystem } from '../composables/useEventSystem';
 import { tagInstanceForPicking } from '../utils/picking';
 import { getComponentMethodDefinitions } from '../utils/componentRegistry';
+import { t } from '../i18n';
 
 /**
- * 项目 Store
- * 管理项目保存/加载/导出功能
+ * English comment.
  */
 export const useProjectStore = defineStore('project', () => {
     const CAMERA_EXCLUSIVE_TYPES = new Set([
@@ -25,34 +25,34 @@ export const useProjectStore = defineStore('project', () => {
     const MODEL_LOAD_SUCCESS_EVENTS = ['loadComplete', 'loaded'];
     const MODEL_LOAD_ERROR_EVENTS = ['loadError', 'error'];
 
-    // ==================== 状态 ====================
+    // English comment.
 
-    // 项目名称
-    const projectName = ref('未命名项目');
+    // English comment.
+    const projectName = ref(t('project.untitledName'));
 
-    // 项目版本
+    // English comment.
     const projectVersion = ref('1.0.0');
 
-    // API 基础 URL 前缀
+    // English comment.
     const apiBaseUrl = ref('http://localhost:3000/');
 
-    // 项目最后保存时间
+    // English comment.
     const lastSavedAt = ref(null);
 
-    // 是否有未保存的更改
+    // English comment.
     const hasUnsavedChanges = ref(false);
 
-    // 自动保存开关
+    // English comment.
     const autoSaveEnabled = ref(true);
 
-    // 自动保存间隔（毫秒）
-    const autoSaveInterval = ref(60000); // 1分钟
+    // English comment.
+    const autoSaveInterval = ref(60000); // English comment.
 
-    // 视角管理器状态（项目内持久化）
+    // English comment.
     const cameraViews = ref([]);
     const currentCameraViewId = ref(null);
 
-    // 点位管理器状态（项目内持久化）
+    // English comment.
     const buildingPoints = ref([]);
     const buildingPointCoordinateSystem = ref({
         mode: 'xyz',
@@ -64,15 +64,15 @@ export const useProjectStore = defineStore('project', () => {
         }
     });
 
-    // 大场景治理配置（项目内持久化）
+    // English comment.
     const largeSceneGovernanceState = ref({});
 
-    // 反序列化后是否需要在 Scene 就绪时恢复运行时实例
+    // English comment.
     const pendingRuntimeRestore = ref(false);
 
-    // ==================== 计算属性 ====================
+    // English comment.
 
-    // 项目信息
+    // English comment.
     const projectInfo = computed(() => ({
         name: projectName.value,
         version: projectVersion.value,
@@ -81,7 +81,7 @@ export const useProjectStore = defineStore('project', () => {
         hasUnsavedChanges: hasUnsavedChanges.value
     }));
 
-    // ==================== 方法 ====================
+    // English comment.
 
     const cloneJsonSafe = (value, fallback = null) => {
         try {
@@ -137,7 +137,7 @@ export const useProjectStore = defineStore('project', () => {
             : {};
     };
 
-    // methodDefinitions 按 type 缓存（componentRegistry 是静态注册的，运行期不变）
+    // English comment.
     const _methodDefCache = new Map();
     const _cacheMethodDefs = (type) => {
         const defs = getComponentMethodDefinitions(type);
@@ -146,8 +146,7 @@ export const useProjectStore = defineStore('project', () => {
     };
 
     /**
-     * 序列化项目数据
-     * @returns {Object} 项目数据对象
+     * English comment.
      */
     const serializeProject = () => {
         const sceneStore = useSceneStore();
@@ -159,7 +158,7 @@ export const useProjectStore = defineStore('project', () => {
 
         const runtimeScene = sceneStore.sceneInstance;
 
-        // 运行时相机状态（优先于 store，避免 OrbitControls 操作后 store 不同步）
+        // English comment.
         const runtimeCamera = runtimeScene?.camera?.instance;
         const runtimeControls = runtimeScene?.controls?.instance;
 
@@ -175,8 +174,8 @@ export const useProjectStore = defineStore('project', () => {
             ? runtimeCamera.fov
             : sceneStore.sceneConfig.camera.fov;
 
-        // 注意：selectedComponentId 是编辑器 UI 状态，不参与数据同步
-        // 避免选中组件时触发不必要的 dataUpdate 循环
+        // English comment.
+        // English comment.
 
         const projectData = {
             schemaVersion: 1,
@@ -185,7 +184,7 @@ export const useProjectStore = defineStore('project', () => {
             apiBaseUrl: apiBaseUrl.value,
             savedAt: new Date().toISOString(),
 
-            // 场景配置
+            // English comment.
             scene: {
                 renderer: { ...sceneStore.sceneConfig.renderer },
                 camera: {
@@ -201,7 +200,7 @@ export const useProjectStore = defineStore('project', () => {
             },
 
 
-            // 组件列表（methodDefinitions 按 type 缓存，避免每次序列化重复查找）
+            // English comment.
             components: componentStore.components.map((component) => ({
                 methodDefinitions: _methodDefCache.get(component.type)
                     ?? _cacheMethodDefs(component.type),
@@ -220,19 +219,19 @@ export const useProjectStore = defineStore('project', () => {
                 createdAt: component.createdAt
             })),
 
-            // 变量列表
+            // English comment.
             variables: variableStore.serialize(),
 
-            // 全局数据源配置
+            // English comment.
             dataSourceConfig: dataSourceStore.serialize(),
 
-            // 告警规则配置
+            // English comment.
             alarmRules: alarmStore.serialize(),
 
-            // 趋势与回放配置
+            // English comment.
             trendState: trendStore.serialize(),
 
-            // 编辑器 UI 持久化数据
+            // English comment.
             ui: {
                 cameraViews: Array.isArray(cameraViews.value) ? cameraViews.value : [],
                 currentCameraViewId: currentCameraViewId.value || null,
@@ -250,23 +249,22 @@ export const useProjectStore = defineStore('project', () => {
     };
 
     /**
-     * 迁移/规范化项目数据，保证反序列化阶段字段齐全
-     * @param {Object} raw - 原始项目数据
+     * English comment.
      */
     const migrateProjectData = (raw) => {
         const data = raw && typeof raw === 'object' ? raw : {};
 
-        // v1：历史存档可能没有 schemaVersion
+        // English comment.
         const schemaVersion = Number.isFinite(Number(data.schemaVersion))
             ? Number(data.schemaVersion)
             : 1;
 
-        // 兼容：部分存档可能使用 sceneConfig 命名
+        // English comment.
         const scene = data.scene || data.sceneConfig || {};
 
         const ui = data.ui && typeof data.ui === 'object' ? data.ui : {};
 
-        // 兼容历史字段（根级 cameraViews/currentViewId）
+        // English comment.
         const migratedCameraViews = Array.isArray(ui.cameraViews)
             ? ui.cameraViews
             : (Array.isArray(data.cameraViews) ? data.cameraViews : []);
@@ -275,10 +273,10 @@ export const useProjectStore = defineStore('project', () => {
             ?? data.currentViewId
             ?? data.selectedViewId
             ?? null;
-        // 迁移点位数据：从旧的 BuildingEditor 组件配置中提取，或从 ui.buildingPoints 中读取
+        // English comment.
         let migratedBuildingPoints = Array.isArray(ui.buildingPoints) ? ui.buildingPoints : [];
 
-        // 如果 ui 中没有点位数据，尝试从组件配置中迁移
+        // English comment.
         if (migratedBuildingPoints.length === 0 && Array.isArray(data.components)) {
             const buildingEditorComponent = data.components.find(c => c.type === 'BuildingEditor');
             if (buildingEditorComponent?.config?.points) {
@@ -291,7 +289,7 @@ export const useProjectStore = defineStore('project', () => {
         return {
             schemaVersion,
             version: data.version || '1.0.0',
-            name: data.name || '未命名项目',
+            name: data.name || t('project.untitledName'),
             apiBaseUrl: data.apiBaseUrl || 'http://localhost:3000/',
             savedAt: data.savedAt,
             scene,
@@ -330,8 +328,7 @@ export const useProjectStore = defineStore('project', () => {
     };
 
     /**
-     * 反序列化项目数据
-     * @param {Object} projectData - 项目数据对象
+     * English comment.
      */
     const getRuntimeComponentVisibility = (component, runtimeMode = 'editor') => {
         if (runtimeMode === 'preview') {
@@ -352,7 +349,7 @@ export const useProjectStore = defineStore('project', () => {
         try {
             const migrated = migrateProjectData(projectData);
 
-            // 如果场景已初始化：先移除当前场景中的旧组件实例，避免“加载后叠加”
+            // English comment.
             if (sceneStore.sceneInstance) {
                 componentStore.components.forEach((component) => {
                     try {
@@ -363,14 +360,14 @@ export const useProjectStore = defineStore('project', () => {
                 });
             }
 
-            // 更新项目信息
-            projectName.value = migrated.name || '未命名项目';
+            // English comment.
+            projectName.value = migrated.name || t('project.untitledName');
             projectVersion.value = migrated.version || '1.0.0';
             apiBaseUrl.value = migrated.apiBaseUrl || 'http://localhost:3000/';
 
-            // 恢复场景配置
+            // English comment.
             if (migrated.scene) {
-                // 应用场景配置
+                // English comment.
                 if (migrated.scene.renderer) {
                     sceneStore.updateRendererConfig(migrated.scene.renderer);
                 }
@@ -394,7 +391,7 @@ export const useProjectStore = defineStore('project', () => {
                 }
             }
 
-            // 恢复组件数据（保留 id；instance 由后续“运行时恢复”创建）
+            // English comment.
             const restoredComponents = [];
             if (migrated.components && Array.isArray(migrated.components)) {
                 for (const componentData of migrated.components) {
@@ -436,12 +433,12 @@ export const useProjectStore = defineStore('project', () => {
 
             componentStore.hydrateComponents(restoredComponents);
 
-            // 恢复变量数据
+            // English comment.
             if (migrated.variables && Array.isArray(migrated.variables)) {
                 variableStore.deserialize(migrated.variables);
             }
 
-            // 恢复视角管理器数据（编辑器 UI 持久化）
+            // English comment.
             cameraViews.value = Array.isArray(migrated.ui?.cameraViews)
                 ? migrated.ui.cameraViews
                 : [];
@@ -450,7 +447,7 @@ export const useProjectStore = defineStore('project', () => {
                 : null;
             syncCameraViewsToSceneUserData();
 
-            // 恢复点位管理器数据（编辑器 UI 持久化）
+            // English comment.
             buildingPoints.value = Array.isArray(migrated.ui?.buildingPoints)
                 ? migrated.ui.buildingPoints
                 : [];
@@ -471,7 +468,7 @@ export const useProjectStore = defineStore('project', () => {
                 ? migrated.ui.largeSceneGovernance
                 : {};
 
-            // 恢复全局数据源配置
+            // English comment.
             if (migrated.dataSourceConfig) {
                 dataSourceStore.deserialize(migrated.dataSourceConfig);
             }
@@ -482,10 +479,10 @@ export const useProjectStore = defineStore('project', () => {
                 trendStore.deserialize(migrated.trendState);
             }
 
-            // 注意：不再恢复 selectedComponentId，因为它是编辑器 UI 状态
-            // 恢复 UI 状态会导致数据同步循环
+            // English comment.
+            // English comment.
 
-            // 如果场景已就绪，立即恢复运行时实例；否则标记为待恢复
+            // English comment.
             if (sceneStore.sceneInstance) {
                 await restoreRuntimeToScene(runtimeMode);
                 pendingRuntimeRestore.value = false;
@@ -501,8 +498,7 @@ export const useProjectStore = defineStore('project', () => {
     };
 
     /**
-     * 将当前 store 中的组件数据恢复为场景运行时实例
-     * 约束：sceneStore.sceneInstance 必须已存在
+     * English comment.
      */
     const restoreRuntimeToScene = async (runtimeMode = 'editor') => {
         const sceneStore = useSceneStore();
@@ -602,7 +598,7 @@ export const useProjectStore = defineStore('project', () => {
 
         for (const component of componentStore.components) {
             try {
-                // 若已有旧实例，先移除
+                // English comment.
                 if (component.instance) {
                     try {
                         scene.remove(component.name);
@@ -684,8 +680,7 @@ export const useProjectStore = defineStore('project', () => {
     };
 
     /**
-     * 若此前反序列化发生在 Scene 未初始化阶段，则在 Scene 就绪时调用该方法完成恢复
-     * @param {boolean} force - 是否强制恢复，即使 pendingRuntimeRestore 为 false
+     * English comment.
      */
     const restoreRuntimeIfPending = async (force = false, runtimeMode = 'editor') => {
         if (!pendingRuntimeRestore.value && !force) return { restored: false, reason: 'not pending' };
@@ -698,14 +693,14 @@ export const useProjectStore = defineStore('project', () => {
     };
 
     /**
-     * 保存项目到本地存储（async：序列化前先让出主线程，避免阻塞 UI 渲染）
+     * English comment.
      */
     const saveToLocalStorage = async () => {
         const toast = useToast();
         try {
             const projectData = serializeProject();
 
-            // 让出主线程，避免后续的 JSON.stringify 阻塞当前帧
+            // English comment.
             await new Promise((resolve) => setTimeout(resolve, 0));
 
             const jsonString = JSON.stringify(projectData, null, 2);
@@ -717,17 +712,17 @@ export const useProjectStore = defineStore('project', () => {
             hasUnsavedChanges.value = false;
 
             if (import.meta?.env?.DEV) console.log('[Project] Project saved to localStorage');
-            toast.success('项目已保存到本地');
+            toast.success(t('project.savedLocal'));
             return true;
         } catch (error) {
             console.error('[Project] Failed to save to localStorage:', error);
-            toast.error(`保存失败: ${error.message}`);
+            toast.error(t('project.saveFailed', { message: error.message }));
             return false;
         }
     };
 
     /**
-     * 从本地存储加载项目
+     * English comment.
      */
     const loadFromLocalStorage = async () => {
         const toast = useToast();
@@ -735,7 +730,7 @@ export const useProjectStore = defineStore('project', () => {
             const jsonString = localStorage.getItem('w3d_editor_project');
             if (!jsonString) {
                 console.log('[Project] No saved project found in localStorage');
-                toast.warning('未找到已保存的项目');
+                toast.warning(t('project.noSavedProject'));
                 return false;
             }
 
@@ -746,38 +741,38 @@ export const useProjectStore = defineStore('project', () => {
             hasUnsavedChanges.value = false;
 
             console.log('[Project] Project loaded from localStorage');
-            toast.success('项目已加载');
+            toast.success(t('project.loaded'));
             return true;
         } catch (error) {
             console.error('[Project] Failed to load from localStorage:', error);
-            toast.error(`加载失败: ${error.message}`);
+            toast.error(t('project.loadFailed', { message: error.message }));
             return false;
         }
     };
 
     /**
-     * 导出项目为 JSON 文件
+     * English comment.
      */
     const exportToJSON = () => {
         try {
             const projectData = serializeProject();
             const jsonString = JSON.stringify(projectData, null, 2);
 
-            // 创建 Blob
+            // English comment.
             const blob = new Blob([jsonString], { type: 'application/json' });
 
-            // 创建下载链接
+            // English comment.
             const url = URL.createObjectURL(blob);
             const link = document.createElement('a');
             link.href = url;
             link.download = `${projectName.value}_${Date.now()}.json`;
 
-            // 触发下载
+            // English comment.
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
 
-            // 释放 URL
+            // English comment.
             URL.revokeObjectURL(url);
 
             console.log('[Project] Project exported to JSON file');
@@ -789,8 +784,7 @@ export const useProjectStore = defineStore('project', () => {
     };
 
     /**
-     * 从 JSON 文件导入项目
-     * @param {File} file - JSON 文件
+     * English comment.
      */
     const importFromJSON = async (file) => {
         try {
@@ -799,7 +793,7 @@ export const useProjectStore = defineStore('project', () => {
 
             await deserializeProject(projectData, 'editor');
 
-            hasUnsavedChanges.value = true; // 导入后标记为未保存
+            hasUnsavedChanges.value = true; // English comment.
 
             console.log('[Project] Project imported from JSON file');
             return true;
@@ -810,7 +804,7 @@ export const useProjectStore = defineStore('project', () => {
     };
 
     /**
-     * 清空本地存储的项目
+     * English comment.
      */
     const clearLocalStorage = () => {
         try {
@@ -825,18 +819,14 @@ export const useProjectStore = defineStore('project', () => {
     };
 
     /**
-     * 标记有未保存的更改
+     * English comment.
      */
     const markAsUnsaved = () => {
         hasUnsavedChanges.value = true;
     };
 
     /**
-     * 更新视角管理器状态
-     * @param {Object} payload
-     * @param {Array} payload.views
-     * @param {string|null} payload.currentViewId
-     * @param {boolean} payload.markUnsaved
+     * English comment.
      */
     const setCameraViewsState = ({ views = [], currentViewId = null, markUnsaved = true } = {}) => {
         cameraViews.value = Array.isArray(views) ? views : [];
@@ -853,10 +843,7 @@ export const useProjectStore = defineStore('project', () => {
     });
 
     /**
-     * 更新点位管理器状态
-     * @param {Object} payload
-     * @param {Array} payload.points
-     * @param {boolean} payload.markUnsaved
+     * English comment.
      */
     const setBuildingPointsState = ({ points = [], markUnsaved = true } = {}) => {
         buildingPoints.value = Array.isArray(points) ? points : [];
@@ -918,11 +905,10 @@ export const useProjectStore = defineStore('project', () => {
             : {}
     });
 
-    // ==================== 返回 ====================
+    // English comment.
 
     /**
-     * 更新项目设置
-     * @param {Object} settings - 设置对象
+     * English comment.
      */
     const updateSettings = (settings) => {
         if (settings.name !== undefined) {
@@ -934,10 +920,10 @@ export const useProjectStore = defineStore('project', () => {
         hasUnsavedChanges.value = true;
     };
 
-    // ==================== 返回 ====================
+    // English comment.
 
     return {
-        // 状态
+        // English comment.
         projectName,
         projectVersion,
         apiBaseUrl,
@@ -952,10 +938,10 @@ export const useProjectStore = defineStore('project', () => {
         buildingPointCoordinateSystem,
         largeSceneGovernanceState,
 
-        // 计算属性
+        // English comment.
         projectInfo,
 
-        // 方法
+        // English comment.
         serializeProject,
         deserializeProject,
         restoreRuntimeToScene,

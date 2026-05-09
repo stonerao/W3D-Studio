@@ -1,8 +1,4 @@
-/*
- * @Description: 生成路径方法类
- * @Author:
- * @Date: 2022-02-07 16:45:39
-  */
+/* English comment. */
 import glUtil from '@glUtil';
 import PATH_SHADER from './shader';
 import { handlePoints, getRotaion } from './util';
@@ -16,10 +12,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 添加路径
-     * @author
-     * @date 2022-02-07
-     * @param {Objec} opt 配置项
+     * English comment.
      */
     addPath(opt) {
         const conf = {
@@ -44,15 +37,15 @@ export default class PathMesh {
             isFade = false
         } = conf;
 
-        // 有重复id则不创建
+        // English comment.
         if (this._pathObjs[id]) return;
-        // 点位数据处理
+        // English comment.
         const {
             indexs, cIndex, vecs, length
         } = handlePoints(conf);
-        // 创建geo
+        // English comment.
         const geo = this.createGeo(geoStyle, size, vecs, cIndex);
-        // 创建材质
+        // English comment.
         const mtl = this.createMtl(conf, { length, size });
         glUtil.shaderMtlAddFog(mtl);
         const mesh = new THREE.Mesh(geo, mtl);
@@ -80,7 +73,7 @@ export default class PathMesh {
             this.pathIns.eventArr.push(mesh);
             this.pathIns.renderer.updateEventArr(this.pathIns);
         }
-        // 高性能模式 内存换计算
+        // English comment.
         if (this.bufferPos[id]) return;
         const [cBevels, position] = [geo.attributes.cBevels.array, geo.attributes.position.array];
         const [positions, bevels, rotations, rotations2D] = [[], [], [], []];
@@ -115,14 +108,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 生成geo
-     * @author
-     * @date 2021-12-23
-     * @param {String} geoStyle 路径样式
-     * @param {number} size 路径宽度
-     * @param {array} vecs 点位
-     * @param {array} cIndex 下标
-     * @returns {Object} geo
+     * English comment.
      */
     createGeo(geoStyle, size, vecs) {
         const geo = glUtil.geo.buf();
@@ -149,16 +135,13 @@ export default class PathMesh {
     }
 
     /**
-     * @description 获取纹理设置
-     * @author
-     * @param {*} repeat 纹理重复
-     * @param {*} opt 长度、宽度
+     * English comment.
      */
     getRepeat(repeat, opt) {
         let [x, y] = [1, 1];
         const { length, size } = opt;
         if (repeat[0] >= 0 && repeat[1] >= 0) {
-            // 兼容以前数组配置
+            // English comment.
             x = repeat['0'];
             y = repeat['1'];
         } else {
@@ -169,9 +152,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 创建材质
-     * @author
-     * @date 2021-12-31
+     * English comment.
      */
     createMtl(config, opt) {
         const {
@@ -188,21 +169,21 @@ export default class PathMesh {
             ...mtlConfig,
             uniforms: {
                 uTime: { value: 0 },
-                uBgColor: { value: glUtil.getColorArr(bgColor, true) }, // 背景颜色
-                uBgTxue: { value: bgTxue }, // 背景纹理
-                uIsBgTxue: { value: !!bgTxue }, // 背景纹理是否加载
-                uBgRepeat: { value: this.getRepeat(bgRepeat, opt) }, // 背景纹理重复
-                uOpacity: { value: 1 }, // 整体显隐
-                uColor: { value: glUtil.getColorArr(color, true) }, // 跑光颜色
-                uTxue: { value: txue }, // 跑光纹理
-                uIsTxue: { value: !!txue }, // 跑光纹理是否加载
-                uRepeat: { value: this.getRepeat(repeat, opt) }, // 跑光纹理重复
-                uLoop: { value: loop }, // 动画是否重复执行
-                uRadio: { value: radio || 0.00001 }, // 跑光占比
-                uIsSyn: { value: isSyn }, // 背景和流光是否同步
-                uScale: { value: 1 }, // 相机缩放倍数
-                uAutoSize: { sizeAttenuation }, // 是否开启缩放
-                uIsFade: { value: isFade } // 是否首尾透明
+                uBgColor: { value: glUtil.getColorArr(bgColor, true) }, // English comment.
+                uBgTxue: { value: bgTxue }, // English comment.
+                uIsBgTxue: { value: !!bgTxue }, // English comment.
+                uBgRepeat: { value: this.getRepeat(bgRepeat, opt) }, // English comment.
+                uOpacity: { value: 1 }, // English comment.
+                uColor: { value: glUtil.getColorArr(color, true) }, // English comment.
+                uTxue: { value: txue }, // English comment.
+                uIsTxue: { value: !!txue }, // English comment.
+                uRepeat: { value: this.getRepeat(repeat, opt) }, // English comment.
+                uLoop: { value: loop }, // English comment.
+                uRadio: { value: radio || 0.00001 }, // English comment.
+                uIsSyn: { value: isSyn }, // English comment.
+                uScale: { value: 1 }, // English comment.
+                uAutoSize: { sizeAttenuation }, // English comment.
+                uIsFade: { value: isFade } // English comment.
             },
             vertexShader: PATH_SHADER.vertexShader,
             fragmentShader: style === 'flow' ? PATH_SHADER.fragmentShader1 : PATH_SHADER.fragmentShader2
@@ -210,7 +191,7 @@ export default class PathMesh {
         return mtl;
     }
 
-    // 获取纹理
+    // English comment.
     getTxue(txueId) {
         const txue = this.pathIns.renderer.getTxue(txueId);
         if (txue) {
@@ -222,10 +203,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 获取uv，点位数据
-     * @author
-     * @date 2021-12-31
-     * @param {Object} buffer 数据存储对象
+     * English comment.
      */
     roadBuffer(config) {
         const {
@@ -257,21 +235,16 @@ export default class PathMesh {
     }
 
     /**
-     * @description 根据路径geo样式获取构面斜率
-     * @author
-     * @date 2021-12-24
-     * @param {Array} vecs 坐标
-     * @param {String} geoStyle 路径样式
-     * @returns {*}
+     * English comment.
      */
     getPathSlope(vecs, geoStyle) {
         if (geoStyle === 'plane') {
-            // 平面展示
+            // English comment.
             const res = this.pathIns.getPathInfo([vecs], false, true, false);
             res.bevelY = 0;
             return res;
         }
-        // 侧面展示
+        // English comment.
         const obj = {
             vertices: [],
             beveling: [],
@@ -285,11 +258,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 拆分3维点为2维，方便构面
-     * @author
-     * @date 2021-12-24
-     * @param {Array} 点位
-     * @returns {Object}
+     * English comment.
      */
     getVec3ToVec2(arr) {
         const vecs = [];
@@ -325,13 +294,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 关键点事件
-     * @author
-     * @date 2022-03-04
-     * @param {object} node 节点
-     * @param {number} time 长度
-     * @param {number} index 点位下标
-     * @param {boolean} idEnd 是否最后一个点
+     * English comment.
      */
     handlerEvent(node, diffTime) {
         const {
@@ -359,10 +322,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 动画
-     * @author
-     * @date 2021-12-30
-     * @param {Number} dt
+     * English comment.
      */
     animate(dt) {
         Object.keys(this._pathObjs).forEach((key) => {
@@ -388,13 +348,13 @@ export default class PathMesh {
                     id,
                     radio
                 });
-                // 移动物动画
+                // English comment.
                 this.pathIns.moverAnimate(id, radio, nScale);
             }
         });
     }
 
-    // 手动设置动画展示位置
+    // English comment.
     setPathRadio(ids = [], radio) {
         Object.keys(this._pathObjs).forEach((key) => {
             const node = this._pathObjs[key];
@@ -411,7 +371,7 @@ export default class PathMesh {
         });
     }
 
-    // 设置运动时间
+    // English comment.
     setPathAniTime(ids = [], time) {
         Object.keys(this._pathObjs).forEach((key) => {
             const node = this._pathObjs[key];
@@ -424,7 +384,7 @@ export default class PathMesh {
         });
     }
 
-    // 设置运动速度
+    // English comment.
     setPathSpeed(ids = [], speed) {
         if (speed <= 0) return;
         Object.keys(this._pathObjs).forEach((key) => {
@@ -439,9 +399,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 销毁mesh
-     * @author
-     * @date 2022-01-06
+     * English comment.
      */
     dispose() {
         Object.keys(this._pathObjs).forEach((key) => {
@@ -452,10 +410,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 删除路径
-     * @author
-     * @date 2022-03-05
-     * @param {array} id
+     * English comment.
      */
     delPath(ids) {
         for (let i = 0; i < ids.length; i++) {
@@ -470,10 +425,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 停止动画
-     * @author
-     * @date 2022-01-06
-     * @param {array} ids 路径id
+     * English comment.
      */
     stop(ids) {
         for (let i = 0; i < ids.length; i++) {
@@ -485,10 +437,7 @@ export default class PathMesh {
     }
 
     /**
-     * @description 开启动画
-     * @author
-     * @date 2022-01-06
-     * @param {array} id 路径id
+     * English comment.
      */
     play(ids) {
         for (let i = 0; i < ids.length; i++) {
@@ -499,13 +448,13 @@ export default class PathMesh {
         }
     }
 
-    // 获取对应路径节点
+    // English comment.
     getPathNode(id) {
         if (!this._pathObjs[id]) return false;
         return this._pathObjs[id];
     }
 
-    // 显示
+    // English comment.
     show(ids, time = this.pathIns.tweenTims, callback) {
         for (let i = 0; i < ids.length; i++) {
             const id = ids[i];
@@ -515,7 +464,7 @@ export default class PathMesh {
         }
     }
 
-    // 隐藏
+    // English comment.
     hide(ids, time, callback) {
         for (let i = 0; i < ids.length; i++) {
             const id = ids[i];

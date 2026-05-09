@@ -18,7 +18,7 @@
                         <path d="M3 2L7 5L3 8V2Z" />
                     </svg>
                 </span>
-                <span class="accordion-title">{{ item.label }}</span>
+                <span class="accordion-title">{{ displayText(item.label) }}</span>
             </button>
             <Transition name="accordion-content">
                 <div v-show="isExpanded(item.key)" class="accordion-content-wrapper">
@@ -33,12 +33,13 @@
 
 <script setup>
 import { ref } from 'vue';
+import { translateDisplayText } from '../../i18n';
 
 const props = defineProps({
     items: {
         type: Array,
         required: true,
-        // items: [{ key: 'transform', label: '变换', icon: '' }]
+        // English comment.
     },
     defaultOpen: {
         type: Array,
@@ -47,22 +48,24 @@ const props = defineProps({
     }
 });
 
-// 展开状态管理
+// English comment.
 const expandedKeys = ref(new Set(props.defaultOpen));
 
-// 检查是否展开
+const displayText = (value) => translateDisplayText(value);
+
+// English comment.
 const isExpanded = (key) => {
     return expandedKeys.value.has(key);
 };
 
-// 切换展开状态
+// English comment.
 const toggle = (key) => {
     if (expandedKeys.value.has(key)) {
         expandedKeys.value.delete(key);
     } else {
         expandedKeys.value.add(key);
     }
-    // 触发响应式更新
+    // English comment.
     expandedKeys.value = new Set(expandedKeys.value);
 };
 </script>
@@ -148,7 +151,7 @@ const toggle = (key) => {
     background-color: rgba(13, 20, 32, 0.7);
 }
 
-/* 手风琴内容展开/收起动画 */
+/* English comment. */
 .accordion-content-enter-active {
     animation: accordion-expand var(--duration-slow, 300ms) var(--ease-out-expo, cubic-bezier(0.16, 1, 0.3, 1));
 }

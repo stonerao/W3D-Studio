@@ -18,7 +18,7 @@
                 <TrafficCoordinateFittingEditor :component-id="componentId" />
 
                 <div class="roadside-device-manager__layout flex gap-3">
-                <!-- 左侧：列表/方块 -->
+                <!-- English comment. -->
                 <div class="roadside-device-manager__sidebar w-[320px] shrink-0">
                     <div class="roadside-device-manager__toolbar flex items-center justify-between mb-2">
                         <div class="flex gap-2">
@@ -49,7 +49,7 @@
                         暂无设备，点击“新增”开始。
                     </div>
 
-                    <!-- 列表视图 -->
+                    <!-- English comment. -->
                     <div v-else-if="viewMode === 'list'" class="roadside-device-manager__list space-y-1">
                         <button
                             v-for="d in devices"
@@ -68,7 +68,7 @@
                         </button>
                     </div>
 
-                    <!-- 方块视图 -->
+                    <!-- English comment. -->
                     <div v-else class="roadside-device-manager__grid grid grid-cols-2 gap-2">
                         <button
                             v-for="d in devices"
@@ -84,7 +84,7 @@
                     </div>
                 </div>
 
-                <!-- 右侧：编辑 -->
+                <!-- English comment. -->
                 <div class="roadside-device-manager__editor flex-1 rounded p-3">
                     <div v-if="!currentDevice" class="roadside-device-manager__placeholder text-sm">
                         请选择左侧设备进行编辑。
@@ -257,7 +257,7 @@
             </template>
         </Modal>
 
-        <!-- 拾取坐标确认框：拾取到点后先确认，确认后才写回 xyz -->
+        <!-- English comment. -->
         <Modal
             v-model="showPickConfirm"
             title="确认拾取坐标"
@@ -283,7 +283,7 @@
             </template>
         </Modal>
 
-        <!-- 资源选择器 -->
+        <!-- English comment. -->
         <AssetPickerModal
             v-model="showAssetPicker"
             :category="pickerCategory"
@@ -361,7 +361,7 @@ const hasResource = computed(() => {
 
 const hasMeaningfulXyz = computed(() => {
     const xyz = ensureVec3(currentDevice.value?.xyz, [0, 0, 0]);
-    // 业务上 [0,0,0] 经常是“尚未设置”的默认值，这里只做提示，不阻断保存
+    // English comment.
     return !(xyz[0] === 0 && xyz[1] === 0 && xyz[2] === 0);
 });
 
@@ -471,7 +471,7 @@ const onDraftKeydown = (event, commitFn) => {
             event.preventDefault();
         } catch {}
         commitFn?.();
-        // 让输入框失焦，避免连续触发
+        // English comment.
         try {
             event.target?.blur?.();
         } catch {}
@@ -542,7 +542,7 @@ const addDevice = async () => {
         await commitDevices(next);
         await nextTick();
 
-        // commitDevices 不再因运行时异常抛出，设备一定已写入 store
+        // English comment.
         const exists = devices.value.some((d) => d.id === id);
         if (exists) {
             selectDevice(id);
@@ -550,7 +550,7 @@ const addDevice = async () => {
             syncDraftFromDevice(dev);
             pendingAutoSelectDeviceId.value = '';
         } else {
-            // 极端兜底：响应式传播延迟，留给 watcher 处理
+            // English comment.
             console.warn('[DeviceManager] 新设备写入 store 后未立即可见，等待 watcher 补偿', id);
         }
     } catch (error) {
@@ -649,7 +649,7 @@ const startPick = () => {
     if (!selectedDeviceId.value) return;
     componentStore.startTrafficPicking(props.componentId, selectedDeviceId.value);
 
-    // 最小化弹窗（这里用关闭弹窗模拟最小化），拾取完成后自动恢复
+    // English comment.
     minimizeAndRestoreAfterPick.value = true;
     showManager.value = false;
 };
@@ -716,7 +716,7 @@ const cancelPickConfirm = () => {
         return;
     }
 
-    // 取消：继续拾取，不自动恢复主弹窗
+    // English comment.
     suppressRestoreOnce.value = true;
     componentStore.clearTrafficPickConfirm();
     if (pc.componentId === props.componentId && pc.deviceId) {
@@ -778,7 +778,7 @@ watch(
 watch(
     () => componentStore.trafficPicking?.active,
     (active, prev) => {
-        // 从“拾取中”变为“结束”，且是当前组件触发的拾取：恢复弹窗
+        // English comment.
         if (prev && !active && minimizeAndRestoreAfterPick.value && !componentStore.trafficPickConfirm?.visible) {
             const last = componentStore.trafficSelectedDevice;
             if (last?.componentId === props.componentId) {
@@ -792,7 +792,7 @@ watch(
 watch(
     () => componentStore.trafficPickConfirm?.visible,
     (visible, prev) => {
-        // 确认框关闭后（且本轮拾取需要恢复）：恢复主弹窗
+        // English comment.
         if (prev && !visible && minimizeAndRestoreAfterPick.value) {
             if (suppressRestoreOnce.value) {
                 suppressRestoreOnce.value = false;

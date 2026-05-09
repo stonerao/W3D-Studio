@@ -2,10 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * GridHelper 网格辅助组件
- *
- * @class GridHelper
- * @extends Component
+ * English comment.
  */
 export class GridHelper extends Component {
     static defaultConfig = {
@@ -31,21 +28,20 @@ export class GridHelper extends Component {
     }
 
     /**
-     * 更新配置
-     * @param {Object} newConfig - 新配置
+     * English comment.
      */
     updateConfig(newConfig) {
-        // 合并配置
+        // English comment.
         Object.assign(this.config, newConfig);
 
-        // 移除旧的网格
+        // English comment.
         if (this.grid) {
             this.remove(this.grid);
             this.grid.geometry.dispose();
             this.grid.material.dispose();
         }
 
-        // 重新创建
+        // English comment.
         this.createGrid();
     }
 

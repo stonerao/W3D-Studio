@@ -12,27 +12,33 @@ import { fileURLToPath } from 'url';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 export default defineConfig({
-    // Vue 插件
+    // English comment.
     plugins: [vue()],
 
-    // 开发服务器
+    // English comment.
     server: {
         port: 5174,
         host: '0.0.0.0',
         open: false,
         cors: true,
         strictPort: false,
+        proxy: {
+            '/api/ai': {
+                target: process.env.VITE_AI_GATEWAY_URL || 'http://localhost:8787',
+                changeOrigin: true
+            }
+        },
         headers: {
             'Cross-Origin-Opener-Policy': 'same-origin',
             'Cross-Origin-Embedder-Policy': 'require-corp'
         },
-        // 配置文件系统访问
+        // English comment.
         fs: {
             allow: ['..', '../..']
         }
     },
 
-    // 公共目录配置
+    // English comment.
     preview: {
         headers: {
             'Cross-Origin-Opener-Policy': 'same-origin',
@@ -42,7 +48,7 @@ export default defineConfig({
 
     publicDir: path.resolve(__dirname, 'public'),
 
-    // 构建配置
+    // English comment.
     build: {
         outDir: 'dist',
         assetsDir: 'assets',
@@ -63,7 +69,7 @@ export default defineConfig({
         chunkSizeWarningLimit: 1000
     },
 
-    // 路径别名
+    // English comment.
     resolve: {
         alias: {
             '@': path.resolve(__dirname, 'src'),
@@ -73,7 +79,7 @@ export default defineConfig({
         }
     },
 
-    // 优化配置
+    // English comment.
     optimizeDeps: {
         include: ['three', 'vue', 'vue-router', 'pinia'],
         exclude: [

@@ -2,41 +2,22 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * BuildingEditor 楼宇点位编辑器组件
- *
- * @class BuildingEditor
- * @extends Component
- * @description 用于在 3D 场景中管理楼宇点位，支持点位的增删改查、筛选和交互
- *
- * @example
- * const editor = await scene.add('BuildingEditor', {
- *     name: 'building-editor',
- *     points: [],
- *     pointTypes: POINT_TYPES,
- *     enableRightClick: true
- * });
- *
- * // 添加点位
- * editor.addPoint({ id: 'p1', name: '摄像头1', type: 'camera', floor: '1F', position: { x: 0, y: 1, z: 0 } });
- *
- * // 筛选点位
- * editor.filterByFloor('2F');
- * editor.filterByType('camera');
+ * English comment.
  */
 export class BuildingEditor extends Component {
     /**
-     * 默认配置
+     * English comment.
      */
     static defaultConfig = {
-        points: [],              // 初始点位数据数组
-        pointTypes: [],          // 点位类型配置
-        selectedFloor: 'all',    // 当前选中楼层
-        selectedType: 'all',     // 当前选中类型
-        enableRightClick: true,  // 是否启用右键添加
-        pointSize: 1.0,          // 点位标记大小
-        highlightColor: 0xFFFF00,// 高亮颜色
-        defaultIcon: null,       // 默认图标
-        labelOffset: { x: 0, y: 1.5, z: 0 } // 标签偏移
+        points: [],              // English comment.
+        pointTypes: [],          // English comment.
+        selectedFloor: 'all',    // English comment.
+        selectedType: 'all',     // English comment.
+        enableRightClick: true,  // English comment.
+        pointSize: 1.0,          // English comment.
+        highlightColor: 0xFFFF00,// English comment.
+        defaultIcon: null,       // English comment.
+        labelOffset: { x: 0, y: 1.5, z: 0 } // English comment.
     };
 
     normalizePosition(position, fallback = { x: 0, y: 0, z: 0 }) {
@@ -73,50 +54,50 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 组件挂载完成
+     * English comment.
      */
     async onMounted() {
-        // 点位对象映射表 (id -> THREE.Object3D)
+        // English comment.
         this.pointObjects = new Map();
 
-        // 点位数据映射表 (id -> pointData)
+        // English comment.
         this.pointDataMap = new Map();
 
-        // 点位类型映射表 (typeId -> typeConfig)
+        // English comment.
         this.typeConfigMap = new Map();
 
-        // 当前选中的点位 ID
+        // English comment.
         this.selectedPointId = null;
 
-        // 当前筛选条件
+        // English comment.
         this.currentFloorFilter = this.config.selectedFloor;
         this.currentTypeFilter = this.config.selectedType;
 
-        // 纹理加载器
+        // English comment.
         this.textureLoader = new THREE.TextureLoader();
 
-        // 纹理缓存
+        // English comment.
         this.textureCache = new Map();
 
-        // 射线检测器
+        // English comment.
         this.raycaster = new THREE.Raycaster();
         this.raycaster.params.Sprite = { threshold: 10 };
         this.mouse = new THREE.Vector2();
 
-        // 初始化点位类型配置
+        // English comment.
         this.initPointTypes();
 
-        // 创建初始点位
+        // English comment.
         await this.createInitialPoints();
 
-        // 设置鼠标事件
+        // English comment.
         this.setupMouseEvents();
 
         console.log('[BuildingEditor] 组件初始化完成');
     }
 
     /**
-     * 初始化点位类型配置
+     * English comment.
      */
     initPointTypes() {
         const { pointTypes } = this.config;
@@ -131,7 +112,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 创建初始点位
+     * English comment.
      */
     async createInitialPoints() {
         const { points } = this.config;
@@ -139,7 +120,7 @@ export class BuildingEditor extends Component {
         if (points && points.length > 0) {
             for (let index = 0; index < points.length; index += 1) {
                 const pointData = this.normalizePointData(points[index], index);
-                await this.addPoint(pointData, false); // 不触发事件
+                await this.addPoint(pointData, false); // English comment.
             }
         }
 
@@ -147,7 +128,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 加载纹理（带缓存）
+     * English comment.
      */
     async loadTexture(url) {
         if (!url) return null;
@@ -173,31 +154,31 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 生成唯一 ID
+     * English comment.
      */
     generateId() {
         return 'point_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
     }
 
     /**
-     * 获取点位类型配置
+     * English comment.
      */
     getTypeConfig(typeId) {
         return this.typeConfigMap.get(typeId) || null;
     }
 
     /**
-     * 获取可交互对象（供事件系统使用）
+     * English comment.
      */
     getInteractiveObjects() {
-        // 返回所有可见的点位对象
+        // English comment.
         return Array.from(this.pointObjects.values()).filter(obj => obj.visible);
     }
 
-    // ==================== 点位创建和管理方法 ====================
+    // English comment.
 
     /**
-     * 创建点位 3D 对象
+     * English comment.
      */
     async createPointObject(pointData) {
         const { id, type } = pointData;
@@ -207,7 +188,7 @@ export class BuildingEditor extends Component {
 
         let markerObject;
 
-        // 如果有图标，使用 Sprite
+        // English comment.
         if (typeConfig && typeConfig.icon) {
             try {
                 const texture = await this.loadTexture(typeConfig.icon);
@@ -221,18 +202,18 @@ export class BuildingEditor extends Component {
                 markerObject = new THREE.Sprite(material);
                 markerObject.scale.set(pointSize * 2, pointSize * 2, 1);
             } catch (error) {
-                // 纹理加载失败，使用默认球体
+                // English comment.
                 markerObject = this.createDefaultMarker(typeConfig, pointSize);
             }
         } else {
-            // 没有图标，使用默认球体
+            // English comment.
             markerObject = this.createDefaultMarker(typeConfig, pointSize);
         }
 
-        // 设置位置
+        // English comment.
         markerObject.position.set(position.x, position.y, position.z);
 
-        // 存储用户数据
+        // English comment.
         markerObject.userData = {
             pointId: id,
             pointType: type,
@@ -243,7 +224,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 创建默认点位标记（球体）
+     * English comment.
      */
     createDefaultMarker(typeConfig, size) {
         const color = typeConfig ? typeConfig.color : '#07A6FF';
@@ -257,19 +238,19 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 添加点位
+     * English comment.
      */
     async addPoint(pointData, triggerEvent = true) {
         const normalizedData = this.normalizePointData(pointData, this.pointObjects.size);
         const { id } = normalizedData;
 
-        // 检查是否已存在
+        // English comment.
         if (this.pointObjects.has(id)) {
             console.warn(`[BuildingEditor] 点位 ${id} 已存在`);
             return null;
         }
 
-        // 创建 3D 对象
+        // English comment.
         const pointObject = await this.createPointObject(normalizedData);
 
         if (!pointObject) {
@@ -277,17 +258,17 @@ export class BuildingEditor extends Component {
             return null;
         }
 
-        // 添加到场景
+        // English comment.
         this.add(pointObject);
 
-        // 保存到映射表
+        // English comment.
         this.pointObjects.set(id, pointObject);
         this.pointDataMap.set(id, { ...normalizedData });
 
-        // 应用筛选
+        // English comment.
         this.applyFiltersToPoint(id);
 
-        // 触发事件
+        // English comment.
         if (triggerEvent) {
             this.emit('pointAdded', { pointId: id, pointData: normalizedData });
         }
@@ -297,7 +278,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 更新点位
+     * English comment.
      */
     async updatePoint(id, updates) {
         const pointObject = this.pointObjects.get(id);
@@ -308,7 +289,7 @@ export class BuildingEditor extends Component {
             return false;
         }
 
-        // 更新位置
+        // English comment.
         if (updates.position) {
             const nextPosition = this.normalizePosition(updates.position, pointData.position || { x: 0, y: 0, z: 0 });
             pointObject.position.set(
@@ -319,21 +300,21 @@ export class BuildingEditor extends Component {
             updates.position = nextPosition;
         }
 
-        // 更新类型（需要重新创建对象）
+        // English comment.
         if (updates.type && updates.type !== pointData.type) {
             const newPointData = { ...pointData, ...updates };
             await this.removePoint(id, false);
             await this.addPoint(newPointData, false);
         }
 
-        // 更新数据
+        // English comment.
         Object.assign(pointData, updates);
         this.pointDataMap.set(id, pointData);
 
-        // 应用筛选
+        // English comment.
         this.applyFiltersToPoint(id);
 
-        // 触发事件
+        // English comment.
         this.emit('pointUpdated', { pointId: id, pointData, updates });
 
         console.log(`[BuildingEditor] 更新点位: ${id}`);
@@ -341,7 +322,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 删除点位
+     * English comment.
      */
     removePoint(id, triggerEvent = true) {
         const pointObject = this.pointObjects.get(id);
@@ -352,30 +333,30 @@ export class BuildingEditor extends Component {
             return false;
         }
 
-        // 如果是选中状态，先取消选中
+        // English comment.
         if (this.selectedPointId === id) {
             this.deselectPoint();
         }
 
-        // 从场景移除
+        // English comment.
         this.remove(pointObject);
 
-        // 释放资源
+        // English comment.
         if (pointObject.geometry) {
             pointObject.geometry.dispose();
         }
         if (pointObject.material) {
             if (pointObject.material.map) {
-                // 不释放纹理，因为可能被其他点位使用
+                // English comment.
             }
             pointObject.material.dispose();
         }
 
-        // 从映射表移除
+        // English comment.
         this.pointObjects.delete(id);
         this.pointDataMap.delete(id);
 
-        // 触发事件
+        // English comment.
         if (triggerEvent) {
             this.emit('pointRemoved', { pointId: id, pointData });
         }
@@ -385,21 +366,21 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 获取点位数据
+     * English comment.
      */
     getPoint(id) {
         return this.pointDataMap.get(id) || null;
     }
 
     /**
-     * 获取所有点位数据
+     * English comment.
      */
     getAllPoints() {
         return Array.from(this.pointDataMap.values());
     }
 
     /**
-     * 获取筛选后的点位
+     * English comment.
      */
     getFilteredPoints() {
         return this.getAllPoints().filter(point => {
@@ -410,7 +391,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 清除所有点位
+     * English comment.
      */
     clearPoints() {
         const ids = Array.from(this.pointObjects.keys());
@@ -418,10 +399,10 @@ export class BuildingEditor extends Component {
         this.emit('pointsCleared');
     }
 
-    // ==================== 筛选方法 ====================
+    // English comment.
 
     /**
-     * 按楼层筛选
+     * English comment.
      */
     filterByFloor(floor) {
         this.currentFloorFilter = floor;
@@ -430,7 +411,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 按类型筛选
+     * English comment.
      */
     filterByType(type) {
         this.currentTypeFilter = type;
@@ -439,7 +420,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 设置筛选条件
+     * English comment.
      */
     setFilters(floor, type) {
         this.currentFloorFilter = floor;
@@ -449,7 +430,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 应用筛选到所有点位
+     * English comment.
      */
     applyFilters() {
         this.pointObjects.forEach((_, id) => {
@@ -458,7 +439,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 应用筛选到单个点位
+     * English comment.
      */
     applyFiltersToPoint(id) {
         const pointObject = this.pointObjects.get(id);
@@ -472,10 +453,10 @@ export class BuildingEditor extends Component {
         pointObject.visible = floorMatch && typeMatch;
     }
 
-    // ==================== 选中和高亮方法 ====================
+    // English comment.
 
     /**
-     * 选中点位
+     * English comment.
      */
     selectPoint(id) {
         const pointObject = this.pointObjects.get(id);
@@ -486,7 +467,7 @@ export class BuildingEditor extends Component {
             return;
         }
 
-        // 如果已有选中，先取消
+        // English comment.
         if (this.selectedPointId && this.selectedPointId !== id) {
             this.deselectPoint();
         }
@@ -499,7 +480,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 取消选中
+     * English comment.
      */
     deselectPoint() {
         if (!this.selectedPointId) return;
@@ -514,22 +495,22 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 高亮点位
+     * English comment.
      */
     highlightPoint(pointObject) {
         const { highlightColor } = this.config;
 
-        // 保存原始颜色
+        // English comment.
         if (!pointObject.userData.originalColor && pointObject.material) {
             pointObject.userData.originalColor = pointObject.material.color.getHex();
         }
 
-        // 设置高亮颜色
+        // English comment.
         if (pointObject.material) {
             pointObject.material.color.setHex(highlightColor);
         }
 
-        // 放大效果
+        // English comment.
         if (!pointObject.userData.originalScale) {
             pointObject.userData.originalScale = pointObject.scale.clone();
         }
@@ -537,26 +518,26 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 取消高亮
+     * English comment.
      */
     unhighlightPoint(pointObject, id) {
-        // 恢复原始颜色
+        // English comment.
         if (pointObject.userData.originalColor !== undefined && pointObject.material) {
             pointObject.material.color.setHex(pointObject.userData.originalColor);
             delete pointObject.userData.originalColor;
         }
 
-        // 恢复原始大小
+        // English comment.
         if (pointObject.userData.originalScale) {
             pointObject.scale.copy(pointObject.userData.originalScale);
             delete pointObject.userData.originalScale;
         }
     }
 
-    // ==================== 鼠标事件方法 ====================
+    // English comment.
 
     /**
-     * 设置鼠标事件
+     * English comment.
      */
     setupMouseEvents() {
         if (!this.scene || !this.scene.eventSystem) {
@@ -564,11 +545,11 @@ export class BuildingEditor extends Component {
             return;
         }
 
-        // 绑定事件处理函数
+        // English comment.
         this.onSceneClick = this.handleSceneClick.bind(this);
         this.onSceneContextMenu = this.handleSceneContextMenu.bind(this);
 
-        // 监听场景事件系统的事件
+        // English comment.
         this.scene.eventSystem.on('click', this.onSceneClick);
         this.scene.eventSystem.on('contextmenu', this.onSceneContextMenu);
 
@@ -576,7 +557,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 移除鼠标事件
+     * English comment.
      */
     removeMouseEvents() {
         if (!this.scene || !this.scene.eventSystem) return;
@@ -590,10 +571,10 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 处理场景点击事件
+     * English comment.
      */
     handleSceneClick(eventData) {
-        // 检查点击的是否是点位对象
+        // English comment.
         if (eventData.object && eventData.object.userData.isBuildingPoint) {
             const pointId = eventData.object.userData.pointId;
             this.selectPoint(pointId);
@@ -601,17 +582,17 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 处理场景右键菜单事件
+     * English comment.
      */
     handleSceneContextMenu(eventData) {
         if (!this.config.enableRightClick) return;
 
-        // 检查点击的是否是点位对象，如果是则忽略
+        // English comment.
         if (eventData.object && eventData.object.userData.isBuildingPoint) {
             return;
         }
 
-        // 触发右键点击事件，传递 3D 坐标
+        // English comment.
         if (eventData.point) {
             this.emit('rightClick', {
                 position: {
@@ -626,10 +607,10 @@ export class BuildingEditor extends Component {
         }
     }
 
-    // ==================== 数据导入导出方法 ====================
+    // English comment.
 
     /**
-     * 导出点位数据为 JSON
+     * English comment.
      */
     exportToJSON() {
         const points = this.getAllPoints();
@@ -637,7 +618,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 从 JSON 导入点位数据
+     * English comment.
      */
     async importFromJSON(jsonString) {
         try {
@@ -647,10 +628,10 @@ export class BuildingEditor extends Component {
                 throw new Error('数据格式错误：需要数组');
             }
 
-            // 清除现有点位
+            // English comment.
             this.clearPoints();
 
-            // 导入新点位
+            // English comment.
             for (const pointData of points) {
                 await this.addPoint(pointData, false);
             }
@@ -666,7 +647,7 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 获取点位统计信息
+     * English comment.
      */
     getStatistics() {
         const points = this.getAllPoints();
@@ -677,13 +658,13 @@ export class BuildingEditor extends Component {
         };
 
         points.forEach(point => {
-            // 按楼层统计
+            // English comment.
             if (!stats.byFloor[point.floor]) {
                 stats.byFloor[point.floor] = 0;
             }
             stats.byFloor[point.floor]++;
 
-            // 按类型统计
+            // English comment.
             if (!stats.byType[point.type]) {
                 stats.byType[point.type] = 0;
             }
@@ -693,13 +674,13 @@ export class BuildingEditor extends Component {
         return stats;
     }
 
-    // ==================== 生命周期方法 ====================
+    // English comment.
 
     /**
-     * 每帧更新
+     * English comment.
      */
     onUpdate(delta) {
-        // 可以添加动画效果
+        // English comment.
     }
 
     async updateConfig(newConfig = {}) {
@@ -767,24 +748,24 @@ export class BuildingEditor extends Component {
     }
 
     /**
-     * 组件销毁
+     * English comment.
      */
     onDispose() {
         console.log('[BuildingEditor] 销毁组件');
 
-        // 移除鼠标事件
+        // English comment.
         this.removeMouseEvents();
 
-        // 清除所有点位
+        // English comment.
         this.clearPoints();
 
-        // 清除纹理缓存
+        // English comment.
         this.textureCache.forEach(texture => {
             texture.dispose();
         });
         this.textureCache.clear();
 
-        // 清空映射表
+        // English comment.
         this.pointObjects.clear();
         this.pointDataMap.clear();
         this.typeConfigMap.clear();

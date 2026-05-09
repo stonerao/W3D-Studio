@@ -5,7 +5,7 @@
         width="900px"
         @close="handleClose"
     >
-        <!-- 搜索框 -->
+        <!-- English comment. -->
         <div class="search-bar">
             <div class="search-input-wrap">
                 <Input
@@ -44,13 +44,13 @@
             </div>
         </div>
 
-        <!-- 加载状态 -->
+        <!-- English comment. -->
         <div v-if="assetStore.loading" class="loading-state">
             <div class="loading-spinner"></div>
             <div class="loading-text">加载中...</div>
         </div>
 
-        <!-- 错误状态 -->
+        <!-- English comment. -->
         <div v-else-if="assetStore.error" class="error-state">
             <div class="error-icon"></div>
             <div class="error-text">{{ assetStore.error }}</div>
@@ -59,7 +59,7 @@
             </Button>
         </div>
 
-        <!-- 资源列表 -->
+        <!-- English comment. -->
         <div v-else-if="filteredModelAssets.length > 0" class="asset-list">
             <div
                 v-for="asset in filteredModelAssets"
@@ -68,7 +68,7 @@
                 :class="{ 'selected': isAssetSelected(asset) }"
                 @click="selectAsset(asset)"
             >
-                <!-- 缩略图 -->
+                <!-- English comment. -->
                 <div class="asset-thumbnail">
                     <img
                         v-if="asset.thumbnail"
@@ -81,7 +81,7 @@
                     </div>
                 </div>
 
-                <!-- 资源信息 -->
+                <!-- English comment. -->
                 <div class="asset-info">
                     <div class="asset-name">{{ asset.name }}</div>
                     <div class="asset-meta">
@@ -93,19 +93,19 @@
                     </div>
                 </div>
 
-                <!-- 选中标记 -->
+                <!-- English comment. -->
                 <div v-if="isAssetSelected(asset)" class="asset-check">✓</div>
             </div>
         </div>
 
-        <!-- 空状态 -->
+        <!-- English comment. -->
         <div v-else class="empty-state">
             <div class="empty-icon"></div>
             <div class="empty-text">没有找到符合条件的资源</div>
             <div class="empty-hint">请先在左侧资源库中上传资源文件</div>
         </div>
 
-        <!-- 分页控制 -->
+        <!-- English comment. -->
         <div v-if="assetStore.total > 0" class="pagination">
             <div class="pagination-info">
                 共 {{ assetStore.total }} 个资源，第 {{ assetStore.currentPage }} / {{ assetStore.totalPages }} 页
@@ -138,7 +138,7 @@
             </div>
         </div>
 
-        <!-- 底部按钮 -->
+        <!-- English comment. -->
         <template #footer>
             <Button variant="outline" @click="handleClose">取消</Button>
             <Button
@@ -192,7 +192,7 @@ const assetStore = useAssetStore();
 const toast = useToast();
 const injectedProjectId = inject('editorProjectId', null);
 
-// 获取当前项目 ID
+// English comment.
 const projectId = computed(() => {
     const providedId = typeof injectedProjectId?.value === 'string'
         ? injectedProjectId.value
@@ -206,7 +206,7 @@ const projectId = computed(() => {
     return typeof routeId === 'string' && routeId.trim() ? routeId.trim() : '';
 });
 
-// 状态
+// English comment.
 const isOpen = ref(props.modelValue);
 const searchQuery = ref('');
 const selectedAsset = ref(null);
@@ -285,7 +285,7 @@ const isFuzzyMatched = (keyword, ...fields) => {
     });
 };
 
-// 监听 modelValue 变化
+// English comment.
 watch(() => props.modelValue, async (newValue) => {
     isOpen.value = newValue;
     if (newValue) {
@@ -328,13 +328,13 @@ watch(
     }
 );
 
-// 监听 isOpen 变化
+// English comment.
 watch(isOpen, (newValue) => {
     emit('update:modelValue', newValue);
 });
 
 /**
- * 点击搜索按钮时执行搜索
+ * English comment.
  */
 const handleSearch = async () => {
     assetStore.setSearchKeyword(String(searchQuery.value || '').trim());
@@ -382,7 +382,7 @@ const isAssetInCategory = (asset, category) => {
     return allowedExts.includes(ext);
 };
 
-// 过滤模型资源（直接使用 store 中的资源列表）
+// English comment.
 const filteredModelAssets = computed(() => {
     return assetStore.assets.filter((asset) => {
         if (!isAssetInCategory(asset, normalizedCategory.value)) {
@@ -444,7 +444,7 @@ const clearSelectedAssets = () => {
     selectedAssets.value = [];
 };
 
-// 选择资源
+// English comment.
 const selectAsset = (asset) => {
     if (props.multiple) {
         const exists = selectedAssets.value.some((item) => item?.id === asset.id);
@@ -456,7 +456,7 @@ const selectAsset = (asset) => {
     selectedAsset.value = asset;
 };
 
-// 确认选择
+// English comment.
 const handleConfirm = () => {
     if (props.multiple) {
         if (!selectedAssets.value.length) {
@@ -481,13 +481,13 @@ const handleConfirm = () => {
     handleClose();
 };
 
-// 关闭对话框
+// English comment.
 const handleClose = () => {
     isOpen.value = false;
 };
 
 /**
- * 加载模型列表
+ * English comment.
  */
 const loadAssets = async () => {
     const params = {
@@ -507,7 +507,7 @@ const loadAssets = async () => {
 };
 
 /**
- * 上一页
+ * English comment.
  */
 const handlePrevPage = async () => {
     if (assetStore.currentPage > 1) {
@@ -517,7 +517,7 @@ const handlePrevPage = async () => {
 };
 
 /**
- * 下一页
+ * English comment.
  */
 const handleNextPage = async () => {
     if (assetStore.currentPage < assetStore.totalPages) {
@@ -533,19 +533,19 @@ const handlePageSizeChange = async (event) => {
 };
 
 /**
- * 重试加载
+ * English comment.
  */
 const handleRetry = async () => {
     await loadAssets();
 };
 
-// 获取文件扩展名
+// English comment.
 const getFileExtension = (fileType) => {
     if (!fileType) return '';
     return `.${fileType.toUpperCase()}`;
 };
 
-// 格式化文件大小（转换为 MB）
+// English comment.
 const formatFileSize = (bytes) => {
     if (bytes === 0) return '-';
     const mb = (bytes / 1024 / 1024).toFixed(2);
@@ -553,7 +553,7 @@ const formatFileSize = (bytes) => {
 };
 
 /**
- * 格式化日期
+ * English comment.
  */
 const formatDate = (timestamp) => {
     const date = new Date(timestamp);
@@ -722,7 +722,7 @@ watch(
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
-    /* 超出隐藏 */
+    /* English comment. */
     text-overflow: ellipsis;
     word-break: break-all;
     width: 130px;

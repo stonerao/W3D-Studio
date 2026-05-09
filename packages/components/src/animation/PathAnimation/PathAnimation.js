@@ -2,25 +2,21 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * PathAnimation 路径动画组件
- *
- * @class PathAnimation
- * @extends Component
- * @description 沿路径移动的动画
+ * English comment.
  */
 export class PathAnimation extends Component {
     static defaultConfig = {
         path: [],
-        speed: 1.0, // 移动速度 (单位/秒)
-        loop: true, // 是否循环
-        pingPong: false, // 往返模式
-        autoStart: false, // 自动开始
-        lookAtDirection: 'forward', // 朝向模式: 'forward', 'backward', 'up', 'down', 'fixed', 'custom'
-        customRotation: [0, 0, 0], // 自定义旋转角度 (弧度)
-        easing: 'linear', // 缓动函数: 'linear', 'easeIn', 'easeOut', 'easeInOut'
-        showPath: true, // 显示路径轨迹
-        pathColor: '#00ff88', // 路径颜色
-        pathWidth: 2 // 路径线宽
+        speed: 1.0, // English comment.
+        loop: true, // English comment.
+        pingPong: false, // English comment.
+        autoStart: false, // English comment.
+        lookAtDirection: 'forward', // English comment.
+        customRotation: [0, 0, 0], // English comment.
+        easing: 'linear', // English comment.
+        showPath: true, // English comment.
+        pathColor: '#00ff88', // English comment.
+        pathWidth: 2 // English comment.
     };
 
     onMounted() {
@@ -29,28 +25,28 @@ export class PathAnimation extends Component {
             return;
         }
 
-        // 创建路径曲线
+        // English comment.
         this.createPath();
 
-        // 创建路径可视化
+        // English comment.
         if (this.config.showPath) {
             this.createPathVisualization();
         }
 
-        // 初始化动画状态
+        // English comment.
         this.isPlaying = false;
         this.isPaused = false;
         this.progress = 0;
         this.totalDistance = 0;
         this.currentDistance = 0;
-        this.direction = 1; // 1: 正向, -1: 反向 (用于往返模式)
+        this.direction = 1; // English comment.
         this.startTime = 0;
         this.pausedTime = 0;
 
-        // 计算路径总长度
+        // English comment.
         this.calculateTotalDistance();
 
-        // 设置初始位置
+        // English comment.
         this.setPositionAtProgress(0);
 
         if (this.config.autoStart) {
@@ -62,17 +58,17 @@ export class PathAnimation extends Component {
         const points = this.config.path.map(
             (p) => new THREE.Vector3(p.x || p[0], p.y || p[1], p.z || p[2])
         );
-        this.curve = new THREE.CatmullRomCurve3(points, false); // false = 不闭合
+        this.curve = new THREE.CatmullRomCurve3(points, false); // English comment.
         this.pathPoints = points;
     }
 
     createPathVisualization() {
         if (this.pathLine) {
-            // 从场景中移除旧的路径线条
+            // English comment.
             this.scene.scene.remove(this.pathLine);
         }
 
-        // 创建路径线条
+        // English comment.
         const points = this.curve.getPoints(100);
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
         const material = new THREE.LineBasicMaterial({
@@ -81,16 +77,16 @@ export class PathAnimation extends Component {
         });
 
         this.pathLine = new THREE.Line(geometry, material);
-        // 直接添加到场景中，而不是添加到组件中
+        // English comment.
         this.scene.scene.add(this.pathLine);
 
-        // 创建路径点标记
+        // English comment.
         this.createPathMarkers();
     }
 
     createPathMarkers() {
         if (this.pathMarkers) {
-            // 从场景中移除旧的标记点
+            // English comment.
             this.pathMarkers.forEach((marker) => this.scene.scene.remove(marker));
         }
 
@@ -101,7 +97,7 @@ export class PathAnimation extends Component {
         this.pathPoints.forEach((point, index) => {
             const marker = new THREE.Mesh(markerGeometry, markerMaterial);
             marker.position.copy(point);
-            // 直接添加到场景中，而不是添加到组件中
+            // English comment.
             this.scene.scene.add(marker);
             this.pathMarkers.push(marker);
         });
@@ -113,11 +109,11 @@ export class PathAnimation extends Component {
 
     play() {
         if (this.isPaused) {
-            // 从暂停状态恢复
+            // English comment.
             this.startTime = Date.now() - this.pausedTime;
             this.isPaused = false;
         } else {
-            // 重新开始
+            // English comment.
             this.startTime = Date.now();
         }
         this.isPlaying = true;
@@ -148,7 +144,7 @@ export class PathAnimation extends Component {
         this.emit('reset');
     }
 
-    // 缓动函数
+    // English comment.
     applyEasing(t) {
         switch (this.config.easing) {
             case 'easeIn':
@@ -170,7 +166,7 @@ export class PathAnimation extends Component {
         const point = this.curve.getPoint(easedProgress);
         this.position.copy(point);
 
-        // 设置朝向
+        // English comment.
         this.updateLookAt(easedProgress);
 
         this.emit('update', {
@@ -186,12 +182,12 @@ export class PathAnimation extends Component {
         const direction = this.config.lookAtDirection;
 
         if (direction === 'fixed') {
-            // 保持固定朝向，不改变旋转
+            // English comment.
             return;
         }
 
         if (direction === 'custom') {
-            // 使用自定义旋转角度
+            // English comment.
             this.rotation.set(
                 this.config.customRotation[0],
                 this.config.customRotation[1],
@@ -200,7 +196,7 @@ export class PathAnimation extends Component {
             return;
         }
 
-        // 计算运动方向
+        // English comment.
         let lookAtPoint;
         const currentPoint = this.curve.getPoint(progress);
 
@@ -224,16 +220,16 @@ export class PathAnimation extends Component {
     onUpdate(deltaTime) {
         if (!this.isPlaying || !this.curve) return;
 
-        // 计算移动距离
+        // English comment.
         const moveDistance = this.config.speed * deltaTime;
         this.currentDistance += moveDistance * this.direction;
 
-        // 计算进度
+        // English comment.
         let newProgress = this.currentDistance / this.totalDistance;
 
-        // 处理循环和往返模式
+        // English comment.
         if (this.config.pingPong) {
-            // 往返模式
+            // English comment.
             if (newProgress >= 1) {
                 newProgress = 1;
                 this.direction = -1;
@@ -244,14 +240,14 @@ export class PathAnimation extends Component {
                 this.emit('reachStart');
             }
         } else if (this.config.loop) {
-            // 循环模式
+            // English comment.
             if (newProgress >= 1) {
                 newProgress = 0;
                 this.currentDistance = 0;
                 this.emit('complete');
             }
         } else {
-            // 单次播放
+            // English comment.
             if (newProgress >= 1) {
                 newProgress = 1;
                 this.stop();
@@ -264,7 +260,7 @@ export class PathAnimation extends Component {
         this.setPositionAtProgress(this.progress);
     }
 
-    // 跳转到指定进度
+    // English comment.
     jumpToProgress(progress) {
         progress = Math.max(0, Math.min(1, progress));
         this.progress = progress;
@@ -273,7 +269,7 @@ export class PathAnimation extends Component {
         this.emit('jump', { progress });
     }
 
-    // 跳转到指定路径点
+    // English comment.
     jumpToPoint(pointIndex) {
         if (pointIndex < 0 || pointIndex >= this.pathPoints.length) {
             console.warn('PathAnimation: Invalid point index');
@@ -284,7 +280,7 @@ export class PathAnimation extends Component {
         this.jumpToProgress(progress);
     }
 
-    // 更新路径
+    // English comment.
     updatePath(newPath) {
         this.config.path = newPath;
         this.createPath();
@@ -294,12 +290,12 @@ export class PathAnimation extends Component {
             this.createPathVisualization();
         }
 
-        // 重置到起始位置
+        // English comment.
         this.reset();
         this.emit('pathUpdated');
     }
 
-    // 添加路径点
+    // English comment.
     addPathPoint(point, index = -1) {
         if (index === -1) {
             this.config.path.push(point);
@@ -309,7 +305,7 @@ export class PathAnimation extends Component {
         this.updatePath(this.config.path);
     }
 
-    // 删除路径点
+    // English comment.
     removePathPoint(index) {
         if (this.config.path.length <= 2) {
             console.warn('PathAnimation: Cannot remove point, minimum 2 points required');
@@ -320,7 +316,7 @@ export class PathAnimation extends Component {
         this.updatePath(this.config.path);
     }
 
-    // 更新配置
+    // English comment.
     updateConfig(newConfig) {
         Object.assign(this.config, newConfig);
 
@@ -332,7 +328,7 @@ export class PathAnimation extends Component {
             if (newConfig.showPath && !this.pathLine) {
                 this.createPathVisualization();
             } else if (!newConfig.showPath && this.pathLine) {
-                // 从场景中移除路径可视化
+                // English comment.
                 this.scene.scene.remove(this.pathLine);
                 this.pathMarkers?.forEach((marker) => this.scene.scene.remove(marker));
                 this.pathLine = null;
@@ -343,7 +339,7 @@ export class PathAnimation extends Component {
         this.emit('configUpdated', newConfig);
     }
 
-    // 获取状态信息
+    // English comment.
     updateData(data, options = {}) {
         const field = typeof options.field === 'string' && options.field.trim()
             ? options.field.trim()
@@ -368,7 +364,7 @@ export class PathAnimation extends Component {
     onDispose() {
         this.stop();
 
-        // 清理可视化对象 - 从场景中移除
+        // English comment.
         if (this.pathLine) {
             this.scene.scene.remove(this.pathLine);
             this.pathLine = null;

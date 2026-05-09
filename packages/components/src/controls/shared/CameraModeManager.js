@@ -1,8 +1,7 @@
 const SCENE_MANAGER_KEY = '__w3dCameraModeManager__';
 
 /**
- * 场景级相机模式仲裁器。
- * 统一管理 Orbit / Fly / FirstPerson / Tour 的互斥关系。
+ * English comment.
  */
 export class CameraModeManager {
     constructor(scene) {

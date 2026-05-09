@@ -1,18 +1,18 @@
 /**
- * 确认对话框系统
- * 用于替代原生的 confirm() 和 alert() 方法
+ * English comment.
  */
 
 import { ref, reactive } from 'vue';
+import { t } from '../i18n';
 
-// 全局状态
+// English comment.
 const visible = ref(false);
 const dialogState = reactive({
-    title: '确认',
+    title: t('common.confirm'),
     message: '',
     type: 'confirm', // 'confirm' | 'alert'
-    confirmText: '确定',
-    cancelText: '取消',
+    confirmText: t('common.confirm'),
+    cancelText: t('common.cancel'),
     variant: 'default' // 'default' | 'danger' | 'warning'
 });
 
@@ -20,18 +20,15 @@ let resolvePromise = null;
 
 export function useConfirm() {
     /**
-     * 显示确认对话框
-     * @param {string} message - 提示消息
-     * @param {Object} options - 配置选项
-     * @returns {Promise<boolean>} - 用户选择结果
+     * English comment.
      */
     const confirm = (message, options = {}) => {
         return new Promise((resolve) => {
-            dialogState.title = options.title || '确认';
+            dialogState.title = options.title || t('common.confirm');
             dialogState.message = message;
             dialogState.type = 'confirm';
-            dialogState.confirmText = options.confirmText || '确定';
-            dialogState.cancelText = options.cancelText || '取消';
+            dialogState.confirmText = options.confirmText || t('common.confirm');
+            dialogState.cancelText = options.cancelText || t('common.cancel');
             dialogState.variant = options.variant || 'default';
 
             resolvePromise = resolve;
@@ -40,17 +37,14 @@ export function useConfirm() {
     };
 
     /**
-     * 显示警告/提示对话框（只有确定按钮）
-     * @param {string} message - 提示消息
-     * @param {Object} options - 配置选项
-     * @returns {Promise<void>}
+     * English comment.
      */
     const alert = (message, options = {}) => {
         return new Promise((resolve) => {
-            dialogState.title = options.title || '提示';
+            dialogState.title = options.title || t('common.prompt');
             dialogState.message = message;
             dialogState.type = 'alert';
-            dialogState.confirmText = options.confirmText || '确定';
+            dialogState.confirmText = options.confirmText || t('common.confirm');
             dialogState.variant = options.variant || 'default';
 
             resolvePromise = resolve;
@@ -59,23 +53,20 @@ export function useConfirm() {
     };
 
     /**
-     * 显示危险操作确认对话框
-     * @param {string} message - 提示消息
-     * @param {Object} options - 配置选项
-     * @returns {Promise<boolean>}
+     * English comment.
      */
     const danger = (message, options = {}) => {
         return confirm(message, {
-            title: options.title || '危险操作',
-            confirmText: options.confirmText || '删除',
-            cancelText: options.cancelText || '取消',
+            title: options.title || t('common.dangerOperation'),
+            confirmText: options.confirmText || t('common.delete'),
+            cancelText: options.cancelText || t('common.cancel'),
             variant: 'danger',
             ...options
         });
     };
 
     /**
-     * 处理确认
+     * English comment.
      */
     const handleConfirm = () => {
         visible.value = false;
@@ -86,7 +77,7 @@ export function useConfirm() {
     };
 
     /**
-     * 处理取消
+     * English comment.
      */
     const handleCancel = () => {
         visible.value = false;
@@ -97,10 +88,10 @@ export function useConfirm() {
     };
 
     return {
-        // 状态
+        // English comment.
         visible,
         dialogState,
-        // 方法
+        // English comment.
         confirm,
         alert,
         danger,
