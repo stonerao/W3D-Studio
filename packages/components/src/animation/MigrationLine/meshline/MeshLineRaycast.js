@@ -1,6 +1,3 @@
-/**
- * English comment.
- */
 
 import * as THREE from 'three';
 
@@ -12,7 +9,6 @@ export function MeshLineRaycast(raycaster, intersects) {
 
     const geometry = this.geometry;
 
-    // English comment.
     if (!geometry.boundingSphere) geometry.computeBoundingSphere();
     sphere.copy(geometry.boundingSphere);
     sphere.applyMatrix4(this.matrixWorld);
@@ -67,7 +63,6 @@ export function MeshLineRaycast(raycaster, intersects) {
                 object: this,
             });
 
-            // English comment.
             i = l;
         }
     }

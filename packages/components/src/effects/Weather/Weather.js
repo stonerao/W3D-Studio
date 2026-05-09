@@ -1,6 +1,9 @@
 import * as THREE from 'three';
 import { Component } from '@w3d/core';
 
+/**
+ * Effects module component that coordinates weather presets and scene-level weather state.
+ */
 export class Weather extends Component {
     constructor(scene, options = {}) {
         super(scene, options);

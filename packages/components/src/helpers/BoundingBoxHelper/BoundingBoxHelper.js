@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Helpers module component that renders bounding boxes around target objects for inspection and alignment.
  */
 export class BoundingBoxHelper extends Component {
     static defaultConfig = {
@@ -49,10 +49,8 @@ export class BoundingBoxHelper extends Component {
             this.add(this.helper);
         }
 
-        // English comment.
         this.helper.setFromObject(target);
 
-        // English comment.
         if (this.config.color && this.helper.material?.color?.set) {
             this.helper.material.color.set(this.config.color);
         }

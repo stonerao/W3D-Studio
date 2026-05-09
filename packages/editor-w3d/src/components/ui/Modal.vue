@@ -189,7 +189,8 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.7);
+    background-color: rgba(3, 8, 14, 0.68);
+    backdrop-filter: blur(4px);
 }
 
 .modal-overlay--top-right {
@@ -204,14 +205,15 @@ onUnmounted(() => {
 }
 
 .modal-container {
-    background-color: var(--color-bg-tertiary);
-    border-radius: var(--border-radius-lg, 12px);
+    background:
+        linear-gradient(180deg, rgba(18, 30, 48, 0.98) 0%, rgba(8, 15, 26, 0.98) 100%);
+    border-radius: 10px;
     box-shadow: var(--shadow-xl),
                 0 0 0 1px rgba(255, 255, 255, 0.05);
     max-height: 90vh;
     display: flex;
     flex-direction: column;
-    border: 1px solid var(--color-border);
+    border: 1px solid rgba(118, 144, 180, 0.18);
     /* English comment. */
     backdrop-filter: blur(20px);
     /* English comment. */
@@ -227,13 +229,13 @@ onUnmounted(() => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 1rem 1.5rem;
-    border-bottom: 1px solid var(--color-border);
+    padding: 16px 20px;
+    border-bottom: 1px solid rgba(118, 144, 180, 0.15);
     user-select: none;
 }
 
 .modal-title {
-    font-size: 1.125rem;
+    font-size: 16px;
     font-weight: 600;
     color: var(--color-text-primary);
 }
@@ -259,14 +261,14 @@ onUnmounted(() => {
 }
 
 .modal-body {
-    padding: 1rem 1.5rem;
+    padding: 16px 20px;
     overflow-y: auto;
     flex: 1;
 }
 
 .modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid var(--color-border);
+    padding: 14px 20px 18px;
+    border-top: 1px solid rgba(118, 144, 180, 0.15);
     display: flex;
     align-items: center;
     justify-content: flex-end;

@@ -2153,16 +2153,17 @@ defineExpose({
 .traffic-pick-bar {
     position: absolute;
     left: 50%;
-    top: 12px;
+    top: 16px;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
     gap: 12px;
-    padding: 8px 10px;
-    border-radius: var(--border-radius-sm);
-    background: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border);
+    padding: 9px 12px;
+    border-radius: 8px;
+    background: rgba(8, 15, 26, 0.82);
+    border: 1px solid rgba(118, 144, 180, 0.18);
     box-shadow: var(--shadow-sm);
+    backdrop-filter: blur(14px);
     z-index: 20;
     max-width: 70%;
 }
@@ -2201,7 +2202,24 @@ defineExpose({
 <style scoped>
 .center-canvas {
     position: relative;
-    background: #080d15;
+    background:
+        linear-gradient(180deg, rgba(17, 30, 54, 0.96) 0%, rgba(7, 13, 23, 0.98) 100%);
+}
+
+.center-canvas::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background:
+        radial-gradient(circle at 50% 35%, rgba(57, 105, 185, 0.18), transparent 34%),
+        linear-gradient(180deg, rgba(6, 11, 18, 0) 0%, rgba(6, 11, 18, 0.28) 100%);
+    z-index: 1;
+}
+
+.center-canvas > :not(.drag-overlay):not(.traffic-pick-bar):not(.alarm-screen-flash):not(.alarm-runtime-modal):not(.canvas-loading-overlay):not(.transform-toolbar):not(.canvas-status-chip):not(.absolute) {
+    position: relative;
+    z-index: 0;
 }
 
 .center-canvas.is-drag-over {
@@ -2216,8 +2234,8 @@ defineExpose({
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: rgba(8, 13, 21, 0.72);
-    backdrop-filter: blur(2px);
+    background: rgba(8, 15, 26, 0.72);
+    backdrop-filter: blur(4px);
     z-index: 20;
     pointer-events: none;
 }
@@ -2244,16 +2262,17 @@ defineExpose({
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(16, 20, 26, 0.72);
-    backdrop-filter: blur(2px);
+    background: rgba(8, 15, 26, 0.72);
+    backdrop-filter: blur(4px);
 }
 
 .canvas-loading-content {
     min-width: 180px;
-    padding: 14px 16px;
-    border-radius: 10px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(20, 26, 34, 0.92);
+    padding: 16px 18px;
+    border-radius: 8px;
+    border: 1px solid rgba(118, 144, 180, 0.18);
+    background:
+        linear-gradient(180deg, rgba(18, 30, 48, 0.94) 0%, rgba(8, 15, 26, 0.94) 100%);
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -2475,30 +2494,29 @@ defineExpose({
 /* English comment. */
 .transform-toolbar {
     position: absolute;
-    top: 14px;
-    left: 50%;
-    transform: translateX(-50%);
+    top: 132px;
+    right: 22px;
     display: flex;
-    flex-direction: row;
-    gap: var(--space-1);
-    background: rgba(8, 13, 21, 0.78);
-    padding: 5px;
-    border: 1px solid rgba(148, 163, 184, 0.16);
-    border-radius: var(--border-radius);
-    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28);
-    backdrop-filter: blur(10px);
+    flex-direction: column;
+    gap: 6px;
+    background: rgba(8, 15, 26, 0.72);
+    padding: 7px;
+    border: 1px solid rgba(118, 144, 180, 0.17);
+    border-radius: 8px;
+    box-shadow: 0 16px 34px rgba(0, 0, 0, 0.26);
+    backdrop-filter: blur(14px);
     z-index: 10;
 }
 
 .transform-btn {
-    width: 36px;
-    height: 36px;
+    width: 38px;
+    height: 38px;
     display: flex;
     align-items: center;
     justify-content: center;
     background: transparent;
     border: 1px solid transparent;
-    border-radius: calc(var(--border-radius) - 1px);
+    border-radius: 7px;
     color: rgba(226, 232, 240, 0.82);
     font-size: 1.125rem;
     cursor: pointer;
@@ -2511,15 +2529,16 @@ defineExpose({
 }
 
 .transform-btn:hover {
-    background: rgba(148, 163, 184, 0.1);
-    border-color: rgba(148, 163, 184, 0.18);
+    background: rgba(125, 183, 255, 0.1);
+    border-color: rgba(125, 183, 255, 0.22);
     color: #ffffff;
 }
 
 .transform-btn.active {
-    background: rgba(47, 125, 244, 0.2);
+    background: rgba(47, 125, 244, 0.22);
     border-color: rgba(47, 125, 244, 0.5);
     color: #9ec7ff;
+    box-shadow: inset 0 0 0 1px rgba(47, 125, 244, 0.18);
 }
 
 .transform-btn:disabled {
@@ -2533,21 +2552,21 @@ defineExpose({
 
 .canvas-status-chip {
     position: absolute;
-    top: 14px;
-    left: 14px;
+    top: 18px;
+    left: 18px;
     z-index: 10;
     display: inline-flex;
     align-items: center;
     gap: var(--space-2);
-    padding: 7px 9px;
-    border: 1px solid rgba(148, 163, 184, 0.15);
-    border-radius: var(--border-radius);
-    background: rgba(8, 13, 21, 0.62);
+    padding: 8px 10px;
+    border: 1px solid rgba(118, 144, 180, 0.16);
+    border-radius: 8px;
+    background: rgba(8, 15, 26, 0.64);
     color: rgba(226, 232, 240, 0.82);
     font-size: var(--font-size-xs);
     line-height: 1;
     box-shadow: 0 10px 26px rgba(0, 0, 0, 0.18);
-    backdrop-filter: blur(8px);
+    backdrop-filter: blur(12px);
 }
 
 .canvas-status-chip span + span {

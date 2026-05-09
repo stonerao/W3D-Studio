@@ -1,287 +1,301 @@
 <template>
-    <div class="properties-list">
-        <div
-            v-for="field in configSchema"
-            :key="field.key"
-            class="property-field"
+    <div class="properties-list" :class="{ 'properties-list--modules': useModuleGroups }">
+        <section
+            v-for="group in fieldGroups"
+            :key="group.key"
+            class="property-module"
+            :class="{ 'property-module--flat': !group.grouped }"
         >
-            <div v-if="field.type === 'text'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <Input
-                    :model-value="getFieldValue(field.key)"
-                    @update:model-value="emit('update-config', field.key, $event)"
-                    :placeholder="displayText(field.placeholder)"
-                />
-            </div>
-
-            <div v-else-if="field.type === 'number'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <Slider
-                    :model-value="getFieldValue(field.key) ?? field.default"
-                    @update:model-value="emit('update-config', field.key, $event)"
-                    :min="field.min"
-                    :max="field.max"
-                    :step="field.step"
-                />
-            </div>
-
-            <div v-else-if="field.type === 'color'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <ColorPicker
-                    :model-value="getFieldValue(field.key) ?? field.default"
-                    @update:model-value="emit('update-config', field.key, $event)"
-                />
-            </div>
-
-            <div v-else-if="field.type === 'boolean'" class="field-group-inline">
-                <label>{{ displayText(field.label) }}</label>
-                <input
-                    type="checkbox"
-                    :checked="getFieldValue(field.key) ?? field.default"
-                    @change="emit('update-config', field.key, $event.target.checked)"
-                    class="checkbox"
-                />
-            </div>
-
-            <div v-else-if="field.type === 'select'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <template v-if="isCameraJump && field.key === 'meshTarget.componentId'">
-                    <Select
-                        :model-value="getFieldValue(field.key) ?? field.default"
-                        @update:model-value="emit('update-config', field.key, $event)"
-                        :options="modelLoaderComponentOptions"
-                    />
-                </template>
-                <template v-else-if="isCameraJump && field.key === 'meshTarget.meshName'">
-                    <Select
-                        :model-value="getFieldValue(field.key) ?? field.default"
-                        @update:model-value="emit('update-config', field.key, $event)"
-                        :options="cameraJumpMeshOptions"
-                    />
-                </template>
-                <template v-else-if="isCameraJump && field.key === 'labelTarget.componentId'">
-                    <Select
-                        :model-value="getFieldValue(field.key) ?? field.default"
-                        @update:model-value="emit('update-config', field.key, $event)"
-                        :options="label3DComponentOptions"
-                    />
-                </template>
-                <template v-else-if="isCameraJump && field.key === 'labelTarget.labelId'">
-                    <Select
-                        :model-value="getFieldValue(field.key) ?? field.default"
-                        @update:model-value="emit('update-config', field.key, $event)"
-                        :options="cameraJumpLabelOptions"
-                    />
-                </template>
-                <template v-else-if="isCameraJump && field.key === 'pointTarget.pointId'">
-                    <Select
-                        :model-value="getFieldValue(field.key) ?? field.default"
-                        @update:model-value="emit('update-config', field.key, $event)"
-                        :options="buildingPointOptions"
-                    />
-                </template>
-                <template v-else-if="isHeatmap && field.key === 'surfaceTarget.componentId'">
-                    <Select
-                        :model-value="getFieldValue(field.key) ?? field.default"
-                        @update:model-value="emit('update-heatmap-surface-component', $event)"
-                        :options="modelLoaderComponentOptions"
-                    />
-                </template>
-                <template v-else-if="isHeatmap && field.key === 'surfaceTarget.meshName'">
-                    <Select
-                        :model-value="getFieldValue(field.key) ?? field.default"
-                        @update:model-value="emit('update-config', field.key, $event)"
-                        :options="heatmapSurfaceMeshOptions"
-                    />
-                </template>
-                <template v-else>
-                    <Select
-                        :model-value="getFieldValue(field.key) ?? field.default"
-                        @update:model-value="emit('update-config', field.key, $event)"
-                        :options="displayOptions(field.options)"
-                    />
-                </template>
-            </div>
-
-            <div v-else-if="field.type === 'vector3'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <div class="vector3-inputs">
-                    <Input
-                        type="number"
-                        :model-value="(getFieldValue(field.key) || field.default)[0]"
-                        @update:model-value="emit('update-vector3', field.key, 0, $event)"
-                        placeholder="X"
-                        :step="0.1"
-                    />
-                    <Input
-                        type="number"
-                        :model-value="(getFieldValue(field.key) || field.default)[1]"
-                        @update:model-value="emit('update-vector3', field.key, 1, $event)"
-                        placeholder="Y"
-                        :step="0.1"
-                    />
-                    <Input
-                        type="number"
-                        :model-value="(getFieldValue(field.key) || field.default)[2]"
-                        @update:model-value="emit('update-vector3', field.key, 2, $event)"
-                        placeholder="Z"
-                        :step="0.1"
-                    />
+            <div v-if="group.grouped" class="property-module__header">
+                <div>
+                    <div class="property-module__title">{{ displayText(group.label) }}</div>
+                    <div v-if="group.description" class="property-module__desc">{{ displayText(group.description) }}</div>
                 </div>
             </div>
 
-            <div v-else-if="field.type === 'vector2'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <div class="vector2-inputs">
-                    <Input
-                        type="number"
-                        :model-value="getArrayValue(field, 0)"
-                        @update:model-value="emit('update-vector2', field.key, 0, $event)"
-                        :placeholder="displayText(field.labels?.[0] || 'X')"
-                        :step="field.step ?? 0.000001"
-                    />
-                    <Input
-                        type="number"
-                        :model-value="getArrayValue(field, 1)"
-                        @update:model-value="emit('update-vector2', field.key, 1, $event)"
-                        :placeholder="displayText(field.labels?.[1] || 'Y')"
-                        :step="field.step ?? 0.000001"
-                    />
-                </div>
-                <div v-if="field.description" class="field-description">{{ displayText(field.description) }}</div>
-            </div>
-
-            <div v-else-if="field.type === 'colorRange'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <div class="range-inputs">
-                    <div class="range-input">
-                        <span>{{ displayText(field.labels?.[0] || '起始') }}</span>
-                        <ColorPicker
-                            :model-value="getArrayValue(field, 0)"
-                            @update:model-value="emit('update-range', field.key, 0, $event)"
+            <div class="property-module__fields">
+                <div
+                    v-for="field in group.fields"
+                    :key="field.key"
+                    class="property-field"
+                >
+                    <div v-if="field.type === 'text'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <Input
+                            :model-value="getFieldValue(field.key)"
+                            @update:model-value="emit('update-config', field.key, $event)"
+                            :placeholder="displayText(field.placeholder)"
                         />
                     </div>
-                    <div class="range-input">
-                        <span>{{ displayText(field.labels?.[1] || '结束') }}</span>
-                        <ColorPicker
-                            :model-value="getArrayValue(field, 1)"
-                            @update:model-value="emit('update-range', field.key, 1, $event)"
+
+                    <div v-else-if="field.type === 'number'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <Slider
+                            :model-value="getFieldValue(field.key) ?? field.default"
+                            @update:model-value="emit('update-config', field.key, $event)"
+                            :min="field.min"
+                            :max="field.max"
+                            :step="field.step"
                         />
                     </div>
-                </div>
-                <div v-if="field.description" class="field-description">{{ displayText(field.description) }}</div>
-            </div>
 
-            <div v-else-if="field.type === 'numberRange'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <div class="vector2-inputs">
-                    <Input
-                        type="number"
-                        :model-value="getArrayValue(field, 0)"
-                        @update:model-value="emit('update-range', field.key, 0, $event)"
-                        :placeholder="displayText(field.labels?.[0] || '最小值')"
-                        :step="field.step ?? 0.1"
-                    />
-                    <Input
-                        type="number"
-                        :model-value="getArrayValue(field, 1)"
-                        @update:model-value="emit('update-range', field.key, 1, $event)"
-                        :placeholder="displayText(field.labels?.[1] || '最大值')"
-                        :step="field.step ?? 0.1"
-                    />
-                </div>
-                <div v-if="field.description" class="field-description">{{ displayText(field.description) }}</div>
-            </div>
+                    <div v-else-if="field.type === 'color'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <ColorPicker
+                            :model-value="getFieldValue(field.key) ?? field.default"
+                            @update:model-value="emit('update-config', field.key, $event)"
+                        />
+                    </div>
 
-            <div v-else-if="field.type === 'asset'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <div class="input-with-button">
-                    <Input
-                        :model-value="getFieldValue(field.key) || ''"
-                        @update:model-value="emit('update-config', field.key, $event)"
-                        :placeholder="displayText(field.placeholder || '从资源库选择或手动输入')"
-                    />
-                    <button
-                        class="btn-select-asset"
-                        @click="emit('open-asset-picker', field)"
-                        title="从资源库选择"
-                    >
-                        选
-                    </button>
-                </div>
-            </div>
+                    <div v-else-if="field.type === 'boolean'" class="field-group-inline">
+                        <label>{{ displayText(field.label) }}</label>
+                        <input
+                            type="checkbox"
+                            :checked="getFieldValue(field.key) ?? field.default"
+                            @change="emit('update-config', field.key, $event.target.checked)"
+                            class="checkbox"
+                        />
+                    </div>
 
-            <div v-else-if="field.type === 'json'" class="field-group">
-                <label>{{ displayText(field.label) }}</label>
-                <template v-if="shouldUseLabel3DLabelsEditor(field)">
-                    <div class="camera-views-summary">
-                        <span class="camera-views-summary__text">已配置 {{ (getFieldValue('labels') || []).length || 0 }} 条标签</span>
-                        <button class="btn-select-asset" @click="emit('open-editor', 'label3d-labels')" title="编辑标签列表">编</button>
+                    <div v-else-if="field.type === 'select'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <template v-if="isCameraJump && field.key === 'meshTarget.componentId'">
+                            <Select
+                                :model-value="getFieldValue(field.key) ?? field.default"
+                                @update:model-value="emit('update-config', field.key, $event)"
+                                :options="modelLoaderComponentOptions"
+                            />
+                        </template>
+                        <template v-else-if="isCameraJump && field.key === 'meshTarget.meshName'">
+                            <Select
+                                :model-value="getFieldValue(field.key) ?? field.default"
+                                @update:model-value="emit('update-config', field.key, $event)"
+                                :options="cameraJumpMeshOptions"
+                            />
+                        </template>
+                        <template v-else-if="isCameraJump && field.key === 'labelTarget.componentId'">
+                            <Select
+                                :model-value="getFieldValue(field.key) ?? field.default"
+                                @update:model-value="emit('update-config', field.key, $event)"
+                                :options="label3DComponentOptions"
+                            />
+                        </template>
+                        <template v-else-if="isCameraJump && field.key === 'labelTarget.labelId'">
+                            <Select
+                                :model-value="getFieldValue(field.key) ?? field.default"
+                                @update:model-value="emit('update-config', field.key, $event)"
+                                :options="cameraJumpLabelOptions"
+                            />
+                        </template>
+                        <template v-else-if="isCameraJump && field.key === 'pointTarget.pointId'">
+                            <Select
+                                :model-value="getFieldValue(field.key) ?? field.default"
+                                @update:model-value="emit('update-config', field.key, $event)"
+                                :options="buildingPointOptions"
+                            />
+                        </template>
+                        <template v-else-if="isHeatmap && field.key === 'surfaceTarget.componentId'">
+                            <Select
+                                :model-value="getFieldValue(field.key) ?? field.default"
+                                @update:model-value="emit('update-heatmap-surface-component', $event)"
+                                :options="modelLoaderComponentOptions"
+                            />
+                        </template>
+                        <template v-else-if="isHeatmap && field.key === 'surfaceTarget.meshName'">
+                            <Select
+                                :model-value="getFieldValue(field.key) ?? field.default"
+                                @update:model-value="emit('update-config', field.key, $event)"
+                                :options="heatmapSurfaceMeshOptions"
+                            />
+                        </template>
+                        <template v-else>
+                            <Select
+                                :model-value="getFieldValue(field.key) ?? field.default"
+                                @update:model-value="emit('update-config', field.key, $event)"
+                                :options="displayOptions(field.options)"
+                            />
+                        </template>
                     </div>
-                </template>
-                <template v-else-if="isMigrationLine && field.key === 'lines'">
-                    <div class="camera-views-summary">
-                        <span class="camera-views-summary__text">已配置 {{ (getFieldValue('lines') || []).length || 0 }} 条线</span>
-                        <button class="btn-select-asset" @click="emit('open-editor', 'migration-lines')" title="编辑线条列表">编</button>
-                    </div>
-                </template>
-                <template v-else-if="isMultiPathAnimation && field.key === 'paths'">
-                    <div class="camera-views-summary">
-                        <span class="camera-views-summary__text">已配置 {{ (getFieldValue('paths') || []).length || 0 }} 条路径</span>
-                        <button class="btn-select-asset" @click="emit('open-editor', 'multi-paths')" title="编辑多轨迹数据与模型">编</button>
-                    </div>
-                </template>
-                <template v-else-if="isAreaBlock && field.key === 'areas'">
-                    <div class="camera-views-summary">
-                        <span class="camera-views-summary__text">已配置 {{ (getFieldValue('areas') || []).length || 0 }} 个区域块</span>
-                        <button class="btn-select-asset" @click="emit('open-editor', 'area-blocks')" title="编辑区域块列表">编</button>
-                    </div>
-                </template>
-                <template v-else-if="isHeatmap && field.key === 'data'">
-                    <div class="camera-views-summary">
-                        <span class="camera-views-summary__text">已配置 {{ (getFieldValue('data') || []).length || 0 }} 个热力点</span>
-                        <button class="btn-select-asset" @click="emit('open-editor', 'heatmap')" title="编辑热力图数据">编</button>
-                    </div>
-                </template>
-                <template v-else-if="isHeatmap && field.key === 'colors'">
-                    <div class="camera-views-summary">
-                        <span class="camera-views-summary__text">已配置 {{ (getFieldValue('colors') || []).length || 0 }} 个颜色节点</span>
-                        <button class="btn-select-asset" @click="emit('open-editor', 'heatmap')" title="编辑热力图颜色映射">编</button>
-                    </div>
-                </template>
-                <template v-else-if="isHeatmap && field.key === 'thresholds'">
-                    <div class="camera-views-summary">
-                        <span class="camera-views-summary__text">已配置 {{ (getFieldValue('thresholds') || []).length || 0 }} 条阈值映射</span>
-                        <button class="btn-select-asset" @click="emit('open-editor', 'heatmap')" title="编辑热力图阈值映射">编</button>
-                    </div>
-                </template>
-                <template v-else-if="isCameraTour && field.key === 'views'">
-                    <div class="camera-views-summary">
-                        <span class="camera-views-summary__text">已配置 {{ (getFieldValue('views') || []).length || 0 }} 条视角</span>
-                        <button class="btn-select-asset" @click="emit('open-editor', 'camera-views')" title="编辑视角列表">编</button>
-                    </div>
-                </template>
-                <template v-else>
-                    <div class="advanced-json-summary">
-                        <div>
-                            <div class="advanced-json-summary__title">{{ getJsonSummary(field) }}</div>
-                            <div class="advanced-json-summary__desc">普通配置区不再直接编辑原始 JSON。</div>
+
+                    <div v-else-if="field.type === 'vector3'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <div class="vector3-inputs">
+                            <Input
+                                type="number"
+                                :model-value="(getFieldValue(field.key) || field.default)[0]"
+                                @update:model-value="emit('update-vector3', field.key, 0, $event)"
+                                placeholder="X"
+                                :step="0.1"
+                            />
+                            <Input
+                                type="number"
+                                :model-value="(getFieldValue(field.key) || field.default)[1]"
+                                @update:model-value="emit('update-vector3', field.key, 1, $event)"
+                                placeholder="Y"
+                                :step="0.1"
+                            />
+                            <Input
+                                type="number"
+                                :model-value="(getFieldValue(field.key) || field.default)[2]"
+                                @update:model-value="emit('update-vector3', field.key, 2, $event)"
+                                placeholder="Z"
+                                :step="0.1"
+                            />
                         </div>
                     </div>
-                    <details class="advanced-json-panel">
-                        <summary>高级配置：查看或粘贴原始 JSON</summary>
-                        <textarea
-                            class="json-textarea"
-                            :value="formatJsonValue(getFieldValue(field.key))"
-                            @blur="emit('update-json-config', field.key, $event.target.value)"
-                            :placeholder="displayText(field.placeholder)"
-                            rows="5"
-                        ></textarea>
-                    </details>
-                </template>
-                <div v-if="field.description" class="field-description">{{ displayText(field.description) }}</div>
+
+                    <div v-else-if="field.type === 'vector2'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <div class="vector2-inputs">
+                            <Input
+                                type="number"
+                                :model-value="getArrayValue(field, 0)"
+                                @update:model-value="emit('update-vector2', field.key, 0, $event)"
+                                :placeholder="displayText(field.labels?.[0] || 'X')"
+                                :step="field.step ?? 0.000001"
+                            />
+                            <Input
+                                type="number"
+                                :model-value="getArrayValue(field, 1)"
+                                @update:model-value="emit('update-vector2', field.key, 1, $event)"
+                                :placeholder="displayText(field.labels?.[1] || 'Y')"
+                                :step="field.step ?? 0.000001"
+                            />
+                        </div>
+                    </div>
+
+                    <div v-else-if="field.type === 'colorRange'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <div class="range-inputs">
+                            <div class="range-input">
+                                <span>{{ displayText(field.labels?.[0] || '起始') }}</span>
+                                <ColorPicker
+                                    :model-value="getArrayValue(field, 0)"
+                                    @update:model-value="emit('update-range', field.key, 0, $event)"
+                                />
+                            </div>
+                            <div class="range-input">
+                                <span>{{ displayText(field.labels?.[1] || '结束') }}</span>
+                                <ColorPicker
+                                    :model-value="getArrayValue(field, 1)"
+                                    @update:model-value="emit('update-range', field.key, 1, $event)"
+                                />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-else-if="field.type === 'numberRange'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <div class="vector2-inputs">
+                            <Input
+                                type="number"
+                                :model-value="getArrayValue(field, 0)"
+                                @update:model-value="emit('update-range', field.key, 0, $event)"
+                                :placeholder="displayText(field.labels?.[0] || '最小值')"
+                                :step="field.step ?? 0.1"
+                            />
+                            <Input
+                                type="number"
+                                :model-value="getArrayValue(field, 1)"
+                                @update:model-value="emit('update-range', field.key, 1, $event)"
+                                :placeholder="displayText(field.labels?.[1] || '最大值')"
+                                :step="field.step ?? 0.1"
+                            />
+                        </div>
+                    </div>
+
+                    <div v-else-if="field.type === 'asset'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <div class="input-with-button">
+                            <Input
+                                :model-value="getFieldValue(field.key) || ''"
+                                @update:model-value="emit('update-config', field.key, $event)"
+                                :placeholder="displayText(field.placeholder || '从资源库选择或手动输入')"
+                            />
+                            <button
+                                class="btn-select-asset"
+                                @click="emit('open-asset-picker', field)"
+                                title="从资源库选择"
+                            >
+                                选
+                            </button>
+                        </div>
+                    </div>
+
+                    <div v-else-if="field.type === 'json'" class="field-group">
+                        <label>{{ displayText(field.label) }}</label>
+                        <template v-if="shouldUseLabel3DLabelsEditor(field)">
+                            <div class="camera-views-summary">
+                                <span class="camera-views-summary__text">已配置 {{ (getFieldValue('labels') || []).length || 0 }} 条标签</span>
+                                <button class="btn-select-asset" @click="emit('open-editor', 'label3d-labels')" title="编辑标签列表">编</button>
+                            </div>
+                        </template>
+                        <template v-else-if="isMigrationLine && field.key === 'lines'">
+                            <div class="camera-views-summary">
+                                <span class="camera-views-summary__text">已配置 {{ (getFieldValue('lines') || []).length || 0 }} 条线</span>
+                                <button class="btn-select-asset" @click="emit('open-editor', 'migration-lines')" title="编辑线条列表">编</button>
+                            </div>
+                        </template>
+                        <template v-else-if="isMultiPathAnimation && field.key === 'paths'">
+                            <div class="camera-views-summary">
+                                <span class="camera-views-summary__text">已配置 {{ (getFieldValue('paths') || []).length || 0 }} 条路径</span>
+                                <button class="btn-select-asset" @click="emit('open-editor', 'multi-paths')" title="编辑多轨迹数据与模型">编</button>
+                            </div>
+                        </template>
+                        <template v-else-if="isAreaBlock && field.key === 'areas'">
+                            <div class="camera-views-summary">
+                                <span class="camera-views-summary__text">已配置 {{ (getFieldValue('areas') || []).length || 0 }} 个区域块</span>
+                                <button class="btn-select-asset" @click="emit('open-editor', 'area-blocks')" title="编辑区域块列表">编</button>
+                            </div>
+                        </template>
+                        <template v-else-if="isHeatmap && field.key === 'data'">
+                            <div class="camera-views-summary">
+                                <span class="camera-views-summary__text">已配置 {{ (getFieldValue('data') || []).length || 0 }} 个热力点</span>
+                                <button class="btn-select-asset" @click="emit('open-editor', 'heatmap')" title="编辑热力图数据">编</button>
+                            </div>
+                        </template>
+                        <template v-else-if="isHeatmap && field.key === 'colors'">
+                            <div class="camera-views-summary">
+                                <span class="camera-views-summary__text">已配置 {{ (getFieldValue('colors') || []).length || 0 }} 个颜色节点</span>
+                                <button class="btn-select-asset" @click="emit('open-editor', 'heatmap')" title="编辑热力图颜色映射">编</button>
+                            </div>
+                        </template>
+                        <template v-else-if="isHeatmap && field.key === 'thresholds'">
+                            <div class="camera-views-summary">
+                                <span class="camera-views-summary__text">已配置 {{ (getFieldValue('thresholds') || []).length || 0 }} 条阈值映射</span>
+                                <button class="btn-select-asset" @click="emit('open-editor', 'heatmap')" title="编辑热力图阈值映射">编</button>
+                            </div>
+                        </template>
+                        <template v-else-if="isCameraTour && field.key === 'views'">
+                            <div class="camera-views-summary">
+                                <span class="camera-views-summary__text">已配置 {{ (getFieldValue('views') || []).length || 0 }} 条视角</span>
+                                <button class="btn-select-asset" @click="emit('open-editor', 'camera-views')" title="编辑视角列表">编</button>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <div class="advanced-json-summary">
+                                <div>
+                                    <div class="advanced-json-summary__title">{{ getJsonSummary(field) }}</div>
+                                    <div class="advanced-json-summary__desc">普通配置区不再直接编辑原始 JSON。</div>
+                                </div>
+                            </div>
+                            <details class="advanced-json-panel">
+                                <summary>高级配置：查看或粘贴原始 JSON</summary>
+                                <textarea
+                                    class="json-textarea"
+                                    :value="formatJsonValue(getFieldValue(field.key))"
+                                    @blur="emit('update-json-config', field.key, $event.target.value)"
+                                    :placeholder="displayText(field.placeholder)"
+                                    rows="5"
+                                ></textarea>
+                            </details>
+                        </template>
+                    </div>
+
+                    <div v-if="field.description" class="field-description">{{ displayText(field.description) }}</div>
+                </div>
             </div>
-        </div>
+        </section>
 
         <div v-if="configSchema.length === 0" class="no-properties">
             该组件没有可配置的属性
@@ -290,6 +304,7 @@
 </template>
 
 <script setup>
+import { computed } from 'vue';
 import Input from '../ui/Input.vue';
 import Select from '../ui/Select.vue';
 import Slider from '../ui/Slider.vue';
@@ -341,6 +356,10 @@ const props = defineProps({
         type: Boolean,
         default: false
     },
+    isPostProcessing: {
+        type: Boolean,
+        default: false
+    },
     modelLoaderComponentOptions: {
         type: Array,
         default: () => []
@@ -386,6 +405,66 @@ const displayOptions = (options = []) => (
         label: displayText(option?.label)
     }))
 );
+
+const POST_PROCESSING_MODULES = [
+    { key: 'root', label: '整体配置', description: '后期处理总开关。' },
+    { key: 'gtao', label: 'GTAO', description: '高质量环境光遮蔽。' },
+    { key: 'ssao', label: 'SSAO', description: '轻量屏幕空间环境光遮蔽。' },
+    { key: 'sao', label: 'SAO', description: '屏幕空间环境光遮蔽。' },
+    { key: 'ssr', label: 'SSR', description: '屏幕空间反射。' },
+    { key: 'bloom', label: 'Bloom', description: '高亮泛光效果。' },
+    { key: 'dof', label: 'DOF', description: '景深虚化效果。' },
+    { key: 'sobel', label: 'Sobel', description: '边缘检测效果。' },
+    { key: 'pixel', label: 'Pixel', description: '像素化效果。' },
+    { key: 'fxaa', label: 'FXAA', description: '快速抗锯齿。' },
+    { key: 'other', label: '其他', description: '其他后期处理参数。' }
+];
+
+const POST_PROCESSING_MODULE_MAP = POST_PROCESSING_MODULES.reduce((map, item) => {
+    map[item.key] = item;
+    return map;
+}, {});
+
+const getPostProcessingModule = (field) => {
+    const key = String(field?.key || '');
+    if (key === 'enabled' || key === 'pipeline') {
+        return POST_PROCESSING_MODULE_MAP.root;
+    }
+
+    const effectKey = key.split('.')[0];
+    return POST_PROCESSING_MODULE_MAP[effectKey] || POST_PROCESSING_MODULE_MAP.other;
+};
+
+const useModuleGroups = computed(() => props.isPostProcessing && props.configSchema.length > 0);
+
+const fieldGroups = computed(() => {
+    if (!useModuleGroups.value) {
+        return [{
+            key: 'default',
+            grouped: false,
+            fields: props.configSchema
+        }];
+    }
+
+    const groups = [];
+    const groupByKey = new Map();
+
+    props.configSchema.forEach((field) => {
+        const meta = getPostProcessingModule(field);
+        if (!groupByKey.has(meta.key)) {
+            const group = {
+                ...meta,
+                grouped: true,
+                fields: []
+            };
+            groupByKey.set(meta.key, group);
+            groups.push(group);
+        }
+        groupByKey.get(meta.key).fields.push(field);
+    });
+
+    return groups;
+});
 
 const shouldUseLabel3DLabelsEditor = (field) => {
     if (!field || field.key !== 'labels') {
@@ -444,7 +523,56 @@ const getJsonSummary = (field) => {
 .properties-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: 13px;
+}
+
+.properties-list--modules {
+    gap: 10px;
+}
+
+.property-module {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    padding: 10px;
+    border: 1px solid rgba(118, 144, 180, 0.16);
+    border-radius: 8px;
+    background: rgba(8, 15, 26, 0.36);
+}
+
+.property-module--flat {
+    padding: 0;
+    border: 0;
+    border-radius: 0;
+    background: transparent;
+}
+
+.property-module__header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 10px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(118, 144, 180, 0.12);
+}
+
+.property-module__title {
+    font-size: var(--font-size-sm);
+    font-weight: var(--font-weight-semibold);
+    color: var(--color-text-primary);
+}
+
+.property-module__desc {
+    margin-top: 3px;
+    font-size: var(--font-size-xs);
+    line-height: 1.4;
+    color: var(--color-text-tertiary);
+}
+
+.property-module__fields {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
 }
 
 .property-field {
@@ -460,7 +588,7 @@ const getJsonSummary = (field) => {
 .field-group label {
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
-    color: var(--color-text-tertiary);
+    color: #7a8da6;
 }
 
 .input-with-button {
@@ -474,18 +602,18 @@ const getJsonSummary = (field) => {
 
 .btn-select-asset {
     flex-shrink: 0;
-    width: 32px;
-    height: 32px;
+    width: 34px;
+    height: 34px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(15, 23, 42, 0.6);
-    border-radius: var(--border-radius-sm);
+    background-color: rgba(8, 15, 26, 0.72);
+    border-radius: 7px;
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
     cursor: pointer;
-    border: 1px solid var(--color-border);
+    border: 1px solid rgba(118, 144, 180, 0.16);
     transition: all var(--transition-fast);
 }
 
@@ -500,10 +628,10 @@ const getJsonSummary = (field) => {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(118, 144, 180, 0.15);
+    border-radius: 8px;
     padding: var(--space-2);
-    background: rgba(15, 23, 42, 0.46);
+    background: rgba(8, 15, 26, 0.58);
 }
 
 .camera-views-summary__text {
@@ -515,7 +643,10 @@ const getJsonSummary = (field) => {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: var(--space-1) 0;
+    padding: 8px 9px;
+    border: 1px solid rgba(118, 144, 180, 0.13);
+    border-radius: 7px;
+    background: rgba(8, 15, 26, 0.5);
 }
 
 .field-group-inline label {
@@ -525,22 +656,39 @@ const getJsonSummary = (field) => {
 }
 
 .checkbox {
-    width: 14px;
-    height: 14px;
-    border-radius: var(--border-radius-xs);
-    border: 1px solid var(--color-border);
-    background-color: var(--color-bg-tertiary);
+    position: relative;
+    width: 30px;
+    height: 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(118, 144, 180, 0.2);
+    background-color: rgba(84, 100, 122, 0.32);
     cursor: pointer;
     appearance: none;
     transition: all var(--transition-fast);
 }
 
+.checkbox::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    transition:
+        transform var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.checkbox:checked::after {
+    transform: translateX(14px);
+    background: #ffffff;
+}
+
 .checkbox:checked {
-    background-color: var(--color-primary);
-    border-color: var(--color-primary);
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12' fill='none'%3E%3Cpath d='M10 3L4.5 8.5L2 6' stroke='white' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: center;
+    border-color: rgba(47, 125, 244, 0.86);
+    background-color: #2f7df4;
 }
 
 .checkbox:hover:not(:checked) {
@@ -585,10 +733,10 @@ const getJsonSummary = (field) => {
     align-items: center;
     justify-content: space-between;
     gap: var(--space-2);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(118, 144, 180, 0.15);
+    border-radius: 8px;
     padding: var(--space-2);
-    background: rgba(15, 23, 42, 0.46);
+    background: rgba(8, 15, 26, 0.58);
 }
 
 .advanced-json-summary__title {
@@ -603,10 +751,10 @@ const getJsonSummary = (field) => {
 }
 
 .advanced-json-panel {
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(118, 144, 180, 0.15);
+    border-radius: 8px;
     padding: var(--space-2);
-    background: color-mix(in srgb, var(--color-bg-tertiary) 72%, transparent);
+    background: rgba(8, 15, 26, 0.58);
 }
 
 .advanced-json-panel summary {
@@ -626,9 +774,9 @@ const getJsonSummary = (field) => {
     font-family: var(--font-mono);
     font-size: var(--font-size-xs);
     line-height: 1.4;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
-    background-color: rgba(15, 23, 42, 0.68);
+    border: 1px solid rgba(118, 144, 180, 0.15);
+    border-radius: 8px;
+    background-color: rgba(8, 15, 26, 0.68);
     color: var(--color-text-primary);
     resize: vertical;
     transition: border-color var(--transition-fast);

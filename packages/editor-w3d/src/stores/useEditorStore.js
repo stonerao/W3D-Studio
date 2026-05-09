@@ -5,7 +5,7 @@ export const useEditorStore = defineStore('editor', () => {
     const mode = ref('edit');
     const showLeftPanel = ref(true);
     const showRightPanel = ref(true);
-    const activeLeftPanelTab = ref('components');
+    const activeLeftPanelTab = ref('tree');
 
     const setMode = (newMode) => {
         mode.value = newMode;
@@ -20,7 +20,7 @@ export const useEditorStore = defineStore('editor', () => {
     };
 
     const setActiveLeftPanelTab = (tabKey) => {
-        activeLeftPanelTab.value = String(tabKey || 'components');
+        activeLeftPanelTab.value = String(tabKey || 'tree');
     };
 
     return {

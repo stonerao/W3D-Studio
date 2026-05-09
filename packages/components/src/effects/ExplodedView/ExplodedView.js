@@ -3,68 +3,49 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 
 /**
- * English comment.
+ * Effects module component that separates model parts into an exploded-view layout for inspection.
  */
 export class ExplodedView extends Component {
-    /**
-     * English comment.
-     */
     static defaultConfig = {
-        floorMap: {},              // English comment.
-        floorOrder: [],            // English comment.
-        gap: 10,                   // English comment.
-        animate: true,             // English comment.
-        time: 2,                   // English comment.
-        start: 1,                  // English comment.
-        offset: {                  // English comment.
+        floorMap: {},
+        floorOrder: [],
+        gap: 10,
+        animate: true,
+        time: 2,
+        start: 1,
+        offset: {
             x: 0,
             y: 1,
             z: 0
         },
-        // English comment.
-        // English comment.
         direction: 'up',
-        delayStep: 100,            // English comment.
-        customOffsets: {},         // English comment.
-        highlightColor: 0x07A6FF,  // English comment.
-        highlightIntensity: 1.5,   // English comment.
-        // English comment.
-        // English comment.
+        delayStep: 100,
+        customOffsets: {},
+        highlightColor: 0x07A6FF,
+        highlightIntensity: 1.5,
         //        | 'cubic-out' | 'cubic-inout' | 'elastic-out' | 'bounce-out' | 'back-out'
         easingPreset: 'quadratic-out'
     };
 
-    /**
-     * English comment.
-     */
     onMounted() {
         console.log('[ExplodedView] 组件挂载，配置:', this.config);
 
-        // English comment.
         this.floors = new Map();
 
-        // English comment.
         this.originalPositions = new Map();
 
-        // English comment.
         this.originalMaterials = new Map();
 
-        // English comment.
         this.floorOrder = new Map();
 
-        // English comment.
         this.floorAnimateConfig = new Map();
 
-        // English comment.
         this.selectedFloorIndex = null;
 
-        // English comment.
         this.currentState = 'normal';
 
-        // English comment.
         this.tweenGroup = new TWEEN.Group();
 
-        // English comment.
         this.initializeFloors();
 
         console.log('[ExplodedView] 组件挂载完成，已初始化 ' + this.floors.size + ' 个楼层');
@@ -131,9 +112,6 @@ export class ExplodedView extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     initializeFloors() {
         const { floorMap } = this.config;
 
@@ -145,63 +123,48 @@ export class ExplodedView extends Component {
             return;
         }
 
-        // English comment.
         this.floorOrder = this.createFloorOrder(Object.keys(floorMap));
 
-        // English comment.
         Object.entries(floorMap).forEach(([index, floorConfig]) => {
             const floorIndex = String(index);
 
-            // English comment.
             let modelNames = [];
             let shouldAnimate = true;
 
             if (Array.isArray(floorConfig)) {
-                // English comment.
                 modelNames = floorConfig;
                 console.log(`[ExplodedView] 楼层 ${floorIndex}: 使用数组格式`);
             } else if (floorConfig && typeof floorConfig === 'object') {
-                // English comment.
-                // English comment.
                 if (floorConfig.meshes && Array.isArray(floorConfig.meshes)) {
                     modelNames = floorConfig.meshes;
                     console.log(`[ExplodedView] 楼层 ${floorIndex}: 使用 meshes 格式，共 ${modelNames.length} 个`);
                 }
-                // English comment.
                 else if (floorConfig.modelLoaders && Array.isArray(floorConfig.modelLoaders)) {
                     modelNames = floorConfig.modelLoaders.flatMap(loader => loader.meshes || []);
                     console.log(`[ExplodedView] 楼层 ${floorIndex}: 使用 modelLoaders 格式`);
                 }
-                // English comment.
                 else if (floorConfig.models && Array.isArray(floorConfig.models)) {
                     modelNames = floorConfig.models;
                     console.log(`[ExplodedView] 楼层 ${floorIndex}: 使用 models 格式`);
                 }
                 shouldAnimate = floorConfig.animate !== false;
             } else if (typeof floorConfig === 'string') {
-                // English comment.
                 modelNames = [floorConfig];
                 console.log(`[ExplodedView] 楼层 ${floorIndex}: 使用字符串格式`);
             }
 
             console.log(`[ExplodedView] 楼层 ${floorIndex} 需要查找的模型:`, modelNames);
 
-            // English comment.
-            this.floorAnimateConfig.set(floorIndex, shouldAnimate);            // English comment.
+            this.floorAnimateConfig.set(floorIndex, shouldAnimate);
             const floorObjects = [];
-            // English comment.
             const positionsMap = new Map();
-            // English comment.
             const materialsMap = new Map();
 
             modelNames.forEach((modelName) => {
-                // English comment.
                 let modelObject = null;
 
-                // English comment.
                 modelObject = this.scene.scene.getObjectByName(modelName);
 
-                // English comment.
                 if (!modelObject) {
                     this.scene.scene.traverse((child) => {
                         if (!modelObject && child.name === modelName) {
@@ -210,7 +173,6 @@ export class ExplodedView extends Component {
                     });
                 }
 
-                // English comment.
                 if (!modelObject && this.scene.components) {
                     for (const [, comp] of this.scene.components) {
                         if (comp.componentScene) {
@@ -233,10 +195,8 @@ export class ExplodedView extends Component {
                 if (modelObject) {
                     floorObjects.push(modelObject);
 
-                    // English comment.
                     positionsMap.set(modelName, modelObject.position.clone());
 
-                    // English comment.
                     const materials = [];
                     modelObject.traverse((child) => {
                         if (child.isMesh && child.material) {
@@ -254,7 +214,6 @@ export class ExplodedView extends Component {
                     });
                 } else {
                     console.warn(`[ExplodedView] ✗ 未找到楼层 ${floorIndex} 的模型: ${modelName}`);
-                    // English comment.
                     const availableNames = [];
                     this.scene.scene.traverse((child) => {
                         if (child.name && !child.name.startsWith('__')) {
@@ -276,9 +235,6 @@ export class ExplodedView extends Component {
         console.log(`[ExplodedView] 初始化完成，共找到 ${this.floors.size} 个楼层`);
     }
 
-    /**
-     * English comment.
-     */
     resolveOffset() {
         const { direction, offset } = this.config;
         const presets = {
@@ -292,9 +248,6 @@ export class ExplodedView extends Component {
         return presets[direction] || offset || { x: 0, y: 1, z: 0 };
     }
 
-    /**
-     * English comment.
-     */
     resolveEasing() {
         const preset = this.config.easingPreset || 'quadratic-out';
         const easingMap = {
@@ -311,16 +264,11 @@ export class ExplodedView extends Component {
         return easingMap[preset] || TWEEN.Easing.Quadratic.Out;
     }
 
-    /**
-     * English comment.
-     */
     createFloorOrder(floorIndices) {
         const orderMap = new Map();
         const configOrder = this.config.floorOrder;
 
-        // English comment.
         if (Array.isArray(configOrder) && configOrder.length > 0) {
-            // English comment.
             const orderedSet = configOrder.map(String);
             const remaining = floorIndices.filter(i => !orderedSet.includes(String(i)));
             const finalOrder = [...orderedSet.filter(i => floorIndices.map(String).includes(i)), ...remaining];
@@ -330,7 +278,6 @@ export class ExplodedView extends Component {
             return orderMap;
         }
 
-        // English comment.
         const numericFloors = [];
         const specialFloors = [];
 
@@ -356,21 +303,15 @@ export class ExplodedView extends Component {
         return orderMap;
     }
 
-    /**
-     * English comment.
-     */
     calculateFloorOffset(floorIndex) {
         const { gap, start, customOffsets } = this.config;
 
-        // English comment.
         if (customOffsets && customOffsets[floorIndex]) {
             return customOffsets[floorIndex];
         }
 
-        // English comment.
         const offset = this.resolveOffset();
 
-        // English comment.
         const currentOrder = this.floorOrder.get(String(floorIndex)) ?? 0;
         const startOrder = this.floorOrder.get(String(start)) ?? 0;
         const relativeIndex = currentOrder - startOrder;
@@ -382,9 +323,6 @@ export class ExplodedView extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     start() {
         if (this.currentState === 'exploded') {
             console.warn('[ExplodedView] 已处于爆炸状态');
@@ -396,12 +334,10 @@ export class ExplodedView extends Component {
         console.log('[ExplodedView] 楼层列表:', Array.from(this.floors.keys()));
         console.log(this.config);
 
-        // English comment.
         if (this.floors.size === 0) {
             console.warn('[ExplodedView] 楼层数据为空，尝试重新初始化...');
             this.initializeFloors();
 
-            // English comment.
             if (this.floors.size === 0) {
                 console.error('[ExplodedView] 没有可爆炸的楼层！请检查 floorMap 配置和模型名称是否匹配');
                 return;
@@ -416,22 +352,18 @@ export class ExplodedView extends Component {
         const resolvedOffset = this.resolveOffset();
         console.log('[ExplodedView] 动画配置:', { animate, time, direction, delayStep, resolvedOffset });
 
-        // English comment.
-        // English comment.
         const floorIndices = Array.from(this.floors.keys()).sort((a, b) => {
             const orderA = this.floorOrder.get(a) ?? 0;
             const orderB = this.floorOrder.get(b) ?? 0;
             return direction === 'down' ? orderB - orderA : orderA - orderB;
         });
 
-        // English comment.
         this.tweenGroup.removeAll();
 
         floorIndices.forEach((floorIndex, arrayIndex) => {
             const floorObjects = this.floors.get(floorIndex);
             if (!floorObjects || floorObjects.length === 0) return;
             console.log(floorObjects);
-            // English comment.
             const shouldAnimate = this.floorAnimateConfig.get(floorIndex);
             if (shouldAnimate === false) {
                 console.log(`[ExplodedView] 楼层 ${floorIndex} 配置为不参与爆炸效果，跳过`);
@@ -442,7 +374,6 @@ export class ExplodedView extends Component {
             const targetOffset = this.calculateFloorOffset(floorIndex);
             console.log(`[ExplodedView] 楼层 ${floorIndex} 目标偏移:`, targetOffset);
 
-            // English comment.
             floorObjects.forEach((modelObject) => {
                 const modelName = modelObject.name;
                 const originalPos = positionsMap.get(modelName);
@@ -455,9 +386,8 @@ export class ExplodedView extends Component {
                 };
 
                 if (animate) {
-                    // English comment.
                     const delay = arrayIndex * delayStep;
-                    const duration = time * 1000; // English comment.
+                    const duration = time * 1000;
 
                     new TWEEN.Tween(modelObject.position, this.tweenGroup)
                         .to(targetPosition, duration)
@@ -465,7 +395,6 @@ export class ExplodedView extends Component {
                         .easing(easing)
                         .start();
                 } else {
-                    // English comment.
                     modelObject.position.set(targetPosition.x, targetPosition.y, targetPosition.z);
                 }
             });
@@ -477,9 +406,6 @@ export class ExplodedView extends Component {
         this.emit('exploded');
     }
 
-    /**
-     * English comment.
-     */
     reset() {
         if (this.currentState === 'normal') {
             console.warn('[ExplodedView] 已处于正常状态');
@@ -488,7 +414,6 @@ export class ExplodedView extends Component {
 
         console.log('[ExplodedView] 重置爆炸效果');
 
-        // English comment.
         if (this.floors.size === 0) {
             console.warn('[ExplodedView] 楼层数据为空，尝试重新初始化...');
             this.initializeFloors();
@@ -499,22 +424,18 @@ export class ExplodedView extends Component {
         const { animate, time, direction, delayStep } = this.config;
         const easing = this.resolveEasing();
 
-        // English comment.
-        // English comment.
         const floorIndices = Array.from(this.floors.keys()).sort((a, b) => {
             const orderA = this.floorOrder.get(a) ?? 0;
             const orderB = this.floorOrder.get(b) ?? 0;
             return direction === 'down' ? orderA - orderB : orderB - orderA;
         });
 
-        // English comment.
         this.tweenGroup.removeAll();
 
         floorIndices.forEach((floorIndex, arrayIndex) => {
             const floorObjects = this.floors.get(floorIndex);
             if (!floorObjects || floorObjects.length === 0) return;
 
-            // English comment.
             const shouldAnimate = this.floorAnimateConfig.get(floorIndex);
             if (shouldAnimate === false) {
                 console.log(`[ExplodedView] 楼层 ${floorIndex} 配置为不参与爆炸效果，跳过重置`);
@@ -523,16 +444,14 @@ export class ExplodedView extends Component {
 
             const positionsMap = this.originalPositions.get(floorIndex);
 
-            // English comment.
             floorObjects.forEach((modelObject) => {
                 const modelName = modelObject.name;
                 const originalPos = positionsMap.get(modelName);
                 if (!originalPos) return;
 
                 if (animate) {
-                    // English comment.
                     const delay = arrayIndex * delayStep;
-                    const duration = time * 1000; // English comment.
+                    const duration = time * 1000;
 
                     new TWEEN.Tween(modelObject.position, this.tweenGroup)
                         .to({ x: originalPos.x, y: originalPos.y, z: originalPos.z }, duration)
@@ -540,7 +459,6 @@ export class ExplodedView extends Component {
                         .easing(easing)
                         .start();
                 } else {
-                    // English comment.
                     modelObject.position.copy(originalPos);
                 }
             });
@@ -549,7 +467,6 @@ export class ExplodedView extends Component {
             console.log(`[ExplodedView] 楼层 ${floorIndex} 开始重置动画，包含 ${floorObjects.length} 个模型`);
         });
 
-        // English comment.
         if (this.selectedFloorIndex !== null) {
             this.deselectFloor();
         }
@@ -557,13 +474,9 @@ export class ExplodedView extends Component {
         this.emit('reset');
     }
 
-    /**
-     * English comment.
-     */
     selectFloor(floorIndex) {
         const floorKey = String(floorIndex);
 
-        // English comment.
         if (this.floors.size === 0) {
             console.warn('[ExplodedView] 楼层数据为空，尝试重新初始化...');
             this.initializeFloors();
@@ -574,7 +487,6 @@ export class ExplodedView extends Component {
             return;
         }
 
-        // English comment.
         if (this.selectedFloorIndex !== null) {
             this.deselectFloor();
         }
@@ -588,9 +500,6 @@ export class ExplodedView extends Component {
         this.emit('floorSelected', { floorIndex: floorKey });
     }
 
-    /**
-     * English comment.
-     */
     deselectFloor() {
         if (this.selectedFloorIndex === null) return;
 
@@ -603,22 +512,17 @@ export class ExplodedView extends Component {
         this.emit('floorDeselected');
     }
 
-    /**
-     * English comment.
-     */
     highlightFloor(floorObjects) {
         const { highlightColor, highlightIntensity } = this.config;
 
         floorObjects.forEach((modelObject) => {
             modelObject.traverse((child) => {
                 if (child.isMesh && child.material) {
-                    // English comment.
                     if (!child.userData.originalMaterial) {
                         child.userData.originalMaterial = child.material;
                         child.material = child.material.clone();
                     }
 
-                    // English comment.
                     child.material.emissive = new THREE.Color(highlightColor);
                     child.material.emissiveIntensity = highlightIntensity;
                 }
@@ -626,16 +530,12 @@ export class ExplodedView extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     unhighlightFloor(floorObjects, _floorIndex) {
         if (!floorObjects) return;
 
         floorObjects.forEach((modelObject) => {
             modelObject.traverse((child) => {
                 if (child.isMesh && child.userData.originalMaterial) {
-                    // English comment.
                     child.material = child.userData.originalMaterial;
                     delete child.userData.originalMaterial;
                 }
@@ -643,13 +543,9 @@ export class ExplodedView extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     setFloorVisible(floorIndex, visible) {
         const floorKey = String(floorIndex);
 
-        // English comment.
         if (this.floors.size === 0) {
             console.warn('[ExplodedView] 楼层数据为空，尝试重新初始化...');
             this.initializeFloors();
@@ -669,13 +565,9 @@ export class ExplodedView extends Component {
         this.emit('floorVisibilityChanged', { floorIndex: floorKey, visible });
     }
 
-    /**
-     * English comment.
-     */
     setFloorOffset(floorIndex, offset) {
         const floorKey = String(floorIndex);
 
-        // English comment.
         if (this.floors.size === 0) {
             console.warn('[ExplodedView] 楼层数据为空，尝试重新初始化...');
             this.initializeFloors();
@@ -702,7 +594,6 @@ export class ExplodedView extends Component {
             };
 
             if (animate) {
-                // English comment.
                 const duration = time * 1000;
 
                 new TWEEN.Tween(modelObject.position, this.tweenGroup)
@@ -710,7 +601,6 @@ export class ExplodedView extends Component {
                     .easing(easing)
                     .start();
             } else {
-                // English comment.
                 modelObject.position.set(targetPosition.x, targetPosition.y, targetPosition.z);
             }
         });
@@ -720,42 +610,29 @@ export class ExplodedView extends Component {
         this.emit('floorOffsetChanged', { floorIndex: floorKey, offset });
     }
 
-    /**
-     * English comment.
-     */
     getFloor(floorIndex) {
         return this.floors.get(String(floorIndex));
     }
 
-    /**
-     * English comment.
-     */
     getFloorIndices() {
         return Array.from(this.floors.keys());
     }
 
-    /**
-     * English comment.
-     */
     async updateConfig(newConfig) {
         console.log('[ExplodedView] 更新配置:', newConfig);
 
-        // English comment.
         this.config = {
             ...this.config,
             ...newConfig
         };
 
-        // English comment.
         if (newConfig.floorMap !== undefined) {
             console.log('[ExplodedView] floorMap 变化，重新初始化楼层');
 
-            // English comment.
             if (this.currentState === 'exploded') {
                 this.reset();
             }
 
-            // English comment.
             this.floors.clear();
             this.originalPositions.clear();
             this.originalMaterials.clear();
@@ -763,21 +640,16 @@ export class ExplodedView extends Component {
             this.floorAnimateConfig.clear();
             this.selectedFloorIndex = null;
 
-            // English comment.
             this.initializeFloors();
 
             console.log('[ExplodedView] 配置已更新，楼层已重新初始化，共 ' + this.floors.size + ' 个楼层');
         }
     }
 
-    /**
-     * English comment.
-     */
     onUpdate(_delta) {
         const hasActiveTweens = (this.tweenGroup.getAll?.() || []).length > 0;
         if (!hasActiveTweens) return;
 
-        // English comment.
         this.tweenGroup.update();
         const stillActive = (this.tweenGroup.getAll?.() || []).length > 0;
         if (hasActiveTweens || stillActive) {
@@ -785,16 +657,11 @@ export class ExplodedView extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
         console.log('[ExplodedView] 销毁组件');
 
-        // English comment.
         this.tweenGroup.removeAll();
 
-        // English comment.
         this.floors.forEach((floorObjects, floorIndex) => {
             const positionsMap = this.originalPositions.get(floorIndex);
 
@@ -808,11 +675,9 @@ export class ExplodedView extends Component {
             }
             this.syncBatchedModelLoaders();
 
-            // English comment.
             this.unhighlightFloor(floorObjects, floorIndex);
         });
 
-        // English comment.
         this.floors.clear();
         this.originalPositions.clear();
         this.originalMaterials.clear();

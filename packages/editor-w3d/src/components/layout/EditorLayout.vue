@@ -530,17 +530,30 @@ watch(
     }
 );
 
-const handleSave = () => {
+const handleSave = async () => {
     const data = projectStore.serializeProject();
     console.log('[EditorLayout] 保存触发，序列化数据:', {
         hasData: !!data,
         componentsCount: data?.components?.length || 0,
         hasScene: !!data?.scene
     });
-    emitProjectData('save');
-    projectStore.lastSavedAt = new Date().toISOString();
-    projectStore.hasUnsavedChanges = false;
-    toast.success('项目已保存');
+
+    try {
+        let savedData = data;
+        if (typeof props.persistProject === 'function') {
+            savedData = await props.persistProject(data);
+            const persistedData = savedData && typeof savedData === 'object' ? savedData : data;
+            lastEmittedSignature.value = buildSignature(persistedData);
+        } else {
+            emitProjectData('save');
+        }
+
+        const persistedData = savedData && typeof savedData === 'object' ? savedData : data;
+        projectStore.markAsSaved(persistedData?.savedAt);
+    } catch (error) {
+        console.error('[EditorLayout] 保存失败:', error);
+        projectStore.hasUnsavedChanges = true;
+    }
 };
 
 const handleExport = () => {
@@ -941,16 +954,20 @@ onUnmounted(() => {
 
 <style scoped>
 .editor-layout {
-    background-color: var(--color-bg-secondary);
+    background:
+        linear-gradient(180deg, rgba(7, 13, 23, 0.98) 0%, rgba(5, 10, 17, 1) 100%);
     width: 100%;
     height: 100%;
     min-width: 0;
     min-height: 0;
+    color: var(--color-text-primary);
 }
 
 .editor-main {
     min-width: 0;
     min-height: 0;
+    background:
+        linear-gradient(90deg, rgba(5, 10, 17, 0.98) 0%, rgba(9, 17, 29, 0.84) 18%, rgba(9, 17, 29, 0.84) 82%, rgba(5, 10, 17, 0.98) 100%);
 }
 
 .editor-main__center {

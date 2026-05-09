@@ -2,26 +2,25 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Effects module component that renders pipeline geometry and flow-style visual feedback.
  */
 export class Pipeline extends Component {
     static defaultConfig = {
-        pipelines: [], // English comment.
+        pipelines: [],
         globalConfig: {
-            // English comment.
-            radius: 0.5, // English comment.
-            color: '#00ff00', // English comment.
-            opacity: 0.8, // English comment.
-            segments: 64, // English comment.
-            radialSegments: 8, // English comment.
-            materialType: 'standard', // English comment.
-            progress: 100, // English comment.
+            radius: 0.5,
+            color: '#00ff00',
+            opacity: 0.8,
+            segments: 64,
+            radialSegments: 8,
+            materialType: 'standard',
+            progress: 100,
             flow: {
-                enabled: false, // English comment.
-                speed: 1.0, // English comment.
-                color: '#ffffff', // English comment.
-                width: 0.2, // English comment.
-                intensity: 1.5 // English comment.
+                enabled: false,
+                speed: 1.0,
+                color: '#ffffff',
+                width: 0.2,
+                intensity: 1.5
             }
         }
     };
@@ -29,27 +28,19 @@ export class Pipeline extends Component {
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // English comment.
         this.pipelines = new Map();
 
-        // English comment.
         this.pipelineDataMap = new Map();
 
-        // English comment.
         this.flowTime = 0;
     }
 
-    /**
-     * English comment.
-     */
     async onMounted() {
-        // English comment.
         this.globalConfig = {
             ...this.constructor.defaultConfig.globalConfig,
             ...this.config.globalConfig
         };
 
-        // English comment.
         if (this.config.pipelines && this.config.pipelines.length > 0) {
             for (const pipelineData of this.config.pipelines) {
                 await this.addPipeline(pipelineData);
@@ -57,11 +48,7 @@ export class Pipeline extends Component {
         }
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     createPipeline(pipelineData) {
         const {
             id,
@@ -76,32 +63,26 @@ export class Pipeline extends Component {
             flow
         } = pipelineData;
 
-        // English comment.
         if (!id || !points || points.length < 2) {
             console.warn('Pipeline: id and at least 2 points are required');
             return null;
         }
 
-        // English comment.
         const pathPoints = points.map((p) => new THREE.Vector3(p.x, p.y, p.z));
         const curve = new THREE.CatmullRomCurve3(pathPoints);
 
-        // English comment.
         const geometry = new THREE.TubeGeometry(
             curve,
             segments || this.globalConfig.segments,
             radius || this.globalConfig.radius,
             radialSegments || this.globalConfig.radialSegments,
-            false // English comment.
+            false
         );
 
-        // English comment.
         const material = this.createMaterial(pipelineData);
 
-        // English comment.
         const mesh = new THREE.Mesh(geometry, material);
 
-        // English comment.
         mesh.userData = {
             pipelineId: id,
             isPipeline: true,
@@ -110,15 +91,11 @@ export class Pipeline extends Component {
             flow: flow || this.globalConfig.flow
         };
 
-        // English comment.
         this.applyProgress(mesh, mesh.userData.progress);
 
         return mesh;
     }
 
-    /**
-     * English comment.
-     */
     createMaterial(pipelineData) {
         const { color, opacity, materialType, flow } = pipelineData;
 
@@ -127,12 +104,10 @@ export class Pipeline extends Component {
         const finalMaterialType = materialType || this.globalConfig.materialType;
         const finalFlow = flow || this.globalConfig.flow;
 
-        // English comment.
         if (finalFlow.enabled) {
             return this.createFlowMaterial(finalColor, finalOpacity, finalFlow);
         }
 
-        // English comment.
         const materialConfig = {
             color: new THREE.Color(finalColor),
             transparent: finalOpacity < 1,
@@ -155,9 +130,6 @@ export class Pipeline extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     createFlowMaterial(color, opacity, flowConfig) {
         const { speed, color: flowColor, width, intensity } = flowConfig;
 
@@ -197,20 +169,15 @@ export class Pipeline extends Component {
                 varying vec3 vPosition;
 
                 void main() {
-                    // English comment.
                     vec3 color = baseColor;
 
-                    // English comment.
                     float flowPos = mod(vUv.x + time * flowSpeed * 0.1, 1.0);
 
-                    // English comment.
                     float flowMask = smoothstep(0.0, flowWidth * 0.5, flowPos) *
                                      smoothstep(flowWidth, flowWidth * 0.5, flowPos);
 
-                    // English comment.
                     color = mix(color, flowColor, flowMask * flowIntensity);
 
-                    // English comment.
                     float fresnel = pow(1.0 - abs(dot(vNormal, vec3(0.0, 0.0, 1.0))), 2.0);
                     color += flowColor * fresnel * 0.3;
 
@@ -223,25 +190,16 @@ export class Pipeline extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     applyProgress(mesh, progress) {
         const geometry = mesh.geometry;
         const totalVertices = geometry.attributes.position.count;
 
-        // English comment.
         const visibleVertices = Math.floor((totalVertices * progress) / 100);
 
-        // English comment.
         geometry.setDrawRange(0, visibleVertices);
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     async addPipeline(pipelineData) {
         const { id } = pipelineData;
 
@@ -250,40 +208,31 @@ export class Pipeline extends Component {
             return;
         }
 
-        // English comment.
         if (this.pipelines.has(id)) {
             console.warn(`Pipeline: Pipeline with id "${id}" already exists`);
             return;
         }
 
-        // English comment.
         const finalData = {
             ...this.globalConfig,
             ...pipelineData,
             id
         };
 
-        // English comment.
         const pipelineObject = this.createPipeline(finalData);
 
         if (!pipelineObject) {
             return;
         }
 
-        // English comment.
         this.add(pipelineObject);
 
-        // English comment.
         this.pipelines.set(id, pipelineObject);
         this.pipelineDataMap.set(id, finalData);
 
-        // English comment.
         this.emit('pipelineAdded', { pipelineId: id, pipelineData: finalData });
     }
 
-    /**
-     * English comment.
-     */
     removePipeline(id) {
         const pipelineObject = this.pipelines.get(id);
 
@@ -292,10 +241,8 @@ export class Pipeline extends Component {
             return;
         }
 
-        // English comment.
         this.remove(pipelineObject);
 
-        // English comment.
         if (pipelineObject.geometry) {
             pipelineObject.geometry.dispose();
         }
@@ -303,17 +250,12 @@ export class Pipeline extends Component {
             pipelineObject.material.dispose();
         }
 
-        // English comment.
         this.pipelines.delete(id);
         this.pipelineDataMap.delete(id);
 
-        // English comment.
         this.emit('pipelineRemoved', { pipelineId: id });
     }
 
-    /**
-     * English comment.
-     */
     updateProgress(id, progress) {
         const pipelineObject = this.pipelines.get(id);
         const pipelineData = this.pipelineDataMap.get(id);
@@ -323,26 +265,19 @@ export class Pipeline extends Component {
             return;
         }
 
-        // English comment.
         const clampedProgress = Math.max(0, Math.min(100, progress));
 
-        // English comment.
         this.applyProgress(pipelineObject, clampedProgress);
 
-        // English comment.
         pipelineObject.userData.progress = clampedProgress;
         pipelineData.progress = clampedProgress;
 
-        // English comment.
         this.emit('progressUpdated', {
             pipelineId: id,
             progress: clampedProgress
         });
     }
 
-    /**
-     * English comment.
-     */
     updateFlow(id, flowConfig) {
         const pipelineObject = this.pipelines.get(id);
         const pipelineData = this.pipelineDataMap.get(id);
@@ -352,7 +287,6 @@ export class Pipeline extends Component {
             return;
         }
 
-        // English comment.
         const newFlowConfig = {
             ...pipelineObject.userData.flow,
             ...flowConfig
@@ -361,7 +295,6 @@ export class Pipeline extends Component {
         pipelineObject.userData.flow = newFlowConfig;
         pipelineData.flow = newFlowConfig;
 
-        // English comment.
         if (pipelineObject.material.uniforms) {
             const { speed, color, width, intensity } = newFlowConfig;
 
@@ -379,16 +312,12 @@ export class Pipeline extends Component {
             }
         }
 
-        // English comment.
         this.emit('flowUpdated', {
             pipelineId: id,
             flowConfig: newFlowConfig
         });
     }
 
-    /**
-     * English comment.
-     */
     updatePipeline(id, updates) {
         const pipelineData = this.pipelineDataMap.get(id);
 
@@ -397,10 +326,8 @@ export class Pipeline extends Component {
             return;
         }
 
-        // English comment.
         this.removePipeline(id);
 
-        // English comment.
         const newData = {
             ...pipelineData,
             ...updates,
@@ -410,23 +337,14 @@ export class Pipeline extends Component {
         this.addPipeline(newData);
     }
 
-    /**
-     * English comment.
-     */
     getPipeline(id) {
         return this.pipelineDataMap.get(id) || null;
     }
 
-    /**
-     * English comment.
-     */
     getAllPipelines() {
         return Array.from(this.pipelineDataMap.values());
     }
 
-    /**
-     * English comment.
-     */
     clearPipelines() {
         const ids = Array.from(this.pipelines.keys());
         ids.forEach((id) => this.removePipeline(id));
@@ -434,16 +352,10 @@ export class Pipeline extends Component {
         this.emit('pipelinesCleared');
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     onUpdate(delta) {
-        // English comment.
         this.flowTime += delta;
 
-        // English comment.
         this.pipelines.forEach((pipelineObject) => {
             if (pipelineObject.userData.flow?.enabled && pipelineObject.material.uniforms) {
                 pipelineObject.material.uniforms.time.value = this.flowTime;
@@ -451,11 +363,7 @@ export class Pipeline extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
-        // English comment.
         this.clearPipelines();
     }
 }

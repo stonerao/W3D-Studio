@@ -9,22 +9,21 @@ import { HDRLoader } from 'three/examples/jsm/loaders/HDRLoader.js';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Loader module component that applies HDR textures as scene environment lighting and optional background imagery.
  */
 export class HDRLoaderCom extends Component {
     static defaultConfig = {
         url: '',
         mapping: THREE.EquirectangularReflectionMapping,
-        asEnvironment: true,      // English comment.
-        asBackground: false,      // English comment.
-        intensity: 1.0,           // English comment.
-        backgroundIntensity: 1.0  // English comment.
+        asEnvironment: true,
+        asBackground: false,
+        intensity: 1.0,
+        backgroundIntensity: 1.0
     };
 
     async onMounted() {
         this.loader = new HDRLoader();
 
-        // English comment.
         this.currentIntensity = this.config.intensity;
         this.currentBackgroundIntensity = this.config.backgroundIntensity;
 
@@ -37,13 +36,11 @@ export class HDRLoaderCom extends Component {
             return;
         }
 
-        // English comment.
         const url = this.config.url.toLowerCase();
         if (!url.endsWith('.hdr') && !url.endsWith('.exr')) {
             const error = new Error(`不支持的文件格式。请使用 .hdr 或 .exr 文件。当前文件: ${this.config.url}`);
             console.error('HDRLoader:', error.message);
             this.emit('loadError', { error });
-            // English comment.
             if (this.scene && this.scene.scene) {
                 if (this.config.asEnvironment) {
                     this.scene.scene.environment = null;
@@ -62,7 +59,6 @@ export class HDRLoaderCom extends Component {
                 this.loader.load(
                     this.config.url,
                     (texture) => {
-                        // English comment.
                         if (!texture || !texture.image) {
                             reject(new Error('加载的纹理无效'));
                             return;
@@ -76,7 +72,6 @@ export class HDRLoaderCom extends Component {
                         }
                     },
                     (error) => {
-                        // English comment.
                         const errorMsg = error?.message || String(error);
                         if (errorMsg.includes('Bad File Format') || errorMsg.includes('bad initial token')) {
                             reject(new Error(`HDR 文件格式错误。请确保文件是有效的 .hdr 或 .exr 格式。URL: ${this.config.url}`));
@@ -89,24 +84,19 @@ export class HDRLoaderCom extends Component {
                 );
             });
 
-            // English comment.
             if (!this.texture || !this.texture.image) {
                 throw new Error('加载的 HDR 纹理无效');
             }
 
-            // English comment.
             this.texture.mapping = this.config.mapping;
 
-            // English comment.
             if (this.config.asEnvironment) {
                 this.scene.scene.environment = this.texture;
-                // English comment.
                 this.applyEnvironmentIntensity(this.currentIntensity);
             }
 
             if (this.config.asBackground) {
                 this.scene.scene.background = this.texture;
-                // English comment.
                 this.applyBackgroundIntensity(this.currentBackgroundIntensity);
             }
 
@@ -116,7 +106,6 @@ export class HDRLoaderCom extends Component {
             console.error('HDRLoader: Failed to load HDR', error);
             this.emit('loadError', { error });
             
-            // English comment.
             if (this.texture) {
                 this.texture.dispose();
                 this.texture = null;
@@ -133,17 +122,12 @@ export class HDRLoaderCom extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     applyEnvironmentIntensity(value) {
         if (!this.scene || !this.scene.scene) return;
 
-        // English comment.
         if ('environmentIntensity' in this.scene.scene) {
             this.scene.scene.environmentIntensity = value;
         } else {
-            // English comment.
             this.scene.scene.traverse((object) => {
                 if (object.isMesh && object.material) {
                     const materials = Array.isArray(object.material)
@@ -161,25 +145,16 @@ export class HDRLoaderCom extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     applyBackgroundIntensity(value) {
         if (!this.scene || !this.scene.scene) return;
 
-        // English comment.
         if ('backgroundIntensity' in this.scene.scene) {
             this.scene.scene.backgroundIntensity = value;
         } else {
-            // English comment.
-            // English comment.
             console.warn('HDRLoader: backgroundIntensity 不被当前 Three.js 版本支持');
         }
     }
 
-    /**
-     * English comment.
-     */
     setIntensity(value) {
         if (typeof value !== 'number' || value < 0) {
             console.warn('HDRLoader: intensity 必须是非负数');
@@ -194,9 +169,6 @@ export class HDRLoaderCom extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     setBackgroundIntensity(value) {
         if (typeof value !== 'number' || value < 0) {
             console.warn('HDRLoader: backgroundIntensity 必须是非负数');
@@ -211,9 +183,6 @@ export class HDRLoaderCom extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     setAsEnvironment(enabled) {
         if (!this.scene || !this.scene.scene) {
             console.warn('HDRLoader: 场景未初始化');
@@ -237,9 +206,6 @@ export class HDRLoaderCom extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     setAsBackground(enabled) {
         if (!this.scene || !this.scene.scene) {
             console.warn('HDRLoader: 场景未初始化');
@@ -263,53 +229,36 @@ export class HDRLoaderCom extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     getIntensity() {
         return this.currentIntensity;
     }
 
-    /**
-     * English comment.
-     */
     getBackgroundIntensity() {
         return this.currentBackgroundIntensity;
     }
 
-    /**
-     * English comment.
-     */
     getTexture() {
         return this.texture;
     }
 
-    /**
-     * English comment.
-     */
     async updateConfig(newConfig) {
         console.log(newConfig)
         const oldUrl = this.config.url;
         const oldAsEnvironment = this.config.asEnvironment;
         const oldAsBackground = this.config.asBackground;
 
-        // English comment.
         Object.assign(this.config, newConfig);
 
         const newUrl = this.config.url;
 
-        // English comment.
         if (newUrl && newUrl !== oldUrl) {
-            // English comment.
             if (this.texture) {
                 this.texture.dispose();
                 this.texture = null;
             }
 
-            // English comment.
             await this.loadHDR();
         } else {
-            // English comment.
             if ('intensity' in newConfig && newConfig.intensity !== this.currentIntensity) {
                 this.setIntensity(newConfig.intensity);
             }
@@ -329,7 +278,6 @@ export class HDRLoaderCom extends Component {
     }
 
     onDispose() {
-        // English comment.
         if (this.scene && this.scene.scene) {
             if (this.config.asEnvironment && this.scene.scene.environment === this.texture) {
                 this.scene.scene.environment = null;
@@ -339,17 +287,14 @@ export class HDRLoaderCom extends Component {
             }
         }
 
-        // English comment.
         if (this.texture) {
             this.texture.dispose();
             this.texture = null;
         }
 
-        // English comment.
         this.loader = null;
     }
 }
-// English comment.
 export { HDRLoaderCom as HDRLoader };
 
 export default HDRLoaderCom;

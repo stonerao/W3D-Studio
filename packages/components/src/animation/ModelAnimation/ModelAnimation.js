@@ -1,7 +1,7 @@
 import { Component } from '@w3d/core';
 
 /**
- * English comment.
+ * Animation module component that controls embedded model animation clips and playback state.
  */
 export class ModelAnimation extends Component {
     static defaultConfig = {
@@ -36,17 +36,11 @@ export class ModelAnimation extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     updateConfig(newConfig) {
-        // English comment.
         this.stop();
 
-        // English comment.
         Object.assign(this.config, newConfig);
 
-        // English comment.
         if (this.config.target) {
             this.playAnimation();
         }

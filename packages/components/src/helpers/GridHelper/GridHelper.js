@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Helpers module component that adds a configurable ground grid to support scene scale and orientation.
  */
 export class GridHelper extends Component {
     static defaultConfig = {
@@ -27,21 +27,15 @@ export class GridHelper extends Component {
         this.add(this.grid);
     }
 
-    /**
-     * English comment.
-     */
     updateConfig(newConfig) {
-        // English comment.
         Object.assign(this.config, newConfig);
 
-        // English comment.
         if (this.grid) {
             this.remove(this.grid);
             this.grid.geometry.dispose();
             this.grid.material.dispose();
         }
 
-        // English comment.
         this.createGrid();
     }
 

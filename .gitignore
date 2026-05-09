@@ -59,4 +59,5 @@ test_vue
 /scripts/replace_go_to_vfd.py
 *.md
 !README.md
+!README.zh-CN.md
 !document/zh/lowcode-json-reduction/*.md

@@ -78,6 +78,9 @@ const getDedupedCustomKeys = (keys = []) => {
     });
 };
 
+/**
+ * Effects module component that creates device-focused exploded views for equipment inspection workflows.
+ */
 export class DeviceExplodedView extends Component {
     static defaultConfig = {
         selectedLoaderId: '',

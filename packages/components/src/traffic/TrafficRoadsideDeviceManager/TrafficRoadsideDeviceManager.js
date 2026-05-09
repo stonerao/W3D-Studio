@@ -89,6 +89,9 @@ function deepMergeConfig(target, source) {
     return result;
 }
 
+/**
+ * Traffic module component that manages roadside device placement, GeoJSON alignment, and traffic scene device visualization.
+ */
 export class TrafficRoadsideDeviceManager extends Component {
     static defaultConfig = {
         coordinateSystem: {

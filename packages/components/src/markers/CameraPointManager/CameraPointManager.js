@@ -390,6 +390,9 @@ function createLabelTexture(labelConfig = {}) {
     };
 }
 
+/**
+ * Marker module component that manages camera point markers and viewpoint interaction data.
+ */
 export class CameraPointManager extends Component {
     static defaultConfig = {
         points: [],

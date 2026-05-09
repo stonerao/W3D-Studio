@@ -458,7 +458,7 @@ const clearAll = () => {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    gap: var(--left-panel-content-gap);
+    gap: 12px;
     padding: var(--left-panel-content-padding) var(--left-panel-content-padding) 0;
 }
 
@@ -467,7 +467,7 @@ const clearAll = () => {
     align-items: center;
     justify-content: space-between;
     flex: 0 0 auto;
-    min-height: var(--left-panel-control-height);
+    min-height: 34px;
     margin-bottom: 0;
     padding: 0;
     border-bottom: 0;
@@ -475,9 +475,9 @@ const clearAll = () => {
 }
 
 .toolbar-label {
-    font-size: var(--font-size-xs);
+    font-size: 14px;
     font-weight: var(--font-weight-semibold);
-    color: var(--color-primary);
+    color: #7db7ff;
     letter-spacing: 0;
 }
 
@@ -488,21 +488,22 @@ const clearAll = () => {
 }
 
 .tool-btn {
-    width: 26px;
-    height: 26px;
+    width: 28px;
+    height: 28px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--border-radius-sm);
-    background-color: transparent;
-    border: none;
+    border-radius: 7px;
+    background-color: rgba(8, 15, 26, 0.42);
+    border: 1px solid transparent;
     color: var(--color-text-tertiary);
     cursor: pointer;
     transition: all var(--transition-fast);
 }
 
 .tool-btn:hover {
-    background-color: var(--color-bg-hover);
+    border-color: rgba(125, 183, 255, 0.22);
+    background-color: rgba(125, 183, 255, 0.08);
     color: var(--color-text-primary);
 }
 
@@ -550,7 +551,7 @@ const clearAll = () => {
 .tree-list {
     display: flex;
     flex-direction: column;
-    gap: var(--space-1);
+    gap: 3px;
     height: 100%;
     overflow-y: auto;
     padding: 0 0 var(--left-panel-content-padding);
@@ -565,17 +566,18 @@ const clearAll = () => {
     transition: opacity var(--transition-fast);
 }
 
-.tree-node:hover .node-actions {
+:deep(.tree-node:hover) .node-actions,
+:deep(.tree-node-content.selected) .node-actions {
     opacity: 1;
 }
 
 .action-btn {
-    width: 24px;
-    height: 24px;
+    width: 25px;
+    height: 25px;
     display: flex;
     align-items: center;
     justify-content: center;
-    border-radius: var(--border-radius-sm);
+    border-radius: 6px;
     background-color: transparent;
     border: none;
     color: var(--color-text-tertiary);
@@ -584,7 +586,7 @@ const clearAll = () => {
 }
 
 .action-btn:hover {
-    background-color: var(--color-bg-hover);
+    background-color: rgba(125, 183, 255, 0.08);
     color: var(--color-text-primary);
 }
 

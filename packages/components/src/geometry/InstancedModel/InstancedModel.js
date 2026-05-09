@@ -2,6 +2,9 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 import { ModelLoader as CoreModelLoader } from '@w3d/core';
 
+/**
+ * Geometry module component that renders many model instances efficiently from shared geometry and materials.
+ */
 export class InstancedModel extends Component {
     static defaultConfig = {
         modelUrl: '/models/ShaderBall.glb',
@@ -9,7 +12,7 @@ export class InstancedModel extends Component {
         positions: [],
         rotations: [],
         scales: [],
-        instancesData: null, // English comment.
+        instancesData: null,
         normalColor: 0x00ff00,
         hoverColor: 0xffff00,
         clickedColor: 0xff0000,
@@ -77,7 +80,6 @@ export class InstancedModel extends Component {
             return;
         }
 
-        // English comment.
         if (this.config.instancesData && Array.isArray(this.config.instancesData)) {
             this.setInstancesData(this.config.instancesData);
         }
@@ -136,14 +138,11 @@ export class InstancedModel extends Component {
     generateInstancePositions() {
         const { layout, instanceCount, gridSize, spacing, positions } = this.config;
 
-        // English comment.
         if (layout === 'custom' && positions.length > 0) {
-            // English comment.
             this.ensureTransformArrays();
             return;
         }
 
-        // English comment.
         this.config.positions = [];
         this.config.rotations = [];
         this.config.scales = [];
@@ -158,13 +157,10 @@ export class InstancedModel extends Component {
                 const x = (col - cols / 2) * spacing.x;
                 const z = (row - rows / 2) * spacing.z;
 
-                // English comment.
                 this.config.positions.push({ x, y: 0, z });
 
-                // English comment.
                 this.config.rotations.push({ x: 0, y: 0, z: 0 });
 
-                // English comment.
                 this.config.scales.push({ x: 1, y: 1, z: 1 });
             }
         } else if (layout === 'random') {
@@ -172,17 +168,14 @@ export class InstancedModel extends Component {
                 const x = (Math.random() - 0.5) * gridSize.x;
                 const z = (Math.random() - 0.5) * gridSize.z;
 
-                // English comment.
                 this.config.positions.push({ x, y: 0, z });
 
-                // English comment.
                 this.config.rotations.push({
                     x: 0,
                     y: Math.random() * Math.PI * 2,
                     z: 0
                 });
 
-                // English comment.
                 const randomScale = 0.8 + Math.random() * 0.4;
                 this.config.scales.push({
                     x: randomScale,
@@ -193,47 +186,34 @@ export class InstancedModel extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     ensureTransformArrays() {
         const { instanceCount } = this.config;
 
-        // English comment.
         while (this.config.positions.length < instanceCount) {
             this.config.positions.push({ x: 0, y: 0, z: 0 });
         }
 
-        // English comment.
         while (this.config.rotations.length < instanceCount) {
             this.config.rotations.push({ x: 0, y: 0, z: 0 });
         }
 
-        // English comment.
         while (this.config.scales.length < instanceCount) {
             this.config.scales.push({ x: 1, y: 1, z: 1 });
         }
     }
 
-    /**
-     * English comment.
-     */
     setInstancesData(instancesData) {
         if (!Array.isArray(instancesData) || instancesData.length === 0) {
             return;
         }
 
-        // English comment.
         this.config.instanceCount = instancesData.length;
 
-        // English comment.
         this.config.positions = [];
         this.config.rotations = [];
         this.config.scales = [];
 
-        // English comment.
         instancesData.forEach((data) => {
-            // English comment.
             const pos = data.position || { x: 0, y: 0, z: 0 };
             this.config.positions.push({
                 x: pos.x || 0,
@@ -241,7 +221,6 @@ export class InstancedModel extends Component {
                 z: pos.z || 0
             });
 
-            // English comment.
             const rot = data.rotation || { x: 0, y: 0, z: 0 };
             this.config.rotations.push({
                 x: rot.x || 0,
@@ -249,14 +228,11 @@ export class InstancedModel extends Component {
                 z: rot.z || 0
             });
 
-            // English comment.
             let scl;
             if (data.scale !== undefined) {
                 if (typeof data.scale === 'number') {
-                    // English comment.
                     scl = { x: data.scale, y: data.scale, z: data.scale };
                 } else {
-                    // English comment.
                     scl = {
                         x: data.scale.x || 1,
                         y: data.scale.y || 1,
@@ -269,7 +245,6 @@ export class InstancedModel extends Component {
             this.config.scales.push(scl);
         });
 
-        // English comment.
         this.config.layout = 'custom';
     }
 

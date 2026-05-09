@@ -1,8 +1,5 @@
 import * as THREE from 'three';
 
-/**
- * English comment.
- */
 export function createGradientMaterial(params = {}) {
     const {
         color1 = '#ff0000',
@@ -27,14 +24,11 @@ export function createGradientMaterial(params = {}) {
             varying vec3 vNormal;
             
             void main() {
-                // English comment.
                 vec3 color = mix(color1, color2, vUv.y);
                 
-                // English comment.
                 vec3 light = normalize(vec3(1.0, 1.0, 1.0));
                 float dProd = max(0.0, dot(vNormal, light));
                 
-                // English comment.
                 vec3 finalColor = color * (0.3 + 0.7 * dProd);
                 
                 gl_FragColor = vec4(finalColor, 1.0);
@@ -48,9 +42,6 @@ export function createGradientMaterial(params = {}) {
     };
 }
 
-/**
- * English comment.
- */
 export function getGradientMaterialDefaults() {
     return {
         color1: '#ff0000',
@@ -58,9 +49,6 @@ export function getGradientMaterialDefaults() {
     };
 }
 
-/**
- * English comment.
- */
 export const GradientMaterialMeta = {
     name: 'gradient',
     displayName: '渐变材质',

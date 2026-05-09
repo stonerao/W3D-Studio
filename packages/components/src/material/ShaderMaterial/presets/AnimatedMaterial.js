@@ -1,8 +1,5 @@
 import * as THREE from 'three';
 
-/**
- * English comment.
- */
 export function createAnimatedMaterial(params = {}) {
     const {
         color = '#00ff00',
@@ -28,22 +25,19 @@ export function createAnimatedMaterial(params = {}) {
             varying vec3 vNormal;
             
             void main() {
-                // English comment.
                 float wave = sin(vUv.x * 10.0 + time * speed) * 0.5 + 0.5;
                 vec3 animatedColor = color * wave;
                 
-                // English comment.
                 vec3 light = normalize(vec3(1.0, 1.0, 1.0));
                 float dProd = max(0.0, dot(vNormal, light));
                 
-                // English comment.
                 vec3 finalColor = animatedColor * (0.3 + 0.7 * dProd);
                 
                 gl_FragColor = vec4(finalColor, 1.0);
             }
         `,
         uniforms: {
-            time: { value: 0.0 },  // English comment.
+            time: { value: 0.0 },
             color: { value: new THREE.Color(color) },
             speed: { value: speed }
         },
@@ -51,9 +45,6 @@ export function createAnimatedMaterial(params = {}) {
     };
 }
 
-/**
- * English comment.
- */
 export function getAnimatedMaterialDefaults() {
     return {
         color: '#00ff00',
@@ -61,9 +52,6 @@ export function getAnimatedMaterialDefaults() {
     };
 }
 
-/**
- * English comment.
- */
 export const AnimatedMaterialMeta = {
     name: 'animated',
     displayName: '动画材质',

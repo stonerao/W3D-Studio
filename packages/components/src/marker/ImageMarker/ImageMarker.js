@@ -3,88 +3,66 @@ import * as THREE from 'three';
 import { Label3D } from '../../markers/Label3D/Label3D.js';
 
 /**
- * English comment.
+ * Marker module component that displays image-based markers anchored to scene positions.
  */
 export class ImageMarker extends Component {
     static defaultConfig = {
-        markers: [], // English comment.
+        markers: [],
         globalConfig: {
-            // English comment.
             type: 'sprite', // 'sprite' | 'plane'
             size: 5,
             opacity: 1.0,
             color: '#ffffff',
-            sizeAttenuation: true // English comment.
+            sizeAttenuation: true
         }
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // English comment.
         this.imageMarkers = new Map();
 
-        // English comment.
         this.markerDataMap = new Map();
 
-        // English comment.
         this.markerLabels = new Map();
 
-        // English comment.
         this.textureCache = new Map();
 
-        // English comment.
         this.textureLoader = new THREE.TextureLoader();
 
-        // English comment.
         this.raycaster = new THREE.Raycaster();
-        // English comment.
         this.raycaster.params.Sprite = { threshold: 10 };
         this.mouse = new THREE.Vector2();
         this.hoveredMarker = null;
 
-        // English comment.
         this.positionAnimations = new Map(); // markerId -> animationData
     }
 
-    /**
-     * English comment.
-     */
     async onMounted() {
-        // English comment.
         this.globalConfig = {
             ...this.constructor.defaultConfig.globalConfig,
             ...this.config.globalConfig
         };
 
-        // English comment.
         if (this.config.markers && this.config.markers.length > 0) {
             for (const markerData of this.config.markers) {
                 await this.addMarker(markerData);
             }
         }
 
-        // English comment.
         this.setupMouseEvents();
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     async loadTexture(url) {
-        // English comment.
         if (this.textureCache.has(url)) {
             return this.textureCache.get(url);
         }
 
-        // English comment.
         return new Promise((resolve, reject) => {
             this.textureLoader.load(
                 url,
                 (texture) => {
-                    // English comment.
                     this.textureCache.set(url, texture);
                     resolve(texture);
                 },
@@ -97,11 +75,7 @@ export class ImageMarker extends Component {
         });
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     async createMarker(markerData) {
         const {
             id,
@@ -118,13 +92,11 @@ export class ImageMarker extends Component {
             userData = {}
         } = markerData;
 
-        // English comment.
         if (!id || !position || !images) {
             console.warn('ImageMarker: id, position, and images are required');
             return null;
         }
 
-        // English comment.
         const currentState = state || Object.keys(images)[0];
         const imageUrl = images[currentState];
 
@@ -133,7 +105,6 @@ export class ImageMarker extends Component {
             return null;
         }
 
-        // English comment.
         let texture;
         try {
             texture = await this.loadTexture(imageUrl);
@@ -145,7 +116,6 @@ export class ImageMarker extends Component {
         let markerObject;
 
         if (type === 'sprite') {
-            // English comment.
             const material = new THREE.SpriteMaterial({
                 map: texture,
                 color: new THREE.Color(color),
@@ -157,7 +127,6 @@ export class ImageMarker extends Component {
             markerObject = new THREE.Sprite(material);
             markerObject.scale.set(size * scale.x, size * scale.y, 1);
         } else if (type === 'plane') {
-            // English comment.
             const geometry = new THREE.PlaneGeometry(size * scale.x, size * scale.y);
             const material = new THREE.MeshBasicMaterial({
                 map: texture,
@@ -170,7 +139,6 @@ export class ImageMarker extends Component {
             markerObject = new THREE.Mesh(geometry, material);
         } else {
             console.warn(`ImageMarker: Unknown type "${type}", using sprite`);
-            // English comment.
             const material = new THREE.SpriteMaterial({
                 map: texture,
                 color: new THREE.Color(color),
@@ -183,14 +151,12 @@ export class ImageMarker extends Component {
             markerObject.scale.set(size * scale.x, size * scale.y, 1);
         }
 
-        // English comment.
         markerObject.position.set(
             position.x + offset.x,
             position.y + offset.y,
             position.z + offset.z
         );
 
-        // English comment.
         markerObject.userData = {
             ...userData,
             markerId: id,
@@ -201,9 +167,6 @@ export class ImageMarker extends Component {
         return markerObject;
     }
 
-    /**
-     * English comment.
-     */
     async addMarker(markerData) {
         const { id, label } = markerData;
 
@@ -212,41 +175,31 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // English comment.
         if (this.imageMarkers.has(id)) {
             console.warn(`ImageMarker: Marker with id "${id}" already exists`);
             return;
         }
 
-        // English comment.
         const markerObject = await this.createMarker(markerData);
 
         if (!markerObject) {
             return;
         }
 
-        // English comment.
         this.add(markerObject);
 
-        // English comment.
         this.imageMarkers.set(id, markerObject);
 
-        // English comment.
         const currentState = markerData.state || Object.keys(markerData.images)[0];
         this.markerDataMap.set(id, { ...markerData, state: currentState });
 
-        // English comment.
         if (label) {
             await this.createLabelForMarker(id, markerObject, label);
         }
 
-        // English comment.
         this.emit('markerAdded', { markerId: id, markerData });
     }
 
-    /**
-     * English comment.
-     */
     async updateState(id, newState) {
         const markerObject = this.imageMarkers.get(id);
         const markerData = this.markerDataMap.get(id);
@@ -264,7 +217,6 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // English comment.
         let texture;
         try {
             texture = await this.loadTexture(imageUrl);
@@ -273,24 +225,17 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // English comment.
         markerObject.material.map = texture;
         markerObject.material.needsUpdate = true;
 
-        // English comment.
         const oldState = markerData.state;
 
-        // English comment.
         markerData.state = newState;
         this.markerDataMap.set(id, markerData);
 
-        // English comment.
         this.emit('markerStateChanged', { markerId: id, oldState, newState });
     }
 
-    /**
-     * English comment.
-     */
     updateMarker(id, updates) {
         const markerObject = this.imageMarkers.get(id);
         const markerData = this.markerDataMap.get(id);
@@ -300,7 +245,6 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // English comment.
         if (updates.position) {
             const offset = markerData.offset || { x: 0, y: 0, z: 0 };
             markerObject.position.set(
@@ -310,7 +254,6 @@ export class ImageMarker extends Component {
             );
         }
 
-        // English comment.
         if (updates.size !== undefined) {
             const scale = markerData.scale || { x: 1, y: 1 };
             if (markerObject.isSprite) {
@@ -320,24 +263,18 @@ export class ImageMarker extends Component {
             }
         }
 
-        // English comment.
         if (updates.color) {
             markerObject.material.color.set(updates.color);
         }
 
-        // English comment.
         if (updates.opacity !== undefined) {
             markerObject.material.opacity = updates.opacity;
         }
 
-        // English comment.
         Object.assign(markerData, updates);
         this.markerDataMap.set(id, markerData);
     }
 
-    /**
-     * English comment.
-     */
     removeMarker(id) {
         const markerObject = this.imageMarkers.get(id);
 
@@ -346,18 +283,14 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // English comment.
         this.removeLabelForMarker(id);
 
-        // English comment.
         if (this.positionAnimations.has(id)) {
             this.positionAnimations.delete(id);
         }
 
-        // English comment.
         this.remove(markerObject);
 
-        // English comment.
         if (markerObject.geometry) {
             markerObject.geometry.dispose();
         }
@@ -365,41 +298,26 @@ export class ImageMarker extends Component {
             markerObject.material.dispose();
         }
 
-        // English comment.
         this.imageMarkers.delete(id);
         this.markerDataMap.delete(id);
 
-        // English comment.
         this.emit('markerRemoved', { markerId: id });
     }
 
-    /**
-     * English comment.
-     */
     getMarker(id) {
         return this.markerDataMap.get(id) || null;
     }
 
-    /**
-     * English comment.
-     */
     getAllMarkers() {
         return Array.from(this.markerDataMap.values());
     }
 
-    /**
-     * English comment.
-     */
     clearMarkers() {
         const ids = Array.from(this.imageMarkers.keys());
         ids.forEach((id) => this.removeMarker(id));
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     setupMouseEvents() {
         if (!this.scene || !this.scene.renderer || !this.scene.renderer.domElement) {
             console.warn(
@@ -410,20 +328,15 @@ export class ImageMarker extends Component {
 
         const domElement = this.scene.renderer.domElement;
 
-        // English comment.
         this.onMouseClick = this.handleMouseClick.bind(this);
         this.onMouseMove = this.handleMouseMove.bind(this);
 
-        // English comment.
         domElement.addEventListener('click', this.onMouseClick);
         domElement.addEventListener('mousemove', this.onMouseMove);
 
         console.log('[ImageMarker] Mouse events setup successfully');
     }
 
-    /**
-     * English comment.
-     */
     removeMouseEvents() {
         if (!this.scene || !this.scene.renderer || !this.scene.renderer.domElement) {
             return;
@@ -431,7 +344,6 @@ export class ImageMarker extends Component {
 
         const domElement = this.scene.renderer.domElement;
 
-        // English comment.
         if (this.onMouseClick) {
             domElement.removeEventListener('click', this.onMouseClick);
         }
@@ -440,9 +352,6 @@ export class ImageMarker extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     handleMouseClick(event) {
         console.log('[ImageMarker] handleMouseClick called', {
             clientX: event.clientX,
@@ -459,7 +368,6 @@ export class ImageMarker extends Component {
 
             console.log('[ImageMarker] Emitting markerClick event:', { markerId, markerData });
 
-            // English comment.
             this.emit('markerClick', {
                 markerId,
                 markerData,
@@ -470,19 +378,13 @@ export class ImageMarker extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     handleMouseMove(event) {
         const intersectedMarker = this.getIntersectedMarker(event);
 
-        // English comment.
         if (intersectedMarker) {
             const markerId = intersectedMarker.userData.markerId;
 
-            // English comment.
             if (!this.hoveredMarker || this.hoveredMarker.userData.markerId !== markerId) {
-                // English comment.
                 if (this.hoveredMarker) {
                     const prevMarkerId = this.hoveredMarker.userData.markerId;
                     const prevMarkerData = this.markerDataMap.get(prevMarkerId);
@@ -494,7 +396,6 @@ export class ImageMarker extends Component {
                     });
                 }
 
-                // English comment.
                 const markerData = this.markerDataMap.get(markerId);
                 this.emit('markerMouseEnter', {
                     markerId,
@@ -505,7 +406,6 @@ export class ImageMarker extends Component {
                 this.hoveredMarker = intersectedMarker;
             }
         } else {
-            // English comment.
             if (this.hoveredMarker) {
                 const markerId = this.hoveredMarker.userData.markerId;
                 const markerData = this.markerDataMap.get(markerId);
@@ -521,9 +421,6 @@ export class ImageMarker extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     getIntersectedMarker(event) {
         if (!this.scene || !this.scene.camera || !this.scene.renderer) {
             console.warn('[ImageMarker] getIntersectedMarker: scene/camera/renderer not ready');
@@ -533,7 +430,6 @@ export class ImageMarker extends Component {
         const domElement = this.scene.renderer.domElement;
         const rect = domElement.getBoundingClientRect();
 
-        // English comment.
         this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
@@ -543,10 +439,8 @@ export class ImageMarker extends Component {
             rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
         });
 
-        // English comment.
         this.raycaster.setFromCamera(this.mouse, this.scene.camera);
 
-        // English comment.
         const markerObjects = Array.from(this.imageMarkers.values());
 
         console.log('[ImageMarker] Marker objects count:', markerObjects.length);
@@ -557,7 +451,6 @@ export class ImageMarker extends Component {
             return null;
         }
 
-        // English comment.
         const intersects = this.raycaster.intersectObjects(markerObjects, false);
 
         console.log('[ImageMarker] Intersects:', intersects);
@@ -565,7 +458,6 @@ export class ImageMarker extends Component {
 
         if (intersects.length > 0) {
             console.log('[ImageMarker] Found intersection:', intersects[0]);
-            // English comment.
             return intersects[0].object;
         }
 
@@ -573,11 +465,7 @@ export class ImageMarker extends Component {
         return null;
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     updatePosition(id, newPosition, options = {}) {
         const markerObject = this.imageMarkers.get(id);
         const markerData = this.markerDataMap.get(id);
@@ -590,19 +478,14 @@ export class ImageMarker extends Component {
         const { duration = 0, easing = 'linear' } = options;
 
         if (duration > 0) {
-            // English comment.
             this.animatePosition(id, markerObject, newPosition, duration, easing);
         } else {
-            // English comment.
             markerObject.position.set(newPosition.x, newPosition.y, newPosition.z);
 
-            // English comment.
             this.updateLabelPosition(id, markerObject);
 
-            // English comment.
             markerData.position = { ...newPosition };
 
-            // English comment.
             this.emit('positionUpdated', {
                 markerId: id,
                 newPosition,
@@ -611,9 +494,6 @@ export class ImageMarker extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     animatePosition(id, markerObject, targetPosition, duration, easing) {
         const startPosition = {
             x: markerObject.position.x,
@@ -623,7 +503,6 @@ export class ImageMarker extends Component {
 
         const startTime = Date.now();
 
-        // English comment.
         this.positionAnimations.set(id, {
             startPosition,
             targetPosition,
@@ -633,9 +512,6 @@ export class ImageMarker extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     easeFunction(t, type) {
         switch (type) {
             case 'easeIn':
@@ -650,11 +526,7 @@ export class ImageMarker extends Component {
         }
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     async createLabelForMarker(markerId, markerObject, labelConfig) {
         const {
             text,
@@ -674,7 +546,6 @@ export class ImageMarker extends Component {
             return;
         }
 
-        // English comment.
         if (!this.labelComponent) {
             this.labelComponent = new Label3D(this.scene, {
                 globalConfig: {
@@ -685,24 +556,21 @@ export class ImageMarker extends Component {
                     borderWidth,
                     padding,
                     borderRadius,
-                    scale: 0.05, // English comment.
+                    scale: 0.05,
                     billboard: true,
                     depthTest: true,
                     sizeAttenuation: true
                 }
             });
-            // English comment.
             this.add(this.labelComponent);
         }
 
-        // English comment.
         const labelPosition = {
             x: markerObject.position.x + offset.x,
             y: markerObject.position.y + offset.y,
             z: markerObject.position.z + offset.z
         };
 
-        // English comment.
         await this.labelComponent.createLabel({
             id: `marker-label-${markerId}`,
             label: text,
@@ -719,22 +587,17 @@ export class ImageMarker extends Component {
             }
         });
 
-        // English comment.
         this.markerLabels.set(markerId, {
             labelId: `marker-label-${markerId}`,
             offset,
             visible
         });
 
-        // English comment.
         if (!visible) {
             this.labelComponent.hideLabel(`marker-label-${markerId}`);
         }
     }
 
-    /**
-     * English comment.
-     */
     async updateLabel(markerId, updates) {
         const labelInfo = this.markerLabels.get(markerId);
 
@@ -745,10 +608,8 @@ export class ImageMarker extends Component {
 
         const { labelId } = labelInfo;
 
-        // English comment.
         await this.labelComponent.updateLabel(labelId, updates);
 
-        // English comment.
         if (updates.offset) {
             labelInfo.offset = updates.offset;
             const markerObject = this.imageMarkers.get(markerId);
@@ -758,9 +619,6 @@ export class ImageMarker extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     updateLabelPosition(markerId, markerObject) {
         const labelInfo = this.markerLabels.get(markerId);
 
@@ -770,20 +628,15 @@ export class ImageMarker extends Component {
 
         const { labelId, offset } = labelInfo;
 
-        // English comment.
         const newPosition = {
             x: markerObject.position.x + offset.x,
             y: markerObject.position.y + offset.y,
             z: markerObject.position.z + offset.z
         };
 
-        // English comment.
         this.labelComponent.updateLabel(labelId, { position: newPosition });
     }
 
-    /**
-     * English comment.
-     */
     showLabel(markerId) {
         const labelInfo = this.markerLabels.get(markerId);
 
@@ -796,9 +649,6 @@ export class ImageMarker extends Component {
         labelInfo.visible = true;
     }
 
-    /**
-     * English comment.
-     */
     hideLabel(markerId) {
         const labelInfo = this.markerLabels.get(markerId);
 
@@ -811,9 +661,6 @@ export class ImageMarker extends Component {
         labelInfo.visible = false;
     }
 
-    /**
-     * English comment.
-     */
     removeLabelForMarker(markerId) {
         const labelInfo = this.markerLabels.get(markerId);
 
@@ -825,13 +672,8 @@ export class ImageMarker extends Component {
         this.markerLabels.delete(markerId);
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     onUpdate(delta) {
-        // English comment.
         const now = Date.now();
         const completedAnimations = [];
 
@@ -840,10 +682,8 @@ export class ImageMarker extends Component {
             const elapsed = now - startTime;
             const progress = Math.min(elapsed / duration, 1);
 
-            // English comment.
             const easedProgress = this.easeFunction(progress, easing);
 
-            // English comment.
             const markerObject = this.imageMarkers.get(markerId);
             if (markerObject) {
                 markerObject.position.x =
@@ -853,20 +693,16 @@ export class ImageMarker extends Component {
                 markerObject.position.z =
                     startPosition.z + (targetPosition.z - startPosition.z) * easedProgress;
 
-                // English comment.
                 this.updateLabelPosition(markerId, markerObject);
 
-                // English comment.
                 if (progress >= 1) {
                     completedAnimations.push(markerId);
 
-                    // English comment.
                     const markerData = this.markerDataMap.get(markerId);
                     if (markerData) {
                         markerData.position = { ...targetPosition };
                     }
 
-                    // English comment.
                     this.emit('positionUpdated', {
                         markerId,
                         newPosition: targetPosition,
@@ -876,41 +712,31 @@ export class ImageMarker extends Component {
             }
         });
 
-        // English comment.
         completedAnimations.forEach((markerId) => {
             this.positionAnimations.delete(markerId);
         });
 
-        // English comment.
         if (this.labelComponent && this.labelComponent.onUpdate) {
             this.labelComponent.onUpdate(delta);
         }
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
-        // English comment.
         this.removeMouseEvents();
 
-        // English comment.
         this.clearMarkers();
 
-        // English comment.
         if (this.labelComponent) {
             this.labelComponent.onDispose();
             this.remove(this.labelComponent);
             this.labelComponent = null;
         }
 
-        // English comment.
         this.textureCache.forEach((texture) => {
             texture.dispose();
         });
         this.textureCache.clear();
 
-        // English comment.
         this.positionAnimations.clear();
     }
 }

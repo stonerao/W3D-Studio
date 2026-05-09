@@ -1,4 +1,4 @@
-﻿import * as THREE from 'three';
+import * as THREE from 'three';
 import { Component, ModelLoader as CoreModelLoader } from '@w3d/core';
 import { handleBake } from './Bake';
 
@@ -40,15 +40,12 @@ const deepMerge = (target, source) => {
 };
 
 /**
- * English comment.
+ * Loader module component that imports external 3D models, applies transforms, animations, shadows, and performance settings.
  */
 export class ModelLoader extends Component {
-    /**
-     * English comment.
-     */
     static defaultConfig = {
         url: '',
-        format: '', // English comment.
+        format: '',
         scale: 1,
         sizeMode: 'scale',
         targetSize: 1,
@@ -71,17 +68,16 @@ export class ModelLoader extends Component {
             visibleNames: [],
             hiddenNames: []
         },
-        // English comment.
         bakedLighting: {
-            enabled: false, // English comment.
-            textureMapping: {}, // English comment.
-            mode: 'map', // English comment.
-            intensity: 1.0, // English comment.
-            autoApply: true, // English comment.
+            enabled: false,
+            textureMapping: {},
+            mode: 'map',
+            intensity: 1.0,
+            autoApply: true,
             deferApply: false,
             deferDelay: 0,
             disableInEditor: false,
-            channel: 1 // English comment.
+            channel: 1
         },
         material: {
             'material_1': {
@@ -100,19 +96,14 @@ export class ModelLoader extends Component {
         }
     };
 
-    /**
-     * English comment.
-     */
     async onMounted() {
-        // English comment.
         this.interactiveObjects = [];
 
-        // English comment.
         this.textureLoader = null;
         this.bakedTextureCache = new Map();
         this.bakedTextureLoadPromises = new Map();
         this.bakedMaterialCache = new Map();
-        this.originalMaterials = new Map(); // English comment.
+        this.originalMaterials = new Map();
         this.performanceOptimizationState = this.createPerformanceOptimizationState();
         this.optimizationDummy = new THREE.Object3D();
         this.performanceBatchState = null;
@@ -128,12 +119,10 @@ export class ModelLoader extends Component {
         this.pendingBakedLightingTimer = null;
         this.hasWarnedFreezeWithAnimations = false;
 
-        // English comment.
         const loaderManager = this.scene?.loaderManager;
         if (loaderManager && typeof loaderManager.getModelLoader === 'function') {
             this.coreLoader = loaderManager.getModelLoader();
         } else {
-            // English comment.
             this.coreLoader = new CoreModelLoader(this.scene?.indexedDBCache || null, {
                 dracoDecoderPath: this.config.dracoDecoderPath || '/draco/'
             });
@@ -149,23 +138,15 @@ export class ModelLoader extends Component {
 
         this.loadModel()
             .then(() => {
-                // English comment.
-                // English comment.
                 this.setupInteractiveObjects();
             })
             .catch((error) => {
-                // English comment.
                 // eslint-disable-next-line no-console
                 console.error('ModelLoader: Model loading failed in onMounted', error);
             });
 
-        // English comment.
-        // English comment.
     }
 
-    /**
-     * English comment.
-     */
     async loadModel() {
         console.log('ModelLoader start');
         if (!this.config.url) {
@@ -219,7 +200,6 @@ export class ModelLoader extends Component {
 
             this.emit('loadStart', { url: requestUrl, progress: this.loadProgress });
 
-            // English comment.
             const modelData = await this.coreLoader.load(
                 requestUrl,
                 (progress) => {
@@ -227,9 +207,8 @@ export class ModelLoader extends Component {
                         ? Math.min(1, Math.max(0, Number(progress)))
                         : 0;
                     this.loadProgress = nextProgress;
-                    // English comment.
                     this.emit('loadProgress', { progress: nextProgress });
-                    this.emit('progress', { progress: nextProgress }); // English comment.
+                    this.emit('progress', { progress: nextProgress });
                 },
                 this.config.format || undefined
             );
@@ -266,13 +245,10 @@ export class ModelLoader extends Component {
 
             this.baseBounds = this.measureModelBounds();
 
-            // English comment.
             this.applyTransform();
 
-            // English comment.
             this.applyShadow();
 
-            // English comment.
             if (this.config.animations && this.animations.length > 0) {
                 this.setupAnimations(this.animations);
             }
@@ -285,11 +261,10 @@ export class ModelLoader extends Component {
             this.applySubtreeActivation();
             this.applyFreezeWorldMatrix();
 
-            // English comment.
             const loadCompleteData = {
                 modelData,
                 type: modelData.type,
-                gltf: this.gltf, // English comment.
+                gltf: this.gltf,
                 model: this.model
             };
 
@@ -297,14 +272,13 @@ export class ModelLoader extends Component {
                 this.scheduleBakedLightingApply();
             }
             this.componentScene.add(this.model);
-            // English comment.
             this.applyMeshAndMaterialConfig();
 
             this.isLoading = false;
             this.loadProgress = 1;
             this.loadError = null;
             this.emit('loadComplete', loadCompleteData);
-            this.emit('loaded', loadCompleteData); // English comment.
+            this.emit('loaded', loadCompleteData);
         } catch (error) {
             if (loadVersion !== this.loadVersion || this.isDisposed) {
                 return;
@@ -320,27 +294,20 @@ export class ModelLoader extends Component {
                 format: this.config.format || null,
                 error: error?.message || String(error)
             });
-            // English comment.
             this.emit('loadError', { error });
-            this.emit('error', { error }); // English comment.
+            this.emit('error', { error });
         }
     }
 
-    /**
-     * English comment.
-     */
     applyTransform() {
         if (!this.model) return;
 
-        // English comment.
         const scale = this.getResolvedModelScale();
         this.model.scale.set(scale, scale, scale);
 
-        // English comment.
         const [x, y, z] = this.config.position;
         this.model.position.set(x, y, z);
 
-        // English comment.
         const [rx, ry, rz] = this.config.rotation;
         this.model.rotation.set(rx, ry, rz);
     }
@@ -387,9 +354,6 @@ export class ModelLoader extends Component {
         return this.getScaleMultiplier() * this.getFitScaleByMaxDimension();
     }
 
-    /**
-     * English comment.
-     */
     applyShadow() {
         if (!this.model) return;
         const castShadow = this.isPerformanceModeEnabled() ? false : this.config.castShadow;
@@ -401,9 +365,6 @@ export class ModelLoader extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     setupAnimations(animations) {
         this.animations = animations;
         this.mixer = this.scene.animationManager.createMixer(this.model);
@@ -411,21 +372,16 @@ export class ModelLoader extends Component {
         this.animationSpeed = 1.0;
         this.isAnimationPlaying = false;
 
-        // English comment.
         this.emit('animationLoaded', {
             animations: this.getAnimationNames(),
             count: animations.length
         });
 
-        // English comment.
         if (this.config.autoPlayAnimation && animations.length > 0) {
             this.playAnimation(0);
         }
     }
 
-    /**
-     * English comment.
-     */
     playAnimation(index, options = {}) {
         if (!this.animations || !this.mixer) return;
 
@@ -452,7 +408,6 @@ export class ModelLoader extends Component {
 
         const action = this.mixer.clipAction(clip);
 
-        // English comment.
         if (options.loop !== undefined) {
             action.setLoop(
                 options.loop ? THREE.LoopRepeat : THREE.LoopOnce,
@@ -462,10 +417,8 @@ export class ModelLoader extends Component {
             action.setLoop(THREE.LoopRepeat, Infinity);
         }
 
-        // English comment.
         action.setEffectiveTimeScale(this.animationSpeed);
 
-        // English comment.
         const fadeInTime = options.fadeIn || 0.5;
         action.reset().fadeIn(fadeInTime).play();
 
@@ -478,7 +431,6 @@ export class ModelLoader extends Component {
             duration: clip.duration
         });
 
-        // English comment.
         const onFinished = () => {
             this.emit('animationFinished', { name: clip.name });
             this.mixer.removeEventListener('finished', onFinished);
@@ -486,9 +438,6 @@ export class ModelLoader extends Component {
         this.mixer.addEventListener('finished', onFinished);
     }
 
-    /**
-     * English comment.
-     */
     pauseAnimation() {
         if (this.currentAction && this.isAnimationPlaying) {
             this.currentAction.paused = true;
@@ -497,9 +446,6 @@ export class ModelLoader extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     resumeAnimation() {
         if (this.currentAction && !this.isAnimationPlaying) {
             this.currentAction.paused = false;
@@ -508,9 +454,6 @@ export class ModelLoader extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     stopAnimation() {
         if (this.currentAction) {
             this.currentAction.stop();
@@ -519,9 +462,6 @@ export class ModelLoader extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     setAnimationSpeed(speed) {
         this.animationSpeed = speed;
         if (this.currentAction) {
@@ -529,9 +469,6 @@ export class ModelLoader extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     getAnimationNames() {
         if (!this.animations) return [];
         return this.animations.map(
@@ -539,30 +476,18 @@ export class ModelLoader extends Component {
         );
     }
 
-    /**
-     * English comment.
-     */
     getCurrentAnimationName() {
         return this.currentAnimationName || null;
     }
 
-    /**
-     * English comment.
-     */
     isPlaying() {
         return this.isAnimationPlaying;
     }
 
-    /**
-     * English comment.
-     */
     getModel() {
         return this.model;
     }
 
-    /**
-     * English comment.
-     */
     getMeshByName(name) {
         const meshName = String(name || '').trim();
         const batchRecord = this.getBatchProxyRecordByMeshName(meshName);
@@ -579,9 +504,6 @@ export class ModelLoader extends Component {
         return this.meshNameMapCache.get(meshName) || null;
     }
 
-    /**
-     * English comment.
-     */
     findMesh(criteria) {
         if (!this.model) {
             // eslint-disable-next-line no-console
@@ -615,9 +537,6 @@ export class ModelLoader extends Component {
         return foundMesh;
     }
 
-    /**
-     * English comment.
-     */
     getAllMeshes() {
         if (!this.model) {
             const records = this.performanceBatchState?.sourceMeshRecords;
@@ -633,9 +552,6 @@ export class ModelLoader extends Component {
         return [...this.allMeshesCache];
     }
 
-    /**
-     * English comment.
-     */
     getMeshNames() {
         const meshes = this.getAllMeshes();
         return meshes.map((mesh) => mesh.name).filter((name) => name);
@@ -2098,9 +2014,6 @@ export class ModelLoader extends Component {
         this.enforcePerformanceProxyHidden();
     }
 
-    /**
-     * English comment.
-     */
     setupInteractiveObjects() {
         if (!this.model) {
             // eslint-disable-next-line no-console
@@ -2169,7 +2082,6 @@ export class ModelLoader extends Component {
                 mesh.userData.eventEmitter = this.eventEmitter;
             });
 
-            // English comment.
             if (allMeshes.length > 50 || shouldLimit) {
                 // eslint-disable-next-line no-console
                 console.warn(
@@ -2196,12 +2108,10 @@ export class ModelLoader extends Component {
 
             this.interactiveObjects = foundMeshes;
 
-            // English comment.
             this.interactiveObjects.forEach((mesh) => {
                 mesh.userData.eventEmitter = this.eventEmitter;
             });
 
-            // English comment.
             if (notFoundMeshes.length > 0) {
                 // eslint-disable-next-line no-console
                 console.warn(
@@ -2247,16 +2157,10 @@ export class ModelLoader extends Component {
         return merged.size > 0 ? [...merged] : false;
     }
 
-    /**
-     * English comment.
-     */
     getInteractiveObjects() {
         return this.interactiveObjects || [];
     }
 
-    /**
-     * English comment.
-     */
     setInteractiveMeshes(meshes) {
         this.config.interactiveMeshes = meshes;
         this.setupInteractiveObjects();
@@ -2267,16 +2171,10 @@ export class ModelLoader extends Component {
         this.setupInteractiveObjects();
     }
 
-    /**
-     * English comment.
-     */
     isMeshInteractive(mesh) {
         return this.interactiveObjects.includes(mesh);
     }
 
-    /**
-     * English comment.
-     */
     async applyBakedLighting(textureMapping = {}, options = {}) {
         if (this.shouldSkipBakedLightingInCurrentRuntime()) {
             // eslint-disable-next-line no-console
@@ -2293,13 +2191,12 @@ export class ModelLoader extends Component {
         const {
             mode = 'map',
             intensity = 1.0,
-            channel = this.config.bakedLighting.channel ?? 1, // English comment.
-            flipY = this.config.bakedLighting.flipY ?? false, // English comment.
-            IndependentMaterial = this.config.bakedLighting.IndependentMaterial ?? true // English comment.
+            channel = this.config.bakedLighting.channel ?? 1,
+            flipY = this.config.bakedLighting.flipY ?? false,
+            IndependentMaterial = this.config.bakedLighting.IndependentMaterial ?? true
         } = options;
 
         try {
-            // English comment.
             if (!this.textureLoader) {
                 this.textureLoader = new THREE.TextureLoader();
             }
@@ -2307,7 +2204,6 @@ export class ModelLoader extends Component {
             const meshes = this.getMeshListSnapshot();
             const applyTasks = [];
 
-            // English comment.
             for (const mesh of meshes) {
                 const meshName = mesh.name;
                 let texturePath = null;
@@ -2385,7 +2281,6 @@ export class ModelLoader extends Component {
                 this.syncPerformanceBatchMatrices(false);
             }
 
-            // English comment.
             this.emit('bakedLightingApplied', { appliedCount, mode, intensity });
         } catch (error) {
             // eslint-disable-next-line no-console
@@ -2394,9 +2289,6 @@ export class ModelLoader extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     async loadBakeTexture(texturePath, flipY = false) {
         if (this.bakedTextureCache.has(texturePath)) {
             return this.bakedTextureCache.get(texturePath);
@@ -2475,9 +2367,6 @@ export class ModelLoader extends Component {
         return material;
     }
 
-    /**
-     * English comment.
-     */
     applyTextureToMesh({ mesh, texture, texturePath, mode, intensity, channel = 1, IndependentMaterial }) {
         if (!this.originalMaterials.has(mesh.uuid)) {
             this.originalMaterials.set(mesh.uuid, mesh.material);
@@ -2498,9 +2387,6 @@ export class ModelLoader extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     updateBakedIntensity(intensity) {
         if (!this.model) return;
 
@@ -2516,9 +2402,6 @@ export class ModelLoader extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     removeBakedLighting() {
         if (!this.model) return;
 
@@ -2532,7 +2415,6 @@ export class ModelLoader extends Component {
             }
         });
 
-        // English comment.
         this.originalMaterials.clear();
         this.bakedMaterialCache.forEach((material) => material?.dispose?.());
         this.bakedMaterialCache.clear();
@@ -2542,13 +2424,9 @@ export class ModelLoader extends Component {
             this.syncPerformanceBatchMatrices(false);
         }
 
-        // English comment.
         this.emit('bakedLightingRemoved', { removedCount });
     }
 
-    /**
-     * English comment.
-     */
     async handleBakedLightingConfigUpdate(bakedLightingConfig) {
         if (!this.model) {
             // eslint-disable-next-line no-console
@@ -2566,7 +2444,6 @@ export class ModelLoader extends Component {
         // eslint-disable-next-line no-console
         console.log('[ModelLoader] 更新烘焙光照配置:', bakedLightingConfig);
 
-        // English comment.
         if (!bakedLightingConfig.enabled) {
             this.removeBakedLighting();
             // eslint-disable-next-line no-console
@@ -2578,7 +2455,6 @@ export class ModelLoader extends Component {
 
         this.removeBakedLighting();
 
-        // English comment.
         try {
             await this.applyBakedLighting(textureMapping || {}, {
                 mode: mode || 'bake',
@@ -2591,7 +2467,6 @@ export class ModelLoader extends Component {
             // eslint-disable-next-line no-console
             console.log('[ModelLoader] 烘焙光照配置已更新并应用');
 
-            // English comment.
             this.emit('bakedLightingConfigUpdated', bakedLightingConfig);
         } catch (error) {
             // eslint-disable-next-line no-console
@@ -2600,9 +2475,6 @@ export class ModelLoader extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     _resolveTarget(target) {
         if (!this.model) {
             // eslint-disable-next-line no-console
@@ -2610,7 +2482,6 @@ export class ModelLoader extends Component {
             return null;
         }
 
-        // English comment.
         if (typeof target === 'string') {
             let foundObject = null;
             this.model.traverse((child) => {
@@ -2627,7 +2498,6 @@ export class ModelLoader extends Component {
             return foundObject;
         }
 
-        // English comment.
         if (target && (target.isMesh || target.isGroup || target.isObject3D)) {
             return target;
         }
@@ -2637,9 +2507,6 @@ export class ModelLoader extends Component {
         return null;
     }
 
-    /**
-     * English comment.
-     */
     _collectMeshes(targetObject) {
         const meshes = [];
         const isMeshLike = (object) => object?.isMesh || object?.userData?.[BATCH_PROXY_KEY] !== undefined;
@@ -2657,9 +2524,6 @@ export class ModelLoader extends Component {
         return meshes;
     }
 
-    /**
-     * English comment.
-     */
     enableBaking(target, options = {}) {
         const { lightMapIntensity = 1.0, mode = 'lightMap' } = options;
 
@@ -2693,7 +2557,6 @@ export class ModelLoader extends Component {
                 return;
             }
 
-            // English comment.
             if (!this.bakedTextureCache.has(texturePath)) {
                 // eslint-disable-next-line no-console
                 console.warn(`ModelLoader: 烘焙贴图 "${texturePath}" 尚未加载，请先调用 applyBakedLighting()`);
@@ -2702,12 +2565,10 @@ export class ModelLoader extends Component {
 
             const texture = this.bakedTextureCache.get(texturePath);
 
-            // English comment.
             if (!this.originalMaterials.has(mesh.uuid)) {
                 this.originalMaterials.set(mesh.uuid, mesh.material.clone());
             }
 
-            // English comment.
             if (mode === 'lightMap') {
                 mesh.material.lightMap = texture;
                 mesh.material.lightMapIntensity = lightMapIntensity;
@@ -2733,9 +2594,6 @@ export class ModelLoader extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     disableBaking(target) {
         const targetObject = this._resolveTarget(target);
         if (!targetObject) {
@@ -2759,20 +2617,16 @@ export class ModelLoader extends Component {
         let disabledCount = 0;
 
         meshes.forEach((mesh) => {
-            // English comment.
             const originalMaterial = this.originalMaterials.get(mesh.uuid);
 
             if (originalMaterial) {
-                // English comment.
                 if (mesh.material && mesh.material !== originalMaterial) {
                     mesh.material.dispose();
                 }
 
-                // English comment.
                 mesh.material = originalMaterial;
                 mesh.material.needsUpdate = true;
 
-                // English comment.
                 this.originalMaterials.delete(mesh.uuid);
 
                 disabledCount++;
@@ -2793,9 +2647,6 @@ export class ModelLoader extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     updateBaking(target, options = {}) {
         const { lightMapIntensity } = options;
 
@@ -2856,19 +2707,16 @@ export class ModelLoader extends Component {
      * @returns {Promise<void>}
      */
     async updateConfig(newConfig) {
-        // English comment.
         const oldUrl = this.config.url;
         const oldPerformanceMode = this.isPerformanceModeEnabled();
         const previousBakedLightingConfig = deepMerge({}, this.config.bakedLighting || {});
 
-        // English comment.
         this.config = deepMerge(this.config, newConfig || {});
 
         if (newConfig.material !== undefined || newConfig.mesh !== undefined) {
             this.applyMeshAndMaterialConfig();
         }
 
-        // English comment.
         if (newConfig.bakedLighting !== undefined) {
             await this.handleBakedLightingConfigUpdate(
                 deepMerge(previousBakedLightingConfig, newConfig.bakedLighting || {})
@@ -2903,13 +2751,11 @@ export class ModelLoader extends Component {
             this.performanceOptimizationState = this.createPerformanceOptimizationState();
             this.rebuildMeshCache();
 
-            // English comment.
             if (this.mixer) {
                 this.scene.animationManager.remove(previousModel);
                 this.mixer = null;
             }
 
-            // English comment.
             await this.loadModel();
         } else {
             if (
@@ -2948,7 +2794,6 @@ export class ModelLoader extends Component {
             }
         }
 
-        // English comment.
         this.emit('configUpdated', this.config);
     }
 
@@ -2996,9 +2841,6 @@ export class ModelLoader extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     getGeometryStats() {
         if (!this.model) return null;
 
@@ -3044,22 +2886,17 @@ export class ModelLoader extends Component {
     }
 
 
-    /**
-     * English comment.
-     */
     applyMeshAndMaterialConfig() {
         if (!this.model) return;
 
         const { material: materialConfig, mesh: meshConfig } = this.config;
         const meshNameMap = this.meshNameMapCache;
 
-        // English comment.
         if (meshConfig && typeof meshConfig === 'object') {
             Object.entries(meshConfig).forEach(([meshName, config]) => {
                 const mesh = meshNameMap.get(meshName);
                 if (!mesh) return;
 
-                // English comment.
                 if (config.position) {
                     mesh.position.set(
                         config.position.x ?? mesh.position.x,
@@ -3068,7 +2905,6 @@ export class ModelLoader extends Component {
                     );
                 }
 
-                // English comment.
                 if (config.rotation) {
                     mesh.rotation.set(
                         config.rotation.x ?? mesh.rotation.x,
@@ -3077,7 +2913,6 @@ export class ModelLoader extends Component {
                     );
                 }
 
-                // English comment.
                 if (config.scale) {
                     mesh.scale.set(
                         config.scale.x ?? mesh.scale.x,
@@ -3094,14 +2929,12 @@ export class ModelLoader extends Component {
                     }
                 }
 
-                // English comment.
                 if (config.material && materialConfig && materialConfig[config.material]) {
                     this.applyMaterialToMesh(mesh, materialConfig[config.material]);
                 }
             });
         }
 
-        // English comment.
         if (materialConfig && typeof materialConfig === 'object') {
             this.getAllMeshes().forEach((child) => {
                 if (!child.material) return;
@@ -3164,9 +2997,6 @@ export class ModelLoader extends Component {
         return map[key] ?? map[key.toLowerCase()];
     }
 
-    /**
-     * English comment.
-     */
     applyMaterialToMesh(mesh, materialConfig) {
         if (!mesh || !mesh.material) return;
 
@@ -3558,9 +3388,6 @@ export class ModelLoader extends Component {
         return this.setMeshesMaterial(options);
     }
 
-    /**
-     * English comment.
-     */
     updateMeshMaterial(meshName, materialProps) {
         if (isPlainObject(meshName) && materialProps === undefined) {
             return this.setMeshesMaterial({
@@ -3588,13 +3415,9 @@ export class ModelLoader extends Component {
             this.syncPerformanceBatchMatrices(true, [record]);
         }
 
-        // English comment.
         this.emit('meshMaterialUpdated', { meshName, materialProps });
     }
 
-    /**
-     * English comment.
-     */
     updateMeshTransform(meshName, transform) {
         if (isPlainObject(meshName) && transform === undefined) {
             return this.setMeshTransform(meshName);
@@ -3613,13 +3436,9 @@ export class ModelLoader extends Component {
             this.syncPerformanceBatchMatrices(true, [record]);
         }
 
-        // English comment.
         this.emit('meshTransformUpdated', { meshName, transform });
     }
 
-    /**
-     * English comment.
-     */
     getMeshMaterialProps(meshName) {
         const mesh = this.getMeshByName(meshName);
         if (!mesh || !mesh.material) return null;
@@ -3652,9 +3471,6 @@ export class ModelLoader extends Component {
         return props;
     }
 
-    /**
-     * English comment.
-     */
     getMeshTransform(meshName) {
         const mesh = this.getMeshByName(meshName);
         if (!mesh) return null;
@@ -3680,9 +3496,6 @@ export class ModelLoader extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     getMeshesInfo() {
         if (!this.model) return [];
 
@@ -3712,9 +3525,6 @@ export class ModelLoader extends Component {
         }));
     }
 
-    /**
-     * English comment.
-     */
     setMeshVisibility(meshName, visible) {
         if (isPlainObject(meshName) && visible === undefined) {
             const targetInfo = this.resolveMeshActionTargets(this.getMeshActionTargetsFromOptions(meshName));
@@ -3812,20 +3622,15 @@ export class ModelLoader extends Component {
         return this.hideMeshesExcept(options);
     }
 
-    /**
-     * English comment.
-     */
     highlightMesh(meshName, color = '#ffff00') {
         const mesh = this.getMeshByName(meshName);
         if (!mesh || !mesh.material) return;
 
-        // English comment.
         if (!mesh.userData._originalColor) {
             mesh.userData._originalColor = mesh.material.color.clone();
             mesh.userData._originalEmissive = mesh.material.emissive?.clone();
         }
 
-        // English comment.
         if (mesh.material.emissive) {
             mesh.material.emissive = new THREE.Color(color);
             mesh.material.emissiveIntensity = 0.3;
@@ -3890,14 +3695,10 @@ export class ModelLoader extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     unhighlightMesh(meshName) {
         const mesh = this.getMeshByName(meshName);
         if (!mesh || !mesh.material) return;
 
-        // English comment.
         if (mesh.userData._originalColor) {
             mesh.material.color = mesh.userData._originalColor;
             delete mesh.userData._originalColor;
@@ -3959,9 +3760,6 @@ export class ModelLoader extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     isolateMesh(meshNames) {
         if (isPlainObject(meshNames)) {
             return this.hideMeshesExcept(meshNames);
@@ -4056,7 +3854,6 @@ export class ModelLoader extends Component {
             this.scene.animationManager.remove(this.model);
         }
 
-        // English comment.
         if (this.bakedTextureCache) {
             this.bakedTextureCache.forEach((texture) => {
                 texture.dispose();

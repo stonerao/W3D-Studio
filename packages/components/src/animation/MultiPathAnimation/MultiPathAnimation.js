@@ -3,24 +3,24 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 /**
- * English comment.
+ * Animation module component that coordinates multiple path animations for synchronized scene movement.
  */
 export class MultiPathAnimation extends Component {
     static defaultConfig = {
-        modelUrl: '',              // English comment.
-        paths: [],                 // English comment.
-        vehiclesPerPath: 5,       // English comment.
-        scale: [1, 1, 1],         // English comment.
-        instancedScale: [2, 2, 2], // English comment.
-        position: [0, 0, 0],      // English comment.
-        rotation: [0, 0, 0],      // English comment.
-        speed: 10,                // English comment.
-        loop: true,               // English comment.
-        autoStart: true,          // English comment.
-        lookAtDirection: 'forward', // English comment.
-        showPath: true,           // English comment.
-        pathColor: '#ffaa00',     // English comment.
-        pathWidth: 2              // English comment.
+        modelUrl: '',
+        paths: [],
+        vehiclesPerPath: 5,
+        scale: [1, 1, 1],
+        instancedScale: [2, 2, 2],
+        position: [0, 0, 0],
+        rotation: [0, 0, 0],
+        speed: 10,
+        loop: true,
+        autoStart: true,
+        lookAtDirection: 'forward',
+        showPath: true,
+        pathColor: '#ffaa00',
+        pathWidth: 2
     };
 
     onCreate() {
@@ -40,18 +40,14 @@ export class MultiPathAnimation extends Component {
             return;
         }
 
-        // English comment.
         await this.loadModel();
 
-        // English comment.
         this.createPaths();
 
-        // English comment.
         if (this.config.showPath) {
             this.createPathVisualization();
         }
 
-        // English comment.
         this.initAnimations();
 
         this.isReady = true;
@@ -69,7 +65,6 @@ export class MultiPathAnimation extends Component {
                 (gltf) => {
                     const model = gltf.scene;
 
-                    // English comment.
                     let geometry = null;
                     let material = null;
 
@@ -86,7 +81,6 @@ export class MultiPathAnimation extends Component {
                         return;
                     }
 
-                    // English comment.
                     const instanceCount = this.normalizedPaths.length * this.config.vehiclesPerPath;
                     this.instancedMesh = new THREE.InstancedMesh(
                         geometry,
@@ -94,7 +88,6 @@ export class MultiPathAnimation extends Component {
                         instanceCount
                     );
 
-                    // English comment.
                     this.componentScene.add(this.instancedMesh);
 
                     console.log(`MultiPathAnimation: 模型加载成功，创建 ${instanceCount} 个实例`);
@@ -124,7 +117,6 @@ export class MultiPathAnimation extends Component {
     }
 
     createPathVisualization() {
-        // English comment.
         this.pathLines.forEach((line) => this.scene.scene.remove(line));
         this.pathLines = [];
 
@@ -150,9 +142,7 @@ export class MultiPathAnimation extends Component {
             const curve = this.curves[pathIndex];
             const totalDistance = curve.getLength();
 
-            // English comment.
             for (let vehicleIndex = 0; vehicleIndex < this.config.vehiclesPerPath; vehicleIndex++) {
-                // English comment.
                 const initialProgress = vehicleIndex / this.config.vehiclesPerPath;
 
                 this.animations.push({
@@ -186,7 +176,6 @@ export class MultiPathAnimation extends Component {
             return raw;
         }
 
-        // English comment.
         if (raw && Array.isArray(raw.points)) {
             const data = raw.points
                 .map((p) => {
@@ -203,7 +192,6 @@ export class MultiPathAnimation extends Component {
             }
         }
 
-        // English comment.
         if (raw && Array.isArray(raw.data)) {
             return [raw];
         }
@@ -258,14 +246,11 @@ export class MultiPathAnimation extends Component {
 
             anyPlaying = true;
 
-            // English comment.
             const moveDistance = this.config.speed * deltaTime;
             anim.currentDistance += moveDistance;
 
-            // English comment.
             let newProgress = anim.currentDistance / anim.totalDistance;
 
-            // English comment.
             if (this.config.loop && newProgress >= 1) {
                 newProgress = 0;
                 anim.currentDistance = 0;
@@ -290,14 +275,12 @@ export class MultiPathAnimation extends Component {
         this.animations.forEach((anim) => {
             const point = anim.curve.getPoint(anim.progress);
 
-            // English comment.
             const position = new THREE.Vector3(
                 point.x + this.config.position[0],
                 point.y + this.config.position[1],
                 point.z + this.config.position[2]
             );
 
-            // English comment.
             const baseQuaternion = new THREE.Quaternion();
             const lookAtMode = this.config.lookAtDirection || 'forward';
 
@@ -320,7 +303,6 @@ export class MultiPathAnimation extends Component {
                 }
             }
 
-            // English comment.
             const offsetRotation = new THREE.Euler(
                 this.config.rotation[0],
                 this.config.rotation[1],
@@ -329,7 +311,6 @@ export class MultiPathAnimation extends Component {
             const offsetQuaternion = new THREE.Quaternion().setFromEuler(offsetRotation);
             const finalQuaternion = baseQuaternion.multiply(offsetQuaternion);
 
-            // English comment.
             const scaleValue = this.config.instancedScale ?? this.config.scale;
             const scaleVector = Array.isArray(scaleValue)
                 ? scaleValue
@@ -341,7 +322,6 @@ export class MultiPathAnimation extends Component {
                 new THREE.Vector3(scaleVector[0], scaleVector[1], scaleVector[2])
             );
 
-            // English comment.
             this.instancedMesh.setMatrixAt(anim.index, matrix);
         });
 
@@ -368,7 +348,6 @@ export class MultiPathAnimation extends Component {
     onDispose() {
         this.stop();
 
-        // English comment.
         this.pathLines.forEach((line) => {
             if (line.geometry) line.geometry.dispose();
             if (line.material) line.material.dispose();
@@ -376,7 +355,6 @@ export class MultiPathAnimation extends Component {
         });
         this.pathLines = [];
 
-        // English comment.
         if (this.instancedMesh) {
             if (this.instancedMesh.geometry) {
                 this.instancedMesh.geometry.dispose();
@@ -396,27 +374,19 @@ export class MultiPathAnimation extends Component {
         this.animations = [];
     }
 
-    /**
-     * English comment.
-     */
     async updateConfig(newConfig) {
-        // English comment.
         this.stop();
 
-        // English comment.
         Object.assign(this.config, newConfig);
 
-        // English comment.
         this.onDispose();
 
-        // English comment.
         this.isReady = false;
         this.curves = [];
         this.pathLines = [];
         this.animations = [];
         this.normalizedPaths = [];
 
-        // English comment.
         await this.onMounted();
     }
 

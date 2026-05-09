@@ -108,7 +108,7 @@ const handleChildToggle = (id) => {
     display: flex;
     align-items: center;
     gap: 6px;
-    min-height: 32px;
+    min-height: 34px;
     padding-top: 0;
     padding-right: 8px;
     padding-bottom: 0;
@@ -116,18 +116,21 @@ const handleChildToggle = (id) => {
     cursor: pointer;
     transition: background-color 0.15s cubic-bezier(0.16, 1, 0.3, 1),
                 color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
-    border-radius: var(--border-radius-sm, 4px);
-    margin: 1px 0;
+    border-radius: 7px;
+    margin: 2px 0;
+    border: 1px solid transparent;
 }
 
 .tree-node-content:hover {
-    background-color: var(--color-bg-hover);
+    background-color: rgba(125, 183, 255, 0.07);
+    border-color: rgba(118, 144, 180, 0.12);
 }
 
 .tree-node-content.selected {
-    background-color: rgba(0, 212, 255, 0.15);
-    color: var(--color-primary);
-    box-shadow: inset 3px 0 0 var(--color-primary, #00d4ff);
+    background-color: rgba(47, 125, 244, 0.16);
+    color: #d8eaff;
+    border-color: rgba(47, 125, 244, 0.35);
+    box-shadow: inset 3px 0 0 var(--color-primary), 0 8px 18px rgba(0, 0, 0, 0.12);
 }
 
 .tree-node-icon {
@@ -164,12 +167,16 @@ const handleChildToggle = (id) => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
-    color: var(--color-text-primary);
+    color: rgba(238, 245, 255, 0.9);
     transition: color 0.15s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .tree-node-content:hover .tree-node-label {
-    color: var(--color-text-primary);
+    color: #ffffff;
+}
+
+.tree-node-content.selected .tree-node-label {
+    color: #ffffff;
 }
 
 .tree-node-visibility {

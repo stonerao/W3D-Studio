@@ -3,7 +3,7 @@ import { createI18n } from 'vue-i18n';
 import en from './locales/en';
 import zh from './locales/zh';
 
-export const DEFAULT_LOCALE = 'en';
+export const DEFAULT_LOCALE = 'zh';
 export const SUPPORT_LOCALES = ['en', 'zh'];
 export const LOCALE_STORAGE_KEY = 'w3d_editor_locale';
 

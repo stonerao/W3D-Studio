@@ -38,6 +38,8 @@ const FORBIDDEN_COMPONENT_METHODS = new Set([
     'dispose'
 ]);
 
+const normalizeRefText = (value) => String(value ?? '').trim();
+
 /**
  * English comment.
  */
@@ -80,6 +82,45 @@ class EditorActionsService {
     }
 
     // English comment.
+
+    resolveComponentReference({ id, name, type, prefer } = {}) {
+        this.ensureInit();
+
+        const components = this.stores.component.components || [];
+        const targetId = normalizeRefText(id);
+        if (targetId) {
+            return components.find((component) => component.id === targetId) || null;
+        }
+
+        const targetName = normalizeRefText(name);
+        if (targetName) {
+            const exactMatch = components.find((component) => component.name === targetName);
+            if (exactMatch) return exactMatch;
+
+            const lowerName = targetName.toLowerCase();
+            const caseInsensitiveMatch = components.find((component) => (
+                normalizeRefText(component.name).toLowerCase() === lowerName
+            ));
+            if (caseInsensitiveMatch) return caseInsensitiveMatch;
+        }
+
+        const targetType = normalizeRefText(type);
+        if (!targetType) return null;
+
+        const matches = components.filter((component) => component.type === targetType);
+        if (matches.length === 0) return null;
+        if (matches.length === 1) return matches[0];
+
+        const selectedId = this.stores.component.selectedComponentId;
+        const selectedMatch = matches.find((component) => component.id === selectedId);
+        if (selectedMatch) return selectedMatch;
+
+        if (['last', 'latest', 'newest'].includes(normalizeRefText(prefer))) {
+            return matches[matches.length - 1];
+        }
+
+        return null;
+    }
 
     /**
      * English comment.
@@ -195,13 +236,14 @@ class EditorActionsService {
      * @param {Array} [params.args]
      * @returns {ActionResult}
      */
-    async callComponentMethod({ id, methodName, args = [] }) {
+    async callComponentMethod({ id, name, type, prefer, methodName, args = [] }) {
         this.ensureInit();
 
         try {
-            const component = this.stores.component.components.find(c => c.id === id);
+            const component = this.resolveComponentReference({ id, name, type, prefer });
             if (!component) {
-                return { success: false, message: '组件不存在' };
+                const target = id || name || type || '';
+                return { success: false, message: `组件不存在或无法唯一定位: ${target}` };
             }
 
             const method = String(methodName || '').trim();
@@ -713,7 +755,14 @@ class EditorActionsService {
             },
             callComponentMethod: {
                 description: '调用组件实例方法',
-                params: { id: '组件 ID (必填)', methodName: '方法名 (必填)', args: '参数数组 (可选)' }
+                params: {
+                    id: '组件 ID（优先）',
+                    name: '组件名称（没有 id 时可用）',
+                    type: '组件类型（没有 id/name 时可用；多实例时需配合 prefer）',
+                    prefer: '同类型多实例选择策略，可选 latest',
+                    methodName: '方法名 (必填)',
+                    args: '参数数组 (可选)'
+                }
             },
             selectComponent: {
                 description: '选中组件',

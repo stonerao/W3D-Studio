@@ -2,13 +2,12 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Marker module component that places HTML or sprite-based labels in 3D space.
  */
 export class Label3D extends Component {
     static defaultConfig = {
-        labels: [], // English comment.
+        labels: [],
         globalConfig: {
-            // English comment.
             renderMode: 'sprite', // sprite | plane
             fontSize: 32,
             fontFamily: 'Arial, sans-serif',
@@ -19,78 +18,60 @@ export class Label3D extends Component {
             borderWidth: 2,
             padding: 10,
             borderRadius: 5,
-            backgroundImage: null, // English comment.
-            billboard: true, // English comment.
-            scale: 1, // English comment.
-            size: 1, // English comment.
-            width: 2, // English comment.
-            height: 1, // English comment.
-            autoSize: true, // English comment.
-            center: { x: 0.5, y: 0 }, // English comment.
-            depthTest: true, // English comment.
-            sizeAttenuation: true, // English comment.
-            parent: null, // English comment.
-            useLocalPosition: false, // English comment.
-            autoConvertToLocal: false // English comment.
+            backgroundImage: null,
+            billboard: true,
+            scale: 1,
+            size: 1,
+            width: 2,
+            height: 1,
+            autoSize: true,
+            center: { x: 0.5, y: 0 },
+            depthTest: true,
+            sizeAttenuation: true,
+            parent: null,
+            useLocalPosition: false,
+            autoConvertToLocal: false
         }
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // English comment.
         this.labelSprites = new Map();
 
-        // English comment.
         this.labelDataMap = new Map();
 
-        // English comment.
         this.parentMap = new Map();
         this.alarmHighlightConfigMap = new Map();
 
-        // English comment.
         this.canvasCache = new Map();
 
-        // English comment.
         this.imageCache = new Map();
 
-        // English comment.
         this._measureCanvas = document.createElement('canvas');
         this._measureCtx = this._measureCanvas.getContext('2d');
 
-        // English comment.
         this._lastBillboardCameraPos = new THREE.Vector3(Number.NaN, Number.NaN, Number.NaN);
         this._billboardEpsilon = 1e-6;
     }
 
-    /**
-     * English comment.
-     */
     async onMounted() {
-        // English comment.
         this.globalConfig = {
             ...this.constructor.defaultConfig.globalConfig,
             ...this.config.globalConfig
         };
 
-        // English comment.
         if (this.config.labels && this.config.labels.length > 0) {
             await this.createLabels(this.config.labels);
         }
     }
 
-    /**
-     * English comment.
-     */
     async createLabels(labels) {
         for (const labelData of labels) {
             await this.createLabel(labelData);
         }
     }
 
-    /**
-     * English comment.
-     */
     async createLabel(labelData) {
         const { id, label, position, userData, config, parent } = labelData;
 
@@ -99,57 +80,44 @@ export class Label3D extends Component {
             return;
         }
 
-        // English comment.
         const labelConfig = {
             ...this.globalConfig,
             ...config
         };
 
-        // English comment.
         const parentObject = parent || labelConfig.parent;
 
-        // English comment.
         let backgroundImage = null;
         if (labelConfig.backgroundImage) {
             backgroundImage = await this.loadImage(labelConfig.backgroundImage);
         }
 
-        // English comment.
         const { canvas, width, height } = this.createCanvasTexture(
             label,
             labelConfig,
             backgroundImage
         );
 
-        // English comment.
         const texture = new THREE.CanvasTexture(canvas);
         texture.needsUpdate = true;
 
-        // English comment.
         const labelObject = this.createLabelObject(texture, labelConfig, width, height);
 
-        // English comment.
         if (position) {
             const pos = new THREE.Vector3(position.x || 0, position.y || 0, position.z || 0);
 
-            // English comment.
             if (parentObject && labelConfig.autoConvertToLocal) {
-                // English comment.
                 const localPos = parentObject.worldToLocal(pos.clone());
                 labelObject.position.copy(localPos);
             } else if (parentObject && labelConfig.useLocalPosition) {
-                // English comment.
                 labelObject.position.copy(pos);
             } else {
-                // English comment.
                 labelObject.position.copy(pos);
             }
         }
 
-        // English comment.
         this.applyLabelScale(labelObject, labelConfig, width, height);
 
-        // English comment.
         labelObject.userData = {
             labelId: id,
             labelText: label,
@@ -159,7 +127,6 @@ export class Label3D extends Component {
             renderMode: this.getRenderMode(labelConfig)
         };
 
-        // English comment.
         if (parentObject) {
             parentObject.add(labelObject);
             this.parentMap.set(id, parentObject);
@@ -167,7 +134,6 @@ export class Label3D extends Component {
             this.add(labelObject);
         }
 
-        // English comment.
         this.labelSprites.set(id, labelObject);
         this.labelDataMap.set(id, {
             ...labelData,
@@ -251,9 +217,6 @@ export class Label3D extends Component {
         labelObject.scale.set(spriteWidth, spriteHeight, 1);
     }
 
-    /**
-     * English comment.
-     */
     createCanvasTexture(text, config, backgroundImage = null) {
         const {
             fontSize,
@@ -267,28 +230,23 @@ export class Label3D extends Component {
             borderRadius
         } = config;
 
-        // English comment.
         const measureCtx = this._measureCtx;
         measureCtx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
         const metrics = measureCtx.measureText(text);
         const textWidth = metrics.width;
         const textHeight = fontSize;
 
-        // English comment.
         const canvasWidth = Math.ceil(textWidth + padding * 2 + borderWidth * 2);
         const canvasHeight = Math.ceil(textHeight + padding * 2 + borderWidth * 2);
 
-        // English comment.
         const canvas = document.createElement('canvas');
         canvas.width = canvasWidth;
         canvas.height = canvasHeight;
         const ctx = canvas.getContext('2d');
 
-        // English comment.
         if (backgroundImage) {
             ctx.drawImage(backgroundImage, 0, 0, canvasWidth, canvasHeight);
         } else {
-            // English comment.
             ctx.fillStyle = backgroundColor;
             if (borderRadius > 0) {
                 this.drawRoundedRect(
@@ -305,7 +263,6 @@ export class Label3D extends Component {
             }
         }
 
-        // English comment.
         if (borderWidth > 0) {
             ctx.strokeStyle = borderColor;
             ctx.lineWidth = borderWidth;
@@ -329,7 +286,6 @@ export class Label3D extends Component {
             }
         }
 
-        // English comment.
         ctx.font = `${fontWeight} ${fontSize}px ${fontFamily}`;
         ctx.fillStyle = textColor;
         ctx.textAlign = 'center';
@@ -339,9 +295,6 @@ export class Label3D extends Component {
         return { canvas, width: canvasWidth, height: canvasHeight };
     }
 
-    /**
-     * English comment.
-     */
     drawRoundedRect(ctx, x, y, width, height, radius) {
         ctx.beginPath();
         ctx.moveTo(x + radius, y);
@@ -356,11 +309,7 @@ export class Label3D extends Component {
         ctx.closePath();
     }
 
-    /**
-     * English comment.
-     */
     loadImage(url) {
-        // English comment.
         if (this.imageCache.has(url)) {
             return Promise.resolve(this.imageCache.get(url));
         }
@@ -380,9 +329,6 @@ export class Label3D extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     async updateLabel(id, updates) {
         const labelObject = this.labelSprites.get(id);
         const labelData = this.labelDataMap.get(id);
@@ -392,7 +338,6 @@ export class Label3D extends Component {
             return;
         }
 
-        // English comment.
         Object.assign(labelData, updates);
 
         const mergedConfig = {
@@ -412,7 +357,6 @@ export class Label3D extends Component {
             return;
         }
 
-        // English comment.
         if (updates.label || updates.config) {
             const labelConfig = mergedConfig;
 
@@ -427,7 +371,6 @@ export class Label3D extends Component {
                 backgroundImage
             );
 
-            // English comment.
             if (labelObject.material?.map) {
                 labelObject.material.map.image = canvas;
                 labelObject.material.map.needsUpdate = true;
@@ -443,7 +386,6 @@ export class Label3D extends Component {
             labelObject.userData.renderMode = targetRenderMode;
         }
 
-        // English comment.
         if (updates.position) {
             const labelConfig = {
                 ...this.globalConfig,
@@ -456,7 +398,6 @@ export class Label3D extends Component {
                 updates.position.z ?? labelObject.position.z
             );
 
-            // English comment.
             if (parentObject && labelConfig.autoConvertToLocal) {
                 const localPos = parentObject.worldToLocal(pos.clone());
                 labelObject.position.copy(localPos);
@@ -467,19 +408,16 @@ export class Label3D extends Component {
             }
         }
 
-        // English comment.
         if (updates.parent !== undefined) {
             const oldParent = this.parentMap.get(id);
             const newParent = updates.parent;
 
-            // English comment.
             if (oldParent) {
                 oldParent.remove(labelObject);
             } else {
                 this.remove(labelObject);
             }
 
-            // English comment.
             if (newParent) {
                 newParent.add(labelObject);
                 this.parentMap.set(id, newParent);
@@ -489,15 +427,11 @@ export class Label3D extends Component {
             }
         }
 
-        // English comment.
         if (updates.userData) {
             labelObject.userData.customData = updates.userData;
         }
     }
 
-    /**
-     * English comment.
-     */
     removeLabel(id) {
         const labelObject = this.labelSprites.get(id);
 
@@ -506,7 +440,6 @@ export class Label3D extends Component {
             return;
         }
 
-        // English comment.
         if (labelObject.material?.map) {
             labelObject.material.map.dispose();
         }
@@ -517,7 +450,6 @@ export class Label3D extends Component {
             labelObject.geometry.dispose();
         }
 
-        // English comment.
         const parentObject = this.parentMap.get(id);
         if (parentObject) {
             parentObject.remove(labelObject);
@@ -526,21 +458,14 @@ export class Label3D extends Component {
             this.remove(labelObject);
         }
 
-        // English comment.
         this.labelSprites.delete(id);
         this.labelDataMap.delete(id);
     }
 
-    /**
-     * English comment.
-     */
     getLabel(id) {
         return this.labelDataMap.get(id);
     }
 
-    /**
-     * English comment.
-     */
     getAllLabels() {
         return Array.from(this.labelDataMap.values());
     }
@@ -596,9 +521,6 @@ export class Label3D extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     clearLabels() {
         const ids = Array.from(this.labelSprites.keys());
         for (const id of ids) {
@@ -606,9 +528,6 @@ export class Label3D extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     showLabel(id) {
         const sprite = this.labelSprites.get(id);
         if (sprite) {
@@ -616,9 +535,6 @@ export class Label3D extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     hideLabel(id) {
         const sprite = this.labelSprites.get(id);
         if (sprite) {
@@ -626,39 +542,25 @@ export class Label3D extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     getInteractiveObjects() {
         return Array.from(this.labelSprites.values());
     }
 
-    /**
-     * English comment.
-     */
     getLabelParent(id) {
         return this.parentMap.get(id) || null;
     }
 
-    /**
-     * English comment.
-     */
     async batchSetParents(parentMappings) {
         for (const { id, parent } of parentMappings) {
             await this.updateLabel(id, { parent });
         }
     }
 
-    /**
-     * English comment.
-     */
     async updateConfig(newConfig) {
-        // English comment.
         if (newConfig.globalConfig) {
             Object.assign(this.globalConfig, newConfig.globalConfig);
         }
 
-        // English comment.
         if (Array.isArray(newConfig.labels)) {
             const nextLabels = newConfig.labels
                 .filter((item) => item && typeof item === 'object' && item.id)
@@ -669,14 +571,12 @@ export class Label3D extends Component {
 
             const nextIdSet = new Set(nextLabels.map((item) => item.id));
 
-            // English comment.
             for (const existingId of Array.from(this.labelDataMap.keys())) {
                 if (!nextIdSet.has(existingId)) {
                     this.removeLabel(existingId);
                 }
             }
 
-            // English comment.
             const syncTasks = nextLabels.map((nextLabel) => {
                 if (this.labelDataMap.has(nextLabel.id)) {
                     return this.updateLabel(nextLabel.id, nextLabel);
@@ -689,7 +589,6 @@ export class Label3D extends Component {
             return;
         }
 
-        // English comment.
         const refreshTasks = [];
         for (const [id, labelData] of this.labelDataMap) {
             refreshTasks.push(this.updateLabel(id, {
@@ -719,11 +618,7 @@ export class Label3D extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     onUpdate(_delta) {
-        // English comment.
         if (this.globalConfig.billboard && this.scene.camera) {
             const cameraPosition = this.scene?.camera?.position || this.scene?.camera?.instance?.position;
             if (!cameraPosition || typeof cameraPosition.distanceToSquared !== 'function') {
@@ -734,7 +629,6 @@ export class Label3D extends Component {
                 this._lastBillboardCameraPos = new THREE.Vector3(Number.NaN, Number.NaN, Number.NaN);
             }
 
-            // English comment.
             if (cameraPosition.distanceToSquared(this._lastBillboardCameraPos) <= this._billboardEpsilon) {
                 return;
             }
@@ -756,21 +650,15 @@ export class Label3D extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
-        // English comment.
         this.clearLabels();
 
-        // English comment.
         this.canvasCache.clear();
         this.imageCache.clear();
 
         this._measureCanvas = null;
         this._measureCtx = null;
 
-        // English comment.
         this.parentMap.clear();
         this.alarmHighlightConfigMap.clear();
     }

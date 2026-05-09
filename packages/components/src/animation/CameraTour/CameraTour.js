@@ -1,6 +1,9 @@
 import { Component, Tween } from '@w3d/core';
 import { getCameraModeManager } from '../../controls/shared/CameraModeManager.js';
 
+/**
+ * Animation module component that plays an ordered camera tour across saved viewpoints.
+ */
 export class CameraTour extends Component {
     static defaultConfig = {
         enabled: false,

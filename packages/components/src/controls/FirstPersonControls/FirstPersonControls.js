@@ -4,7 +4,7 @@ import { CollisionDetector } from './CollisionDetector.js';
 import { getCameraModeManager } from '../shared/CameraModeManager.js';
 
 /**
- * English comment.
+ * Controls module component that provides first-person navigation with keyboard, pointer, and collision support.
  */
 export class FirstPersonControls extends Component {
     static defaultConfig = {

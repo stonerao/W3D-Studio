@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Marker module component that renders line markers for routes, boundaries, and connection overlays.
  */
 export class MarkLine extends Component {
     static defaultConfig = {
@@ -32,14 +32,9 @@ export class MarkLine extends Component {
         this.add(this.line);
     }
 
-    /**
-     * English comment.
-     */
     updateConfig(newConfig) {
-        // English comment.
         Object.assign(this.config, newConfig);
 
-        // English comment.
         if (this.line) {
             this.remove(this.line);
             this.line.geometry.dispose();
@@ -47,7 +42,6 @@ export class MarkLine extends Component {
             this.line = null;
         }
 
-        // English comment.
         this.createLine();
     }
 

@@ -491,6 +491,9 @@ const disposePass = (pass) => {
     }
 };
 
+/**
+ * Effects module component that renders volumetric-style cloud layers driven by weather configuration.
+ */
 export class WeatherClouds extends Component {
     static defaultConfig = {
         name: 'weather-clouds',

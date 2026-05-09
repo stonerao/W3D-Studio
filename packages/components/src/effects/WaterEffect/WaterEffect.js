@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Effects module component that creates animated water surfaces with reflection and wave controls.
  */
 export class WaterEffect extends Component {
     static defaultConfig = {

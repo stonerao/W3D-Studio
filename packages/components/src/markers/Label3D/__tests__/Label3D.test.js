@@ -1,6 +1,3 @@
-/**
- * English comment.
- */
 
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { Label3D } from '../Label3D.js';
@@ -10,7 +7,6 @@ describe('Label3D', () => {
     let label3D;
 
     beforeEach(() => {
-        // English comment.
         mockScene = {
             scene: {
                 add: vi.fn()
@@ -20,7 +16,6 @@ describe('Label3D', () => {
             }
         };
 
-        // English comment.
         label3D = new Label3D(mockScene, {
             name: 'test-labels',
             globalConfig: {

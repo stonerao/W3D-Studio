@@ -1,5 +1,5 @@
 <template>
-    <div class="left-panel panel" :style="{ width: 'calc(var(--panel-width) + 60px)' }">
+    <div class="left-panel panel" :style="{ width: 'calc(var(--panel-width) + var(--left-module-rail-width))' }">
         <Tabs v-model="activeTab" :tabs="tabs" orientation="vertical" class="left-panel__nav" />
 
         <div class="panel-content left-panel__content">
@@ -34,7 +34,7 @@ import { useEditorStore } from '../../stores/useEditorStore';
 import { useEditorI18n } from '../../i18n';
 
 const AVAILABLE_LEFT_PANEL_TABS = new Set(['components', 'tree', 'variables']);
-const normalizeLeftPanelTab = (tab) => AVAILABLE_LEFT_PANEL_TABS.has(tab) ? tab : 'components';
+const normalizeLeftPanelTab = (tab) => AVAILABLE_LEFT_PANEL_TABS.has(tab) ? tab : 'tree';
 
 const editorStore = useEditorStore();
 const activeTab = ref(normalizeLeftPanelTab(editorStore.activeLeftPanelTab));
@@ -42,8 +42,8 @@ const componentStore = useComponentStore();
 const { t } = useEditorI18n();
 
 const tabs = computed(() => [
-    { key: 'components', label: t('panels.components'), icon: 'icon-gongzuotaimorentubiao' },
     { key: 'tree', label: t('panels.sceneTree'), icon: 'icon-wenjianjia' },
+    { key: 'components', label: t('panels.components'), icon: 'icon-gongzuotaimorentubiao' },
     { key: 'variables', label: t('panels.variables'), icon: 'icon-yuanshujubianji' }
 ]);
 
@@ -93,15 +93,27 @@ watch(
     flex-direction: row;
     height: 100%;
     min-width: 0;
-    background: var(--color-bg-secondary);
-    border-right: 1px solid var(--color-border);
+    background: var(--color-workbench-panel);
+    border-right: 1px solid rgba(118, 144, 180, 0.17);
+    box-shadow: inset -1px 0 0 rgba(255, 255, 255, 0.02);
 }
 
 .left-panel__nav {
-    width: 60px;
-    flex: 0 0 60px;
-    border-right: 1px solid var(--color-border);
-    background: #09111d;
+    width: var(--left-module-rail-width);
+    flex: 0 0 var(--left-module-rail-width);
+    border-right: 1px solid rgba(118, 144, 180, 0.14);
+    background:
+        linear-gradient(180deg, rgba(7, 15, 27, 0.98) 0%, rgba(5, 11, 19, 0.98) 100%);
+    --tabs-rail-item-width: 58px;
+    --tabs-rail-item-height: 68px;
+    --tabs-rail-padding-x: 6px;
+    --tabs-rail-gap: 8px;
+    --tabs-hover-bg: transparent;
+    --tabs-hover-color: #d8eaff;
+    --tabs-active-bg: transparent;
+    --tabs-active-shadow: none;
+    --tabs-active-color: #58a2ff;
+    --tabs-active-icon-color: #58a2ff;
 }
 
 .left-panel__content {
@@ -109,7 +121,8 @@ watch(
     display: flex;
     flex-direction: column;
     padding: 0;
-    background: var(--color-bg-secondary);
+    background:
+        linear-gradient(180deg, rgba(10, 18, 31, 0.98) 0%, rgba(7, 14, 24, 0.98) 100%);
     overflow: hidden;
 }
 

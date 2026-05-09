@@ -317,13 +317,13 @@ watch(
 .transform-editor {
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: 14px;
 }
 
 .transform-group {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: 9px;
 }
 
 .group-header {
@@ -337,7 +337,7 @@ watch(
 .group-label {
     font-size: var(--font-size-xs);
     font-weight: 600;
-    color: var(--color-text-secondary);
+    color: #b9c7d8;
 }
 
 .binding-icon-btn {
@@ -347,7 +347,7 @@ watch(
     align-items: center;
     justify-content: center;
     border: 1px solid transparent;
-    border-radius: var(--border-radius-sm);
+    border-radius: 6px;
     background: transparent;
     color: var(--color-text-tertiary);
     cursor: pointer;
@@ -382,7 +382,7 @@ watch(
 .vector3-inputs {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: var(--space-2);
+    gap: 7px;
 }
 
 .scale-inputs {
@@ -400,18 +400,18 @@ watch(
 
 .input-group label {
     font-size: var(--font-size-xs);
-    color: var(--color-text-tertiary);
+    color: #6f86a1;
 }
 
 .lock-btn {
-    width: 34px;
-    height: 32px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
+    width: 36px;
+    height: 34px;
+    border: 1px solid rgba(118, 144, 180, 0.16);
+    border-radius: 7px;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--color-bg-tertiary);
+    background: rgba(8, 15, 26, 0.72);
     color: var(--color-text-secondary);
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-semibold);

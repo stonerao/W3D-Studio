@@ -74,14 +74,15 @@ const toggle = (key) => {
 .accordion-container {
     display: flex;
     flex-direction: column;
-    gap: var(--space-2);
+    gap: 12px;
 }
 
 .accordion-item {
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
+    border: 1px solid rgba(118, 144, 180, 0.15);
+    border-radius: 8px;
     overflow: hidden;
-    background-color: rgba(15, 23, 42, 0.34);
+    background:
+        linear-gradient(180deg, rgba(16, 28, 45, 0.74) 0%, rgba(9, 17, 29, 0.74) 100%);
     transition: border-color var(--duration-fast, 150ms) var(--ease-out),
                 box-shadow var(--duration-fast, 150ms) var(--ease-out);
 }
@@ -91,8 +92,8 @@ const toggle = (key) => {
 }
 
 .accordion-item--expanded {
-    border-color: var(--color-border-hover);
-    box-shadow: none;
+    border-color: rgba(125, 183, 255, 0.24);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03);
 }
 
 .accordion-header {
@@ -100,8 +101,8 @@ const toggle = (key) => {
     display: flex;
     align-items: center;
     gap: var(--space-2);
-    min-height: 40px;
-    padding: 0 var(--space-3);
+    min-height: 48px;
+    padding: 0 14px;
     background-color: transparent;
     text-align: left;
     font-weight: var(--font-weight-medium);
@@ -117,7 +118,8 @@ const toggle = (key) => {
 }
 
 .accordion-header.expanded {
-    background-color: rgba(18, 27, 42, 0.82);
+    background:
+        linear-gradient(180deg, rgba(18, 32, 52, 0.92) 0%, rgba(12, 22, 37, 0.92) 100%);
 }
 
 .accordion-arrow {
@@ -133,7 +135,7 @@ const toggle = (key) => {
 
 .accordion-header.expanded .accordion-arrow {
     transform: rotate(90deg);
-    color: var(--color-primary);
+    color: #7db7ff;
 }
 
 .accordion-title {
@@ -146,9 +148,9 @@ const toggle = (key) => {
 }
 
 .accordion-content {
-    padding: var(--space-3);
-    border-top: 1px solid var(--color-border-light);
-    background-color: rgba(13, 20, 32, 0.7);
+    padding: 14px;
+    border-top: 1px solid rgba(118, 144, 180, 0.1);
+    background-color: rgba(7, 14, 24, 0.58);
 }
 
 /* English comment. */

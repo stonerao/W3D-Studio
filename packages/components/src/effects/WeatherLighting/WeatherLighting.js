@@ -18,8 +18,6 @@ function toJulian(date) {
 }
 
 function getSunPositionApprox(date, latDeg, lonDeg) {
-    // English comment.
-    // English comment.
     const jd = toJulian(date);
     const d = jd - 2451545.0;
 
@@ -105,7 +103,6 @@ function deepMerge(target = {}, source = {}) {
 }
 
 function inferTimePresetFromSunAltitude(altitudeRad) {
-    // English comment.
     if (!Number.isFinite(altitudeRad)) return 'noon';
     if (altitudeRad <= -0.05) return 'night';
     if (altitudeRad <= 0.20) return 'dawn';
@@ -136,6 +133,9 @@ function presetToHour(timePreset) {
     }
 }
 
+/**
+ * Effects module component that synchronizes sun, sky, clouds, shadows, and lighting presets for weather scenarios.
+ */
 export class WeatherLighting extends Component {
     static defaultConfig = {
         name: 'weather-lighting',
@@ -143,20 +143,17 @@ export class WeatherLighting extends Component {
         // 'manual' | 'auto'
         mode: 'manual',
 
-        // English comment.
         location: {
             lat: 29.0001,
             lon: 130.0001
         },
 
-        // English comment.
         provider: {
             url: '',
             updateIntervalMinutes: 30,
             timeoutMs: 8000
         },
 
-        // English comment.
         weather: {
             preset: 'clear', // clear | rainLight | rainHeavy | snow | fog | cloudy
             enabled: true
@@ -182,26 +179,17 @@ export class WeatherLighting extends Component {
             }
         },
 
-        // English comment.
         lighting: {
-            // English comment.
-            // English comment.
-            // English comment.
             timeHour: null,
             sunDistance: 200,
-            // English comment.
             castShadow: true,
             shadowMapSize: 2048,
-            // English comment.
             autoApplyMeshShadows: true,
-            // English comment.
             shadowCamera: null,
-            // English comment.
             shadowTarget: {
                 mode: 'area', // 'area' | 'scene'
                 center: [0, 0, 0]
             },
-            // English comment.
             shadowGround: {
                 enabled: true,
                 y: 0,
@@ -209,7 +197,6 @@ export class WeatherLighting extends Component {
             }
         },
 
-        // English comment.
         area: {
             enabled: true,
             followCamera: false,
@@ -217,7 +204,6 @@ export class WeatherLighting extends Component {
             size: [120, 60, 120]
         },
 
-        // English comment.
         roadsideLights: {
             enabled: true,
             streetLightType: 'streetLight',
@@ -265,12 +251,9 @@ export class WeatherLighting extends Component {
     async onMounted() {
         this._initLights();
 
-        // English comment.
-        // English comment.
         this.scene.registerComponent('EnvironmentEffect', EnvironmentEffect);
         this.scene.registerComponent('WeatherClouds', WeatherClouds);
 
-        // English comment.
         this._envEffect = await this.scene.add('EnvironmentEffect', {
             name: this._envEffectName,
             particleCount: 3000,
@@ -309,7 +292,6 @@ export class WeatherLighting extends Component {
     onDispose() {
         this._clearTimers();
 
-        // English comment.
         try {
             this.scene.remove(this._envEffectName);
         } catch {
@@ -321,7 +303,6 @@ export class WeatherLighting extends Component {
             // ignore
         }
 
-        // English comment.
         if (this._ambientLight) {
             this.componentScene.remove(this._ambientLight);
             this._ambientLight = null;
@@ -337,17 +318,14 @@ export class WeatherLighting extends Component {
 
         this._disposeShadowGround();
 
-        // English comment.
         this._clearRoadsideLights();
     }
 
     onUpdate() {
         this._updateSunLerp();
 
-        // English comment.
         this._applyMeshShadowsThrottled();
 
-        // English comment.
         const now = nowMs();
         if (now - this._lastRoadsideSyncMs > 1000) {
             this._lastRoadsideSyncMs = now;
@@ -361,7 +339,6 @@ export class WeatherLighting extends Component {
         if (!this.config.lighting?.autoApplyMeshShadows) return;
 
         const now = nowMs();
-        // English comment.
         if (now - this._lastMeshShadowApplyMs < 2000) return;
         this._lastMeshShadowApplyMs = now;
 
@@ -376,7 +353,6 @@ export class WeatherLighting extends Component {
     async updateConfig(newConfig = {}) {
         this.config = deepMerge(this.config, newConfig || {});
 
-        // English comment.
         if (this._envEffect && (newConfig?.area || newConfig?.area?.size || newConfig?.area?.center || newConfig?.area?.followCamera)) {
             const area = this._getEffectArea();
             this._envEffect.updateConfig({ effectArea: area });
@@ -415,7 +391,6 @@ export class WeatherLighting extends Component {
         this.emit('config-updated', { changed: Object.keys(newConfig || {}) });
     }
 
-    // English comment.
 
     setMode(mode) {
         this.updateConfig({ mode });
@@ -426,7 +401,6 @@ export class WeatherLighting extends Component {
     }
 
     setTimePreset(timePreset) {
-        // English comment.
         const hour = presetToHour(timePreset);
         if (hour === null) return;
         this.setTimeHour(hour);
@@ -449,13 +423,9 @@ export class WeatherLighting extends Component {
     }
 
     _isNightHour(h) {
-        // English comment.
         return h < 5 || h >= 20;
     }
 
-    /**
-     * English comment.
-     */
     getShadowDebugInfo() {
         const rendererShadowEnabled = !!this.scene?.renderer?.instance?.shadowMap?.enabled;
         const now = new Date();
@@ -497,9 +467,6 @@ export class WeatherLighting extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     computeShadowFit(options = {}) {
         const margin = clampNumber(options.margin, 10);
 
@@ -508,7 +475,6 @@ export class WeatherLighting extends Component {
 
         const { box, center, size } = bounds;
 
-        // English comment.
         const half = Math.max(size.x, size.y, size.z) / 2 + Math.max(0, margin);
         const far = Math.max(500, half * 10);
 
@@ -516,7 +482,6 @@ export class WeatherLighting extends Component {
             lighting: {
                 castShadow: true,
                 autoApplyMeshShadows: true,
-                // English comment.
                 shadowTarget: {
                     mode: 'scene',
                     center: [center.x, center.y, center.z]
@@ -529,7 +494,6 @@ export class WeatherLighting extends Component {
                     near: 0.5,
                     far
                 },
-                // English comment.
                 shadowGround: {
                     ...(this.config.lighting?.shadowGround || {}),
                     enabled: true,
@@ -543,19 +507,15 @@ export class WeatherLighting extends Component {
         await this._refreshWeatherOnce();
     }
 
-    // English comment.
 
     _initLights() {
-        // English comment.
         this._ambientLight = new THREE.AmbientLight(0xffffff, 0.4);
         this._ambientLight.name = `${this.config.name}__ambient`;
 
-        // English comment.
         this._sunLight = new THREE.DirectionalLight(0xffffff, 1.0);
         this._sunLight.name = `${this.config.name}__sun`;
         this._sunLight.castShadow = !!this.config.lighting?.castShadow;
 
-        // English comment.
         this._sunTarget = this._sunLight.target;
         this._sunTarget.name = `${this.config.name}__sunTarget`;
 
@@ -563,7 +523,6 @@ export class WeatherLighting extends Component {
         this.componentScene.add(this._sunLight);
         this.componentScene.add(this._sunTarget);
 
-        // English comment.
         this._applySunShadowSettings();
     }
 
@@ -578,7 +537,6 @@ export class WeatherLighting extends Component {
             return;
         }
 
-        // English comment.
         try {
             this.scene?.renderer?.enableShadow?.(true);
         } catch {
@@ -591,7 +549,6 @@ export class WeatherLighting extends Component {
 
         const cam = this._sunLight.shadow.camera;
 
-        // English comment.
         const sc = this.config.lighting?.shadowCamera;
         if (sc && typeof sc === 'object') {
             cam.left = clampNumber(sc.left, -60);
@@ -615,10 +572,8 @@ export class WeatherLighting extends Component {
         }
         cam.updateProjectionMatrix();
 
-        // English comment.
         this._sunLight.shadow.bias = -0.0001;
 
-        // English comment.
         if (this.config.lighting?.autoApplyMeshShadows) {
             this.scene?.scene?.traverse?.((obj) => {
                 if (obj && obj.isMesh) {
@@ -628,7 +583,6 @@ export class WeatherLighting extends Component {
             });
         }
 
-        // English comment.
         this._ensureShadowGround();
     }
 
@@ -669,20 +623,17 @@ export class WeatherLighting extends Component {
             this.componentScene.add(mesh);
         }
 
-        // English comment.
         const opacity = Math.max(0, Math.min(1, clampNumber(sg.opacity, 0.35)));
         if (this._shadowGround.material && this._shadowGround.material.opacity !== opacity) {
             this._shadowGround.material.opacity = opacity;
         }
 
-        // English comment.
         const area = this._getEffectArea();
         const center = asVector3Array(area.center, [0, 0, 0]);
         const y = clampNumber(sg.y, 0);
         const width = Math.max(1, clampNumber(area.width, 120));
         const depth = Math.max(1, clampNumber(area.depth, 120));
 
-        // English comment.
         const prevW = clampNumber(this._shadowGround.userData?._w, 0);
         const prevD = clampNumber(this._shadowGround.userData?._d, 0);
         if (Math.abs(prevW - width) > 1e-3 || Math.abs(prevD - depth) > 1e-3) {
@@ -734,7 +685,6 @@ export class WeatherLighting extends Component {
         const t = (h - dayStart) / Math.max(1e-6, dayEnd - dayStart);
         const k = Math.max(0, Math.min(1, t));
 
-        // English comment.
         const minAlt = degToRad(0);
         const maxAlt = degToRad(70);
         const altitude = minAlt + Math.sin(Math.PI * k) * (maxAlt - minAlt);
@@ -743,8 +693,6 @@ export class WeatherLighting extends Component {
         const aziEnd = degToRad(270);
         const azimuth = lerp(aziStart, aziEnd, k);
 
-        // English comment.
-        // English comment.
         const y = Math.sin(altitude) * distance;
         const r = Math.cos(altitude) * distance;
         const x = Math.sin(azimuth) * r;
@@ -753,19 +701,16 @@ export class WeatherLighting extends Component {
         const c = this._getShadowTargetCenter();
         const target = new THREE.Vector3(c[0] + x, c[1] + y, c[2] + z);
 
-        // English comment.
         if (this._sunTarget) {
             this._sunTarget.position.set(c[0], c[1], c[2]);
         }
 
         if (this._isManualTimeHour()) {
-            // English comment.
             this._sunLight.position.copy(target);
             this._sunLerp.startMs = 0;
             this._sunLerp.endMs = 0;
             this._sunLerp.altitudeRad = altitude;
         } else {
-            // English comment.
             const now = nowMs();
             const intervalMs = minutesToMs(10);
             this._sunLerp.startMs = now;
@@ -779,14 +724,11 @@ export class WeatherLighting extends Component {
             }
         }
 
-        // English comment.
         const sunIntensity = Math.max(0, Math.min(1.2, Math.max(0, Math.sin(altitude)) * 1.2));
         this._sunLight.intensity = sunIntensity;
 
-        // English comment.
         this._applySunShadowSettings();
 
-        // English comment.
         this._currentAutoTimePreset = inferTimePresetFromSunAltitude(altitude);
     }
 
@@ -809,7 +751,6 @@ export class WeatherLighting extends Component {
         }
         if (this._sunLight) {
             this._sunLight.color = new THREE.Color(p.sun.color);
-            // English comment.
             if (this.config.lighting?.mode === 'preset') {
                 this._sunLight.intensity = p.sun.intensity;
             }
@@ -818,7 +759,6 @@ export class WeatherLighting extends Component {
 
     _applySunDirectionFromTimePreset(timePreset) {
         if (!this._sunLight) return;
-        // English comment.
         const hour = presetToHour(timePreset);
         if (hour === null) return;
         this.updateConfig({ lighting: { ...this.config.lighting, timeHour: hour } });
@@ -854,13 +794,11 @@ export class WeatherLighting extends Component {
         return { box, center, size };
     }
 
-    // English comment.
 
     _getEffectArea() {
         const area = this.config.area || {};
         const size = asVector3Array(area.size, WeatherLighting.defaultConfig.area.size);
 
-        // English comment.
         let center = asVector3Array(area.center, WeatherLighting.defaultConfig.area.center);
         if (area.followCamera && this.scene?.camera?.instance) {
             const p = this.scene.camera.instance.position;
@@ -888,7 +826,6 @@ export class WeatherLighting extends Component {
             return;
         }
 
-        // English comment.
         if (isPlaceholderWeather(preset)) {
             this._envEffect.clearEffect();
             this._applyCloudPreset('overcast');
@@ -987,7 +924,6 @@ export class WeatherLighting extends Component {
             const timePreset = data?.lighting?.timePreset;
             const mappedHour = Number.isFinite(apiTimeHour) ? clampInt(apiTimeHour, 0, 23, 12) : presetToHour(timePreset);
 
-            // English comment.
             const next = {
                 weather: {
                     ...this.config.weather,
@@ -995,12 +931,10 @@ export class WeatherLighting extends Component {
                 },
                 lighting: {
                     ...this.config.lighting,
-                    // English comment.
                     timeHour: mappedHour !== null ? mappedHour : this.config.lighting?.timeHour
                 }
             };
 
-            // English comment.
             this.config = { ...this.config, ...next };
             this._applyAll();
             this.emit('weather-updated', data);
@@ -1012,16 +946,13 @@ export class WeatherLighting extends Component {
     }
 
     _setupTimers() {
-        // English comment.
         this._clearTimers();
 
-        // English comment.
         this._scheduleSunTarget();
         if (!this._isManualTimeHour()) {
             this._timers.push(setInterval(() => this._scheduleSunTarget(), minutesToMs(10)));
         }
 
-        // English comment.
         if (this.config.mode === 'auto') {
             const weatherIntervalMs = minutesToMs(this.config.provider?.updateIntervalMinutes ?? 30);
             this._refreshWeatherOnce();
@@ -1037,28 +968,22 @@ export class WeatherLighting extends Component {
     }
 
     _applyAll() {
-        // English comment.
         this._applySunShadowSettings();
 
-        // English comment.
         this._ensureShadowGround();
 
-        // English comment.
         const tp = this._currentAutoTimePreset || 'noon';
         this._applyLightingPreset(tp);
 
-        // English comment.
         const preset = this.config.weather?.preset || 'clear';
         if (preset !== this._lastWeatherAppliedPreset) {
             this._applyWeatherPreset(preset);
             this._lastWeatherAppliedPreset = preset;
         }
 
-        // English comment.
         this._syncRoadsideLights();
     }
 
-    // English comment.
 
     _isNightNow() {
         return (this._currentAutoTimePreset || 'noon') === 'night';
@@ -1073,7 +998,6 @@ export class WeatherLighting extends Component {
         if (!traffic || this._roadsideObservedTraffic.has(traffic)) return;
 
         const handler = () => {
-            // English comment.
             this._syncRoadsideLights(true);
         };
 
@@ -1082,13 +1006,11 @@ export class WeatherLighting extends Component {
     }
 
     _clearRoadsideLights() {
-        // English comment.
         for (const [, unsub] of this._roadsideObservedTraffic) {
             try { unsub(); } catch { /* ignore */ }
         }
         this._roadsideObservedTraffic.clear();
 
-        // English comment.
         for (const [, light] of this._roadsidePointLights) {
             if (light.parent) {
                 light.parent.remove(light);
@@ -1105,7 +1027,6 @@ export class WeatherLighting extends Component {
 
         const night = this._isNightNow();
 
-        // English comment.
         if (!night) {
             if (this._roadsidePointLights.size) this._clearRoadsideLights();
             return;
@@ -1116,7 +1037,6 @@ export class WeatherLighting extends Component {
             this._observeTrafficIfNeeded(t);
         }
 
-        // English comment.
         const desired = new Map(); // deviceId -> { object, intensity }
         const streetType = this.config.roadsideLights.streetLightType || 'streetLight';
         const signalType = this.config.roadsideLights.signalLightType || 'signalLight';
@@ -1141,7 +1061,6 @@ export class WeatherLighting extends Component {
             }
         }
 
-        // English comment.
         for (const [deviceId, light] of this._roadsidePointLights) {
             if (!desired.has(deviceId)) {
                 if (light.parent) light.parent.remove(light);
@@ -1149,7 +1068,6 @@ export class WeatherLighting extends Component {
             }
         }
 
-        // English comment.
         for (const [deviceId, meta] of desired) {
             const existing = this._roadsidePointLights.get(deviceId);
             const distance = clampNumber(this.config.roadsideLights.distance, 35);
@@ -1158,13 +1076,11 @@ export class WeatherLighting extends Component {
             if (!existing) {
                 const light = new THREE.PointLight(0xffffff, meta.intensity, distance, decay);
                 light.name = `${this.config.name}__roadside_${deviceId}`;
-                // English comment.
                 light.position.set(0, 3, 0);
                 meta.obj.add(light);
                 this._roadsidePointLights.set(deviceId, light);
             } else {
                 if (force) {
-                    // English comment.
                     if (existing.parent !== meta.obj) {
                         if (existing.parent) existing.parent.remove(existing);
                         meta.obj.add(existing);

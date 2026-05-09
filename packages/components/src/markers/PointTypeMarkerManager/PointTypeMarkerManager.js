@@ -212,6 +212,9 @@ function deepMerge(target, source) {
     return result;
 }
 
+/**
+ * Marker module component that manages typed point markers and shared marker rendering rules.
+ */
 export class PointTypeMarkerManager extends Component {
     static defaultConfig = {
         types: [{ ...DEFAULT_TYPE }],

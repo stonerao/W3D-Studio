@@ -12,62 +12,50 @@ import {
     StaticGeometryGenerator
 } from 'three-mesh-bvh';
 
-// English comment.
-// English comment.
 THREE.Mesh.prototype.raycast = acceleratedRaycast;
 THREE.BufferGeometry.prototype.computeBoundsTree = computeBoundsTree;
 THREE.BufferGeometry.prototype.disposeBoundsTree = disposeBoundsTree;
 
 /**
- * English comment.
+ * Spatial module component that builds BVH acceleration data for fast raycasting and spatial queries.
  */
 export class BVHQuery extends Component {
     static defaultConfig = {
-        // English comment.
         mesh: null,
         geometry: null,
 
-        // English comment.
         bvhOptions: {
             strategy: 'SAH', // 'CENTER' | 'AVERAGE' | 'SAH'
-            maxDepth: 40, // English comment.
-            maxLeafTris: 10, // English comment.
-            verbose: false, // English comment.
-            setBoundingBox: true // English comment.
+            maxDepth: 40,
+            maxLeafTris: 10,
+            verbose: false,
+            setBoundingBox: true
         },
 
-        // English comment.
         async: false,
 
-        // English comment.
         autoUpdate: false,
 
-        // English comment.
         showHelper: false,
         helperOptions: {
-            depth: 10, // English comment.
-            color: 0x00ff88, // English comment.
-            opacity: 0.3, // English comment.
-            displayEdges: true // English comment.
+            depth: 10,
+            color: 0x00ff88,
+            opacity: 0.3,
+            displayEdges: true
         }
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // English comment.
         this.bvh = null;
 
-        // English comment.
         this.targetMesh = null;
 
-        // English comment.
         this.targetGeometry = null;
 
-        // English comment.
         this.helper = null;
 
-        // English comment.
         this.stats = {
             lastQueryTime: 0,
             totalQueries: 0,
@@ -75,32 +63,22 @@ export class BVHQuery extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     async onMounted() {
-        // English comment.
         if (!this._initializeGeometry()) {
             return;
         }
 
-        // English comment.
         if (!this._validateGeometry()) {
             return;
         }
 
-        // English comment.
         await this.generateBVH();
 
-        // English comment.
         if (this.config.showHelper) {
             this.createHelper();
         }
     }
 
-    /**
-     * English comment.
-     */
     _initializeGeometry() {
         if (this.config.mesh) {
             this.targetMesh = this.config.mesh;
@@ -115,9 +93,6 @@ export class BVHQuery extends Component {
         return true;
     }
 
-    /**
-     * English comment.
-     */
     _validateGeometry() {
         if (!this.targetGeometry) {
             const error = new Error('Target geometry is null or undefined');
@@ -136,16 +111,11 @@ export class BVHQuery extends Component {
         return true;
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     async generateBVH() {
         const startTime = Date.now();
 
         try {
-            // English comment.
             if (this.config.async) {
                 console.warn(
                     'BVHQuery: Async generation not implemented yet, using sync generation'
@@ -154,12 +124,10 @@ export class BVHQuery extends Component {
 
             this.bvh = new MeshBVH(this.targetGeometry, this.config.bvhOptions);
 
-            // English comment.
             this.targetGeometry.boundsTree = this.bvh;
 
             const buildTime = Date.now() - startTime;
 
-            // English comment.
             this.emit('bvhGenerated', {
                 buildTime,
                 stats: this.getStats()
@@ -171,9 +139,6 @@ export class BVHQuery extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     refit(nodeIndices = null) {
         if (!this.bvh) {
             console.warn('BVHQuery: BVH not generated yet');
@@ -189,36 +154,25 @@ export class BVHQuery extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     async rebuild(options = null) {
-        // English comment.
         if (this.bvh) {
             this.bvh = null;
             this.targetGeometry.boundsTree = null;
         }
 
-        // English comment.
         if (options) {
             this.config.bvhOptions = { ...this.config.bvhOptions, ...options };
         }
 
-        // English comment.
         await this.generateBVH();
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     raycast(ray, options = {}) {
         if (!this._checkBVH()) {
             return options.firstHitOnly ? null : [];
         }
 
-        // English comment.
         if (!ray || !ray.origin || !ray.direction) {
             console.error('BVHQuery: Invalid ray parameter. Expected THREE.Ray object.');
             return options.firstHitOnly ? null : [];
@@ -237,11 +191,7 @@ export class BVHQuery extends Component {
         );
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     closestPointToPoint(point, options = {}) {
         if (!this._checkBVH()) {
             return null;
@@ -255,9 +205,6 @@ export class BVHQuery extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     closestPointToGeometry(geometry, geometryToBvh, options = {}) {
         if (!this._checkBVH()) {
             return null;
@@ -280,11 +227,7 @@ export class BVHQuery extends Component {
         });
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     intersectsSphere(sphere) {
         if (!this._checkBVH()) {
             return false;
@@ -299,9 +242,6 @@ export class BVHQuery extends Component {
         );
     }
 
-    /**
-     * English comment.
-     */
     intersectsBox(box, boxToBvh = null) {
         if (!this._checkBVH()) {
             return false;
@@ -316,9 +256,6 @@ export class BVHQuery extends Component {
         );
     }
 
-    /**
-     * English comment.
-     */
     intersectsGeometry(geometry, geometryToBvh) {
         if (!this._checkBVH()) {
             return false;
@@ -333,11 +270,7 @@ export class BVHQuery extends Component {
         );
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     shapecast(callbacks) {
         if (!this._checkBVH()) {
             return null;
@@ -348,29 +281,18 @@ export class BVHQuery extends Component {
         });
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     distanceToPoint(point) {
         const result = this.closestPointToPoint(point);
         return result ? result.distance : Infinity;
     }
 
-    /**
-     * English comment.
-     */
     distanceToGeometry(geometry, geometryToBvh) {
         const result = this.closestPointToGeometry(geometry, geometryToBvh);
         return result && result.target1 ? result.target1.distance : Infinity;
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     createHelper() {
         if (!this.bvh) {
             console.warn('BVHQuery: BVH not generated yet');
@@ -395,9 +317,6 @@ export class BVHQuery extends Component {
         return this.helper;
     }
 
-    /**
-     * English comment.
-     */
     updateHelper(options = {}) {
         if (!this.helper) {
             return;
@@ -419,9 +338,6 @@ export class BVHQuery extends Component {
         this.helper.update();
     }
 
-    /**
-     * English comment.
-     */
     toggleHelper(visible = null) {
         if (!this.helper) {
             if (visible !== false) {
@@ -437,15 +353,11 @@ export class BVHQuery extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     getStats() {
         if (!this.bvh) {
             return null;
         }
 
-        // English comment.
         let nodeCount = 0;
         let leafNodeCount = 0;
 
@@ -469,9 +381,6 @@ export class BVHQuery extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     _updateStats(queryTime) {
         this.stats.lastQueryTime = queryTime;
         this.stats.totalQueries++;
@@ -480,11 +389,7 @@ export class BVHQuery extends Component {
             this.stats.totalQueries;
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     _checkBVH() {
         if (!this.bvh) {
             console.warn('BVHQuery: BVH not generated yet');
@@ -493,9 +398,6 @@ export class BVHQuery extends Component {
         return true;
     }
 
-    /**
-     * English comment.
-     */
     _executeQuery(queryType, queryFn, defaultValue = null) {
         const startTime = Date.now();
 
@@ -519,23 +421,17 @@ export class BVHQuery extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     onDestroy() {
-        // English comment.
         if (this.bvh) {
             this.bvh = null;
         }
 
-        // English comment.
         if (this.helper) {
             this.remove(this.helper);
             this.helper.dispose();
             this.helper = null;
         }
 
-        // English comment.
         if (this.targetGeometry && this.targetGeometry.boundsTree) {
             this.targetGeometry.boundsTree = null;
         }

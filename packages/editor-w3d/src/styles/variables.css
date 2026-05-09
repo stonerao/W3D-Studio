@@ -3,18 +3,22 @@
 
     /* English comment. */
     --color-primary: #2f7df4;
-    --color-primary-hover: #4c91ff;
+    --color-primary-hover: #5aa0ff;
     --color-primary-active: #2563eb;
-    --color-primary-subtle: rgba(47, 125, 244, 0.16);
+    --color-primary-subtle: rgba(47, 125, 244, 0.18);
     --color-accent: #7db7ff;
 
     /* English comment. */
-    --color-bg-base: #080d15;
-    --color-bg-secondary: #0d1420;
-    --color-bg-tertiary: #121b2a;
-    --color-bg-elevated: #182338;
+    --color-bg-base: #060b12;
+    --color-bg-secondary: #09111d;
+    --color-bg-tertiary: #101927;
+    --color-bg-elevated: #162235;
     --color-bg-hover: rgba(255, 255, 255, 0.06);
     --color-bg-active: rgba(92, 124, 250, 0.12);
+    --color-workbench-rail: #050b13;
+    --color-workbench-panel: rgba(9, 17, 29, 0.96);
+    --color-workbench-panel-strong: rgba(13, 24, 39, 0.98);
+    --color-workbench-field: rgba(8, 15, 26, 0.82);
 
     /* English comment. */
     --color-btn-default: #121b2a;
@@ -22,16 +26,16 @@
     --color-btn-danger: #fa5252;
 
     /* English comment. */
-    --color-border: rgba(148, 163, 184, 0.14);
-    --color-border-hover: rgba(148, 163, 184, 0.26);
+    --color-border: rgba(118, 144, 180, 0.16);
+    --color-border-hover: rgba(125, 183, 255, 0.34);
     --color-border-focus: rgba(47, 125, 244, 0.52);
-    --color-border-light: rgba(148, 163, 184, 0.08);
+    --color-border-light: rgba(148, 163, 184, 0.09);
 
     /* English comment. */
-    --color-text-primary: #eef4fb;
-    --color-text-secondary: #a9b7c9;
-    --color-text-tertiary: #718096;
-    --color-text-muted: #4d5b70;
+    --color-text-primary: #eef5ff;
+    --color-text-secondary: #a8b8cc;
+    --color-text-tertiary: #71839b;
+    --color-text-muted: #4e6078;
     --color-text-inverse: #07101c;
 
     /* English comment. */
@@ -51,9 +55,10 @@
     --color-info-bg: rgba(59, 130, 246, 0.12);
 
     /* English comment. */
-    --gradient-primary: linear-gradient(135deg, #5c7cfa 0%, #a78bfa 100%);
-    --gradient-secondary: linear-gradient(135deg, #5c7cfa 0%, #22d3ee 100%);
-    --gradient-surface: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, transparent 100%);
+    --gradient-primary: linear-gradient(180deg, #4f94ff 0%, #2f7df4 48%, #2366e8 100%);
+    --gradient-secondary: linear-gradient(135deg, #2f7df4 0%, #22d3ee 100%);
+    --gradient-surface: linear-gradient(180deg, rgba(255, 255, 255, 0.045) 0%, rgba(255, 255, 255, 0.01) 100%);
+    --gradient-panel: linear-gradient(180deg, rgba(16, 25, 39, 0.98) 0%, rgba(7, 14, 24, 0.98) 100%);
 
     /* English comment. */
     --space-1: 4px;
@@ -65,22 +70,24 @@
     --space-8: 32px;
     --space-10: 40px;
 
-    --panel-width: 292px;
-    --panel-width-lg: 344px;
-    --toolbar-height: 54px;
+    --panel-width: 300px;
+    --panel-width-lg: 360px;
+    --toolbar-height: 62px;
     --header-height: 42px;
-    --left-panel-content-padding: 10px;
-    --left-panel-content-gap: 10px;
+    --side-rail-width: 62px;
+    --left-module-rail-width: 78px;
+    --left-panel-content-padding: 14px;
+    --left-panel-content-gap: 12px;
     --left-panel-list-gap: 8px;
     --left-panel-control-height: 32px;
     --left-panel-control-radius: 6px;
     --left-panel-card-min-height: 86px;
     --left-panel-card-padding: 10px 12px;
     --left-panel-card-radius: 7px;
-    --left-panel-card-bg: rgba(15, 23, 42, 0.34);
-    --left-panel-card-bg-hover: rgba(18, 27, 42, 0.82);
-    --left-panel-card-border: rgba(148, 163, 184, 0.16);
-    --left-panel-card-border-hover: rgba(47, 125, 244, 0.46);
+    --left-panel-card-bg: rgba(13, 24, 39, 0.54);
+    --left-panel-card-bg-hover: rgba(18, 31, 49, 0.92);
+    --left-panel-card-border: rgba(118, 144, 180, 0.16);
+    --left-panel-card-border-hover: rgba(47, 125, 244, 0.5);
 
     /* English comment. */
     --border-radius-xs: 2px;
@@ -92,12 +99,12 @@
     --border-radius-full: 9999px;
 
     /* English comment. */
-    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
-    --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.4);
-    --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.4), 0 2px 4px rgba(0, 0, 0, 0.3);
-    --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.5), 0 4px 8px rgba(0, 0, 0, 0.3);
-    --shadow-xl: 0 16px 32px rgba(0, 0, 0, 0.5), 0 8px 16px rgba(0, 0, 0, 0.3);
-    --shadow-glow: 0 0 16px rgba(47, 125, 244, 0.35);
+    --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.35);
+    --shadow-sm: 0 8px 20px rgba(0, 0, 0, 0.24);
+    --shadow-md: 0 16px 36px rgba(0, 0, 0, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.03);
+    --shadow-lg: 0 22px 48px rgba(0, 0, 0, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.04);
+    --shadow-xl: 0 28px 70px rgba(0, 0, 0, 0.5), 0 10px 30px rgba(0, 0, 0, 0.32);
+    --shadow-glow: 0 0 22px rgba(47, 125, 244, 0.38);
     --shadow-inset: inset 0 1px 2px rgba(0, 0, 0, 0.3);
 
     /* English comment. */
@@ -105,6 +112,11 @@
     --transition-base: 150ms ease-out;
     --transition-slow: 250ms ease-out;
     --transition-smooth: 300ms cubic-bezier(0.4, 0, 0.2, 1);
+    --duration-fast: 120ms;
+    --duration-normal: 180ms;
+    --duration-slow: 260ms;
+    --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
     --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
 
     /* English comment. */
@@ -133,6 +145,7 @@
     --z-modal: 300;
     --z-popover: 400;
     --z-toast: 500;
+    --z-tooltip: 600;
 
     /* English comment. */
     --focus-ring: 0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-primary);

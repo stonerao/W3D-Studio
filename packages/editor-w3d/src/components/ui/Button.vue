@@ -70,7 +70,7 @@ const handleClick = (event) => {
     gap: var(--space-2);
     font-family: var(--font-sans);
     font-weight: var(--font-weight-medium);
-    border-radius: var(--border-radius);
+    border-radius: 7px;
     transition: all var(--duration-fast, 150ms) var(--ease-out, cubic-bezier(0, 0, 0.2, 1));
     cursor: pointer;
     outline: none;
@@ -114,27 +114,28 @@ const handleClick = (event) => {
 
 /* English comment. */
 .btn-sm {
-    height: 28px;
+    height: 30px;
     padding: 0 var(--space-3);
     font-size: var(--font-size-sm);
 }
 
 .btn-md {
-    height: 34px;
+    height: 36px;
     padding: 0 var(--space-4);
     font-size: var(--font-size-base);
 }
 
 .btn-lg {
-    height: 40px;
+    height: 42px;
     padding: 0 var(--space-5);
     font-size: var(--font-size-md);
 }
 
 /* English comment. */
 .btn-default {
-    background-color: var(--color-bg-tertiary);
-    border: 1px solid var(--color-border);
+    background:
+        linear-gradient(180deg, rgba(18, 30, 48, 0.76) 0%, rgba(10, 18, 31, 0.76) 100%);
+    border: 1px solid rgba(118, 144, 180, 0.16);
     color: var(--color-text-primary);
 }
 
@@ -149,9 +150,9 @@ const handleClick = (event) => {
 }
 
 .btn-primary {
-    background: var(--color-primary);
-    border: 1px solid transparent;
-    color: var(--color-text-inverse);
+    background: var(--gradient-primary);
+    border: 1px solid rgba(96, 165, 250, 0.74);
+    color: #ffffff;
     font-weight: var(--font-weight-semibold);
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2),
                 inset 0 1px 0 rgba(255, 255, 255, 0.1);
@@ -201,8 +202,8 @@ const handleClick = (event) => {
 }
 
 .btn-outline {
-    background-color: transparent;
-    border: 1px solid var(--color-border);
+    background-color: rgba(8, 15, 26, 0.38);
+    border: 1px solid rgba(118, 144, 180, 0.18);
     color: var(--color-text-secondary);
 }
 

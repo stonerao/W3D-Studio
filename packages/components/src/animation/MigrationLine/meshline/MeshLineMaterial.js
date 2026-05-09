@@ -1,13 +1,8 @@
-/**
- * English comment.
- */
 
 import * as THREE from 'three';
 
-// English comment.
 const vertexShader = /* glsl */ `
 
-// English comment.
 #ifdef USE_LOGDEPTHBUF
     #ifdef USE_LOGDEPTHBUF_EXT
         varying float vFragDepth;
@@ -17,12 +12,10 @@ const vertexShader = /* glsl */ `
     #endif
 #endif
 
-// English comment.
 #ifdef USE_FOG
     varying float vFogDepth;
 #endif
 
-// English comment.
 attribute vec3 previous;
 attribute vec3 next;
 attribute float side;
@@ -108,10 +101,8 @@ void main() {
 }
 `;
 
-// English comment.
 const fragmentShader = /* glsl */ `
 
-// English comment.
 #ifdef USE_FOG
     uniform vec3 fogColor;
     varying float vFogDepth;
@@ -153,7 +144,6 @@ void main() {
     // --- log depth buffer ---
     #ifdef USE_LOGDEPTHBUF
         #ifdef USE_LOGDEPTHBUF_EXT
-            // English comment.
             float fragDepth = vFragDepth;
         #endif
     #endif
@@ -163,7 +153,6 @@ void main() {
     if (useMap == 1.0) {
         vec2 mapUV = vec2(vUV.x * repeat.x + mapOffset.x, vUV.y * repeat.y + mapOffset.y);
         vec4 texColor = texture2D(map, mapUV);
-        // English comment.
         c = vec4(texColor.rgb, texColor.a * vColor.a);
     }
     if (useAlphaMap == 1.0) {
@@ -191,13 +180,11 @@ void main() {
 }
 `;
 
-// English comment.
 
 export class MeshLineMaterial extends THREE.ShaderMaterial {
     constructor(parameters = {}) {
         super({
             uniforms: {
-                // English comment.
                 lineWidth: { value: 1 },
                 map: { value: null },
                 useMap: { value: 0 },
@@ -207,17 +194,14 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
                 opacity: { value: 1 },
                 resolution: { value: new THREE.Vector2(1, 1) },
                 sizeAttenuation: { value: 1 },
-                // English comment.
                 dashArray: { value: 0 },
                 dashOffset: { value: 0 },
                 dashRatio: { value: 0.5 },
                 useDash: { value: 0 },
-                // English comment.
                 visibility: { value: 1 },
                 alphaTest: { value: 0 },
                 repeat: { value: new THREE.Vector2(1, 1) },
                 mapOffset: { value: new THREE.Vector2(0, 0) },
-                // English comment.
                 fogColor: { value: new THREE.Color(0x000000) },
                 fogNear: { value: 1 },
                 fogFar: { value: 2000 },
@@ -231,13 +215,10 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
         this.isMeshLineMaterial = true;
         this.type = 'MeshLineMaterial';
 
-        // English comment.
         this.fog = true;
 
-        // English comment.
         this._defineProperties();
 
-        // English comment.
         this.setValues(parameters);
     }
 
@@ -269,7 +250,6 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             });
         }
 
-        // English comment.
         Object.defineProperty(this, 'color', {
             enumerable: true,
             get() {
@@ -280,7 +260,6 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             },
         });
 
-        // English comment.
         Object.defineProperty(this, 'resolution', {
             enumerable: true,
             get() {
@@ -291,7 +270,6 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             },
         });
 
-        // English comment.
         Object.defineProperty(this, 'repeat', {
             enumerable: true,
             get() {
@@ -302,7 +280,6 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             },
         });
 
-        // English comment.
         Object.defineProperty(this, 'mapOffset', {
             enumerable: true,
             get() {
@@ -313,7 +290,6 @@ export class MeshLineMaterial extends THREE.ShaderMaterial {
             },
         });
 
-        // English comment.
         Object.defineProperty(this, 'dashArray', {
             enumerable: true,
             get() {

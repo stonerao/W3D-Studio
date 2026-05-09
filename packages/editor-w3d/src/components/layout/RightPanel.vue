@@ -5,7 +5,7 @@
  * @FilePath: \sdk\packages\editor\src\components\layout\RightPanel.vue
 -->
 <template>
-    <div class="right-panel panel" :style="{ width: 'calc(var(--panel-width) + 60px)' }">
+    <div class="right-panel panel" :style="{ width: 'calc(var(--panel-width) + var(--side-rail-width))' }">
         <div class="panel-content right-panel__content">
             <div class="workspace-panel-header">
                     <div class="workspace-panel-header__text">
@@ -77,15 +77,19 @@ const activeTabMeta = computed(() => tabs.value.find((tab) => tab.key === active
     height: 100%;
     min-width: 0;
     border-right: none;
-    border-left: 1px solid var(--color-border);
-    background: var(--color-bg-secondary);
+    border-left: 1px solid rgba(118, 144, 180, 0.17);
+    background: var(--color-workbench-panel);
+    box-shadow: inset 1px 0 0 rgba(255, 255, 255, 0.02);
 }
 
 .right-panel__nav {
-    width: 60px;
-    flex: 0 0 60px;
-    border-left: 1px solid var(--color-border);
-    background: #09111d;
+    width: var(--side-rail-width);
+    flex: 0 0 var(--side-rail-width);
+    border-left: 1px solid rgba(118, 144, 180, 0.14);
+    background:
+        linear-gradient(180deg, rgba(7, 15, 27, 0.98) 0%, rgba(5, 11, 19, 0.98) 100%);
+    --tabs-rail-item-width: 48px;
+    --tabs-rail-item-height: 70px;
 }
 
 .right-panel__content {
@@ -93,7 +97,8 @@ const activeTabMeta = computed(() => tabs.value.find((tab) => tab.key === active
     display: flex;
     flex-direction: column;
     padding: 0;
-    background: var(--color-bg-secondary);
+    background:
+        linear-gradient(180deg, rgba(10, 18, 31, 0.98) 0%, rgba(7, 14, 24, 0.98) 100%);
     overflow: hidden;
 }
 
@@ -104,9 +109,10 @@ const activeTabMeta = computed(() => tabs.value.find((tab) => tab.key === active
     align-items: center;
     justify-content: space-between;
     gap: var(--space-3);
-    padding: var(--space-3) var(--space-4);
-    border-bottom: 1px solid var(--color-border);
-    background: rgba(13, 20, 32, 0.96);
+    padding: 16px 18px;
+    border-bottom: 1px solid rgba(118, 144, 180, 0.15);
+    background:
+        linear-gradient(180deg, rgba(15, 28, 45, 0.98) 0%, rgba(10, 18, 31, 0.98) 100%);
 }
 
 .workspace-panel-header__text {
@@ -114,15 +120,16 @@ const activeTabMeta = computed(() => tabs.value.find((tab) => tab.key === active
 }
 
 .workspace-panel-header__eyebrow {
-    color: var(--color-text-tertiary);
+    color: #7db7ff;
     font-size: 10px;
     line-height: 1;
     margin-bottom: var(--space-1);
+    font-weight: var(--font-weight-semibold);
 }
 
 .workspace-panel-header__title {
     color: var(--color-text-primary);
-    font-size: var(--font-size-md);
+    font-size: 16px;
     font-weight: var(--font-weight-semibold);
     overflow: hidden;
     text-overflow: ellipsis;
@@ -132,7 +139,7 @@ const activeTabMeta = computed(() => tabs.value.find((tab) => tab.key === active
 .workspace-panel-body {
     flex: 1 1 auto;
     min-height: 0;
-    padding: var(--space-3);
+    padding: 14px;
     overflow: hidden;
 }
 </style>

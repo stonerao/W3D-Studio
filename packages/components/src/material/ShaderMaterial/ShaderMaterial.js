@@ -8,40 +8,29 @@ import {
 } from './presets/index.js';
 
 /**
- * English comment.
+ * Material module component that applies reusable shader material presets and custom shader configuration.
  */
 export class ShaderMaterial extends Component {
     static defaultConfig = {
-        // English comment.
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // English comment.
         this.materials = new Map();
 
-        // English comment.
         this.time = 0;
     }
 
-    /**
-     * English comment.
-     */
     onMounted() {
         this.emit('mounted', {
             name: this.name
         });
     }
 
-    /**
-     * English comment.
-     */
     onUpdate(delta) {
-        // English comment.
         this.time += delta;
 
-        // English comment.
         this.materials.forEach((material) => {
             if (material.uniforms && material.uniforms.time) {
                 material.uniforms.time.value = this.time;
@@ -49,9 +38,6 @@ export class ShaderMaterial extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     createMaterial(name, config = {}) {
         if (!name) {
             // eslint-disable-next-line no-console
@@ -62,12 +48,10 @@ export class ShaderMaterial extends Component {
         if (this.materials.has(name)) {
             // eslint-disable-next-line no-console
             console.warn(`ShaderMaterial: 材质 "${name}" 已存在，将被覆盖`);
-            // English comment.
             const oldMaterial = this.materials.get(name);
             oldMaterial.dispose();
         }
 
-        // English comment.
         let finalConfig = config;
         if (config.preset) {
             const presetConfig = createPresetMaterial(config.preset, config);
@@ -78,11 +62,9 @@ export class ShaderMaterial extends Component {
                 );
                 return null;
             }
-            // English comment.
             finalConfig = { ...presetConfig, ...config };
         }
 
-        // English comment.
         const material = new THREE.ShaderMaterial({
             vertexShader: finalConfig.vertexShader || this.getDefaultVertexShader(),
             fragmentShader: finalConfig.fragmentShader || this.getDefaultFragmentShader(),
@@ -94,10 +76,8 @@ export class ShaderMaterial extends Component {
             depthWrite: finalConfig.depthWrite !== undefined ? finalConfig.depthWrite : true
         });
 
-        // English comment.
         this.materials.set(name, material);
 
-        // English comment.
         this.emit('materialCreated', {
             name,
             material
@@ -106,20 +86,14 @@ export class ShaderMaterial extends Component {
         return material;
     }
 
-    /**
-     * English comment.
-     */
     getMaterial(name, params) {
-        // English comment.
         if (this.materials.has(name)) {
             const material = this.materials.get(name);
 
-            // English comment.
             if (params) {
                 Object.keys(params).forEach((key) => {
                     if (material.uniforms && material.uniforms[key]) {
                         const value = params[key];
-                        // English comment.
                         if (
                             typeof value === 'string' &&
                             (value.startsWith('#') || value.startsWith('rgb'))
@@ -135,16 +109,13 @@ export class ShaderMaterial extends Component {
             return material;
         }
 
-        // English comment.
         if (params !== undefined && hasPreset(name)) {
-            // English comment.
             return this.createMaterial(name, {
                 preset: name,
                 ...params
             });
         }
 
-        // English comment.
         if (params === undefined) {
             // eslint-disable-next-line no-console
             console.warn(`ShaderMaterial: 材质 "${name}" 不存在`);
@@ -158,9 +129,6 @@ export class ShaderMaterial extends Component {
         return null;
     }
 
-    /**
-     * English comment.
-     */
     removeMaterial(name) {
         if (!this.materials.has(name)) {
             // eslint-disable-next-line no-console
@@ -172,7 +140,6 @@ export class ShaderMaterial extends Component {
         material.dispose();
         this.materials.delete(name);
 
-        // English comment.
         this.emit('materialRemoved', {
             name
         });
@@ -180,9 +147,6 @@ export class ShaderMaterial extends Component {
         return true;
     }
 
-    /**
-     * English comment.
-     */
     getAllMaterials() {
         const result = [];
         this.materials.forEach((material, name) => {
@@ -191,9 +155,6 @@ export class ShaderMaterial extends Component {
         return result;
     }
 
-    /**
-     * English comment.
-     */
     updateUniform(name, uniformName, value) {
         const material = this.getMaterial(name);
         if (!material) {
@@ -208,7 +169,6 @@ export class ShaderMaterial extends Component {
 
         material.uniforms[uniformName].value = value;
 
-        // English comment.
         this.emit('uniformUpdated', {
             materialName: name,
             uniformName,
@@ -218,23 +178,14 @@ export class ShaderMaterial extends Component {
         return true;
     }
 
-    /**
-     * English comment.
-     */
     getAvailablePresets() {
         return getAvailablePresets();
     }
 
-    /**
-     * English comment.
-     */
     getPresetDefaults(presetName) {
         return getPresetDefaults(presetName);
     }
 
-    /**
-     * English comment.
-     */
     getDefaultVertexShader() {
         return `
             varying vec2 vUv;
@@ -245,9 +196,6 @@ export class ShaderMaterial extends Component {
         `;
     }
 
-    /**
-     * English comment.
-     */
     getDefaultFragmentShader() {
         return `
             varying vec2 vUv;
@@ -257,11 +205,7 @@ export class ShaderMaterial extends Component {
         `;
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
-        // English comment.
         this.materials.forEach((material) => {
             material.dispose();
         });

@@ -1,8 +1,5 @@
 const SCENE_MANAGER_KEY = '__w3dCameraModeManager__';
 
-/**
- * English comment.
- */
 export class CameraModeManager {
     constructor(scene) {
         this.scene = scene;

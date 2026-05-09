@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Helpers module component that displays scene axes for orientation and debugging.
  */
 export class AxesHelper extends Component {
     static defaultConfig = {

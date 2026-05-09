@@ -16,7 +16,7 @@ const ACTION_PROTOCOL = `
 可用 action：
 - addComponent: { type, name?, config? }
 - updateComponentConfig: { id, config }
-- callComponentMethod: { id, methodName, args? }
+- callComponentMethod: { id?, name?, type?, prefer?, methodName, args? }。优先用 id；新增组件后的连续调用可用刚才指定的 name；用 type 时多实例需设置 prefer="latest" 或先确认目标。
 - removeComponent: { id }
 - selectComponent: { id }
 - deselectComponent: {}
@@ -30,7 +30,8 @@ const ACTION_PROTOCOL = `
 - saveProject: {}
 
 规则：
-- 只能操作上下文中存在的组件 id；新增组件不需要 id。
+- 操作已有组件时优先使用上下文中存在的组件 id；新增组件不需要 id。
+- 需要先新增组件再调用该新组件方法时，必须给新增组件一个明确 name，并在后续 callComponentMethod 中用同一个 name 定位。
 - 新增 ModelLoader 的默认 position 必须是 [0, 0, 0]。
 - 没有明确要求执行时，actions 返回 []，只给建议。
 - 删除组件、批量覆盖配置、重置场景、替换多个模型资源等高影响操作必须设置 requireConfirmation=true。
@@ -46,6 +47,139 @@ const compactContext = (context = {}) => ({
     scene: context.scene || {},
     components: Array.isArray(context.components) ? context.components.slice(0, 120) : []
 });
+
+const DEVICE_EXPLOSION_KEYWORDS = ['设备爆炸', '设备爆炸图', '爆炸效果', '爆炸拆解', '拆解效果', '拆解动画'];
+const MODEL_ALIAS_NAMES = new Set(['模型', '模型组件', '模型加载器', 'ModelLoader', 'modelloader']);
+
+const normalizeText = (value) => String(value ?? '').trim();
+
+const includesAny = (text, keywords) => keywords.some((keyword) => text.includes(keyword));
+
+const getComponentName = (component) => normalizeText(component?.name);
+const getComponentType = (component) => normalizeText(component?.type);
+
+const findModelTargetName = (message) => {
+    const text = normalizeText(message);
+    const patterns = [
+        /给组件\s+(.+?)\s+组件添加/,
+        /给组件\s+(.+?)\s+添加/,
+        /组件\s+(.+?)\s+添加/,
+        /给\s+(.+?)\s+添加设备爆炸/
+    ];
+
+    for (const pattern of patterns) {
+        const match = text.match(pattern);
+        const value = normalizeText(match?.[1]);
+        if (value) return value;
+    }
+
+    return '';
+};
+
+const resolveModelLoaderTarget = (context = {}, message = '') => {
+    const components = Array.isArray(context.components) ? context.components : [];
+    const models = components.filter((component) => getComponentType(component) === 'ModelLoader');
+    const targetName = findModelTargetName(message);
+
+    if (targetName) {
+        const exact = models.find((component) => getComponentName(component) === targetName);
+        if (exact) return { component: exact, ambiguous: false };
+
+        const lowerName = targetName.toLowerCase();
+        const caseInsensitive = models.find((component) => getComponentName(component).toLowerCase() === lowerName);
+        if (caseInsensitive) return { component: caseInsensitive, ambiguous: false };
+
+        if (!MODEL_ALIAS_NAMES.has(targetName) && !MODEL_ALIAS_NAMES.has(lowerName)) {
+            return { component: null, ambiguous: false, targetName };
+        }
+    }
+
+    if (getComponentType(context.selectedComponent) === 'ModelLoader') {
+        return { component: context.selectedComponent, ambiguous: false };
+    }
+
+    if (models.length === 1) {
+        return { component: models[0], ambiguous: false };
+    }
+
+    return { component: null, ambiguous: models.length > 1, targetName };
+};
+
+const resolveDeviceExplosionIntent = ({ message, context = {} }) => {
+    const text = normalizeText(message);
+    if (!includesAny(text, DEVICE_EXPLOSION_KEYWORDS)) return null;
+    if (!/模型|ModelLoader|modelloader/i.test(text)) return null;
+
+    const { component: model, ambiguous, targetName } = resolveModelLoaderTarget(context, text);
+    if (!model?.id) {
+        return {
+            message: ambiguous
+                ? '场景中有多个模型加载器，请指定要添加设备爆炸效果的模型名称。'
+                : `未找到${targetName ? `名为“${targetName}”的` : ''}模型加载器组件，请先选择或添加模型。`,
+            actions: [],
+            requireConfirmation: false,
+            actionSummary: ''
+        };
+    }
+
+    const components = Array.isArray(context.components) ? context.components : [];
+    const existingEffect = components.find((component) => (
+        getComponentType(component) === 'DeviceExplodedView'
+        && normalizeText(component?.config?.selectedLoaderId) === normalizeText(model.id)
+    ));
+
+    if (existingEffect?.id) {
+        return {
+            message: `已找到“${getComponentName(model) || model.id}”的设备爆炸图，并执行爆炸动画。`,
+            actions: [
+                {
+                    action: 'callComponentMethod',
+                    params: {
+                        id: existingEffect.id,
+                        methodName: 'start',
+                        args: []
+                    }
+                }
+            ],
+            requireConfirmation: false,
+            actionSummary: '执行已有设备爆炸图的爆炸动画'
+        };
+    }
+
+    const effectName = `${getComponentName(model) || '模型'}设备爆炸图`;
+    return {
+        message: `已为“${getComponentName(model) || model.id}”添加设备爆炸图，并执行爆炸动画。`,
+        actions: [
+            {
+                action: 'addComponent',
+                params: {
+                    type: 'DeviceExplodedView',
+                    name: effectName,
+                    config: {
+                        selectedLoaderId: model.id,
+                        selectionMode: 'level',
+                        explodeLevel: 1,
+                        animate: true
+                    }
+                }
+            },
+            {
+                action: 'callComponentMethod',
+                params: {
+                    name: effectName,
+                    methodName: 'start',
+                    args: []
+                }
+            }
+        ],
+        requireConfirmation: false,
+        actionSummary: '给模型绑定设备爆炸图并开始爆炸'
+    };
+};
+
+export const resolveDeterministicW3DResponse = ({ message, context = {} }) => {
+    return resolveDeviceExplosionIntent({ message, context });
+};
 
 export const buildChatMessages = ({ message, history = [], context = {} }) => {
     const safeHistory = Array.isArray(history)

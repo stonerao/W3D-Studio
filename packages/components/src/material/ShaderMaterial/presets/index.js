@@ -1,6 +1,3 @@
-/**
- * English comment.
- */
 
 import {
     createBasicColorMaterial,
@@ -26,9 +23,6 @@ import {
     DiffusionMaterialMeta
 } from './DiffusionMaterial.js';
 
-/**
- * English comment.
- */
 export const PRESET_FACTORIES = {
     basicColor: createBasicColorMaterial,
     gradient: createGradientMaterial,
@@ -36,9 +30,6 @@ export const PRESET_FACTORIES = {
     diffusion: createDiffusionMaterial
 };
 
-/**
- * English comment.
- */
 export const PRESET_DEFAULTS = {
     basicColor: getBasicColorMaterialDefaults,
     gradient: getGradientMaterialDefaults,
@@ -46,9 +37,6 @@ export const PRESET_DEFAULTS = {
     diffusion: getDiffusionMaterialDefaults
 };
 
-/**
- * English comment.
- */
 export const PRESET_META = {
     basicColor: BasicColorMaterialMeta,
     gradient: GradientMaterialMeta,
@@ -56,38 +44,23 @@ export const PRESET_META = {
     diffusion: DiffusionMaterialMeta
 };
 
-/**
- * English comment.
- */
 export function getAvailablePresets() {
     return Object.keys(PRESET_FACTORIES);
 }
 
-/**
- * English comment.
- */
 export function hasPreset(presetName) {
     return presetName in PRESET_FACTORIES;
 }
 
-/**
- * English comment.
- */
 export function getPresetDefaults(presetName) {
     const defaultsGetter = PRESET_DEFAULTS[presetName];
     return defaultsGetter ? defaultsGetter() : null;
 }
 
-/**
- * English comment.
- */
 export function getPresetMeta(presetName) {
     return PRESET_META[presetName] || null;
 }
 
-/**
- * English comment.
- */
 export function createPresetMaterial(presetName, params = {}) {
     const factory = PRESET_FACTORIES[presetName];
     if (!factory) {
@@ -98,7 +71,6 @@ export function createPresetMaterial(presetName, params = {}) {
     return factory(params);
 }
 
-// English comment.
 export {
     createBasicColorMaterial,
     createGradientMaterial,

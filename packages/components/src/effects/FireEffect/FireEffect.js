@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Effects module component that renders procedural fire visuals with configurable intensity and placement.
  */
 export class FireEffect extends Component {
     static defaultConfig = {
@@ -15,7 +15,6 @@ export class FireEffect extends Component {
     }
 
     createFire() {
-        // English comment.
         const geometry = new THREE.ConeGeometry(this.config.size, this.config.size * 2, 8);
         const material = new THREE.MeshBasicMaterial({
             color: this.config.color,
@@ -27,21 +26,15 @@ export class FireEffect extends Component {
         this.add(this.fire);
     }
 
-    /**
-     * English comment.
-     */
     updateConfig(newConfig) {
-        // English comment.
         Object.assign(this.config, newConfig);
 
-        // English comment.
         if (this.fire) {
             this.remove(this.fire);
             this.fire.geometry.dispose();
             this.fire.material.dispose();
         }
 
-        // English comment.
         this.createFire();
     }
 

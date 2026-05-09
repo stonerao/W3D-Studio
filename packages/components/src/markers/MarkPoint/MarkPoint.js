@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Marker module component that renders interactive point markers with configurable icon, label, and event behavior.
  */
 export class MarkPoint extends Component {
     static defaultConfig = {
@@ -30,21 +30,15 @@ export class MarkPoint extends Component {
         this.add(this.marker);
     }
 
-    /**
-     * English comment.
-     */
     updateConfig(newConfig) {
-        // English comment.
         Object.assign(this.config, newConfig);
 
-        // English comment.
         if (this.marker) {
             this.remove(this.marker);
             this.marker.geometry.dispose();
             this.marker.material.dispose();
         }
 
-        // English comment.
         this.createMarker();
     }
 

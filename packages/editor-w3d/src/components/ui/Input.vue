@@ -78,21 +78,21 @@ const handleKeydown = (event) => {
 
 .input-label {
     display: block;
-    font-size: var(--font-size-sm);
+    font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
     color: var(--color-text-secondary);
 }
 
 .input {
     width: 100%;
-    height: 32px;
-    padding: 0 var(--space-3);
+    height: 34px;
+    padding: 0 11px;
     font-family: var(--font-sans);
     font-size: var(--font-size-base);
     font-feature-settings: 'tnum' on, 'lnum' on;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius);
-    background-color: rgba(8, 13, 21, 0.66);
+    border: 1px solid rgba(118, 144, 180, 0.16);
+    border-radius: 7px;
+    background-color: var(--color-workbench-field);
     color: var(--color-text-primary);
     transition: border-color var(--duration-fast, 150ms) var(--ease-out),
                 background-color var(--duration-fast, 150ms) var(--ease-out),
@@ -105,14 +105,14 @@ const handleKeydown = (event) => {
 
 .input:hover:not(:disabled):not(:focus) {
     border-color: var(--color-border-hover);
-    background-color: rgba(18, 27, 42, 0.9);
+    background-color: rgba(11, 22, 37, 0.9);
 }
 
 .input:focus {
     outline: none;
-    border-color: var(--color-primary);
-    background-color: rgba(8, 13, 21, 0.9);
-    box-shadow: 0 0 0 3px var(--color-primary-subtle);
+    border-color: rgba(96, 165, 250, 0.74);
+    background-color: rgba(8, 15, 26, 0.96);
+    box-shadow: 0 0 0 3px rgba(47, 125, 244, 0.16);
 }
 
 .input:disabled {

@@ -301,7 +301,7 @@ const handleContextMenuSelect = (item) => {
     display: flex;
     flex-direction: column;
     min-height: 0;
-    gap: var(--left-panel-content-gap);
+    gap: 12px;
     padding: var(--left-panel-content-padding) var(--left-panel-content-padding) 0;
 }
 
@@ -313,25 +313,27 @@ const handleContextMenuSelect = (item) => {
 }
 
 .component-search :deep(.input) {
-    height: var(--left-panel-control-height);
-    border-radius: var(--left-panel-control-radius);
+    height: 36px;
+    border-radius: 7px;
     font-size: var(--font-size-sm);
 }
 
 .category-strip {
     display: flex;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     gap: 6px;
+    overflow-x: auto;
+    padding-bottom: 2px;
 }
 
 .category-btn {
-    height: 26px;
-    padding: 0 10px;
+    height: 28px;
+    padding: 0 11px;
     font-size: var(--font-size-xs);
     font-weight: var(--font-weight-medium);
-    border-radius: 6px;
+    border-radius: 7px;
     border: 1px solid rgba(148, 163, 184, 0.18);
-    background-color: rgba(15, 23, 42, 0.28);
+    background-color: rgba(8, 15, 26, 0.45);
     color: var(--color-text-secondary);
     cursor: pointer;
     white-space: nowrap;
@@ -382,9 +384,9 @@ const handleContextMenuSelect = (item) => {
 
 .component-card {
     display: flex;
-    min-height: var(--left-panel-card-min-height);
+    min-height: 88px;
     padding: var(--left-panel-card-padding);
-    border-radius: var(--left-panel-card-radius);
+    border-radius: 8px;
     border: 1px solid var(--left-panel-card-border);
     background-color: var(--left-panel-card-bg);
     cursor: pointer;
@@ -398,6 +400,7 @@ const handleContextMenuSelect = (item) => {
 .component-card:hover {
     border-color: var(--left-panel-card-border-hover);
     background-color: var(--left-panel-card-bg-hover);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.03), 0 12px 24px rgba(0, 0, 0, 0.16);
 }
 
 .component-card:active {

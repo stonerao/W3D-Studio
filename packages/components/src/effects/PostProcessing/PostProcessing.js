@@ -183,6 +183,9 @@ const disposePass = (pass) => {
 /**
  * Unified scene-level post-processing component.
  */
+/**
+ * Effects module component that manages screen-space post-processing passes for the renderer.
+ */
 export class PostProcessing extends Component {
     static defaultConfig = createDefaultConfig();
 

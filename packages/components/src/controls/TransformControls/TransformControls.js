@@ -2,37 +2,28 @@ import { Component } from '@w3d/core';
 import { TransformControls as ThreeTransformControls } from 'three/examples/jsm/controls/TransformControls.js';
 
 /**
- * English comment.
+ * Controls module component that exposes transform handles for translating, rotating, and scaling selected objects.
  */
 export class TransformControls extends Component {
-    /**
-     * English comment.
-     */
     static defaultConfig = {
-        mode: 'translate',      // English comment.
-        size: 1,                // English comment.
-        space: 'world',         // English comment.
-        enabled: true,          // English comment.
-        showX: true,            // English comment.
-        showY: true,            // English comment.
-        showZ: true,            // English comment.
-        translationSnap: null,  // English comment.
-        rotationSnap: null,     // English comment.
-        scaleSnap: null,        // English comment.
-        disableOrbitOnDrag: true // English comment.
+        mode: 'translate',
+        size: 1,
+        space: 'world',
+        enabled: true,
+        showX: true,
+        showY: true,
+        showZ: true,
+        translationSnap: null,
+        rotationSnap: null,
+        scaleSnap: null,
+        disableOrbitOnDrag: true
     };
 
-    /**
-     * English comment.
-     */
     onCreate() {
-        // English comment.
         this.control = null;
 
-        // English comment.
         this.attachedObject = null;
 
-        // English comment.
         this.eventHandlers = {
             change: null,
             draggingChanged: null,
@@ -43,34 +34,23 @@ export class TransformControls extends Component {
         this.orbitLockKey = `transform-controls:${this.name || 'default'}`;
     }
 
-    /**
-     * English comment.
-     */
     onMounted() {
-        // English comment.
         this.control = new ThreeTransformControls(
             this.scene.camera.instance,
             this.scene.renderer.instance.domElement
         );
-        // English comment.
         this.applyConfig();
 
         	const gizmo =  this.control.getHelper();
         this.scene.scene.add( gizmo );
 
-        // English comment.
         // this.scene.scene.add(this.control);
 
-        // English comment.
         this.setupEventListeners();
 
-        // English comment.
         this.emit('mounted', { control: this.control });
     }
 
-    /**
-     * English comment.
-     */
     applyConfig() {
         if (!this.control) return;
 
@@ -106,13 +86,9 @@ export class TransformControls extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     setupEventListeners() {
         if (!this.control) return;
 
-        // English comment.
         this.eventHandlers.change = (_event) => {
             this.emit('change', {
                 object: this.attachedObject,
@@ -121,11 +97,9 @@ export class TransformControls extends Component {
         };
         this.control.addEventListener('change', this.eventHandlers.change);
 
-        // English comment.
         this.eventHandlers.draggingChanged = (event) => {
             const isDragging = event.value;
 
-            // English comment.
             if (this.config.disableOrbitOnDrag && this.scene.controls) {
                 if (isDragging) {
                     if (typeof this.scene.controls.acquireLock === 'function') {
@@ -147,7 +121,6 @@ export class TransformControls extends Component {
         };
         this.control.addEventListener('dragging-changed', this.eventHandlers.draggingChanged);
 
-        // English comment.
         this.eventHandlers.objectChange = () => {
             this.emit('object-change', {
                 object: this.attachedObject,
@@ -158,7 +131,6 @@ export class TransformControls extends Component {
         };
         this.control.addEventListener('objectChange', this.eventHandlers.objectChange);
 
-        // English comment.
         this.eventHandlers.mouseDown = () => {
             this.emit('mouse-down', {
                 object: this.attachedObject
@@ -166,7 +138,6 @@ export class TransformControls extends Component {
         };
         this.control.addEventListener('mouseDown', this.eventHandlers.mouseDown);
 
-        // English comment.
         this.eventHandlers.mouseUp = () => {
             this.emit('mouse-up', {
                 object: this.attachedObject
@@ -175,9 +146,6 @@ export class TransformControls extends Component {
         this.control.addEventListener('mouseUp', this.eventHandlers.mouseUp);
     }
 
-    /**
-     * English comment.
-     */
     attach(object) {
         if (!this.control) {
             console.warn('TransformControls: Control not initialized');
@@ -195,9 +163,6 @@ export class TransformControls extends Component {
         this.emit('attached', { object });
     }
 
-    /**
-     * English comment.
-     */
     detach() {
         if (!this.control) return;
 
@@ -208,9 +173,6 @@ export class TransformControls extends Component {
         this.emit('detached', { object: previousObject });
     }
 
-    /**
-     * English comment.
-     */
     setMode(mode) {
         if (!this.control) return;
 
@@ -226,9 +188,6 @@ export class TransformControls extends Component {
         this.emit('mode-changed', { mode });
     }
 
-    /**
-     * English comment.
-     */
     setEnabled(enabled) {
         if (!this.control) return;
 
@@ -238,9 +197,6 @@ export class TransformControls extends Component {
         this.emit('enabled-changed', { enabled });
     }
 
-    /**
-     * English comment.
-     */
     setSpace(space) {
         if (!this.control) return;
 
@@ -256,9 +212,6 @@ export class TransformControls extends Component {
         this.emit('space-changed', { space });
     }
 
-    /**
-     * English comment.
-     */
     setSize(size) {
         if (!this.control) return;
 
@@ -268,9 +221,6 @@ export class TransformControls extends Component {
         this.emit('size-changed', { size });
     }
 
-    /**
-     * English comment.
-     */
     setTranslationSnap(snap) {
         if (!this.control) return;
 
@@ -280,9 +230,6 @@ export class TransformControls extends Component {
         this.emit('translation-snap-changed', { snap });
     }
 
-    /**
-     * English comment.
-     */
     setRotationSnap(snap) {
         if (!this.control) return;
 
@@ -292,9 +239,6 @@ export class TransformControls extends Component {
         this.emit('rotation-snap-changed', { snap });
     }
 
-    /**
-     * English comment.
-     */
     setScaleSnap(snap) {
         if (!this.control) return;
 
@@ -304,9 +248,6 @@ export class TransformControls extends Component {
         this.emit('scale-snap-changed', { snap });
     }
 
-    /**
-     * English comment.
-     */
     setAxisVisible(axis, show) {
         if (!this.control) return;
 
@@ -325,9 +266,6 @@ export class TransformControls extends Component {
         this.emit('axis-visibility-changed', { axis, show });
     }
 
-    /**
-     * English comment.
-     */
     reset() {
         if (!this.control) return;
 
@@ -336,39 +274,23 @@ export class TransformControls extends Component {
         this.emit('reset');
     }
 
-    /**
-     * English comment.
-     */
     getMode() {
         return this.control?.mode || this.config.mode;
     }
 
-    /**
-     * English comment.
-     */
     getSpace() {
         return this.control?.space || this.config.space;
     }
 
-    /**
-     * English comment.
-     */
     getAttachedObject() {
         return this.attachedObject;
     }
 
-    /**
-     * English comment.
-     */
     getControl() {
         return this.control;
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
-        // English comment.
         if (this.control) {
             Object.keys(this.eventHandlers).forEach(key => {
                 if (this.eventHandlers[key]) {
@@ -376,10 +298,8 @@ export class TransformControls extends Component {
                 }
             });
 
-            // English comment.
             this.detach();
 
-            // English comment.
             this.control.dispose();
             this.control = null;
         }

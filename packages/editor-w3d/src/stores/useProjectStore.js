@@ -479,6 +479,8 @@ export const useProjectStore = defineStore('project', () => {
                 trendStore.deserialize(migrated.trendState);
             }
 
+            lastSavedAt.value = migrated.savedAt || null;
+
             // English comment.
             // English comment.
 
@@ -825,6 +827,11 @@ export const useProjectStore = defineStore('project', () => {
         hasUnsavedChanges.value = true;
     };
 
+    const markAsSaved = (savedAt = null) => {
+        lastSavedAt.value = savedAt || new Date().toISOString();
+        hasUnsavedChanges.value = false;
+    };
+
     /**
      * English comment.
      */
@@ -952,6 +959,7 @@ export const useProjectStore = defineStore('project', () => {
         importFromJSON,
         clearLocalStorage,
         markAsUnsaved,
+        markAsSaved,
         updateSettings,
         setCameraViewsState,
         getCameraViewsState,

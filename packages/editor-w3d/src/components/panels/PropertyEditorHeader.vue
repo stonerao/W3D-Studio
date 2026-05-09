@@ -4,8 +4,8 @@
             <span class="info-label">名称</span>
             <Input
                 :model-value="selectedComponent.name"
-                @update:model-value="emit('update-name', $event)"
                 placeholder="组件名称"
+                @update:model-value="emit('update-name', $event)"
             />
         </div>
         <div class="info-row">
@@ -55,18 +55,19 @@ const emit = defineEmits(['update-name', 'copy-callable-id', 'preview-camera-jum
 
 <style scoped>
 .component-info {
-    background-color: rgba(15, 23, 42, 0.38);
-    border-radius: var(--border-radius-sm);
-    padding: var(--space-3);
+    background:
+        linear-gradient(180deg, rgba(16, 28, 45, 0.72) 0%, rgba(9, 17, 29, 0.72) 100%);
+    border-radius: 8px;
+    padding: 12px;
     display: flex;
     flex-direction: column;
     gap: var(--space-2);
-    border: 1px solid var(--color-border);
+    border: 1px solid rgba(118, 144, 180, 0.15);
 }
 
 .info-row {
     display: grid;
-    grid-template-columns: 58px minmax(0, 1fr) auto;
+    grid-template-columns: 64px minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--space-1);
     min-width: 0;
@@ -90,15 +91,15 @@ const emit = defineEmits(['update-name', 'copy-callable-id', 'preview-camera-jum
 
 .text-xs {
     font-size: var(--font-size-xs);
-    opacity: 0.7;
+    opacity: 0.72;
 }
 
 .copy-id-btn {
-    height: 20px;
+    height: 24px;
     padding: 0 var(--space-2);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-xs);
-    background: var(--color-bg-tertiary);
+    border: 1px solid rgba(118, 144, 180, 0.18);
+    border-radius: 6px;
+    background: rgba(8, 15, 26, 0.62);
     color: var(--color-text-secondary);
     font-size: var(--font-size-xs);
     line-height: 1;
@@ -107,7 +108,7 @@ const emit = defineEmits(['update-name', 'copy-callable-id', 'preview-camera-jum
 }
 
 .copy-id-btn:hover {
-    border-color: var(--color-primary);
-    color: var(--color-primary);
+    border-color: rgba(125, 183, 255, 0.45);
+    color: #9ec7ff;
 }
 </style>

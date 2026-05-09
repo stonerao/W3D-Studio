@@ -1,6 +1,3 @@
-/**
- * English comment.
- */
 
 import * as THREE from 'three';
 import { MeshLineGeometry, MeshLineMaterial, MeshLineRaycast } from './index.js';
@@ -8,14 +5,12 @@ import { MeshLineGeometry, MeshLineMaterial, MeshLineRaycast } from './index.js'
 export function runMeshLineTest(scene) {
     console.log('=== MeshLine 适配测试开始 ===');
 
-    // English comment.
     console.log('[Test 1] MeshLineGeometry 构造...');
     const geometry = new MeshLineGeometry();
     console.assert(geometry.isMeshLine === true, 'isMeshLine 应为 true');
     console.assert(geometry.type === 'MeshLine', 'type 应为 MeshLine');
     console.log('  ✓ 构造成功');
 
-    // English comment.
     console.log('[Test 2] setPoints (Vector3[])...');
     const points = [];
     for (let i = 0; i <= 100; i++) {
@@ -38,16 +33,14 @@ export function runMeshLineTest(scene) {
     console.log(`  ✓ 顶点数: ${geometry.getAttribute('position').count}`);
     console.log(`  ✓ 索引数: ${geometry.index.count}`);
 
-    // English comment.
     console.log('[Test 3] setPoints 带 widthCallback...');
     const geometry2 = new MeshLineGeometry();
-    geometry2.setPoints(points, (p) => 1 - p); // English comment.
+    geometry2.setPoints(points, (p) => 1 - p);
     const widthAttr = geometry2.getAttribute('width');
     console.assert(widthAttr.array[0] === 1, '首端宽度应为 1');
     console.assert(widthAttr.array[widthAttr.count - 1] < 0.02, '末端宽度应接近 0');
     console.log('  ✓ 宽度回调工作正常');
 
-    // English comment.
     console.log('[Test 4] MeshLineMaterial 构造...');
     const material = new MeshLineMaterial({
         color: new THREE.Color(0x00ff00),
@@ -65,7 +58,6 @@ export function runMeshLineTest(scene) {
     console.assert(material.fog === true, 'fog 应为 true');
     console.log('  ✓ 材质创建成功');
 
-    // English comment.
     console.log('[Test 5] 创建 THREE.Mesh...');
     const mesh = new THREE.Mesh(geometry, material);
     mesh.raycast = MeshLineRaycast;
@@ -77,14 +69,12 @@ export function runMeshLineTest(scene) {
         console.log('  ✓ 已添加到场景');
     }
 
-    // English comment.
     console.log('[Test 6] dashOffset 动画驱动...');
     const initial = material.dashOffset;
     material.dashOffset = initial - 0.01;
     console.assert(material.dashOffset === initial - 0.01, 'dashOffset 应可动态更新');
     console.log('  ✓ dashOffset 动画驱动正常');
 
-    // English comment.
     console.log('[Test 7] advance 方法...');
     const geometry3 = new MeshLineGeometry();
     const trailPoints = [];
@@ -99,12 +89,11 @@ export function runMeshLineTest(scene) {
     console.assert(posAfter[1] === 1, 'advance 后末尾 y 应为 1');
     console.log('  ✓ advance 方法正常');
 
-    // English comment.
     console.log('[Test 8] 纹理贴图设置...');
     const texMaterial = new MeshLineMaterial({
         lineWidth: 3,
         useMap: 1,
-        map: null, // English comment.
+        map: null,
         repeat: new THREE.Vector2(4, 1),
         resolution: new THREE.Vector2(1920, 1080),
     });

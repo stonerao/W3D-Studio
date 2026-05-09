@@ -2,77 +2,59 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Effects module component that enables path-traced rendering for higher quality lighting and material previews.
  */
 export class PathTracer extends Component {
-    /**
-     * English comment.
-     */
     static defaultConfig = {
-        // English comment.
-        enable: true, // English comment.
-        pause: false, // English comment.
-        samples: 100, // English comment.
-        minSamples: 3, // English comment.
-        tiles: 3, // English comment.
-        resolutionScale: 1.0, // English comment.
+        enable: true,
+        pause: false,
+        samples: 100,
+        minSamples: 3,
+        tiles: 3,
+        resolutionScale: 1.0,
 
-        // English comment.
-        model: null, // English comment.
-        environment: null, // English comment.
-        background: null, // English comment.
+        model: null,
+        environment: null,
+        background: null,
 
-        // English comment.
-        envMapIntensity: 1.0, // English comment.
-        envMapBlur: 0.0, // English comment.
+        envMapIntensity: 1.0,
+        envMapBlur: 0.0,
 
-        // English comment.
-        adjustMaterials: true, // English comment.
+        adjustMaterials: true,
         materialConfig: {
-            roughnessScale: 0.25, // English comment.
-            enableTransmission: true, // English comment.
-            transmissionIOR: 1.4 // English comment.
+            roughnessScale: 0.25,
+            enableTransmission: true,
+            transmissionIOR: 1.4
         },
 
-        // English comment.
         floor: {
-            enabled: false, // English comment.
-            size: 2500, // English comment.
-            roughness: 0.15, // English comment.
-            metalness: 0.9, // English comment.
-            color: '#ffffff', // English comment.
-            generateTexture: true // English comment.
+            enabled: false,
+            size: 2500,
+            roughness: 0.15,
+            metalness: 0.9,
+            color: '#ffffff',
+            generateTexture: true
         },
 
-        // English comment.
-        filterGlossyFactor: 1, // English comment.
+        filterGlossyFactor: 1,
 
-        // English comment.
-        toneMapping: true, // English comment.
-        toneMappingType: 'ACESFilmic', // English comment.
+        toneMapping: true,
+        toneMappingType: 'ACESFilmic',
 
-        // English comment.
         transparentBackground: false,
 
-        // English comment.
         autoStart: true,
 
-        // English comment.
         onProgress: null, // (progress) => {}
         onComplete: null // () => {}
     };
 
-    /**
-     * English comment.
-     */
     async onMounted() {
-        // English comment.
         if (!this.config.model) {
             console.warn('PathTracer: No model provided');
             return;
         }
 
-        // English comment.
         try {
             const module = await import('three-gpu-pathtracer');
             this.WebGLPathTracer = module.WebGLPathTracer;
@@ -84,36 +66,27 @@ export class PathTracer extends Component {
             return;
         }
 
-        // English comment.
         this.initializePathTracer();
 
-        // English comment.
         this.setupEnvironment();
 
-        // English comment.
         if (this.config.adjustMaterials && this.config.model) {
             this.adjustModelMaterials(this.config.model);
         }
 
-        // English comment.
         if (this.config.floor.enabled) {
             this.createFloor();
         }
 
-        // English comment.
-        // English comment.
         if (this.config.model) {
             this.scene.scene.add(this.config.model);
-            this.addedModel = this.config.model; // English comment.
+            this.addedModel = this.config.model;
         }
 
-        // English comment.
         await this.updateScene();
 
-        // English comment.
         this.setupCameraControls();
 
-        // English comment.
         if (this.config.autoStart) {
             this.start();
         }
@@ -121,23 +94,17 @@ export class PathTracer extends Component {
         this.emit('mounted');
     }
 
-    /**
-     * English comment.
-     */
     initializePathTracer() {
         const renderer = this.scene.renderer.instance;
 
-        // English comment.
         this.pathTracer = new this.WebGLPathTracer(renderer);
         this.pathTracer.filterGlossyFactor = this.config.filterGlossyFactor;
         this.pathTracer.minSamples = this.config.minSamples;
         this.pathTracer.renderScale = this.config.resolutionScale;
         this.pathTracer.tiles.set(this.config.tiles, this.config.tiles);
 
-        // English comment.
         this.originalToneMapping = renderer.toneMapping;
 
-        // English comment.
         if (this.config.toneMapping) {
             const toneMappingTypes = {
                 Linear: THREE.LinearToneMapping,
@@ -150,25 +117,16 @@ export class PathTracer extends Component {
                 toneMappingTypes[this.config.toneMappingType] || THREE.ACESFilmicToneMapping;
         }
 
-        // English comment.
-        // English comment.
         this.originalSceneRender = this.scene.renderer.render.bind(this.scene.renderer);
 
-        // English comment.
         this.scene.renderer.render = () => {
-            // English comment.
-            // English comment.
         };
 
         this.isInitialized = true;
         this.currentSamples = 0;
     }
 
-    /**
-     * English comment.
-     */
     setupEnvironment() {
-        // English comment.
         if (this.config.transparentBackground) {
             this.scene.scene.background = null;
         } else if (this.config.background) {
@@ -178,7 +136,6 @@ export class PathTracer extends Component {
                 this.scene.scene.background = this.config.background;
             }
         } else {
-            // English comment.
             const gradientMap = new this.GradientEquirectTexture();
             gradientMap.topColor.set(0xeeeeee);
             gradientMap.bottomColor.set(0xeaeaea);
@@ -188,9 +145,6 @@ export class PathTracer extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     adjustModelMaterials(model) {
         const { roughnessScale, enableTransmission, transmissionIOR } = this.config.materialConfig;
 
@@ -198,12 +152,10 @@ export class PathTracer extends Component {
             if (child.isMesh && child.material) {
                 const material = child.material;
 
-                // English comment.
                 if (material.roughness !== undefined) {
                     material.roughness *= roughnessScale;
                 }
 
-                // English comment.
                 if (enableTransmission && material.opacity < 1.0) {
                     const oldMaterial = material;
                     const newMaterial = new THREE.MeshPhysicalMaterial();
@@ -215,7 +167,6 @@ export class PathTracer extends Component {
                     newMaterial.roughness = oldMaterial.roughness || 0.1;
                     newMaterial.metalness = 0.0;
 
-                    // English comment.
                     const hsl = {};
                     oldMaterial.color.getHSL(hsl);
                     hsl.l = Math.max(hsl.l, 0.35);
@@ -223,23 +174,18 @@ export class PathTracer extends Component {
 
                     child.material = newMaterial;
 
-                    // English comment.
                     if (oldMaterial.dispose) {
                         oldMaterial.dispose();
                     }
                 }
             }
 
-            // English comment.
             if (child.isLineSegments) {
                 child.visible = false;
             }
         });
     }
 
-    /**
-     * English comment.
-     */
     createFloor() {
         const floorConfig = this.config.floor;
 
@@ -252,7 +198,6 @@ export class PathTracer extends Component {
             transparent: true
         });
 
-        // English comment.
         if (floorConfig.generateTexture) {
             material.map = this.generateRadialFloorTexture(1024);
         }
@@ -261,19 +206,14 @@ export class PathTracer extends Component {
         this.floor.scale.setScalar(floorConfig.size);
         this.floor.rotation.x = -Math.PI / 2;
 
-        // English comment.
         if (this.config.model) {
             const bbox = new THREE.Box3().setFromObject(this.config.model);
             this.floor.position.y = bbox.min.y;
         }
 
-        // English comment.
         this.scene.scene.add(this.floor);
     }
 
-    /**
-     * English comment.
-     */
     generateRadialFloorTexture(dim) {
         const data = new Uint8Array(dim * dim * 4);
 
@@ -308,50 +248,34 @@ export class PathTracer extends Component {
         return tex;
     }
 
-    /**
-     * English comment.
-     */
     async updateScene() {
         if (!this.pathTracer) return;
 
-        // English comment.
         await this.pathTracer.setScene(this.scene.scene, this.scene.camera.instance);
 
         this.emit('sceneUpdated');
     }
 
-    /**
-     * English comment.
-     */
     setupCameraControls() {
-        // English comment.
         const controls = this.scene.controls?.instance;
 
         if (!controls) {
             return;
         }
 
-        // English comment.
         this.cameraChangeHandler = () => {
             if (this.pathTracer && this.isInitialized) {
-                // English comment.
                 this.pathTracer.updateCamera();
 
-                // English comment.
                 this.pathTracer.reset();
 
-                // English comment.
                 this.emit('cameraChanged');
             }
         };
 
-        // English comment.
         controls.addEventListener('change', this.cameraChangeHandler);
     }
 
-    /**
-     * English comment.
-     */
     start() {
         this.config.enable = true;
         this.config.pause = false;
@@ -359,34 +283,22 @@ export class PathTracer extends Component {
         this.emit('start');
     }
 
-    /**
-     * English comment.
-     */
     pause() {
         this.config.pause = true;
         this.emit('pause');
     }
 
-    /**
-     * English comment.
-     */
     resume() {
         this.config.pause = false;
         this.emit('resume');
     }
 
-    /**
-     * English comment.
-     */
     stop() {
         this.config.enable = false;
         this.isRendering = false;
         this.emit('stop');
     }
 
-    /**
-     * English comment.
-     */
     reset() {
         if (this.pathTracer) {
             this.pathTracer.reset();
@@ -395,9 +307,6 @@ export class PathTracer extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     updateCamera() {
         if (this.pathTracer) {
             this.pathTracer.updateCamera();
@@ -405,9 +314,6 @@ export class PathTracer extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     updateMaterials() {
         if (this.pathTracer) {
             this.pathTracer.updateMaterials();
@@ -415,9 +321,6 @@ export class PathTracer extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     updateEnvironment() {
         if (this.pathTracer) {
             this.pathTracer.updateEnvironment();
@@ -425,9 +328,6 @@ export class PathTracer extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     setResolutionScale(scale) {
         this.config.resolutionScale = Math.max(0.1, Math.min(1.0, scale));
         if (this.pathTracer) {
@@ -436,9 +336,6 @@ export class PathTracer extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     setTiles(tiles) {
         this.config.tiles = Math.max(1, Math.min(6, tiles));
         if (this.pathTracer) {
@@ -446,16 +343,10 @@ export class PathTracer extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     getSamples() {
         return this.pathTracer ? Math.floor(this.pathTracer.samples) : 0;
     }
 
-    /**
-     * English comment.
-     */
     getStatus() {
         return {
             isInitialized: this.isInitialized,
@@ -467,9 +358,6 @@ export class PathTracer extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     download(filename = 'pathtraced-render.png') {
         const renderer = this.scene.renderer.instance;
         const link = document.createElement('a');
@@ -479,35 +367,27 @@ export class PathTracer extends Component {
         this.emit('download', { filename });
     }
 
-    /**
-     * English comment.
-     */
     onUpdate(_deltaTime) {
         if (!this.pathTracer || !this.isInitialized) return;
 
-        // English comment.
         this.pathTracer.enablePathTracing = this.config.enable;
         this.pathTracer.pausePathTracing = this.config.pause;
 
-        // English comment.
         if (this.config.enable && !this.config.pause) {
             this.pathTracer.renderSample();
 
             const samples = this.getSamples();
 
-            // English comment.
             if (this.config.onProgress) {
                 this.config.onProgress(samples / this.config.samples);
             }
 
-            // English comment.
             this.emit('progress', {
                 samples,
                 targetSamples: this.config.samples,
                 progress: samples / this.config.samples
             });
 
-            // English comment.
             if (samples >= this.config.samples && this.currentSamples < this.config.samples) {
                 this.currentSamples = samples;
 
@@ -520,35 +400,26 @@ export class PathTracer extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
-        // English comment.
         this.stop();
 
-        // English comment.
         if (this.scene.controls?.instance && this.cameraChangeHandler) {
             this.scene.controls.instance.removeEventListener('change', this.cameraChangeHandler);
             this.cameraChangeHandler = null;
         }
 
-        // English comment.
         if (this.originalSceneRender) {
             this.scene.renderer.render = this.originalSceneRender;
         }
 
-        // English comment.
         if (this.originalToneMapping !== undefined) {
             this.scene.renderer.instance.toneMapping = this.originalToneMapping;
         }
 
-        // English comment.
         if (this.addedModel) {
             this.scene.scene.remove(this.addedModel);
         }
 
-        // English comment.
         if (this.floor) {
             this.scene.scene.remove(this.floor);
             this.floor.geometry.dispose();
@@ -562,7 +433,6 @@ export class PathTracer extends Component {
             this.gradientMap.dispose();
         }
 
-        // English comment.
         if (this.pathTracer) {
             this.pathTracer.reset();
             this.pathTracer = null;

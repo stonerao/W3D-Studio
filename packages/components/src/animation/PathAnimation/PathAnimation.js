@@ -2,21 +2,21 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Animation module component that moves an object along a configured path with timeline controls.
  */
 export class PathAnimation extends Component {
     static defaultConfig = {
         path: [],
-        speed: 1.0, // English comment.
-        loop: true, // English comment.
-        pingPong: false, // English comment.
-        autoStart: false, // English comment.
-        lookAtDirection: 'forward', // English comment.
-        customRotation: [0, 0, 0], // English comment.
-        easing: 'linear', // English comment.
-        showPath: true, // English comment.
-        pathColor: '#00ff88', // English comment.
-        pathWidth: 2 // English comment.
+        speed: 1.0,
+        loop: true,
+        pingPong: false,
+        autoStart: false,
+        lookAtDirection: 'forward',
+        customRotation: [0, 0, 0],
+        easing: 'linear',
+        showPath: true,
+        pathColor: '#00ff88',
+        pathWidth: 2
     };
 
     onMounted() {
@@ -25,28 +25,23 @@ export class PathAnimation extends Component {
             return;
         }
 
-        // English comment.
         this.createPath();
 
-        // English comment.
         if (this.config.showPath) {
             this.createPathVisualization();
         }
 
-        // English comment.
         this.isPlaying = false;
         this.isPaused = false;
         this.progress = 0;
         this.totalDistance = 0;
         this.currentDistance = 0;
-        this.direction = 1; // English comment.
+        this.direction = 1;
         this.startTime = 0;
         this.pausedTime = 0;
 
-        // English comment.
         this.calculateTotalDistance();
 
-        // English comment.
         this.setPositionAtProgress(0);
 
         if (this.config.autoStart) {
@@ -58,17 +53,15 @@ export class PathAnimation extends Component {
         const points = this.config.path.map(
             (p) => new THREE.Vector3(p.x || p[0], p.y || p[1], p.z || p[2])
         );
-        this.curve = new THREE.CatmullRomCurve3(points, false); // English comment.
+        this.curve = new THREE.CatmullRomCurve3(points, false);
         this.pathPoints = points;
     }
 
     createPathVisualization() {
         if (this.pathLine) {
-            // English comment.
             this.scene.scene.remove(this.pathLine);
         }
 
-        // English comment.
         const points = this.curve.getPoints(100);
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
         const material = new THREE.LineBasicMaterial({
@@ -77,16 +70,13 @@ export class PathAnimation extends Component {
         });
 
         this.pathLine = new THREE.Line(geometry, material);
-        // English comment.
         this.scene.scene.add(this.pathLine);
 
-        // English comment.
         this.createPathMarkers();
     }
 
     createPathMarkers() {
         if (this.pathMarkers) {
-            // English comment.
             this.pathMarkers.forEach((marker) => this.scene.scene.remove(marker));
         }
 
@@ -97,7 +87,6 @@ export class PathAnimation extends Component {
         this.pathPoints.forEach((point, index) => {
             const marker = new THREE.Mesh(markerGeometry, markerMaterial);
             marker.position.copy(point);
-            // English comment.
             this.scene.scene.add(marker);
             this.pathMarkers.push(marker);
         });
@@ -109,11 +98,9 @@ export class PathAnimation extends Component {
 
     play() {
         if (this.isPaused) {
-            // English comment.
             this.startTime = Date.now() - this.pausedTime;
             this.isPaused = false;
         } else {
-            // English comment.
             this.startTime = Date.now();
         }
         this.isPlaying = true;
@@ -144,7 +131,6 @@ export class PathAnimation extends Component {
         this.emit('reset');
     }
 
-    // English comment.
     applyEasing(t) {
         switch (this.config.easing) {
             case 'easeIn':
@@ -166,7 +152,6 @@ export class PathAnimation extends Component {
         const point = this.curve.getPoint(easedProgress);
         this.position.copy(point);
 
-        // English comment.
         this.updateLookAt(easedProgress);
 
         this.emit('update', {
@@ -182,12 +167,10 @@ export class PathAnimation extends Component {
         const direction = this.config.lookAtDirection;
 
         if (direction === 'fixed') {
-            // English comment.
             return;
         }
 
         if (direction === 'custom') {
-            // English comment.
             this.rotation.set(
                 this.config.customRotation[0],
                 this.config.customRotation[1],
@@ -196,7 +179,6 @@ export class PathAnimation extends Component {
             return;
         }
 
-        // English comment.
         let lookAtPoint;
         const currentPoint = this.curve.getPoint(progress);
 
@@ -220,16 +202,12 @@ export class PathAnimation extends Component {
     onUpdate(deltaTime) {
         if (!this.isPlaying || !this.curve) return;
 
-        // English comment.
         const moveDistance = this.config.speed * deltaTime;
         this.currentDistance += moveDistance * this.direction;
 
-        // English comment.
         let newProgress = this.currentDistance / this.totalDistance;
 
-        // English comment.
         if (this.config.pingPong) {
-            // English comment.
             if (newProgress >= 1) {
                 newProgress = 1;
                 this.direction = -1;
@@ -240,14 +218,12 @@ export class PathAnimation extends Component {
                 this.emit('reachStart');
             }
         } else if (this.config.loop) {
-            // English comment.
             if (newProgress >= 1) {
                 newProgress = 0;
                 this.currentDistance = 0;
                 this.emit('complete');
             }
         } else {
-            // English comment.
             if (newProgress >= 1) {
                 newProgress = 1;
                 this.stop();
@@ -260,7 +236,6 @@ export class PathAnimation extends Component {
         this.setPositionAtProgress(this.progress);
     }
 
-    // English comment.
     jumpToProgress(progress) {
         progress = Math.max(0, Math.min(1, progress));
         this.progress = progress;
@@ -269,7 +244,6 @@ export class PathAnimation extends Component {
         this.emit('jump', { progress });
     }
 
-    // English comment.
     jumpToPoint(pointIndex) {
         if (pointIndex < 0 || pointIndex >= this.pathPoints.length) {
             console.warn('PathAnimation: Invalid point index');
@@ -280,7 +254,6 @@ export class PathAnimation extends Component {
         this.jumpToProgress(progress);
     }
 
-    // English comment.
     updatePath(newPath) {
         this.config.path = newPath;
         this.createPath();
@@ -290,12 +263,10 @@ export class PathAnimation extends Component {
             this.createPathVisualization();
         }
 
-        // English comment.
         this.reset();
         this.emit('pathUpdated');
     }
 
-    // English comment.
     addPathPoint(point, index = -1) {
         if (index === -1) {
             this.config.path.push(point);
@@ -305,7 +276,6 @@ export class PathAnimation extends Component {
         this.updatePath(this.config.path);
     }
 
-    // English comment.
     removePathPoint(index) {
         if (this.config.path.length <= 2) {
             console.warn('PathAnimation: Cannot remove point, minimum 2 points required');
@@ -316,7 +286,6 @@ export class PathAnimation extends Component {
         this.updatePath(this.config.path);
     }
 
-    // English comment.
     updateConfig(newConfig) {
         Object.assign(this.config, newConfig);
 
@@ -328,7 +297,6 @@ export class PathAnimation extends Component {
             if (newConfig.showPath && !this.pathLine) {
                 this.createPathVisualization();
             } else if (!newConfig.showPath && this.pathLine) {
-                // English comment.
                 this.scene.scene.remove(this.pathLine);
                 this.pathMarkers?.forEach((marker) => this.scene.scene.remove(marker));
                 this.pathLine = null;
@@ -339,7 +307,6 @@ export class PathAnimation extends Component {
         this.emit('configUpdated', newConfig);
     }
 
-    // English comment.
     updateData(data, options = {}) {
         const field = typeof options.field === 'string' && options.field.trim()
             ? options.field.trim()
@@ -364,7 +331,6 @@ export class PathAnimation extends Component {
     onDispose() {
         this.stop();
 
-        // English comment.
         if (this.pathLine) {
             this.scene.scene.remove(this.pathLine);
             this.pathLine = null;

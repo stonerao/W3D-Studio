@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Loader module component that loads texture assets and exposes them for scene materials or dependent components.
  */
 export class TextureLoader extends Component {
     static defaultConfig = {
@@ -41,7 +41,6 @@ export class TextureLoader extends Component {
                 );
             });
 
-            // English comment.
             this.applyConfig();
 
             this.emit('loadComplete', { texture: this.texture });

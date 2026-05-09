@@ -3,72 +3,51 @@ import * as THREE from 'three';
 import TWEEN from '@tweenjs/tween.js';
 
 /**
- * English comment.
+ * Controls module component that focuses the camera and interaction state on selected devices or scene targets.
  */
 export class DeviceFocusController extends Component {
-    /**
-     * English comment.
-     */
     static defaultConfig = {
-        animationDuration: 1500,        // English comment.
-        cameraDistance: 5,               // English comment.
-        highlightColor: 0xFF0000,        // English comment.
-        colorTransitionDuration: 800,    // English comment.
-        autoHideOtherFloors: true,       // English comment.
-        floorMap: {},                    // English comment.
-        easing: TWEEN.Easing.Quadratic.Out  // English comment.
+        animationDuration: 1500,
+        cameraDistance: 5,
+        highlightColor: 0xFF0000,
+        colorTransitionDuration: 800,
+        autoHideOtherFloors: true,
+        floorMap: {},
+        easing: TWEEN.Easing.Quadratic.Out
     };
 
-    /**
-     * English comment.
-     */
     onMounted() {
-        // English comment.
         this.currentDevice = null;
 
-        // English comment.
         this.originalMaterials = new Map();
 
-        // English comment.
         this.initialCameraPosition = null;
 
-        // English comment.
         this.initialControlsTarget = null;
 
-        // English comment.
         this.floors = new Map();
 
-        // English comment.
         this.originalFloorVisibility = new Map();
 
-        // English comment.
         this.tweenGroup = new TWEEN.Group();
 
-        // English comment.
         this.isFocusing = false;
 
-        // English comment.
         this.saveInitialCameraState();
 
-        // English comment.
         this.initializeFloors();
 
         console.log('[DeviceFocusController] 组件初始化完成');
     }
 
-    /**
-     * English comment.
-     */
     saveInitialCameraState() {
         if (!this.scene || !this.scene.camera.instance) {
             console.warn('[DeviceFocusController] 场景或相机未就绪');
             return;
         }
 
-        // English comment.
         this.initialCameraPosition = this.scene.camera.instance.clone();
 
-        // English comment.
         console.log(this.scene.controls );
         if (this.scene.controls && this.scene.controls.instance.target) {
             this.initialControlsTarget = this.scene.controls.instance.target.clone();
@@ -80,9 +59,6 @@ export class DeviceFocusController extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     initializeFloors() {
         const { floorMap } = this.config;
 
@@ -91,17 +67,14 @@ export class DeviceFocusController extends Component {
             return;
         }
 
-        // English comment.
         Object.entries(floorMap).forEach(([index, floorName]) => {
             const floorIndex = parseInt(index);
 
-            // English comment.
             const floorObject = this.scene.scene.getObjectByName(floorName);
 
             if (floorObject) {
                 this.floors.set(floorIndex, floorObject);
 
-                // English comment.
                 this.originalFloorVisibility.set(floorIndex, floorObject.visible);
 
                 console.log(`[DeviceFocusController] 找到楼层 ${floorIndex}: ${floorName}`);
@@ -113,16 +86,12 @@ export class DeviceFocusController extends Component {
         console.log(`[DeviceFocusController] 楼层初始化完成，共 ${this.floors.size} 层`);
     }
 
-    /**
-     * English comment.
-     */
     async focusDevice(deviceObject, options = {}) {
         if (!deviceObject) {
             console.error('[DeviceFocusController] 设备对象不能为空');
             return;
         }
 
-        // English comment.
         if (this.isFocusing && this.currentDevice !== deviceObject) {
             await this.resetView();
         }
@@ -130,49 +99,36 @@ export class DeviceFocusController extends Component {
         this.currentDevice = deviceObject;
         this.isFocusing = true;
 
-        // English comment.
         const config = { ...this.config, ...options };
 
-        // English comment.
         const deviceFloor = this.getDeviceFloor(deviceObject);
         console.log('[DeviceFocusController] 设备所在楼层:', deviceFloor);
 
-        // English comment.
         if (config.autoHideOtherFloors && deviceFloor !== null) {
             this.hideOtherFloors(deviceFloor);
         }
 
-        // English comment.
         const deviceCenter = this.getDeviceCenter(deviceObject);
         console.log('[DeviceFocusController] 设备中心点:', deviceCenter);
 
-        // English comment.
         this.highlightDevice(deviceObject);
 
-        // English comment.
         await this.moveCameraToDevice(deviceCenter, config);
 
-        // English comment.
         this.emit('focusComplete', { device: deviceObject, center: deviceCenter });
     }
 
-    /**
-     * English comment.
-     */
     getDeviceFloor(deviceObject) {
-        // English comment.
         if (deviceObject.userData && deviceObject.userData.floor !== undefined) {
             return deviceObject.userData.floor;
         }
 
-        // English comment.
         let parent = deviceObject.parent;
         while (parent) {
             if (parent.userData && parent.userData.floor !== undefined) {
                 return parent.userData.floor;
             }
 
-            // English comment.
             for (const [floorIndex, floorName] of Object.entries(this.config.floorMap)) {
                 if (parent.name === floorName) {
                     return parseInt(floorIndex);
@@ -186,9 +142,6 @@ export class DeviceFocusController extends Component {
         return null;
     }
 
-    /**
-     * English comment.
-     */
     getDeviceCenter(deviceObject) {
         const box = new THREE.Box3().setFromObject(deviceObject);
         const center = new THREE.Vector3();
@@ -196,9 +149,6 @@ export class DeviceFocusController extends Component {
         return center;
     }
 
-    /**
-     * English comment.
-     */
     hideOtherFloors(targetFloor) {
         this.floors.forEach((floorObject, floorIndex) => {
             if (floorIndex !== targetFloor) {
@@ -211,16 +161,11 @@ export class DeviceFocusController extends Component {
         console.log(`[DeviceFocusController] 已隐藏其他楼层，仅显示第 ${targetFloor} 层`);
     }
 
-    /**
-     * English comment.
-     */
     highlightDevice(deviceObject) {
         const { highlightColor, colorTransitionDuration } = this.config;
 
-        // English comment.
         deviceObject.traverse((child) => {
             if (child.isMesh && child.material) {
-                // English comment.
                 if (!this.originalMaterials.has(child.uuid)) {
                     if (Array.isArray(child.material)) {
                         this.originalMaterials.set(child.uuid, child.material.map(mat => mat.clone()));
@@ -229,7 +174,6 @@ export class DeviceFocusController extends Component {
                     }
                 }
 
-                // English comment.
                 this.applyHighlightColor(child, highlightColor, colorTransitionDuration);
             }
         });
@@ -237,9 +181,6 @@ export class DeviceFocusController extends Component {
         console.log('[DeviceFocusController] 设备高亮已应用');
     }
 
-    /**
-     * English comment.
-     */
     applyHighlightColor(mesh, targetColor, duration) {
         const materials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
 
@@ -259,9 +200,6 @@ export class DeviceFocusController extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     moveCameraToDevice(targetPosition, config) {
         return new Promise((resolve) => {
             if (!this.scene || !this.scene.camera) {
@@ -273,14 +211,12 @@ export class DeviceFocusController extends Component {
             const camera = this.scene.camera.instance;
             const controls = this.scene.controls.instance;
 
-            // English comment.
             const cameraTargetPosition = new THREE.Vector3(
                 targetPosition.x,
                 targetPosition.y + config.cameraDistance * 0.5,
                 targetPosition.z + config.cameraDistance
             );
 
-            // English comment.
             const cameraTween = new TWEEN.Tween(
                 { x: camera.position.x, y: camera.position.y, z: camera.position.z },
                 this.tweenGroup
@@ -299,7 +235,6 @@ export class DeviceFocusController extends Component {
                 })
                 .start();
 
-            // English comment.
             if (controls && controls.target) {
                 const controlsTween = new TWEEN.Tween(
                     { x: controls.target.x, y: controls.target.y, z: controls.target.z },
@@ -319,9 +254,6 @@ export class DeviceFocusController extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     async resetView() {
         if (!this.isFocusing) {
             console.log('[DeviceFocusController] 当前未处于聚焦状态，无需重置');
@@ -330,30 +262,22 @@ export class DeviceFocusController extends Component {
 
         console.log('[DeviceFocusController] 开始重置视图');
 
-        // English comment.
         this.restoreFloorVisibility();
 
-        // English comment.
         if (this.currentDevice) {
             this.removeHighlight(this.currentDevice);
         }
 
-        // English comment.
         await this.moveCameraToInitialPosition();
 
-        // English comment.
         this.currentDevice = null;
         this.isFocusing = false;
 
-        // English comment.
         this.emit('resetComplete');
 
         console.log('[DeviceFocusController] 视图重置完成');
     }
 
-    /**
-     * English comment.
-     */
     restoreFloorVisibility() {
         this.floors.forEach((floorObject, floorIndex) => {
             const originalVisibility = this.originalFloorVisibility.get(floorIndex);
@@ -365,9 +289,6 @@ export class DeviceFocusController extends Component {
         console.log('[DeviceFocusController] 楼层可见性已恢复');
     }
 
-    /**
-     * English comment.
-     */
     removeHighlight(deviceObject) {
         const { colorTransitionDuration } = this.config;
 
@@ -376,7 +297,6 @@ export class DeviceFocusController extends Component {
                 const originalMaterial = this.originalMaterials.get(child.uuid);
 
                 if (originalMaterial) {
-                    // English comment.
                     this.restoreOriginalColor(child, originalMaterial, colorTransitionDuration);
                 }
             }
@@ -385,9 +305,6 @@ export class DeviceFocusController extends Component {
         console.log('[DeviceFocusController] 设备高亮已移除');
     }
 
-    /**
-     * English comment.
-     */
     restoreOriginalColor(mesh, originalMaterial, duration) {
         const currentMaterials = Array.isArray(mesh.material) ? mesh.material : [mesh.material];
         const originalMaterials = Array.isArray(originalMaterial) ? originalMaterial : [originalMaterial];
@@ -411,9 +328,6 @@ export class DeviceFocusController extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     moveCameraToInitialPosition() {
         return new Promise((resolve) => {
             if (!this.scene || !this.scene.camera || !this.initialCameraPosition) {
@@ -425,7 +339,6 @@ export class DeviceFocusController extends Component {
             const camera = this.scene.camera.instance;
             const controls = this.scene.controls.instance;
 
-            // English comment.
             const cameraTween = new TWEEN.Tween(
                 { x: camera.position.x, y: camera.position.y, z: camera.position.z },
                 this.tweenGroup
@@ -444,7 +357,6 @@ export class DeviceFocusController extends Component {
                 })
                 .start();
 
-            // English comment.
             if (controls && controls.target && this.initialControlsTarget) {
                 const controlsTween = new TWEEN.Tween(
                     { x: controls.target.x, y: controls.target.y, z: controls.target.z },
@@ -464,25 +376,15 @@ export class DeviceFocusController extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     onUpdate(delta) {
-        // English comment.
         this.tweenGroup.update();
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
-        // English comment.
         this.tweenGroup.removeAll();
 
-        // English comment.
         this.originalMaterials.clear();
 
-        // English comment.
         this.floors.clear();
         this.originalFloorVisibility.clear();
 

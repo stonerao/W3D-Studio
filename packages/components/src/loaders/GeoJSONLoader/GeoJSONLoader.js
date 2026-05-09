@@ -235,6 +235,9 @@ const createLabelSprite = (text, config) => {
     return sprite;
 };
 
+/**
+ * Loader module component that converts GeoJSON features into scene geometry for map and region visualization.
+ */
 export class GeoJSONLoader extends Component {
     static defaultConfig = {
         url: '',

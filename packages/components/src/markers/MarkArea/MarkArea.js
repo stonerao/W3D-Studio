@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Marker module component that renders filled area markers for region selection and area highlighting.
  */
 export class MarkArea extends Component {
     static defaultConfig = {
@@ -26,26 +26,19 @@ export class MarkArea extends Component {
         });
 
         this.area = new THREE.Mesh(geometry, material);
-        // English comment.
         this.area.rotation.x = -Math.PI / 2;
         this.add(this.area);
     }
 
-    /**
-     * English comment.
-     */
     updateConfig(newConfig) {
-        // English comment.
         Object.assign(this.config, newConfig);
 
-        // English comment.
         if (this.area) {
             this.remove(this.area);
             this.area.geometry.dispose();
             this.area.material.dispose();
         }
 
-        // English comment.
         this.createArea();
     }
 

@@ -3,36 +3,34 @@ import * as THREE from 'three';
 import { MeshLineGeometry, MeshLineMaterial, MeshLineRaycast } from './meshline/index.js';
 
 /**
- * English comment.
+ * Animation module component that renders animated migration lines for route, flow, and traffic visualizations.
  */
 export class MigrationLine extends Component {
     static defaultConfig = {
-        lines: [], // English comment.
-        areas: [], // English comment.
-        markers: [], // English comment.
+        lines: [],
+        areas: [],
+        markers: [],
         globalConfig: {
-            // English comment.
             color: '#00ff00',
             size: 2,
-            speed: 1, // English comment.
-            duration: 3000, // English comment.
+            speed: 1,
+            duration: 3000,
             loop: true,
             delay: 0,
             autoStart: true,
-            lineWidth: 2, // English comment.
-            texture: '', // English comment.
-            alphaTexture: '', // English comment.
-            textureRepeat: 4, // English comment.
-            dashArray: 0.1, // English comment.
-            dashRatio: 0.5, // English comment.
-            direction: 1, // English comment.
-            sizeAttenuation: true, // English comment.
-            segments: 200, // English comment.
+            lineWidth: 2,
+            texture: '',
+            alphaTexture: '',
+            textureRepeat: 4,
+            dashArray: 0.1,
+            dashRatio: 0.5,
+            direction: 1,
+            sizeAttenuation: true,
+            segments: 200,
             widthMode: 'constant', // 'constant' | 'taper' | 'wave'
-            taperRatio: 0.5, // English comment.
-            depthTest: true, // English comment.
+            taperRatio: 0.5,
+            depthTest: true,
             blending: 'normal', // 'normal' | 'additive'
-            // English comment.
             showWall: true,
             showBottom: true,
             showBorder: true,
@@ -42,93 +40,70 @@ export class MigrationLine extends Component {
             borderWidth: 2,
             borderGlow: true,
             animationSpeed: 1.0,
-            // English comment.
             markerType: 'sprite', // 'sprite' | 'plane'
             markerSize: 5,
             markerOpacity: 1.0,
             markerColor: '#ffffff',
-            markerSizeAttenuation: true // English comment.
+            markerSizeAttenuation: true
         }
     };
 
     constructor(scene, config = {}) {
         super(scene, config);
 
-        // English comment.
         this.migrationLines = new Map();
 
-        // English comment.
         this.lineDataMap = new Map();
 
-        // English comment.
         this.animationStates = new Map();
 
-        // English comment.
         this.areaBlocks = new Map();
 
-        // English comment.
         this.areaDataMap = new Map();
 
-        // English comment.
         this.imageMarkers = new Map();
 
-        // English comment.
         this.markerDataMap = new Map();
 
-        // English comment.
         this.textureCache = new Map();
 
-        // English comment.
         this.textureLoader = new THREE.TextureLoader();
 
-        // English comment.
         this.raycaster = new THREE.Raycaster();
         this.mouse = new THREE.Vector2();
         this.hoveredArea = null;
         this.hoveredMarker = null;
 
-        // English comment.
         this.clock = new THREE.Clock();
     }
 
-    /**
-     * English comment.
-     */
     async onMounted() {
-        // English comment.
         this.globalConfig = {
             ...this.constructor.defaultConfig.globalConfig,
             ...this.config.globalConfig
         };
 
-        // English comment.
         if (this.config.lines && this.config.lines.length > 0) {
             for (const lineData of this.config.lines) {
                 await this.createLine(lineData);
             }
         }
 
-        // English comment.
         if (this.config.areas && this.config.areas.length > 0) {
             for (const areaData of this.config.areas) {
                 await this.addArea(areaData);
             }
         }
 
-        // English comment.
         if (this.config.markers && this.config.markers.length > 0) {
             for (const markerData of this.config.markers) {
                 await this.addImageMarker(markerData);
             }
         }
 
-        // English comment.
         this.setupMouseEvents();
     }
 
-    /**
-     * English comment.
-     */
     async createLine(lineData) {
         const { id, points, type, userData } = lineData;
 
@@ -137,19 +112,15 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         const lineConfig = {
             ...this.globalConfig,
             ...lineData
         };
 
-        // English comment.
         const curve = this.createCurve(points);
 
-        // English comment.
         const lineObject = await this.createMeshLine(curve, lineConfig);
 
-        // English comment.
         lineObject.userData = {
             lineId: id,
             customData: userData,
@@ -158,7 +129,6 @@ export class MigrationLine extends Component {
             type: 'meshline'
         };
 
-        // English comment.
         this.add(lineObject);
 
         console.log('[MigrationLine] Line added to scene:', {
@@ -169,11 +139,9 @@ export class MigrationLine extends Component {
             childrenCount: this.children.length
         });
 
-        // English comment.
         this.migrationLines.set(id, lineObject);
         this.lineDataMap.set(id, lineData);
 
-        // English comment.
         const animationState = {
             isPlaying: lineConfig.autoStart,
             isPaused: false,
@@ -184,26 +152,18 @@ export class MigrationLine extends Component {
         };
         this.animationStates.set(id, animationState);
 
-        // English comment.
 
-        // English comment.
         if (lineConfig.autoStart && lineConfig.delay === 0) {
             this.emit('start', { lineId: id, userData });
             animationState.hasStarted = true;
         }
     }
 
-    /**
-     * English comment.
-     */
     createCurve(points) {
         const vectors = points.map((p) => new THREE.Vector3(p.x || 0, p.y || 0, p.z || 0));
         return new THREE.CatmullRomCurve3(vectors, false);
     }
 
-    /**
-     * English comment.
-     */
     _getResolution() {
         if (this.scene && this.scene.renderer && this.scene.renderer.instance) {
             const size = new THREE.Vector2();
@@ -213,36 +173,26 @@ export class MigrationLine extends Component {
         return new THREE.Vector2(window.innerWidth, window.innerHeight);
     }
 
-    /**
-     * English comment.
-     */
     _getWidthCallback(config) {
         switch (config.widthMode) {
             case 'taper':
-                // English comment.
                 return (p) => 1 - p * (config.taperRatio || 0.5);
             case 'wave':
-                // English comment.
                 return (p) => 0.5 + Math.sin(p * Math.PI * 4) * 0.5;
             case 'constant':
             default:
-                return null; // English comment.
+                return null;
         }
     }
 
-    /**
-     * English comment.
-     */
     async createMeshLine(curve, config) {
         const segments = config.segments || 200;
         const curvePoints = curve.getPoints(segments);
 
-        // English comment.
         const geometry = new MeshLineGeometry();
         const widthCallback = this._getWidthCallback(config);
         geometry.setPoints(curvePoints, widthCallback);
 
-        // English comment.
         const materialParams = {
             color: new THREE.Color(config.color),
             lineWidth: config.lineWidth || 2,
@@ -253,19 +203,16 @@ export class MigrationLine extends Component {
             depthWrite: false,
         };
 
-        // English comment.
         if (config.blending === 'additive') {
             materialParams.blending = THREE.AdditiveBlending;
         }
 
-        // English comment.
         if (config.dashArray && config.dashArray > 0) {
             materialParams.dashArray = config.dashArray;
             materialParams.dashRatio = config.dashRatio || 0.5;
             materialParams.dashOffset = 0;
         }
 
-        // English comment.
         if (config.texture) {
             try {
                 const texture = await this._loadLineTexture(config.texture);
@@ -279,7 +226,6 @@ export class MigrationLine extends Component {
             }
         }
 
-        // English comment.
         if (config.alphaTexture) {
             try {
                 const alphaTexture = await this._loadLineTexture(config.alphaTexture);
@@ -297,7 +243,6 @@ export class MigrationLine extends Component {
         mesh.raycast = MeshLineRaycast;
         mesh.frustumCulled = false;
 
-        // English comment.
         const onResize = () => {
             material.resolution = this._getResolution();
         };
@@ -315,9 +260,6 @@ export class MigrationLine extends Component {
         return mesh;
     }
 
-    /**
-     * English comment.
-     */
     _loadLineTexture(url) {
         if (this.textureCache.has(url)) {
             return Promise.resolve(this.textureCache.get(url));
@@ -335,45 +277,33 @@ export class MigrationLine extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     updateMeshLine(lineObject, progress, delta) {
         const material = lineObject.material;
         const config = lineObject.userData.config;
-        // English comment.
         const speed = (config.speed !== undefined ? config.speed : 1);
-        const dir = (config.direction === -1) ? 1 : -1; // English comment.
+        const dir = (config.direction === -1) ? 1 : -1;
 
-        // English comment.
         material.uniforms.visibility.value = 1.0;
 
-        // English comment.
         if (material.uniforms.dashArray.value > 0) {
             material.uniforms.dashOffset.value += dir * delta * speed * 0.08;
         }
 
-        // English comment.
         if (material.uniforms.useMap.value === 1) {
             material.uniforms.mapOffset.value.x += dir * delta * speed * 0.15;
         }
     }
 
-    /**
-     * English comment.
-     */
     createShaderLine(curve, config) {
         const points = curve.getPoints(100);
         const geometry = new THREE.BufferGeometry().setFromPoints(points);
 
-        // English comment.
         const indices = new Float32Array(points.length);
         for (let i = 0; i < points.length; i++) {
             indices[i] = i / (points.length - 1);
         }
         geometry.setAttribute('aIndex', new THREE.BufferAttribute(indices, 1));
 
-        // English comment.
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 uTime: { value: 0 },
@@ -404,16 +334,12 @@ export class MigrationLine extends Component {
                 varying vec3 vPosition;
 
                 void main() {
-                    // English comment.
                     float flow = mod(vIndex - uTime * uFlowSpeed, 1.0);
 
-                    // English comment.
                     float alpha = smoothstep(0.0, 0.1, flow) * smoothstep(1.0, 0.9, flow);
 
-                    // English comment.
                     float glow = pow(alpha, 0.5) * uGlowIntensity;
 
-                    // English comment.
                     if (vIndex > uProgress) {
                         discard;
                     }
@@ -430,11 +356,7 @@ export class MigrationLine extends Component {
         return new THREE.Line(geometry, material);
     }
 
-    /**
-     * English comment.
-     */
     createParticleLine(curve, config) {
-        // English comment.
         const particleCount = config.particleCount;
         const geometry = new THREE.BufferGeometry();
 
@@ -447,32 +369,24 @@ export class MigrationLine extends Component {
             curveLength: curve.getLength()
         });
 
-        // English comment.
         const positions = new Float32Array(particleCount * 3);
         const sizes = new Float32Array(particleCount);
         const alphas = new Float32Array(particleCount);
 
-        // English comment.
         console.log('[MigrationLine] Distributing particles along curve...');
         for (let i = 0; i < particleCount; i++) {
-            // English comment.
             const t = i / (particleCount - 1);
 
-            // English comment.
             const point = curve.getPoint(t);
 
-            // English comment.
             positions[i * 3] = point.x;
             positions[i * 3 + 1] = point.y;
             positions[i * 3 + 2] = point.z;
 
-            // English comment.
             sizes[i] = config.particleSize;
 
-            // English comment.
             alphas[i] = 0;
 
-            // English comment.
             if (i < 3) {
                 console.log(
                     `  Particle ${i} (t=${t.toFixed(3)}): (${point.x.toFixed(2)}, ${point.y.toFixed(2)}, ${point.z.toFixed(2)})`
@@ -497,14 +411,10 @@ export class MigrationLine extends Component {
         geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
         geometry.setAttribute('alpha', new THREE.BufferAttribute(alphas, 1));
 
-        // English comment.
-        // English comment.
-        // English comment.
-        // English comment.
         const material = new THREE.ShaderMaterial({
             uniforms: {
                 uColor: { value: new THREE.Color(config.color) },
-                uTime: { value: 0 } // English comment.
+                uTime: { value: 0 }
             },
             vertexShader: `
                 uniform float uTime;
@@ -516,10 +426,7 @@ export class MigrationLine extends Component {
                     vAlpha = alpha;  // 使用 alpha 属性控制透明度
                     vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
 
-                    // English comment.
-                    // English comment.
                     float pulse = sin(uTime * 2.0) * 0.5 + 0.5;
-                    // English comment.
                     float sizeMultiplier = 0.8 + pulse * 0.4;
 
                     gl_PointSize = size * 10.0 * sizeMultiplier;
@@ -532,17 +439,13 @@ export class MigrationLine extends Component {
                 varying float vAlpha;
 
                 void main() {
-                    // English comment.
                     vec2 center = gl_PointCoord - vec2(0.5);
                     float dist = length(center);
                     if (dist > 0.5) discard;
 
-                    // English comment.
-                    // English comment.
                     float brightness = sin(uTime * 3.0) * 0.2 + 1.0; // 1.0 到 1.2 之间
                     vec3 color = uColor * brightness;
 
-                    // English comment.
                     float alpha = (1.0 - dist * 2.0) * vAlpha;
                     gl_FragColor = vec4(color, alpha);
                 }
@@ -567,9 +470,6 @@ export class MigrationLine extends Component {
         return points;
     }
 
-    /**
-     * English comment.
-     */
     onUpdate(delta) {
         const currentTime = Date.now();
 
@@ -580,7 +480,6 @@ export class MigrationLine extends Component {
 
             if (!state || !state.isPlaying) return;
 
-            // English comment.
             if (!state.hasStarted) {
                 if (currentTime >= state.startTime) {
                     state.hasStarted = true;
@@ -593,11 +492,9 @@ export class MigrationLine extends Component {
                 }
             }
 
-            // English comment.
             const elapsed = currentTime - state.startTime;
             let progress = elapsed / config.duration;
 
-            // English comment.
             if (progress >= 1) {
                 if (config.loop) {
                     state.startTime = currentTime;
@@ -618,7 +515,6 @@ export class MigrationLine extends Component {
 
             state.progress = progress;
 
-            // English comment.
             switch (type) {
                 case 'meshline':
                     this.updateMeshLine(lineObject, progress, delta);
@@ -631,7 +527,6 @@ export class MigrationLine extends Component {
                     break;
             }
 
-            // English comment.
             this.emit('update', {
                 lineId: id,
                 progress: progress,
@@ -639,24 +534,17 @@ export class MigrationLine extends Component {
             });
         });
 
-        // English comment.
         this.areaBlocks.forEach((areaObject) => {
             this.updateAreaBlock(areaObject, delta);
         });
     }
 
-    /**
-     * English comment.
-     */
     updateShaderLine(lineObject, progress, delta) {
         const material = lineObject.material;
         material.uniforms.uTime.value += delta;
         material.uniforms.uProgress.value = progress;
     }
 
-    /**
-     * English comment.
-     */
     initializeParticles(lineObject) {
         const geometry = lineObject.geometry;
         const positions = geometry.attributes.position.array;
@@ -670,19 +558,15 @@ export class MigrationLine extends Component {
             curvePoints: curve.points.length
         });
 
-        // English comment.
         for (let i = 0; i < particleCount; i++) {
-            // English comment.
             const t = i / (particleCount - 1);
 
-            // English comment.
             const point = curve.getPoint(t);
 
             positions[i * 3] = point.x;
             positions[i * 3 + 1] = point.y;
             positions[i * 3 + 2] = point.z;
 
-            // English comment.
             if (i < 3) {
                 console.log(`  Particle ${i} (t=${t.toFixed(3)}):`, {
                     x: point.x.toFixed(2),
@@ -691,11 +575,9 @@ export class MigrationLine extends Component {
                 });
             }
 
-            // English comment.
             alphas[i] = 0;
         }
 
-        // English comment.
         geometry.attributes.position.needsUpdate = true;
         geometry.attributes.alpha.needsUpdate = true;
 
@@ -710,9 +592,6 @@ export class MigrationLine extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     updateParticleLine(lineObject, progress, delta) {
         const geometry = lineObject.geometry;
         const material = lineObject.material;
@@ -720,10 +599,8 @@ export class MigrationLine extends Component {
         const particleCount = lineObject.userData.particleCount;
         const trailLength = lineObject.userData.trailLength;
 
-        // English comment.
         material.uniforms.uTime.value += delta;
 
-        // English comment.
         if (!this._particleUpdateInitialized) {
             this._particleUpdateInitialized = true;
             console.log('[MigrationLine] First particle update:', {
@@ -740,25 +617,17 @@ export class MigrationLine extends Component {
         let minVisibleIndex = -1;
         let maxVisibleIndex = -1;
 
-        // English comment.
         for (let i = 0; i < particleCount; i++) {
-            // English comment.
             const particleT = i / (particleCount - 1);
 
-            // English comment.
             let distance = progress - particleT;
 
-            // English comment.
             const config = lineObject.userData.config;
             if (config.loop && distance < -0.5) {
-                distance += 1; // English comment.
+                distance += 1;
             }
 
-            // English comment.
-            // English comment.
-            // English comment.
             if (distance >= 0 && distance <= trailLength) {
-                // English comment.
                 const fadeRatio = 1 - distance / trailLength;
                 alphas[i] = fadeRatio;
                 visibleCount++;
@@ -767,12 +636,10 @@ export class MigrationLine extends Component {
                 if (minVisibleIndex === -1) minVisibleIndex = i;
                 maxVisibleIndex = i;
             } else {
-                // English comment.
                 alphas[i] = 0;
             }
         }
 
-        // English comment.
         if (!this._particleDebugCounter) this._particleDebugCounter = 0;
         this._particleDebugCounter++;
         if (this._particleDebugCounter % 60 === 0) {
@@ -789,20 +656,13 @@ export class MigrationLine extends Component {
             });
         }
 
-        // English comment.
         geometry.attributes.alpha.needsUpdate = true;
     }
 
-    /**
-     * English comment.
-     */
     async addLine(lineData) {
         await this.createLine(lineData);
     }
 
-    /**
-     * English comment.
-     */
     removeLine(id) {
         const lineObject = this.migrationLines.get(id);
 
@@ -811,7 +671,6 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         if (lineObject.geometry) {
             lineObject.geometry.dispose();
         }
@@ -819,23 +678,17 @@ export class MigrationLine extends Component {
             lineObject.material.dispose();
         }
 
-        // English comment.
         if (lineObject.userData.onResize) {
             window.removeEventListener('resize', lineObject.userData.onResize);
         }
 
-        // English comment.
         this.remove(lineObject);
 
-        // English comment.
         this.migrationLines.delete(id);
         this.lineDataMap.delete(id);
         this.animationStates.delete(id);
     }
 
-    /**
-     * English comment.
-     */
     startLine(id) {
         const state = this.animationStates.get(id);
         if (!state) {
@@ -851,9 +704,6 @@ export class MigrationLine extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     pauseLine(id) {
         const state = this.animationStates.get(id);
         if (!state) {
@@ -867,9 +717,6 @@ export class MigrationLine extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     stopLine(id) {
         const state = this.animationStates.get(id);
         if (!state) {
@@ -884,9 +731,6 @@ export class MigrationLine extends Component {
         state.hasStarted = false;
     }
 
-    /**
-     * English comment.
-     */
     async updateLine(id, updates) {
         const lineObject = this.migrationLines.get(id);
         const lineData = this.lineDataMap.get(id);
@@ -896,30 +740,22 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         Object.assign(lineData, updates);
 
-        // English comment.
         if (updates.points || updates.type) {
-            // English comment.
             const currentState = this.animationStates.get(id);
 
-            // English comment.
             this.removeLine(id);
 
-            // English comment.
             await this.createLine(lineData);
 
-            // English comment.
             if (currentState) {
                 this.animationStates.set(id, currentState);
             }
         } else {
-            // English comment.
             Object.assign(lineObject.userData.config, updates);
 
             if (lineObject.material.isMeshLineMaterial) {
-                // English comment.
                 const mat = lineObject.material;
                 if (updates.color !== undefined) {
                     mat.uniforms.color.value.set(updates.color);
@@ -949,14 +785,12 @@ export class MigrationLine extends Component {
                 if (updates.sizeAttenuation !== undefined) {
                     mat.uniforms.sizeAttenuation.value = updates.sizeAttenuation ? 1 : 0;
                 }
-                // English comment.
                 if (updates.texture !== undefined || updates.alphaTexture !== undefined || updates.textureRepeat !== undefined) {
                     this.removeLine(id);
                     await this.createLine({ ...lineData, ...updates });
                     return;
                 }
             } else {
-                // English comment.
                 if (updates.color) {
                     const color = new THREE.Color(updates.color);
                     if (lineObject.material.uniforms && lineObject.material.uniforms.uColor) {
@@ -969,67 +803,42 @@ export class MigrationLine extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     startAll() {
         this.animationStates.forEach((state, id) => {
             this.startLine(id);
         });
     }
 
-    /**
-     * English comment.
-     */
     stopAll() {
         this.animationStates.forEach((state, id) => {
             this.stopLine(id);
         });
     }
 
-    /**
-     * English comment.
-     */
     pauseAll() {
         this.animationStates.forEach((state, id) => {
             this.pauseLine(id);
         });
     }
 
-    /**
-     * English comment.
-     */
     getLine(id) {
         return this.lineDataMap.get(id);
     }
 
-    /**
-     * English comment.
-     */
     getAllLines() {
         return Array.from(this.lineDataMap.values());
     }
 
-    /**
-     * English comment.
-     */
     getLineState(id) {
         return this.animationStates.get(id);
     }
 
-    /**
-     * English comment.
-     */
     clearLines() {
         const ids = Array.from(this.migrationLines.keys());
         ids.forEach((id) => this.removeLine(id));
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     createCloudShaderMaterial(config) {
         return new THREE.ShaderMaterial({
             uniforms: {
@@ -1057,14 +866,12 @@ export class MigrationLine extends Component {
                 varying vec2 vUv;
                 varying vec3 vPosition;
 
-                // English comment.
                 vec4 textureRND2D(vec2 uv) {
                     uv = floor(fract(uv) * 1e3);
                     float v = uv.x + uv.y * 1e3;
                     return fract(1e5 * sin(vec4(v * 1e-2, (v + 1.0) * 1e-2, (v + 1e3) * 1e-2, (v + 1e3 + 1.0) * 1e-2)));
                 }
 
-                // English comment.
                 float noise(vec2 p) {
                     vec2 f = fract(p * 1e3);
                     vec4 r = textureRND2D(p);
@@ -1072,7 +879,6 @@ export class MigrationLine extends Component {
                     return mix(mix(r.x, r.y, f.x), mix(r.z, r.w, f.x), f.y);
                 }
 
-                // English comment.
                 float cloud(vec2 p) {
                     float v = 0.0;
                     v += noise(p * 1.0) * 0.50000;
@@ -1087,12 +893,10 @@ export class MigrationLine extends Component {
                     vec2 p = vUv * 0.05 + 0.5;
                     vec3 c = vec3(0.0, 0.0, 0.2);
 
-                    // English comment.
                     c.rgb += vec3(0.6, 0.6, 0.8) * cloud(p * 0.3 + time * 0.0002) * 0.6;
                     c.gbr += vec3(0.8, 0.8, 1.0) * cloud(p * 0.2 + time * 0.0002) * 0.8;
                     c.grb += vec3(1.0, 1.0, 1.0) * cloud(p * 0.1 + time * 0.0002) * 1.0;
 
-                    // English comment.
                     vec3 finalColor = mix(c, color, 0.5);
 
                     gl_FragColor = vec4(finalColor, opacity);
@@ -1104,9 +908,6 @@ export class MigrationLine extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     createAreaBlock(points, config) {
         if (!points || points.length < 3) {
             console.warn('MigrationLine: Area block requires at least 3 points');
@@ -1116,32 +917,27 @@ export class MigrationLine extends Component {
         const group = new THREE.Group();
         group.userData.type = 'areaBlock';
 
-        // English comment.
         const shape = new THREE.Shape();
         shape.moveTo(points[0].x, points[0].z);
         for (let i = 1; i < points.length; i++) {
             shape.lineTo(points[i].x, points[i].z);
         }
-        shape.lineTo(points[0].x, points[0].z); // English comment.
+        shape.lineTo(points[0].x, points[0].z);
 
-        // English comment.
         if (config.showWall !== false) {
             const wallHeight = config.wallHeight || 5;
 
-            // English comment.
             const wallGeometry = new THREE.BufferGeometry();
             const vertices = [];
             const uvs = [];
             const indices = [];
 
-            // English comment.
             for (let i = 0; i < points.length; i++) {
                 const p1 = points[i];
                 const p2 = points[(i + 1) % points.length];
 
                 const baseIndex = i * 4;
 
-                // English comment.
                 vertices.push(
                     p1.x,
                     p1.y || 0,
@@ -1157,13 +953,11 @@ export class MigrationLine extends Component {
                     p2.z
                 );
 
-                // English comment.
                 const segmentLength = Math.sqrt(
                     Math.pow(p2.x - p1.x, 2) + Math.pow(p2.z - p1.z, 2)
                 );
                 uvs.push(0, 0, segmentLength / wallHeight, 0, 0, 1, segmentLength / wallHeight, 1);
 
-                // English comment.
                 indices.push(
                     baseIndex,
                     baseIndex + 1,
@@ -1179,7 +973,6 @@ export class MigrationLine extends Component {
             wallGeometry.setIndex(indices);
             wallGeometry.computeVertexNormals();
 
-            // English comment.
             const wallMaterial = this.createCloudShaderMaterial({
                 ...config,
                 opacity: config.wallOpacity || config.opacity || 0.5
@@ -1189,25 +982,21 @@ export class MigrationLine extends Component {
             group.add(wallMesh);
         }
 
-        // English comment.
         if (config.showBottom !== false) {
-            // English comment.
             const bottomGeometry = new THREE.ShapeGeometry(shape);
 
-            // English comment.
             const bottomMaterial = this.createCloudShaderMaterial({
                 ...config,
                 opacity: config.bottomOpacity || config.opacity || 0.5
             });
 
             const bottomMesh = new THREE.Mesh(bottomGeometry, bottomMaterial);
-            bottomMesh.rotation.x = -Math.PI / 2; // English comment.
-            bottomMesh.position.y = 0; // English comment.
+            bottomMesh.rotation.x = -Math.PI / 2;
+            bottomMesh.position.y = 0;
             bottomMesh.userData.isBottom = true;
             group.add(bottomMesh);
         }
 
-        // English comment.
         if (config.showBorder !== false) {
             const borderGeometry = new THREE.BufferGeometry();
             const borderVertices = [];
@@ -1216,7 +1005,6 @@ export class MigrationLine extends Component {
                 const p = points[i];
                 borderVertices.push(p.x, p.y || 0, p.z);
             }
-            // English comment.
             borderVertices.push(points[0].x, points[0].y || 0, points[0].z);
 
             borderGeometry.setAttribute(
@@ -1236,7 +1024,6 @@ export class MigrationLine extends Component {
             group.add(borderLine);
         }
 
-        // English comment.
         const interactionGeometry = new THREE.ShapeGeometry(shape);
         const interactionMaterial = new THREE.MeshBasicMaterial({
             transparent: true,
@@ -1244,7 +1031,7 @@ export class MigrationLine extends Component {
             side: THREE.DoubleSide
         });
         const interactionMesh = new THREE.Mesh(interactionGeometry, interactionMaterial);
-        interactionMesh.rotation.x = -Math.PI / 2; // English comment.
+        interactionMesh.rotation.x = -Math.PI / 2;
         interactionMesh.userData.isInteraction = true;
         interactionMesh.userData.areaId = config.id;
         group.add(interactionMesh);
@@ -1252,11 +1039,7 @@ export class MigrationLine extends Component {
         return group;
     }
 
-    /**
-     * English comment.
-     */
     updateAreaBlock(areaObject, delta) {
-        // English comment.
         areaObject.children.forEach((child) => {
             if ((child.userData.isWall || child.userData.isBottom) && child.material.uniforms) {
                 child.material.uniforms.time.value += delta;
@@ -1264,9 +1047,6 @@ export class MigrationLine extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     async addArea(areaData) {
         const { id, points, userData } = areaData;
 
@@ -1275,18 +1055,15 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         const areaConfig = {
             ...this.config.globalConfig,
             ...areaData,
             id
         };
 
-        // English comment.
         const areaObject = this.createAreaBlock(points, areaConfig);
         if (!areaObject) return;
 
-        // English comment.
         areaObject.userData = {
             ...areaObject.userData,
             id,
@@ -1294,20 +1071,14 @@ export class MigrationLine extends Component {
             customData: userData
         };
 
-        // English comment.
         this.add(areaObject);
 
-        // English comment.
         this.areaBlocks.set(id, areaObject);
         this.areaDataMap.set(id, areaData);
 
-        // English comment.
         this.emit('areaAdded', { areaId: id, areaData });
     }
 
-    /**
-     * English comment.
-     */
     removeArea(id) {
         const areaObject = this.areaBlocks.get(id);
 
@@ -1316,10 +1087,8 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         this.remove(areaObject);
 
-        // English comment.
         areaObject.children.forEach((child) => {
             if (child.geometry) child.geometry.dispose();
             if (child.material) {
@@ -1331,53 +1100,35 @@ export class MigrationLine extends Component {
             }
         });
 
-        // English comment.
         this.areaBlocks.delete(id);
         this.areaDataMap.delete(id);
 
-        // English comment.
         this.emit('areaRemoved', { areaId: id });
     }
 
-    /**
-     * English comment.
-     */
     getArea(id) {
         return this.areaDataMap.get(id);
     }
 
-    /**
-     * English comment.
-     */
     getAllAreas() {
         return Array.from(this.areaDataMap.values());
     }
 
-    /**
-     * English comment.
-     */
     clearAreas() {
         const ids = Array.from(this.areaBlocks.keys());
         ids.forEach((id) => this.removeArea(id));
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     async loadTexture(url) {
-        // English comment.
         if (this.textureCache.has(url)) {
             return this.textureCache.get(url);
         }
 
-        // English comment.
         return new Promise((resolve, reject) => {
             this.textureLoader.load(
                 url,
                 (texture) => {
-                    // English comment.
                     this.textureCache.set(url, texture);
                     resolve(texture);
                 },
@@ -1390,9 +1141,6 @@ export class MigrationLine extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     async createImageMarker(markerData) {
         const {
             id,
@@ -1409,13 +1157,11 @@ export class MigrationLine extends Component {
             userData = {}
         } = markerData;
 
-        // English comment.
         if (!id || !position || !images) {
             console.warn('ImageMarker: id, position, and images are required');
             return null;
         }
 
-        // English comment.
         const currentState = state || Object.keys(images)[0];
         const imageUrl = images[currentState];
 
@@ -1424,7 +1170,6 @@ export class MigrationLine extends Component {
             return null;
         }
 
-        // English comment.
         let texture;
         try {
             texture = await this.loadTexture(imageUrl);
@@ -1436,7 +1181,6 @@ export class MigrationLine extends Component {
         let markerObject;
 
         if (type === 'sprite') {
-            // English comment.
             const material = new THREE.SpriteMaterial({
                 map: texture,
                 color: new THREE.Color(color),
@@ -1448,7 +1192,6 @@ export class MigrationLine extends Component {
             markerObject = new THREE.Sprite(material);
             markerObject.scale.set(size * scale.x, size * scale.y, 1);
         } else if (type === 'plane') {
-            // English comment.
             const geometry = new THREE.PlaneGeometry(size * scale.x, size * scale.y);
             const material = new THREE.MeshBasicMaterial({
                 map: texture,
@@ -1461,7 +1204,6 @@ export class MigrationLine extends Component {
             markerObject = new THREE.Mesh(geometry, material);
         } else {
             console.warn(`ImageMarker: Unknown type "${type}", using sprite`);
-            // English comment.
             const material = new THREE.SpriteMaterial({
                 map: texture,
                 color: new THREE.Color(color),
@@ -1474,14 +1216,12 @@ export class MigrationLine extends Component {
             markerObject.scale.set(size * scale.x, size * scale.y, 1);
         }
 
-        // English comment.
         markerObject.position.set(
             position.x + offset.x,
             position.y + offset.y,
             position.z + offset.z
         );
 
-        // English comment.
         markerObject.userData = {
             ...userData,
             markerId: id,
@@ -1492,9 +1232,6 @@ export class MigrationLine extends Component {
         return markerObject;
     }
 
-    /**
-     * English comment.
-     */
     async addImageMarker(markerData) {
         const { id } = markerData;
 
@@ -1503,39 +1240,30 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         if (this.imageMarkers.has(id)) {
             console.warn(`ImageMarker: Marker with id "${id}" already exists`);
             return;
         }
 
-        // English comment.
         const markerObject = await this.createImageMarker(markerData);
 
         if (!markerObject) {
             return;
         }
 
-        // English comment.
         this.add(markerObject);
 
-        // English comment.
         this.imageMarkers.set(id, markerObject);
 
-        // English comment.
         const currentState = markerData.state || Object.keys(markerData.images)[0];
         this.markerDataMap.set(id, {
             ...markerData,
             state: currentState
         });
 
-        // English comment.
         this.emit('markerAdded', { markerId: id, markerData });
     }
 
-    /**
-     * English comment.
-     */
     async updateMarkerState(id, newState) {
         const markerObject = this.imageMarkers.get(id);
         const markerData = this.markerDataMap.get(id);
@@ -1553,7 +1281,6 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         let texture;
         try {
             texture = await this.loadTexture(imageUrl);
@@ -1562,20 +1289,16 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         if (markerObject.material) {
             markerObject.material.map = texture;
             markerObject.material.needsUpdate = true;
         }
 
-        // English comment.
         const oldState = markerData.state;
 
-        // English comment.
         markerData.state = newState;
         this.markerDataMap.set(id, markerData);
 
-        // English comment.
         this.emit('markerStateChanged', {
             markerId: id,
             oldState,
@@ -1583,9 +1306,6 @@ export class MigrationLine extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     updateMarker(id, updates) {
         const markerObject = this.imageMarkers.get(id);
         const markerData = this.markerDataMap.get(id);
@@ -1595,7 +1315,6 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         if (updates.size !== undefined) {
             const scale = markerData.scale || { x: 1, y: 1 };
             if (markerObject.isSprite) {
@@ -1611,19 +1330,16 @@ export class MigrationLine extends Component {
             markerData.size = updates.size;
         }
 
-        // English comment.
         if (updates.color !== undefined && markerObject.material) {
             markerObject.material.color.set(updates.color);
             markerData.color = updates.color;
         }
 
-        // English comment.
         if (updates.opacity !== undefined && markerObject.material) {
             markerObject.material.opacity = updates.opacity;
             markerData.opacity = updates.opacity;
         }
 
-        // English comment.
         if (updates.offset !== undefined) {
             const position = markerData.position;
             const offset = { ...markerData.offset, ...updates.offset };
@@ -1635,7 +1351,6 @@ export class MigrationLine extends Component {
             markerData.offset = offset;
         }
 
-        // English comment.
         if (updates.scale !== undefined) {
             const size = markerData.size || 5;
             const scale = { ...markerData.scale, ...updates.scale };
@@ -1648,13 +1363,9 @@ export class MigrationLine extends Component {
             markerData.scale = scale;
         }
 
-        // English comment.
         this.markerDataMap.set(id, markerData);
     }
 
-    /**
-     * English comment.
-     */
     removeMarker(id) {
         const markerObject = this.imageMarkers.get(id);
 
@@ -1663,10 +1374,8 @@ export class MigrationLine extends Component {
             return;
         }
 
-        // English comment.
         this.remove(markerObject);
 
-        // English comment.
         if (markerObject.geometry) {
             markerObject.geometry.dispose();
         }
@@ -1674,41 +1383,26 @@ export class MigrationLine extends Component {
             markerObject.material.dispose();
         }
 
-        // English comment.
         this.imageMarkers.delete(id);
         this.markerDataMap.delete(id);
 
-        // English comment.
         this.emit('markerRemoved', { markerId: id });
     }
 
-    /**
-     * English comment.
-     */
     getMarker(id) {
         return this.markerDataMap.get(id);
     }
 
-    /**
-     * English comment.
-     */
     getAllMarkers() {
         return Array.from(this.markerDataMap.values());
     }
 
-    /**
-     * English comment.
-     */
     clearMarkers() {
         const ids = Array.from(this.imageMarkers.keys());
         ids.forEach((id) => this.removeMarker(id));
     }
 
-    // English comment.
 
-    /**
-     * English comment.
-     */
     setupMouseEvents() {
         if (!this.scene || !this.scene.renderer || !this.scene.renderer.domElement) {
             console.warn(
@@ -1719,20 +1413,15 @@ export class MigrationLine extends Component {
 
         const domElement = this.scene.renderer.domElement;
 
-        // English comment.
         this.onMouseClick = this.handleMouseClick.bind(this);
         this.onMouseMove = this.handleMouseMove.bind(this);
 
-        // English comment.
         domElement.addEventListener('click', this.onMouseClick);
         domElement.addEventListener('mousemove', this.onMouseMove);
 
         console.log('[MigrationLine] Mouse events setup successfully');
     }
 
-    /**
-     * English comment.
-     */
     removeMouseEvents() {
         if (!this.scene || !this.scene.renderer || !this.scene.renderer.domElement) {
             return;
@@ -1740,7 +1429,6 @@ export class MigrationLine extends Component {
 
         const domElement = this.scene.renderer.domElement;
 
-        // English comment.
         if (this.onMouseClick) {
             domElement.removeEventListener('click', this.onMouseClick);
         }
@@ -1749,9 +1437,6 @@ export class MigrationLine extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     handleMouseClick(event) {
         console.log('[MigrationLine] handleMouseClick called', {
             clientX: event.clientX,
@@ -1768,7 +1453,6 @@ export class MigrationLine extends Component {
 
             console.log('[MigrationLine] Emitting markerClick event:', { markerId, markerData });
 
-            // English comment.
             this.emit('markerClick', {
                 markerId,
                 markerData,
@@ -1779,19 +1463,13 @@ export class MigrationLine extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     handleMouseMove(event) {
         const intersectedMarker = this.getIntersectedMarker(event);
 
-        // English comment.
         if (intersectedMarker) {
             const markerId = intersectedMarker.userData.markerId;
 
-            // English comment.
             if (!this.hoveredMarker || this.hoveredMarker.userData.markerId !== markerId) {
-                // English comment.
                 if (this.hoveredMarker) {
                     const prevMarkerId = this.hoveredMarker.userData.markerId;
                     const prevMarkerData = this.markerDataMap.get(prevMarkerId);
@@ -1803,7 +1481,6 @@ export class MigrationLine extends Component {
                     });
                 }
 
-                // English comment.
                 const markerData = this.markerDataMap.get(markerId);
                 this.emit('markerMouseEnter', {
                     markerId,
@@ -1814,7 +1491,6 @@ export class MigrationLine extends Component {
                 this.hoveredMarker = intersectedMarker;
             }
         } else {
-            // English comment.
             if (this.hoveredMarker) {
                 const markerId = this.hoveredMarker.userData.markerId;
                 const markerData = this.markerDataMap.get(markerId);
@@ -1830,9 +1506,6 @@ export class MigrationLine extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     getIntersectedMarker(event) {
         if (!this.scene || !this.scene.camera || !this.scene.renderer) {
             console.warn('[MigrationLine] getIntersectedMarker: scene/camera/renderer not ready');
@@ -1842,7 +1515,6 @@ export class MigrationLine extends Component {
         const domElement = this.scene.renderer.domElement;
         const rect = domElement.getBoundingClientRect();
 
-        // English comment.
         this.mouse.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
         this.mouse.y = -((event.clientY - rect.top) / rect.height) * 2 + 1;
 
@@ -1852,10 +1524,8 @@ export class MigrationLine extends Component {
             rect: { left: rect.left, top: rect.top, width: rect.width, height: rect.height }
         });
 
-        // English comment.
         this.raycaster.setFromCamera(this.mouse, this.scene.camera);
 
-        // English comment.
         const markerObjects = Array.from(this.imageMarkers.values());
 
         console.log('[MigrationLine] Marker objects count:', markerObjects.length);
@@ -1866,7 +1536,6 @@ export class MigrationLine extends Component {
             return null;
         }
 
-        // English comment.
         const intersects = this.raycaster.intersectObjects(markerObjects, false);
 
         console.log('[MigrationLine] Intersects:', intersects);
@@ -1879,42 +1548,28 @@ export class MigrationLine extends Component {
         return null;
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
-        // English comment.
         this.removeMouseEvents();
 
-        // English comment.
         this.clearLines();
 
-        // English comment.
         this.clearAreas();
 
-        // English comment.
         this.clearMarkers();
 
-        // English comment.
         this.textureCache.forEach((texture) => {
             texture.dispose();
         });
         this.textureCache.clear();
     }
 
-    /**
-     * English comment.
-     */
     async updateConfig(newConfig) {
-        // English comment.
         if (newConfig.globalConfig) {
             Object.assign(this.globalConfig, newConfig.globalConfig);
 
-            // English comment.
             if (!newConfig.lines) {
                 const gc = newConfig.globalConfig;
 
-                // English comment.
                 const needsRebuild = gc.texture !== undefined
                     || gc.alphaTexture !== undefined
                     || gc.textureRepeat !== undefined
@@ -1932,7 +1587,6 @@ export class MigrationLine extends Component {
                     this.migrationLines.forEach((lineObject) => {
                         if (!lineObject.material.isMeshLineMaterial) return;
                         const mat = lineObject.material;
-                        // English comment.
                         Object.assign(lineObject.userData.config, gc);
                         if (gc.color !== undefined) mat.uniforms.color.value.set(gc.color);
                         if (gc.lineWidth !== undefined) mat.uniforms.lineWidth.value = gc.lineWidth;
@@ -1942,7 +1596,6 @@ export class MigrationLine extends Component {
                         }
                         if (gc.dashRatio !== undefined) mat.uniforms.dashRatio.value = gc.dashRatio;
                         if (gc.opacity !== undefined) mat.uniforms.opacity.value = gc.opacity;
-                        // English comment.
                         if (gc.depthTest !== undefined) mat.depthTest = gc.depthTest;
                         if (gc.sizeAttenuation !== undefined) {
                             mat.uniforms.sizeAttenuation.value = gc.sizeAttenuation ? 1 : 0;
@@ -1958,7 +1611,6 @@ export class MigrationLine extends Component {
             }
         }
 
-        // English comment.
         if (newConfig.lines) {
             this.clearLines();
             this.config.lines = newConfig.lines;
@@ -1967,7 +1619,6 @@ export class MigrationLine extends Component {
             }
         }
 
-        // English comment.
         if (newConfig.areas) {
             this.clearAreas();
             this.config.areas = newConfig.areas;
@@ -1976,7 +1627,6 @@ export class MigrationLine extends Component {
             }
         }
 
-        // English comment.
         if (newConfig.markers) {
             this.clearMarkers();
             this.config.markers = newConfig.markers;

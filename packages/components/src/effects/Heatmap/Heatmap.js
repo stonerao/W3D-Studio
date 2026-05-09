@@ -76,6 +76,9 @@ const getRemainingAxis = (uAxis, vAxis) => (
 
 const toColorHex = (color) => `#${color.getHexString()}`;
 
+/**
+ * Effects module component that renders heatmap overlays from spatial intensity data.
+ */
 export class Heatmap extends Component {
     static defaultConfig = {
         data: [

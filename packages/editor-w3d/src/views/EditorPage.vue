@@ -96,11 +96,28 @@ const handleReload = async () => {
     loadProjectData();
 };
 
+const getPreviewUrl = () => {
+    const route = router.resolve({ name: 'Preview' });
+    return new URL(route.href, window.location.origin).toString();
+};
+
 const handlePreview = async () => {
-    if (projectData.value) {
-        await persistProjectData(projectData.value, { silent: true });
+    const previewWindow = window.open('about:blank', '_blank');
+    if (!previewWindow) {
+        toast.warning('浏览器阻止了预览窗口，请允许弹窗后重试');
+        return;
     }
-    router.push('/preview');
+    previewWindow.opener = null;
+
+    try {
+        if (projectData.value) {
+            await persistProjectData(projectData.value, { silent: true });
+        }
+        previewWindow.location.href = getPreviewUrl();
+    } catch (error) {
+        previewWindow.close();
+        toast.error(error?.message || '打开预览失败');
+    }
 };
 
 const handleClose = async () => {
@@ -125,11 +142,13 @@ onMounted(() => {
     position: absolute;
     right: 16px;
     bottom: 16px;
-    padding: 6px 10px;
+    padding: 7px 11px;
+    border: 1px solid rgba(118, 144, 180, 0.16);
     border-radius: 8px;
-    background: rgba(15, 23, 42, 0.9);
+    background: rgba(8, 15, 26, 0.86);
     color: #e2e8f0;
     font-size: 12px;
     pointer-events: none;
+    backdrop-filter: blur(12px);
 }
 </style>

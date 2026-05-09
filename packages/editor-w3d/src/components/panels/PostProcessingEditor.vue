@@ -554,7 +554,7 @@ const savePipelineConfig = async () => {
 .pipeline-modal__list {
     display: flex;
     flex-direction: column;
-    gap: 10px;
+    gap: 8px;
 }
 
 .effect-row,
@@ -567,6 +567,15 @@ const savePipelineConfig = async () => {
     border-radius: 10px;
     border: 1px solid var(--color-border);
     background: var(--color-bg-secondary);
+}
+
+.effect-row {
+    grid-template-columns: 28px minmax(0, 1fr);
+    grid-template-rows: auto auto;
+    align-items: start;
+    gap: 8px 10px;
+    padding: 10px;
+    border-radius: 8px;
 }
 
 .effect-row--disabled {
@@ -587,12 +596,25 @@ const savePipelineConfig = async () => {
     font-weight: 600;
 }
 
+.effect-row__order {
+    grid-column: 1;
+    grid-row: 1 / span 2;
+    align-self: center;
+    width: 26px;
+    height: 26px;
+}
+
 .effect-row__main,
 .pipeline-row__main {
     display: flex;
     flex-direction: column;
     gap: 4px;
     min-width: 0;
+}
+
+.effect-row__main {
+    grid-column: 2;
+    grid-row: 1;
 }
 
 .effect-row__title,
@@ -612,6 +634,15 @@ const savePipelineConfig = async () => {
     color: var(--color-text-secondary);
 }
 
+.effect-row__desc {
+    display: -webkit-box;
+    overflow: hidden;
+    word-break: normal;
+    overflow-wrap: break-word;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
 .effect-row__toggle,
 .pipeline-row__toggle,
 .field-boolean {
@@ -623,10 +654,22 @@ const savePipelineConfig = async () => {
     white-space: nowrap;
 }
 
+.effect-row__toggle {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: start;
+}
+
 .effect-row__actions,
 .pipeline-row__actions {
     display: inline-flex;
     gap: 8px;
+}
+
+.effect-row__actions {
+    grid-column: 2;
+    grid-row: 2;
+    justify-self: end;
 }
 
 .pipeline-modal {

@@ -2,21 +2,15 @@ import { Component } from '@w3d/core';
 import * as THREE from 'three';
 
 /**
- * English comment.
+ * Effects module component that renders configurable particle emitters for atmosphere, flow, and visual feedback.
  */
 export class ParticleSystem extends Component {
-    /**
-     * English comment.
-     */
     static defaultConfig = {
-        // English comment.
-        // English comment.
         //        'stars' | 'fountain' | 'waterfall' | 'splash' |
         //        'campfire' | 'lava' | 'raindrops' | 'snowflakes' |
         //        'leaves' | 'cloud' | 'steam' | 'starfield' | 'nebula'
         preset: '',
 
-        // English comment.
         count: 1000,
         size: 1.0,
         color: '#ffffff',
@@ -24,46 +18,38 @@ export class ParticleSystem extends Component {
         lifetime: 5.0,
         speedCoefficient: 1.0,
 
-        // English comment.
-        colorEnd: '',          // English comment.
-        sizeEnd: 0,            // English comment.
-        opacityEnd: 0,         // English comment.
+        colorEnd: '',
+        sizeEnd: 0,
+        opacityEnd: 0,
 
-        // English comment.
         emitter: {
             shape: 'point',        // 'point' | 'sphere' | 'box' | 'cone'
             position: [0, 0, 0],
-            range: 1.0,            // English comment.
-            // English comment.
-            width: null,           // English comment.
-            height: null,          // English comment.
-            depth: null,           // English comment.
+            range: 1.0,
+            width: null,
+            height: null,
+            depth: null,
             rate: 100,
             autoStart: true,
-            // English comment.
-            direction: [0, 1, 0],  // English comment.
-            spread: 90             // English comment.
+            direction: [0, 1, 0],
+            spread: 90
         },
 
-        // English comment.
         physics: {
             gravity: -9.8,
             damping: 0.98,
             velocity: { min: 2, max: 8 },
-            rotationSpeed: { min: 0, max: 0 } // English comment.
+            rotationSpeed: { min: 0, max: 0 }
         },
 
-        // English comment.
         blending: 'additive',  // 'normal' | 'additive' | 'multiply' | 'screen'
         transparent: true,
         sizeAttenuation: true,
 
-        // English comment.
         texture: null,
         textureRepeat: [1, 1],
         textureOffset: [0, 0],
 
-        // English comment.
         useCustomShader: false,
         shaderType: 'glow',    // 'glow' | 'sparkle' | 'fire' | 'smoke'
         depthWrite: false,
@@ -76,60 +62,43 @@ export class ParticleSystem extends Component {
         }
     };
 
-    /**
-     * English comment.
-     */
     onMounted() {
-        // English comment.
         this.textureLoader = new THREE.TextureLoader();
         this.loadedTexture = null;
         this.isTextureLoading = false;
 
-        // English comment.
         this._presetChangeTimer = null;
         this._lastPresetChangeTime = 0;
-        this._presetChangeDebounceDelay = 100; // English comment.
+        this._presetChangeDebounceDelay = 100;
 
-        // English comment.
         this.initializeParticleSystem();
 
-        // English comment.
         this.clock = new THREE.Clock();
 
-        // English comment.
         this.isEmitting = this.config.emitter.autoStart;
 
-        // English comment.
         this.stats = {
             activeParticles: 0,
             totalEmitted: 0
         };
 
-        // English comment.
         if (this.config.texture) {
             this.loadTexture(this.config.texture);
         }
     }
 
-    /**
-     * English comment.
-     */
     initializeParticleSystem() {
         const count = this.config.count;
 
-        // English comment.
         this.particles = [];
         this.emissionAccumulator = 0;
 
-        // English comment.
         this.geometry = new THREE.BufferGeometry();
 
-        // English comment.
         const positions = new Float32Array(count * 3);
         const colors = new Float32Array(count * 3);
         const sizes = new Float32Array(count);
 
-        // English comment.
         for (let i = 0; i < count; i++) {
             const particle = {
                 position: new THREE.Vector3(),
@@ -141,7 +110,6 @@ export class ParticleSystem extends Component {
             };
             this.particles.push(particle);
 
-            // English comment.
             const i3 = i * 3;
             positions[i3] = 0;
             positions[i3 + 1] = 0;
@@ -155,24 +123,18 @@ export class ParticleSystem extends Component {
             sizes[i] = particle.size;
         }
 
-        // English comment.
         this.geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
         this.geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
         this.geometry.setAttribute('size', new THREE.BufferAttribute(sizes, 1));
 
-        // English comment.
         this.createMaterial();
 
-        // English comment.
         this.particlePoints = new THREE.Points(this.geometry, this.material);
         this.componentScene.add(this.particlePoints);
 
         console.log(this.componentScene);
     }
 
-    /**
-     * English comment.
-     */
     getBlendingMode(mode) {
         switch (mode) {
             case 'additive':
@@ -186,9 +148,6 @@ export class ParticleSystem extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     createMaterial() {
         if (this.config.useCustomShader) {
             this.material = this.createShaderMaterial();
@@ -197,9 +156,6 @@ export class ParticleSystem extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     createPointsMaterial() {
         const materialConfig = {
             size: this.config.size,
@@ -212,7 +168,6 @@ export class ParticleSystem extends Component {
             depthWrite: this.config.depthWrite
         };
 
-        // English comment.
         if (this.loadedTexture) {
             materialConfig.map = this.loadedTexture;
             materialConfig.alphaMap = this.loadedTexture;
@@ -221,13 +176,9 @@ export class ParticleSystem extends Component {
         return new THREE.PointsMaterial(materialConfig);
     }
 
-    /**
-     * English comment.
-     */
     createShaderMaterial() {
         const shaderConfig = this.getShaderConfig(this.config.shaderType);
 
-        // English comment.
         const uniforms = {
             uTime: { value: this.config.shaderUniforms.uTime },
             uTexture: { value: this.loadedTexture },
@@ -248,9 +199,6 @@ export class ParticleSystem extends Component {
         });
     }
 
-    /**
-     * English comment.
-     */
     getShaderConfig(shaderType) {
         const configs = {
             glow: {
@@ -286,9 +234,6 @@ export class ParticleSystem extends Component {
         return configs[shaderType] || configs.glow;
     }
 
-    /**
-     * English comment.
-     */
     loadTexture(texturePath) {
         if (this.isTextureLoading) return;
 
@@ -297,7 +242,6 @@ export class ParticleSystem extends Component {
 
         this.textureLoader.load(
             texturePath,
-            // English comment.
             (texture) => {
                 this.loadedTexture = texture;
                 this.loadedTexture.wrapS = THREE.RepeatWrapping;
@@ -305,20 +249,17 @@ export class ParticleSystem extends Component {
                 this.loadedTexture.repeat.set(...this.config.textureRepeat);
                 this.loadedTexture.offset.set(...this.config.textureOffset);
 
-                // English comment.
                 this.updateMaterialTexture();
 
                 this.isTextureLoading = false;
                 this.emit('textureLoaded', { texture: this.loadedTexture, path: texturePath });
             },
-            // English comment.
             (progress) => {
                 this.emit('textureLoadProgress', {
                     progress: (progress.loaded / progress.total) * 100,
                     path: texturePath
                 });
             },
-            // English comment.
             (error) => {
                 console.error('纹理加载失败:', error);
                 this.isTextureLoading = false;
@@ -327,17 +268,12 @@ export class ParticleSystem extends Component {
         );
     }
 
-    /**
-     * English comment.
-     */
     updateMaterialTexture() {
         if (!this.material) return;
 
         if (this.material.isShaderMaterial) {
-            // English comment.
             this.material.uniforms.uTexture.value = this.loadedTexture;
         } else {
-            // English comment.
             this.material.map = this.loadedTexture;
             this.material.alphaMap = this.loadedTexture;
             this.material.needsUpdate = true;
@@ -361,11 +297,9 @@ export class ParticleSystem extends Component {
             void main() {
                 vColor = color;
 
-                // English comment.
                 float life = 1.0 - (uTime * 0.1);
                 vAlpha = smoothstep(0.0, 0.3, life) * smoothstep(1.0, 0.7, life);
 
-                // English comment.
                 vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
                 gl_PointSize = size * uSize * (300.0 / -mvPosition.z);
 
@@ -388,21 +322,17 @@ export class ParticleSystem extends Component {
             varying float vAlpha;
 
             void main() {
-                // English comment.
                 vec2 center = gl_PointCoord - vec2(0.5);
                 float dist = length(center);
 
-                // English comment.
                 float glow = 1.0 - smoothstep(0.0, 0.5, dist);
                 glow = pow(glow, 2.0) * uGlowIntensity;
 
-                // English comment.
                 vec4 texColor = vec4(1.0);
                 if (uTexture != null) {
                     texColor = texture2D(uTexture, gl_PointCoord);
                 }
 
-                // English comment.
                 vec3 finalColor = vColor * uColor * glow;
                 float finalAlpha = vAlpha * uOpacity * texColor.a * glow;
 
@@ -430,12 +360,10 @@ export class ParticleSystem extends Component {
             void main() {
                 vColor = color;
 
-                // English comment.
                 float sparkle = sin(uTime * uSparkleFrequency + position.x * 10.0) * 0.5 + 0.5;
                 vSparkle = sparkle;
                 vAlpha = sparkle;
 
-                // English comment.
                 vec4 mvPosition = modelViewMatrix * vec4(position, 1.0);
                 gl_PointSize = size * uSize * (300.0 / -mvPosition.z) * (0.5 + sparkle * 0.5);
 
@@ -461,12 +389,10 @@ export class ParticleSystem extends Component {
                 vec2 center = gl_PointCoord - vec2(0.5);
                 float dist = length(center);
 
-                // English comment.
                 float angle = atan(center.y, center.x);
                 float star = abs(sin(angle * 4.0)) * 0.5 + 0.5;
                 float sparkle = (1.0 - smoothstep(0.0, 0.4, dist)) * star * vSparkle;
 
-                // English comment.
                 vec4 texColor = vec4(1.0);
                 if (uTexture != null) {
                     texColor = texture2D(uTexture, gl_PointCoord);
@@ -496,7 +422,6 @@ export class ParticleSystem extends Component {
             varying float vAlpha;
             varying vec2 vUv;
 
-            // English comment.
             float noise(vec2 p) {
                 return fract(sin(dot(p, vec2(12.9898, 78.233))) * 43758.5453);
             }
@@ -505,13 +430,11 @@ export class ParticleSystem extends Component {
                 vColor = color;
                 vUv = uv;
 
-                // English comment.
                 vec3 pos = position;
                 float n = noise(pos.xz * uNoiseScale + uTime * 0.5);
                 pos.x += sin(uTime * 2.0 + n * 10.0) * 0.5;
                 pos.y += uTime * 2.0;
 
-                // English comment.
                 float heightFade = 1.0 - smoothstep(0.0, 10.0, pos.y);
                 vAlpha = heightFade;
 
@@ -540,15 +463,12 @@ export class ParticleSystem extends Component {
                 vec2 center = gl_PointCoord - vec2(0.5);
                 float dist = length(center);
 
-                // English comment.
                 float flame = 1.0 - smoothstep(0.0, 0.5, dist);
                 flame *= (sin(uTime * 5.0) * 0.1 + 0.9);
 
-                // English comment.
                 vec3 fireColor = mix(vec3(1.0, 0.0, 0.0), vec3(1.0, 1.0, 0.0), flame);
                 fireColor = mix(fireColor, vColor, 0.5);
 
-                // English comment.
                 vec4 texColor = vec4(1.0);
                 if (uTexture != null) {
                     texColor = texture2D(uTexture, gl_PointCoord);
@@ -584,7 +504,6 @@ export class ParticleSystem extends Component {
             void main() {
                 vColor = color;
 
-                // English comment.
                 vec3 pos = position;
                 float n1 = noise(pos.xz * uNoiseScale + uTime * 0.3);
                 float n2 = noise(pos.xz * uNoiseScale * 2.0 + uTime * 0.2);
@@ -593,7 +512,6 @@ export class ParticleSystem extends Component {
                 pos.z += (n2 - 0.5) * 2.0;
                 pos.y += uTime * 1.0;
 
-                // English comment.
                 float heightFade = 1.0 - smoothstep(0.0, 15.0, pos.y);
                 vAlpha = heightFade * 0.6;
 
@@ -621,15 +539,12 @@ export class ParticleSystem extends Component {
                 vec2 center = gl_PointCoord - vec2(0.5);
                 float dist = length(center);
 
-                // English comment.
                 float smoke = 1.0 - smoothstep(0.0, 0.5, dist);
                 smoke = pow(smoke, 0.5);
 
-                // English comment.
                 vec3 smokeColor = mix(vec3(0.3, 0.3, 0.3), vec3(0.8, 0.8, 0.8), smoke);
                 smokeColor = mix(smokeColor, vColor, 0.3);
 
-                // English comment.
                 vec4 texColor = vec4(1.0);
                 if (uTexture != null) {
                     texColor = texture2D(uTexture, gl_PointCoord);
@@ -643,32 +558,22 @@ export class ParticleSystem extends Component {
         `;
     }
 
-    /**
-     * English comment.
-     */
     onUpdate(deltaTime) {
         if (!this.particles || !this.geometry) return;
 
-        // English comment.
         if (this.material && this.material.isShaderMaterial) {
             this.material.uniforms.uTime.value += deltaTime;
         }
 
-        // English comment.
         this.updateParticles(deltaTime);
 
-        // English comment.
         if (this.isEmitting) {
             this.emitParticles(deltaTime);
         }
 
-        // English comment.
         this.updateGeometry();
     }
 
-    /**
-     * English comment.
-     */
     updateParticles(deltaTime) {
         let activeCount = 0;
         for (let i = 0; i < this.particles.length; i++) {
@@ -676,7 +581,6 @@ export class ParticleSystem extends Component {
 
             if (!particle.active) continue;
 
-            // English comment.
             particle.life += deltaTime;
 
             if (particle.life >= particle.maxLife) {
@@ -686,27 +590,19 @@ export class ParticleSystem extends Component {
 
             activeCount++;
 
-            // English comment.
             particle.position.add(particle.velocity.clone().multiplyScalar(deltaTime));
 
-            // English comment.
             particle.velocity.y += this.config.physics.gravity * deltaTime;
 
-            // English comment.
             particle.velocity.multiplyScalar(this.config.physics.damping);
         }
 
         this.stats.activeParticles = activeCount;
     }
 
-    /**
-     * English comment.
-     */
     emitParticles(deltaTime) {
-        // English comment.
         this.emissionAccumulator += this.config.emitter.rate * deltaTime;
 
-        // English comment.
         const emitCount = Math.floor(this.emissionAccumulator);
         this.emissionAccumulator -= emitCount;
 
@@ -715,34 +611,23 @@ export class ParticleSystem extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     emitSingleParticle() {
-        // English comment.
         const particle = this.particles.find((p) => !p.active);
         if (!particle) return;
 
-        // English comment.
         particle.active = true;
         particle.life = 0;
         particle.maxLife = this.config.lifetime * (0.8 + Math.random() * 0.4);
 
-        // English comment.
         this.setParticlePosition(particle);
 
-        // English comment.
         this.setParticleVelocity(particle);
 
-        // English comment.
         particle.size = this.config.size * (0.5 + Math.random() * 0.5);
 
         this.stats.totalEmitted++;
     }
 
-    /**
-     * English comment.
-     */
     setParticlePosition(particle) {
         const emitter = this.config.emitter;
         const pos = emitter.position;
@@ -788,9 +673,6 @@ export class ParticleSystem extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     setParticleVelocity(particle) {
         const velocity = this.config.physics.velocity;
         const speedCoefficient = this.config.speedCoefficient ?? 1.0;
@@ -800,19 +682,16 @@ export class ParticleSystem extends Component {
         const spreadDeg = this.config.emitter?.spread ?? 90;
         const spreadRad = Math.min(spreadDeg, 180) * Math.PI / 180;
 
-        // English comment.
         const baseDir = new THREE.Vector3(dir[0], dir[1], dir[2]);
         if (baseDir.lengthSq() < 1e-6) baseDir.set(0, 1, 0);
         baseDir.normalize();
 
-        // English comment.
         const up = Math.abs(baseDir.y) < 0.99
             ? new THREE.Vector3(0, 1, 0)
             : new THREE.Vector3(1, 0, 0);
         const perpX = new THREE.Vector3().crossVectors(baseDir, up).normalize();
         const perpZ = new THREE.Vector3().crossVectors(baseDir, perpX).normalize();
 
-        // English comment.
         const cosMax = Math.cos(spreadRad);
         const cosAngle = cosMax + Math.random() * (1 - cosMax);
         const sinAngle = Math.sqrt(1 - cosAngle * cosAngle);
@@ -825,7 +704,6 @@ export class ParticleSystem extends Component {
             .normalize()
             .multiplyScalar(speed);
 
-        // English comment.
         const rot = this.config.physics?.rotationSpeed;
         if (rot && (rot.min !== 0 || rot.max !== 0)) {
             particle.rotationSpeed = rot.min + Math.random() * (rot.max - rot.min);
@@ -834,9 +712,6 @@ export class ParticleSystem extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     updateGeometry() {
         const positions = this.geometry.attributes.position.array;
         const colors = this.geometry.attributes.color.array;
@@ -847,25 +722,21 @@ export class ParticleSystem extends Component {
             const i3 = i * 3;
 
             if (particle.active) {
-                // English comment.
                 positions[i3] = particle.position.x;
                 positions[i3 + 1] = particle.position.y;
                 positions[i3 + 2] = particle.position.z;
 
                 const lifeRatio = particle.life / particle.maxLife;
 
-                // English comment.
                 const sizeStart = particle.size;
                 const sizeEnd   = this.config.sizeEnd ?? 0;
                 const curSize   = sizeStart + (sizeEnd - sizeStart) * lifeRatio;
                 sizes[i] = Math.max(0, curSize);
 
-                // English comment.
                 const opStart = this.config.opacity   ?? 0.8;
                 const opEnd   = this.config.opacityEnd ?? 0;
                 const alpha   = opStart + (opEnd - opStart) * lifeRatio;
 
-                // English comment.
                 const startColor = new THREE.Color(this.config.color);
                 const endColor   = this.config.colorEnd
                     ? new THREE.Color(this.config.colorEnd)
@@ -878,7 +749,6 @@ export class ParticleSystem extends Component {
                 colors[i3 + 1] = lerpedColor.g * alpha;
                 colors[i3 + 2] = lerpedColor.b * alpha;
             } else {
-                // English comment.
                 sizes[i] = 0;
                 colors[i3] = 0;
                 colors[i3 + 1] = 0;
@@ -886,36 +756,23 @@ export class ParticleSystem extends Component {
             }
         }
 
-        // English comment.
         this.geometry.attributes.position.needsUpdate = true;
         this.geometry.attributes.color.needsUpdate = true;
         this.geometry.attributes.size.needsUpdate = true;
     }
-    /**
-     * English comment.
-     */
     startEmission() {
         this.isEmitting = true;
     }
 
-    /**
-     * English comment.
-     */
     stopEmission() {
         this.isEmitting = false;
     }
 
-    /**
-     * English comment.
-     */
     toggleEmission() {
         this.isEmitting = !this.isEmitting;
         return this.isEmitting;
     }
 
-    /**
-     * English comment.
-     */
     clearParticles() {
         if (!this.particles) return;
 
@@ -928,7 +785,6 @@ export class ParticleSystem extends Component {
         this.stats.activeParticles = 0;
         this.stats.totalEmitted = 0;
 
-        // English comment.
         if (this.geometry) {
             const positions = this.geometry.attributes.position.array;
             const colors = this.geometry.attributes.color.array;
@@ -947,9 +803,6 @@ export class ParticleSystem extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     reset() {
         this.clearParticles();
         this.stats.totalEmitted = 0;
@@ -957,11 +810,7 @@ export class ParticleSystem extends Component {
         this.isEmitting = this.config.emitter.autoStart;
     }
 
-    /**
-     * English comment.
-     */
     updateConfig(newConfig) {
-        // English comment.
         if (
             newConfig.preset !== undefined &&
             newConfig.preset !== '' &&
@@ -975,12 +824,9 @@ export class ParticleSystem extends Component {
             return;
         }
 
-        // English comment.
         const oldCount   = this.config.count;
         const oldTexture = this.config.texture;
 
-        // English comment.
-        // English comment.
         const flattenKeys = (obj, prefix = '') => {
             const keys = {};
             for (const k in obj) {
@@ -995,25 +841,20 @@ export class ParticleSystem extends Component {
         };
         const flat = flattenKeys(newConfig);
 
-        // English comment.
         this.config = this.mergeConfig(this.config, newConfig);
 
-        // English comment.
         const newCount = this.config.count;
         if (newCount !== oldCount && newCount > 0) {
             const wasEmitting = this.isEmitting;
             this.isEmitting = false;
 
-            // English comment.
             if (this.particlePoints) {
                 this.componentScene.remove(this.particlePoints);
                 this.particlePoints = null;
             }
-            // English comment.
             if (this.geometry) { this.geometry.dispose(); this.geometry = null; }
             if (this.material) { this.material.dispose(); this.material = null; }
 
-            // English comment.
             this.particles = [];
             this.emissionAccumulator = 0;
             this.stats.activeParticles = 0;
@@ -1021,10 +862,9 @@ export class ParticleSystem extends Component {
 
             this.initializeParticleSystem();
             this.isEmitting = wasEmitting;
-            return; // English comment.
+            return;
         }
 
-        // English comment.
         const materialDirtyKeys = [
             'useCustomShader', 'shaderType', 'blending',
             'color', 'opacity', 'size',
@@ -1042,7 +882,6 @@ export class ParticleSystem extends Component {
                 this.particlePoints.material = this.material;
             }
         } else if (this.material) {
-            // English comment.
             if (this.material.isShaderMaterial) {
                 if ('color' in flat)   this.material.uniforms.uColor?.value?.setStyle?.(this.config.color);
                 if ('opacity' in flat) this.material.uniforms.uOpacity && (this.material.uniforms.uOpacity.value = this.config.opacity);
@@ -1060,7 +899,6 @@ export class ParticleSystem extends Component {
             this.material.needsUpdate = true;
         }
 
-        // English comment.
         if ('texture' in flat) {
             const nextTexture = this.config.texture;
             if (nextTexture && nextTexture !== oldTexture) {
@@ -1072,19 +910,13 @@ export class ParticleSystem extends Component {
             }
         }
 
-        // English comment.
         if (this.loadedTexture) {
             if (newConfig.textureRepeat) this.loadedTexture.repeat.set(...this.config.textureRepeat);
             if (newConfig.textureOffset) this.loadedTexture.offset.set(...this.config.textureOffset);
         }
 
-        // English comment.
-        // English comment.
     }
 
-    /**
-     * English comment.
-     */
     getStats() {
         return {
             ...this.stats,
@@ -1093,20 +925,14 @@ export class ParticleSystem extends Component {
         };
     }
 
-    /**
-     * English comment.
-     */
     setPreset(presetName) {
-        // English comment.
         if (this._presetChangeTimer) {
             clearTimeout(this._presetChangeTimer);
             this._presetChangeTimer = null;
         }
 
-        // English comment.
         const now = Date.now();
         if (now - this._lastPresetChangeTime < this._presetChangeDebounceDelay) {
-            // English comment.
             this._presetChangeTimer = setTimeout(() => {
                 this.setPreset(presetName);
             }, this._presetChangeDebounceDelay);
@@ -1205,7 +1031,6 @@ export class ParticleSystem extends Component {
                 },
                 blending: 'additive'
             },
-            // English comment.
             fountain: {
                 color: '#00bfff',
                 size: 0.8,
@@ -1258,7 +1083,6 @@ export class ParticleSystem extends Component {
                 blending: 'normal',
                 opacity: 0.8
             },
-            // English comment.
             campfire: {
                 color: '#ff6347',
                 size: 1.2,
@@ -1294,7 +1118,6 @@ export class ParticleSystem extends Component {
                 blending: 'additive',
                 opacity: 1.0
             },
-            // English comment.
             raindrops: {
                 color: '#4682b4',
                 size: 0.4,
@@ -1349,7 +1172,6 @@ export class ParticleSystem extends Component {
                 blending: 'normal',
                 opacity: 0.85
             },
-            // English comment.
             cloud: {
                 color: '#d3d3d3',
                 size: 3.0,
@@ -1386,7 +1208,6 @@ export class ParticleSystem extends Component {
                 blending: 'normal',
                 opacity: 0.6
             },
-            // English comment.
             starfield: {
                 color: '#fffacd',
                 size: 1.5,
@@ -1427,52 +1248,41 @@ export class ParticleSystem extends Component {
 
         const preset = presets[presetName];
         if (preset) {
-            // English comment.
             this.isEmitting = false;
 
-            // English comment.
             this.clearParticles();
 
-            // English comment.
             this.emissionAccumulator = 0;
             this.stats.activeParticles = 0;
             this.stats.totalEmitted = 0;
 
-            // English comment.
             if (this.clock) {
                 this.clock = new THREE.Clock();
             }
 
-            // English comment.
             if (this.material && this.material.isShaderMaterial && this.material.uniforms.uTime) {
                 this.material.uniforms.uTime.value = 0;
             }
 
-            // English comment.
             if (this.material) {
                 this.material.dispose();
                 this.material = null;
             }
 
-            // English comment.
             this.updateConfig(preset);
 
-            // English comment.
             if (this.particlePoints && this.material) {
                 this.particlePoints.material = this.material;
             }
 
-            // English comment.
             if (this.geometry) {
                 this.geometry.attributes.position.needsUpdate = true;
                 this.geometry.attributes.color.needsUpdate = true;
                 this.geometry.attributes.size.needsUpdate = true;
             }
 
-            // English comment.
             this.isEmitting = this.config.emitter.autoStart !== false;
 
-            // English comment.
             if (presetName === 'explosion') {
                 this.isEmitting = true;
                 setTimeout(() => {
@@ -1484,9 +1294,6 @@ export class ParticleSystem extends Component {
         }
     }
 
-    /**
-     * English comment.
-     */
     mergeConfig(target, source) {
         const result = { ...target };
 
@@ -1501,37 +1308,28 @@ export class ParticleSystem extends Component {
         return result;
     }
 
-    /**
-     * English comment.
-     */
     onDispose() {
-        // English comment.
         if (this._presetChangeTimer) {
             clearTimeout(this._presetChangeTimer);
             this._presetChangeTimer = null;
         }
 
-        // English comment.
         if (this.geometry) {
             this.geometry.dispose();
         }
 
-        // English comment.
         if (this.material) {
             this.material.dispose();
         }
 
-        // English comment.
         if (this.particlePoints) {
             this.componentScene.remove(this.particlePoints);
         }
 
-        // English comment.
         if (this.loadedTexture) {
             this.loadedTexture.dispose();
         }
 
-        // English comment.
         this.particles = null;
         this.geometry = null;
         this.material = null;

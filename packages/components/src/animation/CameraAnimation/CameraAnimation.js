@@ -2,7 +2,7 @@ import { Component } from '@w3d/core';
 import { Tween } from '@w3d/core';
 
 /**
- * English comment.
+ * Animation module component that interpolates the active camera to a configured position and emits progress events.
  */
 export class CameraAnimation extends Component {
     static defaultConfig = {

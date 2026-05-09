@@ -3,7 +3,7 @@ import { FlyControls as ThreeFlyControls } from 'three/examples/jsm/controls/Fly
 import { getCameraModeManager } from '../shared/CameraModeManager.js';
 
 /**
- * English comment.
+ * Controls module component that provides free-flight camera navigation for large 3D scenes.
  */
 export class FlyControls extends Component {
     static defaultConfig = {

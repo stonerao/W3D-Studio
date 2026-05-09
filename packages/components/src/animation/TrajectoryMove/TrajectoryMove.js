@@ -3,7 +3,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader.js';
 
 /**
- * English comment.
+ * Animation module component that replays trajectory data to drive object movement through the scene.
  */
 export class TrajectoryMove extends Component {
     static defaultConfig = {
@@ -11,7 +11,6 @@ export class TrajectoryMove extends Component {
         modelUrl: '',
         imageUrl: '',
 
-        // English comment.
         fitEnabled: true,
         fitSize: 1,
         modelScale: 1,
@@ -21,11 +20,9 @@ export class TrajectoryMove extends Component {
         loop: true,
         autoStart: true,
 
-        // English comment.
         position: [0, 0, 0],
         rotation: [0, 0, 0],
 
-        // English comment.
         scale: [1, 1, 1]
     };
 
@@ -192,7 +189,6 @@ export class TrajectoryMove extends Component {
     applyModelScaleAndFit() {
         if (!this.assetRoot) return;
 
-        // English comment.
         if (this.config.fitEnabled !== false) {
             const target = Number(this.config.fitSize);
             const targetSize = Number.isFinite(target) && target > 0 ? target : 1;
@@ -207,7 +203,6 @@ export class TrajectoryMove extends Component {
             }
         }
 
-        // English comment.
         const modelScale = Number(this.config.modelScale);
         const s = Number.isFinite(modelScale) && modelScale > 0 ? modelScale : 1;
         this.assetRoot.scale.multiplyScalar(s);
@@ -220,7 +215,6 @@ export class TrajectoryMove extends Component {
             this.moverGroup.remove(this.assetRoot);
         } catch {}
 
-        // English comment.
         const disposeMaterial = (mat) => {
             if (!mat) return;
             try {
@@ -270,7 +264,6 @@ export class TrajectoryMove extends Component {
         const point = this.curve.getPointAt(t, this._tmpVec3A);
         const tangent = this.curve.getTangentAt(t, this._tmpVec3B).normalize();
 
-        // English comment.
         const offset = this.config.position;
         if (Array.isArray(offset) && offset.length >= 3) {
             point.x += Number(offset[0]) || 0;
@@ -280,13 +273,10 @@ export class TrajectoryMove extends Component {
 
         this.moverGroup.position.copy(point);
 
-        // English comment.
         if (tangent.lengthSq() > 1e-8) {
-            // English comment.
             const lookTarget = point.clone().add(tangent);
             this.moverGroup.lookAt(lookTarget);
 
-            // English comment.
             const rot = this.config.rotation;
             if (Array.isArray(rot) && rot.length >= 3) {
                 this._tmpEuler.set(Number(rot[0]) || 0, Number(rot[1]) || 0, Number(rot[2]) || 0);
@@ -336,10 +326,8 @@ export class TrajectoryMove extends Component {
         this.stop();
         Object.assign(this.config, newConfig);
 
-        // English comment.
         this.onDispose();
 
-        // English comment.
         this.moverGroup = new THREE.Group();
         this.componentScene.add(this.moverGroup);
 

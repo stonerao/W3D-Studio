@@ -1,6 +1,9 @@
 import { Component, Tween } from '@w3d/core';
 import * as THREE from 'three';
 
+/**
+ * Animation module component that switches the camera directly to a target viewpoint or focus position.
+ */
 export class CameraJump extends Component {
     static defaultConfig = {
         targetType: 'mesh', // mesh | label | point

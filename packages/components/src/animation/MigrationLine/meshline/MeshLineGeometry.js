@@ -1,6 +1,3 @@
-/**
- * English comment.
- */
 
 import * as THREE from 'three';
 
@@ -24,11 +21,9 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
 
         this.widthCallback = null;
 
-        // English comment.
         this.matrixWorld = new THREE.Matrix4();
     }
 
-    // English comment.
 
     get geometry() {
         return this;
@@ -48,23 +43,16 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
         this.setPoints(value, this.widthCallback);
     }
 
-    // English comment.
 
     setMatrixWorld(matrixWorld) {
         this.matrixWorld = matrixWorld;
     }
 
-    /**
-     * English comment.
-     */
     setGeometry(g, c) {
         this._geometry = g;
         this.setPoints(g.getAttribute('position').array, c);
     }
 
-    /**
-     * English comment.
-     */
     setPoints(points, wcb) {
         if (!(points instanceof Float32Array) && !(points instanceof Array)) {
             console.error('MeshLineGeometry: points must be Float32Array or Array');
@@ -113,9 +101,6 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
         return [this.positions[aa], this.positions[aa + 1], this.positions[aa + 2]];
     }
 
-    /**
-     * English comment.
-     */
     process() {
         const l = this.positions.length / 6;
 
@@ -128,7 +113,6 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
 
         let w, v;
 
-        // English comment.
         if (this.compareV3(0, l - 1)) {
             v = this.copyV3(l - 2);
         } else {
@@ -160,7 +144,6 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
                 this.previous.push(v[0], v[1], v[2]);
                 this.previous.push(v[0], v[1], v[2]);
 
-                // English comment.
                 const n = j * 2;
                 this.indices_array.push(n, n + 1, n + 2);
                 this.indices_array.push(n + 2, n + 1, n + 3);
@@ -173,7 +156,6 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
             }
         }
 
-        // English comment.
         if (this.compareV3(l - 1, 0)) {
             v = this.copyV3(1);
         } else {
@@ -182,7 +164,6 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
         this.next.push(v[0], v[1], v[2]);
         this.next.push(v[0], v[1], v[2]);
 
-        // English comment.
         if (
             !this._attributes ||
             this._attributes.position.count !== this.positions.length
@@ -228,9 +209,6 @@ export class MeshLineGeometry extends THREE.BufferGeometry {
         this.computeBoundingBox();
     }
 
-    /**
-     * English comment.
-     */
     advance(position) {
         const positions = this._attributes.position.array;
         const previous = this._attributes.previous.array;

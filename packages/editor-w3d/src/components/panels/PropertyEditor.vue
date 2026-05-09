@@ -93,6 +93,7 @@
                         :is-multi-path-animation="isMultiPathAnimation"
                         :is-area-block="isAreaBlock"
                         :is-heatmap="isHeatmap"
+                        :is-post-processing="isPostProcessing"
                         :model-loader-component-options="modelLoaderComponentOptions"
                         :label3d-component-options="label3DComponentOptions"
                         :camera-jump-mesh-options="cameraJumpMeshOptions"
@@ -4288,6 +4289,7 @@ const handleAssetSelect = (asset) => {
     height: 100%;
     overflow-y: auto;
     overflow-x: hidden;
+    padding-right: 2px;
 }
 
 .empty-state {
@@ -4318,7 +4320,7 @@ const handleAssetSelect = (asset) => {
     padding: 0;
     display: flex;
     flex-direction: column;
-    gap: var(--space-3);
+    gap: 12px;
 }
 
 .camera-views-editor {
@@ -4437,10 +4439,11 @@ const handleAssetSelect = (asset) => {
     flex-direction: column;
     align-items: stretch;
     gap: var(--space-2);
-    padding: 10px;
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
-    background: rgba(15, 23, 42, 0.36);
+    padding: 12px;
+    border: 1px solid rgba(118, 144, 180, 0.15);
+    border-radius: 8px;
+    background:
+        linear-gradient(180deg, rgba(16, 28, 45, 0.56) 0%, rgba(8, 15, 26, 0.56) 100%);
 }
 
 .common-visibility-header {
@@ -4490,10 +4493,10 @@ const handleAssetSelect = (asset) => {
     grid-template-columns: minmax(0, 1fr) auto;
     align-items: center;
     gap: var(--space-2);
-    padding: 7px 8px;
+    padding: 8px 9px;
     border: 1px solid rgba(148, 163, 184, 0.13);
-    border-radius: var(--border-radius-sm);
-    background: rgba(10, 15, 24, 0.42);
+    border-radius: 7px;
+    background: rgba(8, 15, 26, 0.58);
 }
 
 .common-visibility-switch {
@@ -4506,8 +4509,41 @@ const handleAssetSelect = (asset) => {
 }
 
 .common-visibility-switch input[type="checkbox"] {
-    width: 14px;
-    height: 14px;
+    position: relative;
+    width: 30px;
+    height: 16px;
+    flex: 0 0 30px;
+    border: 1px solid rgba(118, 144, 180, 0.2);
+    border-radius: 999px;
+    background: rgba(84, 100, 122, 0.32);
+    appearance: none;
+    cursor: pointer;
+    transition: all var(--transition-fast);
+}
+
+.common-visibility-switch input[type="checkbox"]::after {
+    content: '';
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    width: 10px;
+    height: 10px;
+    border-radius: 999px;
+    background: #cbd5e1;
+    transition:
+        transform var(--transition-fast),
+        background-color var(--transition-fast);
+}
+
+.common-visibility-switch input[type="checkbox"]:checked {
+    border-color: rgba(96, 165, 250, 0.74);
+    background: var(--color-primary);
+    box-shadow: 0 0 10px rgba(47, 125, 244, 0.35);
+}
+
+.common-visibility-switch input[type="checkbox"]:checked::after {
+    transform: translateX(14px);
+    background: #ffffff;
 }
 
 .common-visibility-switch-label {
@@ -4546,7 +4582,7 @@ const handleAssetSelect = (asset) => {
     align-items: center;
     justify-content: center;
     border: 1px solid transparent;
-    border-radius: var(--border-radius-sm);
+    border-radius: 6px;
     background: transparent;
     color: var(--color-text-tertiary);
     cursor: pointer;
@@ -4607,10 +4643,10 @@ const handleAssetSelect = (asset) => {
 }
 
 .lowcode-summary-card {
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
+    border: 1px solid rgba(118, 144, 180, 0.15);
+    border-radius: 8px;
     padding: var(--space-3);
-    background: var(--color-bg-tertiary);
+    background: rgba(13, 24, 39, 0.62);
 }
 
 .lowcode-summary-card__header {
@@ -4643,7 +4679,7 @@ const handleAssetSelect = (asset) => {
 .lowcode-summary-card__metric {
     min-width: 0;
     border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-sm);
+    border-radius: 7px;
     padding: var(--space-2);
     background: color-mix(in srgb, var(--color-bg-secondary) 86%, transparent);
 }

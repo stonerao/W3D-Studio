@@ -22,7 +22,15 @@
         <div class="toolbar-divider"></div>
 
         <div class="toolbar-action-group">
+            <button
+                class="toolbar-btn toolbar-btn--icon toolbar-btn--play"
+                :title="t('toolbar.previewProject')"
+                @click="handlePreview"
+            >
+                <span class="toolbar-symbol">▶</span>
+            </button>
             <button class="toolbar-btn toolbar-btn--primary" :title="t('toolbar.saveProjectTitle')" @click="handleSave">
+                <i class="sico icon-baocun toolbar-icon" aria-hidden="true"></i>
                 <span>{{ t('common.save') }}</span>
             </button>
             <button class="toolbar-btn" :title="t('toolbar.closeEditorTitle')" @click="handleClose">
@@ -30,19 +38,18 @@
             </button>
         </div>
 
-        <div class="toolbar-project-status">
-            <span class="status-dot" :class="{ 'status-dot--dirty': projectStore.hasUnsavedChanges }"></span>
-            <span class="project-name">{{ displayProjectName }}</span>
-            <span class="project-save-meta">
-                {{ projectSaveMeta }}
-            </span>
-        </div>
+        <div class="toolbar-spacer"></div>
 
         <div class="toolbar-zone toolbar-zone--tools">
+            <div
+                class="toolbar-save-status"
+                :title="projectSaveMeta"
+                :aria-label="projectSaveMeta"
+            >
+                <span class="status-dot" :class="{ 'status-dot--dirty': projectStore.hasUnsavedChanges }"></span>
+            </div>
+
             <div class="toolbar-language">
-                <label class="toolbar-language__label" for="w3d-locale-select">
-                    {{ t('common.language') }}
-                </label>
                 <select
                     id="w3d-locale-select"
                     class="toolbar-language__select"
@@ -65,7 +72,8 @@
                 :title="t('toolbar.cameraManager')"
                 @click="openCameraManager"
             >
-                <span>{{ t('toolbar.camera') }}</span>
+                <i class="sico icon-qianshitu toolbar-icon" aria-hidden="true"></i>
+                <span class="toolbar-compact-label">{{ t('toolbar.camera') }}</span>
             </button>
 
             <button
@@ -73,7 +81,8 @@
                 :title="t('toolbar.buildingManager')"
                 @click="openBuildingManager"
             >
-                <span>{{ t('toolbar.points') }}</span>
+                <i class="sico icon-shiqudian toolbar-icon" aria-hidden="true"></i>
+                <span class="toolbar-compact-label">{{ t('toolbar.points') }}</span>
             </button>
 
             <div class="toolbar-action-group toolbar-action-group--segmented" :aria-label="t('toolbar.panelDisplay')">
@@ -96,19 +105,11 @@
             </div>
 
             <button
-                class="toolbar-btn"
-                :title="t('toolbar.previewProject')"
-                @click="handlePreview"
-            >
-                <span>{{ t('toolbar.preview') }}</span>
-            </button>
-
-            <button
                 class="toolbar-btn toolbar-btn--icon"
                 :title="t('toolbar.projectSettings')"
                 @click="showSettingsModal = true"
             >
-                <span class="toolbar-symbol">⚙</span>
+                <i class="sico icon-shezhi toolbar-icon" aria-hidden="true"></i>
             </button>
         </div>
 
@@ -264,6 +265,7 @@ import { useSceneStore } from '../../stores/useSceneStore';
 import { useToast } from '../../composables/useToast';
 import { useConfirm } from '../../composables/useConfirm';
 import { useEditorI18n } from '../../i18n';
+import '../../styles/icon/iconfont.css';
 import Modal from '../ui/Modal.vue';
 import Input from '../ui/Input.vue';
 import Button from '../ui/Button.vue';
@@ -296,6 +298,7 @@ const { confirm: showConfirm } = useConfirm();
 const { locale, setLocale, t, formatDateTime } = useEditorI18n();
 
 const fileInputRef = ref(null);
+const localSavedAt = ref(null);
 
 // English comment.
 const interactiveEnabled = ref(false);
@@ -318,18 +321,11 @@ const languageOptions = computed(() => [
 
 const projectSaveMeta = computed(() => {
     if (projectStore.hasUnsavedChanges) return t('toolbar.unsavedChanges');
-    if (projectStore.lastSavedAt) {
-        return t('toolbar.savedAt', { time: formatTime(projectStore.lastSavedAt) });
+    const savedAt = localSavedAt.value || projectStore.lastSavedAt;
+    if (savedAt) {
+        return t('toolbar.savedAt', { time: formatTime(savedAt) });
     }
     return t('toolbar.waitingSave');
-});
-
-const displayProjectName = computed(() => {
-    const name = String(projectStore.projectName || '').trim();
-    if (!name || name === '未命名项目' || name === 'Untitled project') {
-        return t('project.untitledName');
-    }
-    return name;
 });
 
 const handleLocaleChange = (event) => {
@@ -377,6 +373,24 @@ watch(showCameraManagerModal, (visible) => {
         persistCameraViews({ markUnsaved: false });
     }
 });
+
+watch(
+    () => projectStore.hasUnsavedChanges,
+    (hasUnsavedChanges) => {
+        if (hasUnsavedChanges) {
+            localSavedAt.value = null;
+        }
+    }
+);
+
+watch(
+    () => projectStore.lastSavedAt,
+    (savedAt) => {
+        if (savedAt) {
+            localSavedAt.value = savedAt;
+        }
+    }
+);
 
 const normalizeVector3 = (value, fallback = { x: 0, y: 0, z: 0 }) => {
     if (Array.isArray(value) && value.length >= 3) {
@@ -651,9 +665,9 @@ const handleRedo = async () => {
 };
 
 // English comment.
-const handleSave = async () => {
+const handleSave = () => {
+    localSavedAt.value = new Date().toISOString();
     emit('save');
-    toast.success(t('toolbar.projectSaved'));
 };
 
 const handlePreview = () => {
@@ -760,12 +774,13 @@ const formatTime = (isoString) => {
 .workbench-toolbar {
     position: relative;
     z-index: 30;
-    gap: var(--space-3);
-    padding: 0 var(--space-3);
+    gap: 10px;
+    padding: 0 14px;
     background:
-        linear-gradient(180deg, rgba(14, 19, 29, 0.98) 0%, rgba(10, 14, 22, 0.98) 100%);
-    border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+        linear-gradient(180deg, rgba(8, 15, 26, 0.99) 0%, rgba(4, 10, 18, 0.99) 100%);
+    border-bottom: 1px solid rgba(118, 144, 180, 0.16);
     color: var(--color-text-primary);
+    box-shadow: inset 0 -1px 0 rgba(255, 255, 255, 0.02), 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
 .toolbar-zone,
@@ -777,40 +792,43 @@ const formatTime = (isoString) => {
 
 .toolbar-zone--tools {
     flex: 0 0 auto;
-    gap: var(--space-2);
+    gap: 8px;
     justify-content: flex-end;
 }
 
 .toolbar-action-group {
-    gap: var(--space-1);
+    gap: 8px;
 }
 
 .toolbar-action-group--segmented {
     gap: 0;
     padding: 2px;
-    border: 1px solid rgba(148, 163, 184, 0.14);
-    border-radius: var(--border-radius);
-    background: rgba(15, 23, 42, 0.56);
+    border: 1px solid rgba(118, 144, 180, 0.14);
+    border-radius: 8px;
+    background: rgba(8, 15, 26, 0.62);
 }
 
-.toolbar-project-status {
+.toolbar-spacer {
     flex: 1 1 auto;
     min-width: 160px;
+}
+
+.toolbar-save-status {
+    flex: 0 0 auto;
+    width: 28px;
+    height: 34px;
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: var(--space-2);
-    padding: 0 var(--space-4);
-    color: var(--color-text-secondary);
 }
 
 .status-dot {
-    width: 7px;
-    height: 7px;
-    flex: 0 0 7px;
+    width: 8px;
+    height: 8px;
+    flex: 0 0 8px;
     border-radius: var(--border-radius-full);
     background: var(--color-success);
-    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12);
+    box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.12), 0 0 14px rgba(16, 185, 129, 0.45);
 }
 
 .status-dot--dirty {
@@ -818,26 +836,11 @@ const formatTime = (isoString) => {
     box-shadow: 0 0 0 3px rgba(245, 158, 11, 0.14);
 }
 
-.project-name {
-    max-width: 280px;
-    overflow: hidden;
-    color: #e5edf7;
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-semibold);
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-
-.project-save-meta {
-    color: rgba(203, 213, 225, 0.55);
-    font-size: var(--font-size-xs);
-    white-space: nowrap;
-}
-
 .toolbar-divider {
-    height: 26px;
+    width: 1px;
+    height: 28px;
     margin: 0;
-    background-color: rgba(148, 163, 184, 0.16);
+    background-color: rgba(118, 144, 180, 0.16);
 }
 
 .toolbar-btn {
@@ -845,15 +848,16 @@ const formatTime = (isoString) => {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    min-width: 34px;
-    height: 32px;
-    padding: 0 var(--space-3);
-    border: 1px solid rgba(148, 163, 184, 0.14);
-    border-radius: var(--border-radius);
-    background-color: rgba(15, 23, 42, 0.4);
+    min-width: 38px;
+    height: 36px;
+    padding: 0 14px;
+    border: 1px solid rgba(118, 144, 180, 0.16);
+    border-radius: 7px;
+    background:
+        linear-gradient(180deg, rgba(18, 30, 48, 0.72) 0%, rgba(10, 18, 31, 0.72) 100%);
     color: rgba(226, 232, 240, 0.9);
-    font-size: var(--font-size-sm);
-    font-weight: var(--font-weight-medium);
+    font-size: 13px;
+    font-weight: var(--font-weight-semibold);
     line-height: 1;
     cursor: pointer;
     transition:
@@ -865,8 +869,9 @@ const formatTime = (isoString) => {
 }
 
 .toolbar-btn:hover:not(:disabled) {
-    border-color: rgba(125, 183, 255, 0.5);
-    background-color: rgba(30, 41, 59, 0.92);
+    border-color: rgba(125, 183, 255, 0.48);
+    background:
+        linear-gradient(180deg, rgba(25, 40, 62, 0.96) 0%, rgba(14, 25, 42, 0.96) 100%);
     color: #ffffff;
 }
 
@@ -881,18 +886,23 @@ const formatTime = (isoString) => {
 
 .toolbar-btn.active {
     border-color: rgba(96, 165, 250, 0.52);
-    background-color: rgba(37, 99, 235, 0.18);
+    background-color: rgba(47, 125, 244, 0.18);
     color: #bfdbfe;
 }
 
 .toolbar-btn--icon {
-    width: 34px;
+    width: 38px;
     padding: 0;
 }
 
+.toolbar-btn--play {
+    border-color: rgba(125, 183, 255, 0.2);
+    background: rgba(14, 24, 40, 0.86);
+}
+
 .toolbar-btn--quiet {
-    border-color: transparent;
-    background-color: transparent;
+    border-color: rgba(118, 144, 180, 0.12);
+    background-color: rgba(8, 15, 26, 0.34);
     color: rgba(203, 213, 225, 0.72);
 }
 
@@ -901,10 +911,10 @@ const formatTime = (isoString) => {
 }
 
 .toolbar-btn--segment {
-    height: 28px;
-    min-width: 38px;
+    height: 30px;
+    min-width: 42px;
     border: 0;
-    border-radius: calc(var(--border-radius) - 2px);
+    border-radius: 6px;
     background: transparent;
     color: rgba(203, 213, 225, 0.64);
 }
@@ -915,10 +925,10 @@ const formatTime = (isoString) => {
 
 .toolbar-btn--primary {
     border-color: rgba(59, 130, 246, 0.92);
-    background: linear-gradient(180deg, #3b82f6 0%, #2563eb 100%);
+    background: var(--gradient-primary);
     color: #ffffff;
     font-weight: var(--font-weight-semibold);
-    box-shadow: 0 8px 18px rgba(37, 99, 235, 0.22);
+    box-shadow: 0 10px 24px rgba(37, 99, 235, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.18);
 }
 
 .toolbar-btn--primary:hover:not(:disabled) {
@@ -931,10 +941,20 @@ const formatTime = (isoString) => {
     line-height: 1;
 }
 
+.toolbar-icon {
+    font-size: 15px;
+    line-height: 1;
+}
+
+.toolbar-compact-label {
+    max-width: 44px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
 .toolbar-language {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
     min-width: 0;
 }
 
@@ -945,14 +965,14 @@ const formatTime = (isoString) => {
 }
 
 .toolbar-language__select {
-    height: 30px;
-    max-width: 104px;
-    padding: 0 24px 0 8px;
-    border: 1px solid rgba(148, 163, 184, 0.16);
-    border-radius: var(--border-radius);
-    background: rgba(15, 23, 42, 0.58);
+    height: 34px;
+    max-width: 96px;
+    padding: 0 26px 0 10px;
+    border: 1px solid rgba(118, 144, 180, 0.16);
+    border-radius: 7px;
+    background: rgba(8, 15, 26, 0.72);
     color: rgba(226, 232, 240, 0.9);
-    font-size: var(--font-size-xs);
+    font-size: 12px;
     outline: none;
 }
 
