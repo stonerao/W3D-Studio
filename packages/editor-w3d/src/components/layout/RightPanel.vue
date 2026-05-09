@@ -5,7 +5,7 @@
  * @FilePath: \sdk\packages\editor\src\components\layout\RightPanel.vue
 -->
 <template>
-    <div class="right-panel panel" :style="{ width: 'calc(var(--panel-width) + var(--side-rail-width))' }">
+    <div class="right-panel panel">
         <div class="panel-content right-panel__content">
             <div class="workspace-panel-header">
                     <div class="workspace-panel-header__text">
@@ -83,16 +83,28 @@ const activeTabMeta = computed(() => tabs.value.find((tab) => tab.key === active
 }
 
 .right-panel__nav {
-    width: var(--side-rail-width);
-    flex: 0 0 var(--side-rail-width);
+    width: auto;
+    min-width: var(--side-rail-width);
+    flex: 0 0 auto;
     border-left: 1px solid rgba(118, 144, 180, 0.14);
     background:
         linear-gradient(180deg, rgba(7, 15, 27, 0.98) 0%, rgba(5, 11, 19, 0.98) 100%);
-    --tabs-rail-item-width: 48px;
+    --tabs-hover-bg: transparent;
+    --tabs-hover-color: #d8eaff;
+    --tabs-active-bg: transparent;
+    --tabs-active-shadow: none;
+    --tabs-active-color: #58a2ff;
+    --tabs-active-icon-color: #58a2ff;
+    --tabs-rail-item-width: max-content;
+    --tabs-rail-item-min-width: 56px;
+    --tabs-rail-item-padding: 10px 9px;
     --tabs-rail-item-height: 70px;
+    --tabs-rail-label-max-width: none;
 }
 
 .right-panel__content {
+    width: var(--panel-width);
+    flex: 0 0 var(--panel-width);
     min-width: 0;
     display: flex;
     flex-direction: column;

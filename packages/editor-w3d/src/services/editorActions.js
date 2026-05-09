@@ -40,6 +40,27 @@ const FORBIDDEN_COMPONENT_METHODS = new Set([
 
 const normalizeRefText = (value) => String(value ?? '').trim();
 
+const normalizeLookupText = (value = '') => String(value || '')
+    .toLowerCase()
+    .replace(/["'`“”‘’]/g, '')
+    .replace(/\b(the|a|an|component|components)\b/g, ' ')
+    .replace(/组件/g, '')
+    .replace(/[^\p{L}\p{N}]+/gu, '');
+
+const pickResolvedComponent = (matches = [], { selectedId = '', prefer = '' } = {}) => {
+    if (matches.length === 0) return null;
+    if (matches.length === 1) return matches[0];
+
+    const selectedMatch = matches.find((component) => component.id === selectedId);
+    if (selectedMatch) return selectedMatch;
+
+    if (['last', 'latest', 'newest'].includes(normalizeRefText(prefer))) {
+        return matches[matches.length - 1];
+    }
+
+    return null;
+};
+
 /**
  * English comment.
  */
@@ -102,6 +123,33 @@ class EditorActionsService {
                 normalizeRefText(component.name).toLowerCase() === lowerName
             ));
             if (caseInsensitiveMatch) return caseInsensitiveMatch;
+
+            const normalizedName = normalizeLookupText(targetName);
+            if (normalizedName) {
+                const selectedId = this.stores.component.selectedComponentId;
+                const normalizedMatches = components.filter((component) => (
+                    normalizeLookupText(component.name) === normalizedName
+                    || normalizeLookupText(component.type) === normalizedName
+                ));
+                const normalizedMatch = pickResolvedComponent(normalizedMatches, {
+                    selectedId,
+                    prefer
+                });
+                if (normalizedMatch) return normalizedMatch;
+
+                const fuzzyMatches = components.filter((component) => {
+                    const candidateName = normalizeLookupText(component.name);
+                    return candidateName && (
+                        candidateName.includes(normalizedName)
+                        || normalizedName.includes(candidateName)
+                    );
+                });
+                const fuzzyMatch = pickResolvedComponent(fuzzyMatches, {
+                    selectedId,
+                    prefer
+                });
+                if (fuzzyMatch) return fuzzyMatch;
+            }
         }
 
         const targetType = normalizeRefText(type);

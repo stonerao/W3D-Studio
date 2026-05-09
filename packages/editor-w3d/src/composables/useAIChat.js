@@ -5,6 +5,7 @@ import { useComponentStore } from '../stores/useComponentStore';
 import { useAISettingsStore } from '../stores/useAISettingsStore';
 import { useProjectStore } from '../stores/useProjectStore';
 import { useSceneStore } from '../stores/useSceneStore';
+import { currentLocale } from '../i18n';
 
 const ACTION_NAME_MAP = Object.freeze({
     add_component: 'addComponent',
@@ -73,6 +74,7 @@ export function useAIChat() {
             name: projectStore.projectName,
             hasUnsavedChanges: projectStore.hasUnsavedChanges
         },
+        locale: currentLocale.value,
         scene: {
             renderer: clonePlain(sceneStore.sceneConfig.renderer, {}),
             camera: clonePlain(sceneStore.sceneConfig.camera, {}),
@@ -129,7 +131,8 @@ export function useAIChat() {
                 message: text,
                 history,
                 context: buildContext(),
-                provider: aiSettingsStore.toRequestPayload()
+                provider: aiSettingsStore.toRequestPayload(),
+                locale: currentLocale.value
             });
 
             const actions = Array.isArray(response.actions) ? response.actions : [];

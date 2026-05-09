@@ -1119,7 +1119,7 @@ const handleDrop = async (event) => {
 
     try {
         if (isPotentialFileDrag(event)) {
-            const localAsset = createLocalModelAssetFromDataTransfer(dt);
+            const localAsset = await createLocalModelAssetFromDataTransfer(dt);
             if (!localAsset) {
                 toast.warning(t('canvas.unsupportedLocalModelFile'));
                 return;
@@ -1130,6 +1130,7 @@ const handleDrop = async (event) => {
                 url: localAsset.url,
                 format: localAsset.format,
                 sourceType: localAsset.sourceType,
+                localAssetId: localAsset.assetId,
                 localFileName: localAsset.fileName,
                 localFileSize: localAsset.fileSize,
                 localFileCount: localAsset.fileCount,
@@ -1142,6 +1143,9 @@ const handleDrop = async (event) => {
             toast.success(t('canvas.localModelLoaded', {
                 name: localAsset.fileName || created?.name || 'ModelLoader'
             }));
+            if (!localAsset.persisted) {
+                toast.warning('本地模型缓存失败，刷新后可能需要重新选择文件');
+            }
             return;
         }
 

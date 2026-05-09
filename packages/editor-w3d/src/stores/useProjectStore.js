@@ -10,6 +10,7 @@ import { useToast } from '../composables/useToast';
 import { useEventSystem } from '../composables/useEventSystem';
 import { tagInstanceForPicking } from '../utils/picking';
 import { getComponentMethodDefinitions } from '../utils/componentRegistry';
+import { restoreLocalModelAssetsFromComponents } from '../utils/localModelFiles';
 import { t } from '../i18n';
 
 /**
@@ -516,6 +517,11 @@ export const useProjectStore = defineStore('project', () => {
         syncCameraViewsToSceneUserData();
 
         console.log('[Project] 开始恢复组件实例，共 %d 个组件', componentStore.components.length);
+        const localModelRestore = await restoreLocalModelAssetsFromComponents(componentStore.components);
+        if (localModelRestore.missing.length > 0) {
+            console.warn('[Project] 部分本地模型缓存未找到:', localModelRestore.missing);
+        }
+
         const modelLoadTasks = [];
 
         const waitForModelLoad = (component, instance, timeoutMs = 120000) => {

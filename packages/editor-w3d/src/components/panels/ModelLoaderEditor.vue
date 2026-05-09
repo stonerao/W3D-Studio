@@ -19,7 +19,7 @@
                 @change="handleLocalModelFileChange"
             />
             <div class="local-model-panel__hint">
-                支持 GLB / GLTF / FBX；文件只在浏览器本地读取，不上传服务器。GLTF 如有外部 .bin 或贴图，请一并选择。
+                支持 GLB / GLTF / FBX；文件会缓存到浏览器本地，不上传服务器。GLTF 如有外部 .bin 或贴图，请一并选择。
             </div>
         </div>
 
@@ -553,7 +553,7 @@ const chooseLocalModelFile = () => {
 };
 
 const handleLocalModelFileChange = async (event) => {
-    const asset = createLocalModelAsset(event?.target?.files || []);
+    const asset = await createLocalModelAsset(event?.target?.files || []);
     if (event?.target) {
         event.target.value = '';
     }
@@ -568,6 +568,7 @@ const handleLocalModelFileChange = async (event) => {
             url: asset.url,
             format: asset.format,
             sourceType: asset.sourceType,
+            localAssetId: asset.assetId,
             localFileName: asset.fileName,
             localFileSize: asset.fileSize,
             localFileCount: asset.fileCount,
@@ -575,6 +576,9 @@ const handleLocalModelFileChange = async (event) => {
             ...(isFirstModel ? { sizeMode: 'fit', targetSize: 10 } : {})
         });
         toast.success(`已加载本地模型：${asset.fileName}`);
+        if (!asset.persisted) {
+            toast.warning('本地模型缓存失败，刷新后可能需要重新选择文件');
+        }
     } catch (error) {
         console.error('[ModelLoaderEditor] Load local model failed:', error);
         toast.error(`加载本地模型失败: ${error?.message || String(error)}`);

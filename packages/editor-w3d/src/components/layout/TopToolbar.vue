@@ -923,6 +923,12 @@ const formatTime = (isoString) => {
     border-color: transparent;
 }
 
+.toolbar-btn--segment.active {
+    background: transparent;
+    box-shadow: none;
+    color: #58a2ff;
+}
+
 .toolbar-btn--primary {
     border-color: rgba(59, 130, 246, 0.92);
     background: var(--gradient-primary);
@@ -947,9 +953,7 @@ const formatTime = (isoString) => {
 }
 
 .toolbar-compact-label {
-    max-width: 44px;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .toolbar-language {

@@ -285,6 +285,8 @@ watch(() => props.orientation, syncScrollStateSoon);
     flex-direction: column;
     justify-content: center;
     width: var(--tabs-rail-item-width, 74px);
+    min-width: var(--tabs-rail-item-min-width, var(--tabs-rail-item-width, 74px));
+    max-width: var(--tabs-rail-item-max-width, none);
     min-height: var(--tabs-rail-item-height, 72px);
     padding: var(--tabs-rail-item-padding, 10px 6px);
     border-bottom: none;
@@ -318,7 +320,7 @@ watch(() => props.orientation, syncScrollStateSoon);
 }
 
 .tab-item--vertical .tab-item__label {
-    max-width: 64px;
+    max-width: var(--tabs-rail-label-max-width, 64px);
     overflow: hidden;
     font-size: 12px;
     font-weight: var(--font-weight-semibold);

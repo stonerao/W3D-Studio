@@ -54,6 +54,7 @@ const normalizeAiResponse = (payload) => ({
 const handleChat = async (req, res) => {
     const body = await readJsonBody(req);
     const message = String(body?.message || '').trim();
+    const locale = String(body?.locale || body?.context?.locale || 'zh').trim();
     if (!message) {
         sendJson(res, 400, { error: 'message is required' });
         return;
@@ -61,7 +62,8 @@ const handleChat = async (req, res) => {
 
     const deterministicResponse = resolveDeterministicW3DResponse({
         message,
-        context: body.context || {}
+        context: body.context || {},
+        locale
     });
     if (deterministicResponse) {
         sendJson(res, 200, {
@@ -78,7 +80,8 @@ const handleChat = async (req, res) => {
         history: Array.isArray(body.history)
             ? body.history.slice(-config.maxHistoryMessages)
             : [],
-        context: body.context || {}
+        context: body.context || {},
+        locale
     });
 
     const provider = normalizeProviderConfig(body.provider || {});

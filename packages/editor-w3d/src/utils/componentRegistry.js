@@ -420,6 +420,14 @@ export function initializeDefaultComponents() {
             { name: 'pauseAnimation', title: '暂停动画', description: '暂停当前模型动画' },
             { name: 'resumeAnimation', title: '继续动画', description: '继续播放当前模型动画' },
             { name: 'stopAnimation', title: '停止动画', description: '停止当前模型动画' },
+            {
+                name: 'setAnimationSpeed',
+                title: '设置动画速度',
+                description: '设置当前模型动画播放速度倍率',
+                params: [
+                    { name: 'speed', title: '播放速度', type: 'number', required: true }
+                ]
+            },
             { name: 'getAnimationNames', title: '获取动画列表', description: '返回模型可用动画名称列表' },
             {
                 name: 'setMeshVisibility',

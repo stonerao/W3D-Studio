@@ -3,7 +3,7 @@ import { createI18n } from 'vue-i18n';
 import en from './locales/en';
 import zh from './locales/zh';
 
-export const DEFAULT_LOCALE = 'zh';
+export const DEFAULT_LOCALE = 'en';
 export const SUPPORT_LOCALES = ['en', 'zh'];
 export const LOCALE_STORAGE_KEY = 'w3d_editor_locale';
 
@@ -83,6 +83,16 @@ const staticTextMap = {
     '例如：添加一个模型加载器并放到原点': 'Example: add a model loader and place it at the origin',
     '例如：Add一个模型加载器并放到原点': 'Example: add a model loader and place it at the origin',
     模型加载器: 'Model loader',
+    设备爆炸图: 'Device exploded view',
+    模型设备爆炸图: 'Model device exploded view',
+    设备爆炸图配置: 'Device exploded view settings',
+    '按设备树结构从中心点向外爆炸，距离中心越远偏移越大': 'Explode device structures outward from a center point. Farther nodes move farther.',
+    开始爆炸: 'Start explosion',
+    执行设备爆炸动画: 'Run the device explosion animation.',
+    恢复原位: 'Reset positions',
+    恢复设备节点到初始位置: 'Reset device nodes to their initial positions.',
+    获取节点摘要: 'Get node summary',
+    获取当前节点数量及状态信息: 'Get the current node count and status information.',
     热力图: 'Heatmap',
     定点漫游: 'Camera tour',
     '3D 标签': '3D label',
@@ -108,6 +118,15 @@ const staticTextMap = {
     显示控制: 'Visibility controls',
     '全显示 · 未锁': 'All visible · unlocked',
     编辑: 'Edit',
+    编: 'Edit',
+    取消: 'Cancel',
+    确认: 'Confirm',
+    保存: 'Save',
+    删除: 'Delete',
+    上移: 'Move up',
+    下移: 'Move down',
+    展开: 'Expand',
+    收起: 'Collapse',
     预览: 'Preview',
     锁定: 'Lock',
     未锁: 'Unlocked',
@@ -128,6 +147,10 @@ const staticTextMap = {
     未选择模型文件: 'No model file selected',
     选择文件: 'Choose file',
     '支持 GLB / GLTF / FBX；文件只在浏览器本地读取，不上传服务器。GLTF 如有外部 .bin 或贴图，请一并选择。': 'Supports GLB / GLTF / FBX. Files are read locally in the browser and are not uploaded. If a GLTF uses external .bin files or textures, select them together.',
+    '支持 GLTF、GLB、FBX 格式，可从资源库选择': 'Supports GLTF, GLB, and FBX formats. You can choose assets from the library.',
+    是否加载模型动画: 'Whether to load model animations.',
+    加载完成后自动播放第一个动画: 'Automatically play the first animation after loading.',
+    '配置哪些 Mesh 可以响应交互事件': 'Configure which meshes can respond to interaction events.',
     尺寸适配: 'Size fitting',
     缩放模式: 'Scale mode',
     普通缩放: 'Normal scale',
@@ -144,6 +167,43 @@ const staticTextMap = {
     'Mesh（共 0 个）': 'Meshes (0 total)',
     '-- 请选择 --': '-- Select --',
     吸管拾取: 'Eyedropper pick',
+    选择模式: 'Selection mode',
+    按层级: 'By hierarchy',
+    叶子节点: 'Leaf nodes',
+    爆炸层级: 'Explosion level',
+    中心点模式: 'Center mode',
+    场景原点: 'Scene origin',
+    模型中心: 'Model center',
+    自定义点: 'Custom point',
+    中心点: 'Center point',
+    基础偏移: 'Base offset',
+    距离系数: 'Distance factor',
+    距离指数: 'Distance exponent',
+    最大偏移: 'Max offset',
+    '允许 X 轴': 'Allow X axis',
+    '允许 Y 轴': 'Allow Y axis',
+    '允许 Z 轴': 'Allow Z axis',
+    '动画时长(秒)': 'Animation duration (s)',
+    延迟模式: 'Delay mode',
+    无延迟: 'No delay',
+    按距离: 'By distance',
+    '延迟步长(ms)': 'Delay step (ms)',
+    延迟步长: 'Delay step',
+    关联模型: 'Linked model',
+    节点选择: 'Node selection',
+    缓动曲线: 'Easing curve',
+    二次缓入: 'Quadratic in',
+    二次缓出: 'Quadratic out',
+    二次缓入缓出: 'Quadratic in-out',
+    三次缓出: 'Cubic out',
+    三次缓入缓出: 'Cubic in-out',
+    弹性缓出: 'Elastic out',
+    弹跳缓出: 'Bounce out',
+    回弹缓出: 'Back out',
+    'Pick择模式': 'Selection mode',
+    'Scene原点': 'Scene origin',
+    '基础Bias': 'Base offset',
+    '最大Bias': 'Max offset',
     '选择一个 Mesh 开始编辑': 'Select a mesh to start editing',
     最大点数: 'Max points',
     渲染模式: 'Render mode',
@@ -476,6 +536,61 @@ const staticRegexRules = [
     [/^已追加\s+(\d+)\s+个点位$/, 'Appended $1 points']
 ];
 
+const staticFallbackRules = [
+    [/^已配置\s+(\d+)\s+条线$/, '$1 lines configured'],
+    [/^已配置\s+(\d+)\s+个区域块$/, '$1 area blocks configured'],
+    [/^视角\s+(\d+)$/, 'View $1'],
+    [/^标签\s+(\d+)$/, 'Label $1'],
+    [/^路径\s+(\d+)$/, 'Path $1'],
+    [/^点\s+(\d+)$/, 'Point $1'],
+    [/^热力点\s+(\d+)$/, 'Heat point $1'],
+    [/^颜色节点\s+(\d+)$/, 'Color stop $1'],
+    [/^阈值\s+(\d+)$/, 'Threshold $1'],
+    [/^区域块\s+(\d+)$/, 'Area block $1']
+];
+
+const staticKeywordFallbacks = [
+    ['支持', 'Supported formats and options.'],
+    ['是否', 'Toggle this option.'],
+    ['配置', 'Configure this option.'],
+    ['选择', 'Select an option.'],
+    ['加载', 'Load related assets or data.'],
+    ['更新', 'Update related data.'],
+    ['删除', 'Delete this item.'],
+    ['添加', 'Add item.'],
+    ['导入', 'Import data.'],
+    ['导出', 'Export data.'],
+    ['显示', 'Show this item.'],
+    ['隐藏', 'Hide this item.'],
+    ['启用', 'Enable this option.'],
+    ['禁用', 'Disable this option.'],
+    ['点位', 'Point settings.'],
+    ['颜色', 'Color settings.'],
+    ['动画', 'Animation settings.'],
+    ['相机', 'Camera settings.'],
+    ['模型', 'Model settings.'],
+    ['数据', 'Data settings.'],
+    ['资源', 'Asset settings.']
+];
+
+const getStaticFallbackText = (value) => {
+    const raw = String(value ?? '');
+    const trimmed = raw.trim();
+    if (!trimmed || !/[\u4e00-\u9fff]/.test(trimmed)) {
+        return raw;
+    }
+
+    for (const [pattern, replacement] of staticFallbackRules) {
+        if (pattern.test(trimmed)) {
+            return raw.replace(trimmed, trimmed.replace(pattern, replacement));
+        }
+    }
+
+    const matched = staticKeywordFallbacks.find(([keyword]) => trimmed.includes(keyword));
+    const fallback = matched?.[1] || 'Configuration details.';
+    return raw.replace(trimmed, fallback);
+};
+
 let staticTextObserver = null;
 let isApplyingStaticTranslation = false;
 const originalTextNodes = new WeakMap();
@@ -505,14 +620,15 @@ const translateStaticString = (value) => {
 
     if (/[\u4e00-\u9fff]/.test(raw)) {
         const replaced = Object.entries(staticTextMap)
+            .filter(([source]) => (source.match(/[\u4e00-\u9fa5]/g) || []).length >= 2)
             .sort((left, right) => right[0].length - left[0].length)
             .reduce((text, [source, target]) => text.split(source).join(target), raw);
-        if (replaced !== raw) {
+        if (replaced !== raw && !/[\u4e00-\u9fff]/.test(replaced)) {
             return replaced;
         }
     }
 
-    return raw;
+    return /[\u4e00-\u9fff]/.test(raw) ? getStaticFallbackText(raw) : raw;
 };
 
 export const translateDisplayText = (value) => {

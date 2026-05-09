@@ -7,7 +7,7 @@ const parseErrorMessage = async (response) => {
     }
 };
 
-export const chatWithAI = async ({ message, history, context, provider }) => {
+export const chatWithAI = async ({ message, history, context, provider, locale }) => {
     const response = await fetch('/api/ai/chat', {
         method: 'POST',
         headers: {
@@ -17,7 +17,8 @@ export const chatWithAI = async ({ message, history, context, provider }) => {
             message,
             history,
             context,
-            provider
+            provider,
+            locale
         })
     });
 

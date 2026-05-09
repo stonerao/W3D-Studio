@@ -1,9 +1,14 @@
 const LOCAL_MODEL_SCHEME = 'w3d-local-model://';
+const LOCAL_MODEL_DB_NAME = 'W3DLocalModelAssets';
+const LOCAL_MODEL_DB_VERSION = 1;
+const LOCAL_MODEL_ASSET_STORE = 'assets';
+const LOCAL_MODEL_FILE_STORE = 'files';
 const SUPPORTED_MODEL_FORMATS = new Set(['glb', 'gltf', 'fbx']);
 
 const registry = new Map();
 let assetCounter = 0;
 let resolverInstalled = false;
+let dbPromise = null;
 
 const normalizePath = (value = '') => {
     let text = String(value || '').trim().replace(/\\/g, '/');
@@ -28,6 +33,186 @@ const encodePath = (value = '') => {
         .split('/')
         .map((part) => encodeURIComponent(part))
         .join('/');
+};
+
+const getIndexedDB = () => globalThis?.indexedDB || null;
+
+const openLocalModelDB = async () => {
+    const indexedDB = getIndexedDB();
+    if (!indexedDB) return null;
+
+    if (dbPromise) return dbPromise;
+
+    dbPromise = new Promise((resolve, reject) => {
+        const request = indexedDB.open(LOCAL_MODEL_DB_NAME, LOCAL_MODEL_DB_VERSION);
+
+        request.onupgradeneeded = (event) => {
+            const db = event.target.result;
+            let assetStore = null;
+            let fileStore = null;
+
+            if (!db.objectStoreNames.contains(LOCAL_MODEL_ASSET_STORE)) {
+                assetStore = db.createObjectStore(LOCAL_MODEL_ASSET_STORE, { keyPath: 'assetId' });
+            } else {
+                assetStore = request.transaction.objectStore(LOCAL_MODEL_ASSET_STORE);
+            }
+
+            if (!assetStore.indexNames.contains('createdAt')) {
+                assetStore.createIndex('createdAt', 'createdAt', { unique: false });
+            }
+
+            if (!db.objectStoreNames.contains(LOCAL_MODEL_FILE_STORE)) {
+                fileStore = db.createObjectStore(LOCAL_MODEL_FILE_STORE, { keyPath: 'fileKey' });
+            } else {
+                fileStore = request.transaction.objectStore(LOCAL_MODEL_FILE_STORE);
+            }
+
+            if (!fileStore.indexNames.contains('assetId')) {
+                fileStore.createIndex('assetId', 'assetId', { unique: false });
+            }
+        };
+
+        request.onsuccess = () => resolve(request.result);
+        request.onerror = () => {
+            dbPromise = null;
+            reject(request.error || new Error('Failed to open local model IndexedDB'));
+        };
+        request.onblocked = () => {
+            console.warn('[LocalModelFiles] IndexedDB open is blocked');
+        };
+    });
+
+    try {
+        return await dbPromise;
+    } catch (error) {
+        console.warn('[LocalModelFiles] IndexedDB unavailable:', error);
+        return null;
+    }
+};
+
+const runTransaction = (db, storeNames, mode, executor) => new Promise((resolve, reject) => {
+    const transaction = db.transaction(storeNames, mode);
+    const stores = Array.isArray(storeNames)
+        ? storeNames.reduce((acc, name) => {
+            acc[name] = transaction.objectStore(name);
+            return acc;
+        }, {})
+        : transaction.objectStore(storeNames);
+
+    transaction.oncomplete = () => resolve();
+    transaction.onerror = () => reject(transaction.error || new Error('IndexedDB transaction failed'));
+    transaction.onabort = () => reject(transaction.error || new Error('IndexedDB transaction aborted'));
+
+    try {
+        executor(stores, transaction);
+    } catch (error) {
+        transaction.abort();
+        reject(error);
+    }
+});
+
+const buildFileKeys = (path = '', fileName = '') => {
+    return [
+        normalizePath(path),
+        normalizePath(fileName),
+        normalizePath(getBaseName(path || fileName))
+    ].filter(Boolean);
+};
+
+const revokeAssetUrls = (asset) => {
+    if (!asset?.urls) return;
+    asset.urls.forEach((objectUrl) => {
+        try {
+            URL.revokeObjectURL(objectUrl);
+        } catch {
+            // ignore
+        }
+    });
+};
+
+const registerAssetFiles = ({ assetId, primaryPath, files, metadata = {} }) => {
+    if (!assetId || !Array.isArray(files) || files.length === 0) return null;
+
+    installResolver();
+
+    const previous = registry.get(assetId);
+    if (previous) {
+        revokeAssetUrls(previous);
+    }
+
+    const urls = new Map();
+    const runtimeFiles = [];
+
+    files.forEach((entry) => {
+        const blob = entry?.blob || entry?.file;
+        if (!blob) return;
+
+        const path = entry.path || entry.fileName || blob.name || '';
+        const fileName = entry.fileName || blob.name || getBaseName(path);
+        const objectUrl = URL.createObjectURL(blob);
+
+        buildFileKeys(path, fileName).forEach((key) => urls.set(key, objectUrl));
+        runtimeFiles.push(blob);
+    });
+
+    const asset = {
+        assetId,
+        primaryPath,
+        urls,
+        files: runtimeFiles,
+        metadata
+    };
+
+    registry.set(assetId, asset);
+    return asset;
+};
+
+const persistLocalModelAsset = async ({ assetRecord, fileRecords }) => {
+    const db = await openLocalModelDB();
+    if (!db) return false;
+
+    await runTransaction(
+        db,
+        [LOCAL_MODEL_ASSET_STORE, LOCAL_MODEL_FILE_STORE],
+        'readwrite',
+        (stores) => {
+            stores[LOCAL_MODEL_ASSET_STORE].put(assetRecord);
+            fileRecords.forEach((record) => {
+                stores[LOCAL_MODEL_FILE_STORE].put(record);
+            });
+        }
+    );
+
+    return true;
+};
+
+const loadPersistedLocalModelAsset = async (assetId) => {
+    const db = await openLocalModelDB();
+    if (!db) return null;
+
+    const assetRecord = await new Promise((resolve, reject) => {
+        const transaction = db.transaction([LOCAL_MODEL_ASSET_STORE], 'readonly');
+        const store = transaction.objectStore(LOCAL_MODEL_ASSET_STORE);
+        const request = store.get(assetId);
+        request.onsuccess = () => resolve(request.result || null);
+        request.onerror = () => reject(request.error || new Error('Failed to read local model asset'));
+    });
+
+    if (!assetRecord) return null;
+
+    const fileRecords = await new Promise((resolve, reject) => {
+        const transaction = db.transaction([LOCAL_MODEL_FILE_STORE], 'readonly');
+        const store = transaction.objectStore(LOCAL_MODEL_FILE_STORE);
+        const index = store.index('assetId');
+        const request = index.getAll(assetId);
+        request.onsuccess = () => resolve(request.result || []);
+        request.onerror = () => reject(request.error || new Error('Failed to read local model files'));
+    });
+
+    return {
+        assetRecord,
+        fileRecords
+    };
 };
 
 export const inferLocalModelFormat = (value = '') => {
@@ -124,14 +309,68 @@ const installResolver = () => {
     };
 
     globalThis.addEventListener?.('beforeunload', () => {
-        registry.forEach((asset) => {
-            asset.urls.forEach((objectUrl) => URL.revokeObjectURL(objectUrl));
-        });
+        registry.forEach((asset) => revokeAssetUrls(asset));
         registry.clear();
     });
 };
 
-export const createLocalModelAsset = (filesLike) => {
+export const restoreLocalModelAsset = async (urlOrAssetId = '') => {
+    installResolver();
+
+    const info = parseLocalModelUrl(urlOrAssetId);
+    const assetId = info?.assetId || String(urlOrAssetId || '').trim();
+    if (!assetId) return { restored: false, reason: 'empty_asset_id' };
+    if (registry.has(assetId)) return { restored: true, cached: true, assetId };
+
+    try {
+        const persisted = await loadPersistedLocalModelAsset(assetId);
+        if (!persisted?.assetRecord || !Array.isArray(persisted.fileRecords) || persisted.fileRecords.length === 0) {
+            return { restored: false, reason: 'not_found', assetId };
+        }
+
+        registerAssetFiles({
+            assetId,
+            primaryPath: persisted.assetRecord.primaryPath,
+            files: persisted.fileRecords.map((record) => ({
+                blob: record.blob,
+                path: record.path,
+                fileName: record.fileName
+            })),
+            metadata: persisted.assetRecord
+        });
+
+        return { restored: true, cached: false, assetId };
+    } catch (error) {
+        console.warn('[LocalModelFiles] Failed to restore local model asset:', error);
+        return { restored: false, reason: 'error', error, assetId };
+    }
+};
+
+export const restoreLocalModelAssetsFromComponents = async (components = []) => {
+    const assetIds = new Set();
+
+    (Array.isArray(components) ? components : []).forEach((component) => {
+        const config = component?.config || {};
+        const info = parseLocalModelUrl(config.url);
+        if (info?.assetId) assetIds.add(info.assetId);
+        if (config.localAssetId) assetIds.add(String(config.localAssetId));
+    });
+
+    const results = [];
+    for (const assetId of assetIds) {
+        // Preserve sequence to avoid IndexedDB transaction pressure with large files.
+        // eslint-disable-next-line no-await-in-loop
+        results.push(await restoreLocalModelAsset(assetId));
+    }
+
+    return {
+        total: assetIds.size,
+        restored: results.filter((item) => item.restored).length,
+        missing: results.filter((item) => !item.restored)
+    };
+};
+
+export const createLocalModelAsset = async (filesLike) => {
     const files = Array.from(filesLike || []).filter((file) => file && typeof file.name === 'string');
     const modelFiles = getSupportedModelFiles(files);
     const primaryFile = modelFiles[0];
@@ -140,45 +379,83 @@ export const createLocalModelAsset = (filesLike) => {
     installResolver();
 
     const assetId = `local_model_${Date.now()}_${++assetCounter}`;
-    const urls = new Map();
-
-    files.forEach((file) => {
-        const objectUrl = URL.createObjectURL(file);
-        const path = getFilePath(file);
-        const keys = [
-            normalizePath(path),
-            normalizePath(file.name),
-            normalizePath(getBaseName(path || file.name))
-        ].filter(Boolean);
-
-        keys.forEach((key) => urls.set(key, objectUrl));
-    });
-
     const primaryPath = getFilePath(primaryFile) || primaryFile.name;
     const format = inferLocalModelFormat(primaryFile);
     const fileName = primaryFile.name || getBaseName(primaryPath);
     const displayName = fileName.replace(/\.[^.]+$/, '') || '本地模型';
+    const now = Date.now();
 
-    registry.set(assetId, {
+    const fileEntries = files.map((file, index) => {
+        const path = getFilePath(file) || file.name;
+        return {
+            file,
+            blob: file,
+            path,
+            fileName: file.name || getBaseName(path),
+            fileKey: `${assetId}::${index}`,
+            size: file.size || 0,
+            type: file.type || '',
+            lastModified: file.lastModified || 0
+        };
+    });
+
+    registerAssetFiles({
         assetId,
         primaryPath,
-        urls,
-        files
+        files: fileEntries,
+        metadata: {
+            assetId,
+            primaryPath,
+            fileName,
+            format
+        }
     });
+
+    let persisted = false;
+    try {
+        const assetRecord = {
+            assetId,
+            primaryPath,
+            format,
+            fileName,
+            displayName,
+            fileSize: primaryFile.size || 0,
+            fileCount: files.length,
+            lastModified: primaryFile.lastModified || 0,
+            createdAt: now,
+            updatedAt: now
+        };
+        const fileRecords = fileEntries.map((entry) => ({
+            fileKey: entry.fileKey,
+            assetId,
+            path: entry.path,
+            fileName: entry.fileName,
+            size: entry.size,
+            type: entry.type,
+            lastModified: entry.lastModified,
+            blob: entry.blob
+        }));
+
+        persisted = await persistLocalModelAsset({ assetRecord, fileRecords });
+    } catch (error) {
+        console.warn('[LocalModelFiles] Failed to persist local model asset:', error);
+    }
 
     return {
         url: `${LOCAL_MODEL_SCHEME}${assetId}/${encodePath(primaryPath || fileName)}`,
+        assetId,
         format,
         name: displayName,
         fileName,
         fileSize: primaryFile.size || 0,
         fileCount: files.length,
         lastModified: primaryFile.lastModified || 0,
-        sourceType: 'local-file'
+        sourceType: 'local-file',
+        persisted
     };
 };
 
-export const createLocalModelAssetFromDataTransfer = (dataTransfer) => {
+export const createLocalModelAssetFromDataTransfer = async (dataTransfer) => {
     return createLocalModelAsset(dataTransfer?.files || []);
 };
 
