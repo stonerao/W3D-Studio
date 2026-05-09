@@ -1,0 +1,614 @@
+- generic [ref=e4]:
+  - banner [ref=e6]:
+    - generic [ref=e7]:
+      - button [ref=e8] [cursor=pointer]:
+        - img [ref=e10]:
+          - img [ref=e11]
+      - button [ref=e14] [cursor=pointer]:
+        - img [ref=e16]:
+          - img [ref=e17]
+      - separator [ref=e19]
+      - button [disabled]:
+        - generic:
+          - img:
+            - img
+      - button [disabled]:
+        - generic:
+          - img:
+            - img
+      - separator [ref=e20]
+      - button [disabled]:
+        - generic:
+          - img:
+            - img
+      - button [disabled]:
+        - generic:
+          - img:
+            - img
+      - button [disabled]:
+        - generic:
+          - img:
+            - img
+      - button [disabled]:
+        - generic:
+          - img:
+            - img
+      - button [disabled]:
+        - generic:
+          - img:
+            - img
+      - button [disabled]:
+        - generic:
+          - img:
+            - img
+      - button "H" [disabled]:
+        - generic:
+          - img:
+            - img
+        - generic: H
+      - button "V" [disabled]:
+        - generic:
+          - img:
+            - img
+        - generic: V
+      - separator [ref=e21]
+      - button "锁定" [disabled]:
+        - generic:
+          - img:
+            - img
+        - generic: 锁定
+    - generic [ref=e23]: 工厂_1
+    - generic [ref=e24]:
+      - button "保存" [ref=e25] [cursor=pointer]:
+        - img [ref=e27]:
+          - img [ref=e28]
+        - generic [ref=e31]: 保存
+      - button "预览" [ref=e32] [cursor=pointer]:
+        - img [ref=e34]:
+          - img [ref=e35]
+        - generic [ref=e39]: 预览
+      - button "导出项目" [ref=e40] [cursor=pointer]:
+        - img [ref=e42]:
+          - img [ref=e43]
+        - generic [ref=e47]: 导出项目
+      - button "AI生成" [ref=e48] [cursor=pointer]:
+        - img [ref=e50]:
+          - img [ref=e51]
+        - generic [ref=e54]: AI生成
+      - button "发布" [ref=e55] [cursor=pointer]:
+        - img [ref=e57]:
+          - img [ref=e58]
+        - generic [ref=e61]: 发布
+      - button "主题" [ref=e62] [cursor=pointer]:
+        - img [ref=e64]:
+          - img [ref=e65]
+        - generic [ref=e68]: 主题
+      - text: 自动保存
+      - switch [ref=e69]
+      - button "颜色" [ref=e72] [cursor=pointer]:
+        - img [ref=e74]:
+          - img [ref=e75]
+      - button "主题" [ref=e83] [cursor=pointer]:
+        - img [ref=e85]:
+          - img [ref=e86]
+      - img [ref=e90] [cursor=pointer]
+  - generic [ref=e91]:
+    - generic [ref=e93]:
+      - generic [ref=e95]:
+        - generic [ref=e98] [cursor=pointer]: 页面
+        - generic [ref=e101] [cursor=pointer]: 图层
+        - generic [ref=e104] [cursor=pointer]: 组件库
+      - generic [ref=e105]:
+        - generic [ref=e108]:
+          - img [ref=e110]:
+            - img [ref=e111]
+          - generic [ref=e113]:
+            - textbox "搜索页面或文件夹..." [ref=e114]
+            - generic:
+              - generic: 搜索页面或文件夹...
+        - generic [ref=e118]:
+          - generic [ref=e119]:
+            - generic [ref=e120]:
+              - img [ref=e121]:
+                - img [ref=e122]
+              - generic [ref=e125]: 工厂_1
+            - generic [ref=e126]:
+              - button [ref=e127] [cursor=pointer]:
+                - img [ref=e129]:
+                  - img [ref=e130]
+              - button [ref=e133] [cursor=pointer]:
+                - img [ref=e135]:
+                  - img [ref=e136]
+          - generic [ref=e138] [cursor=pointer]:
+            - generic [ref=e140]:
+              - img [ref=e141]:
+                - img [ref=e142]
+              - generic [ref=e145]: 首页_副本
+            - button [ref=e147]:
+              - img [ref=e149]:
+                - img [ref=e150]
+    - generic [ref=e155]:
+      - generic [ref=e158]:
+        - generic [ref=e159] [cursor=pointer]:
+          - img [ref=e160]:
+            - img [ref=e161]
+          - generic [ref=e163]: 首页_副本
+          - generic [ref=e165]: 未保存
+          - img [ref=e166]:
+            - img [ref=e167]
+        - generic [ref=e169] [cursor=pointer]:
+          - img [ref=e170]:
+            - img [ref=e171]
+          - generic [ref=e172]: 新建页面
+      - generic [ref=e173]:
+        - generic [ref=e186]:
+          - button "漫游" [ref=e189] [cursor=pointer]
+          - generic [ref=e194]:
+            - generic [ref=e195]: 数字孪生工厂
+            - generic [ref=e196]: Digital Twin of Factory
+          - generic [ref=e209]:
+            - generic [ref=e217]: 生产指标
+            - generic:
+              - generic [ref=e223]:
+                - generic [ref=e224]: 当日产量
+                - generic [ref=e225]:
+                  - generic [ref=e226]: "2935.2"
+                  - generic [ref=e227]: 吨
+              - generic [ref=e229]:
+                - generic [ref=e230]: 当日总电耗
+                - generic [ref=e231]:
+                  - generic [ref=e232]: "821800"
+                  - generic [ref=e233]: kWh
+              - generic [ref=e235]:
+                - generic [ref=e236]: 当日碱耗
+                - generic [ref=e237]:
+                  - generic [ref=e238]: "220125"
+                  - generic [ref=e239]: kg
+              - generic [ref=e241]:
+                - generic [ref=e242]: 当日铝土矿
+                - generic [ref=e243]:
+                  - generic [ref=e244]: "6263"
+                  - generic [ref=e245]: 吨
+          - generic [ref=e246]:
+            - generic [ref=e254]: 近7日能耗势图
+            - img [ref=e264]:
+              - generic [ref=e266]:
+                - generic [ref=e267]: "0"
+                - generic [ref=e268]: "30"
+                - generic [ref=e269]: "60"
+                - generic [ref=e270]: "90"
+                - generic [ref=e271]: "120"
+                - generic [ref=e272]: "150"
+                - generic [ref=e273]: "0"
+                - generic [ref=e274]: "20"
+                - generic [ref=e275]: "40"
+                - generic [ref=e276]: "60"
+                - generic [ref=e277]: "80"
+                - generic [ref=e278]: "100"
+                - generic [ref=e279]: 1月
+                - generic [ref=e280]: 2月
+                - generic [ref=e281]: 3月
+                - generic [ref=e282]: 4月
+                - generic [ref=e283]: 5月
+                - generic [ref=e284]: 6月
+                - generic [ref=e285]: 7月
+                - generic [ref=e293]: "104"
+                - generic [ref=e294]: "56"
+                - generic [ref=e295]: "136"
+                - generic [ref=e296]: "86"
+                - generic [ref=e297]: "98"
+                - generic [ref=e298]: "86"
+                - generic [ref=e299]: "77"
+                - generic [ref=e309]: "30"
+                - generic [ref=e310]: "56"
+                - generic [ref=e311]: "36"
+                - generic [ref=e312]: "6"
+                - generic [ref=e313]: "10"
+                - generic [ref=e314]: "70"
+                - generic [ref=e315]: "57"
+                - generic [ref=e318]: 电耗
+                - generic [ref=e321]: 碱耗
+          - generic [ref=e323]:
+            - generic [ref=e331]: 近7日产量
+            - img [ref=e341]:
+              - generic [ref=e343]:
+                - generic [ref=e344]: "0"
+                - generic [ref=e345]: "500"
+                - generic [ref=e346]: 1,000
+                - generic [ref=e347]: 1,500
+                - generic [ref=e348]: 2,000
+                - generic [ref=e349]: 2,500
+                - generic [ref=e350]: 3,000
+                - generic [ref=e351]: Mon
+                - generic [ref=e352]: Tue
+                - generic [ref=e353]: Wed
+                - generic [ref=e354]: Thu
+                - generic [ref=e355]: Fri
+                - generic [ref=e356]: Sat
+                - generic [ref=e357]: Sun
+                - generic [ref=e368]: "2920.1"
+                - generic [ref=e369]: "2950.5"
+                - generic [ref=e370]: "2950.7"
+                - generic [ref=e371]: "2920.1"
+                - generic [ref=e372]: "2650"
+                - generic [ref=e373]: "2750.4"
+                - generic [ref=e374]: "2952.2"
+          - generic [ref=e375]:
+            - generic [ref=e383]: 能耗消耗分布
+            - img [ref=e393]:
+              - generic [ref=e395]:
+                - generic [ref=e401]: 电力
+                - generic [ref=e404]: 蒸汽
+                - generic [ref=e407]: 天然气
+          - generic [ref=e409]:
+            - generic [ref=e417]: 销售区域
+            - generic [ref=e423]:
+              - generic [ref=e1123] [cursor=pointer]:
+                - generic [ref=e1124]: No.10
+                - generic [ref=e1125]: 成都高新区势草五地儿园
+                - generic [ref=e1126]: "1"
+              - generic [ref=e1131] [cursor=pointer]:
+                - generic [ref=e1132]: No.11
+                - generic [ref=e1133]: 成都高新区势单第六幼儿园
+                - generic [ref=e1134]: "1"
+              - generic [ref=e1139] [cursor=pointer]:
+                - generic [ref=e1140]: No.12
+                - generic [ref=e1141]: 成都高新区紫剃幼儿园
+                - generic [ref=e1142]: "1"
+              - generic [ref=e1147] [cursor=pointer]:
+                - generic [ref=e1148]: No.13
+                - generic [ref=e1149]: 成郫高新区高兴幼儿园
+                - generic [ref=e1150]: "1"
+              - generic [ref=e1155] [cursor=pointer]:
+                - generic [ref=e1156]: No.14
+                - generic [ref=e1157]: 成邮重彼利埃幼儿园
+                - generic [ref=e1158]: "1"
+              - generic [ref=e1163] [cursor=pointer]:
+                - generic [ref=e1164]: No.15
+                - generic [ref=e1165]: 成都高新区第一幼儿园
+                - generic [ref=e1166]: "1"
+          - generic [ref=e472]:
+            - generic [ref=e480]: 区块标题
+            - img [ref=e490]:
+              - generic [ref=e492]:
+                - generic [ref=e493]: "-2,000,000"
+                - generic [ref=e494]: "0"
+                - generic [ref=e495]: 2,000,000
+                - generic [ref=e496]: 4,000,000
+                - generic [ref=e497]: 6,000,000
+                - generic [ref=e498]: 收入
+                - generic [ref=e499]: 税务
+                - generic [ref=e500]: 最终利润
+                - generic [ref=e511]: "+5000000"
+                - generic [ref=e512]: "-2000000"
+                - generic [ref=e513]: "-500000"
+                - generic [ref=e514]: "+300000"
+                - generic [ref=e515]: "+2800000"
+                - generic [ref=e516]: "5600000"
+          - generic [ref=e519]: 2026-04-27 16:21:18
+          - generic [ref=e520]:
+            - generic [ref=e528]: 设备状态列表
+            - generic [ref=e539]:
+              - generic [ref=e540]:
+                - generic [ref=e541]: 序号
+                - generic [ref=e542]: 风机状态
+                - generic [ref=e543]: 风向
+                - generic [ref=e544]: 实时风速
+                - generic [ref=e545]: 对风误差
+                - generic [ref=e546]: 有功功率
+              - generic [ref=e547]:
+                - generic [ref=e548]:
+                  - generic [ref=e551]: NO.1
+                  - generic [ref=e554]: 正常
+                  - generic [ref=e557]: 123°
+                  - generic [ref=e559]:
+                    - generic [ref=e560]: "123"
+                    - generic [ref=e561]: m/s
+                  - generic [ref=e564]: 123°
+                  - generic [ref=e566]:
+                    - generic [ref=e567]: "123"
+                    - generic [ref=e568]: kW
+                - generic [ref=e569]:
+                  - generic [ref=e572]: NO.2
+                  - generic [ref=e575]: 正常
+                  - generic [ref=e578]: 123°
+                  - generic [ref=e580]:
+                    - generic [ref=e581]: "123"
+                    - generic [ref=e582]: m/s
+                  - generic [ref=e585]: 123°
+                  - generic [ref=e587]:
+                    - generic [ref=e588]: "123"
+                    - generic [ref=e589]: kW
+                - generic [ref=e590]:
+                  - generic [ref=e593]: NO.3
+                  - generic [ref=e596]: 正常
+                  - generic [ref=e599]: 123°
+                  - generic [ref=e601]:
+                    - generic [ref=e602]: "123"
+                    - generic [ref=e603]: m/s
+                  - generic [ref=e606]: 123°
+                  - generic [ref=e608]:
+                    - generic [ref=e609]: "123"
+                    - generic [ref=e610]: kW
+                - generic [ref=e611]:
+                  - generic [ref=e614]: NO.4
+                  - generic [ref=e617]: 正常
+                  - generic [ref=e620]: 123°
+                  - generic [ref=e622]:
+                    - generic [ref=e623]: "123"
+                    - generic [ref=e624]: m/s
+                  - generic [ref=e627]: 123°
+                  - generic [ref=e629]:
+                    - generic [ref=e630]: "123"
+                    - generic [ref=e631]: kW
+          - generic [ref=e636]:
+            - generic "展示大屏" [ref=e637]:
+              - generic [ref=e638]: 展示大屏
+            - img "loading" [ref=e639] [cursor=pointer]:
+              - img [ref=e644]
+          - button "车" [ref=e648] [cursor=pointer]
+        - generic [ref=e650]:
+          - generic [ref=e651]:
+            - button "历史记录" [ref=e652] [cursor=pointer]:
+              - generic [ref=e654]: 历史记录
+            - img [ref=e655]:
+              - img [ref=e656]
+          - generic [ref=e662] [cursor=pointer]:
+            - generic "母版 1920 x 1080" [ref=e663]:
+              - generic [ref=e664]: 母版 1920 x 1080
+            - img "loading" [ref=e665]:
+              - img [ref=e670]
+          - button [ref=e673] [cursor=pointer]:
+            - img [ref=e675]:
+              - img [ref=e676]
+          - generic [ref=e683] [cursor=pointer]:
+            - generic "100%" [ref=e684]:
+              - generic [ref=e685]: 100%
+            - img "loading" [ref=e686]:
+              - img [ref=e691]
+          - button [ref=e693] [cursor=pointer]:
+            - img [ref=e695]:
+              - img [ref=e696]
+          - slider [ref=e704] [cursor=pointer]
+      - button [ref=e706] [cursor=pointer]:
+        - img [ref=e708]
+    - generic [ref=e709]:
+      - img [ref=e712] [cursor=pointer]
+      - generic [ref=e716]:
+        - generic [ref=e721] [cursor=pointer]:
+          - text: 页面配置
+          - img [ref=e722]:
+            - img [ref=e723]
+        - generic [ref=e728]:
+          - generic [ref=e729]:
+            - generic [ref=e730]:
+              - generic [ref=e731]:
+                - generic [ref=e733]: 宽度
+                - generic [ref=e737]:
+                  - textbox "请输入" [ref=e739]: "1920"
+                  - generic [ref=e740]:
+                    - button [ref=e741] [cursor=pointer]:
+                      - img [ref=e744]
+                    - button [ref=e745] [cursor=pointer]:
+                      - img [ref=e748]
+              - generic [ref=e751]:
+                - generic [ref=e753]: 高度
+                - generic [ref=e757]:
+                  - textbox "请输入" [ref=e759]: "1080"
+                  - generic [ref=e760]:
+                    - button [ref=e761] [cursor=pointer]:
+                      - img [ref=e764]
+                    - button [ref=e765] [cursor=pointer]:
+                      - img [ref=e768]
+            - generic [ref=e772]:
+              - generic [ref=e774]: Layer
+              - generic [ref=e776]:
+                - generic [ref=e779]:
+                  - textbox "请输入" [ref=e781]: "1"
+                  - generic [ref=e782]:
+                    - button [ref=e783] [cursor=pointer]:
+                      - img [ref=e786]
+                    - button [ref=e787] [cursor=pointer]:
+                      - img [ref=e790]
+                - generic [ref=e792]: "`0` 表示显示全部顶层图层；其他值显示 `layer=0` 和当前值的顶层图层"
+                - button "全部" [ref=e793] [cursor=pointer]:
+                  - generic [ref=e794]: 全部
+                - button "L1" [ref=e795] [cursor=pointer]:
+                  - generic [ref=e796]: L1
+          - text: 当前编辑：母版 1920 x 1080
+          - generic [ref=e804] [cursor=pointer]:
+            - img [ref=e805]
+            - generic [ref=e806]: Background image must be smaller than 5MB.
+          - text: 背景颜色
+          - text: 背景模式
+          - generic [ref=e816]:
+            - generic "颜色背景" [ref=e817]:
+              - generic [ref=e818]: 颜色背景
+            - img "loading" [ref=e819] [cursor=pointer]:
+              - img [ref=e824]
+          - text: 变量绑定 Layer
+          - generic [ref=e828] [cursor=pointer]:
+            - generic:
+              - generic: 绑定变量
+            - img "loading" [ref=e829]:
+              - img [ref=e834]
+          - text: 背景色
+          - generic [ref=e838] [cursor=pointer]:
+            - generic:
+              - generic: 绑定变量
+            - img "loading" [ref=e839]:
+              - img [ref=e844]
+          - text: 透明度
+          - generic [ref=e848] [cursor=pointer]:
+            - generic:
+              - generic: 绑定变量
+            - img "loading" [ref=e849]:
+              - img [ref=e854]
+          - text: 背景控制
+          - button "从资源库选择" [ref=e856] [cursor=pointer]:
+            - generic [ref=e857]: 从资源库选择
+          - button "清除背景" [disabled]:
+            - generic: 清除背景
+          - button "清除颜色" [ref=e858] [cursor=pointer]:
+            - generic [ref=e859]: 清除颜色
+          - text: 适配方式
+          - group [ref=e860]:
+            - button [ref=e861] [cursor=pointer]:
+              - img [ref=e863]:
+                - img [ref=e864]
+            - button [ref=e867] [cursor=pointer]:
+              - img [ref=e869]:
+                - img [ref=e870]
+            - button [ref=e874] [cursor=pointer]:
+              - img [ref=e876]:
+                - img [ref=e877]
+            - button [ref=e880] [cursor=pointer]:
+              - img [ref=e882]:
+                - img [ref=e883]
+            - button [ref=e886] [cursor=pointer]:
+              - img [ref=e888]:
+                - img [ref=e889]
+            - button [ref=e893] [cursor=pointer]:
+              - img [ref=e895]:
+                - img [ref=e896]
+          - separator [ref=e899]
+          - text: 多分辨率
+          - switch [checked] [ref=e901]
+          - text: 运行态会按容器宽高比自动匹配最接近的分辨率档案，并同步页面尺寸。
+          - button "2K 16:9" [ref=e904] [cursor=pointer]:
+            - generic [ref=e905]: 2K 16:9
+          - button "Portrait 9:16" [ref=e906] [cursor=pointer]:
+            - generic [ref=e907]: Portrait 9:16
+          - button "Ultrawide 21:9" [ref=e908] [cursor=pointer]:
+            - generic [ref=e909]: Ultrawide 21:9
+          - generic [ref=e910]:
+            - generic [ref=e911]:
+              - generic [ref=e912]:
+                - generic:
+                  - textbox "Profile name": 1920 x 1080
+              - generic [ref=e915]:
+                - textbox "请输入" [ref=e917]: "1920"
+                - generic [ref=e918]:
+                  - button [ref=e919] [cursor=pointer]:
+                    - img [ref=e922]
+                  - button [ref=e923] [cursor=pointer]:
+                    - img [ref=e926]
+              - generic [ref=e930]:
+                - textbox "请输入" [ref=e932]: "1080"
+                - generic [ref=e933]:
+                  - button [ref=e934] [cursor=pointer]:
+                    - img [ref=e937]
+                  - button [ref=e938] [cursor=pointer]:
+                    - img [ref=e941]
+              - generic [ref=e945] [cursor=pointer]:
+                - generic "Fit" [ref=e946]:
+                  - generic [ref=e947]: Fit
+                - img "loading" [ref=e948]:
+                  - img [ref=e953]
+              - generic [ref=e956]: 覆写 0
+              - button "清空覆写" [ref=e957] [cursor=pointer]:
+                - generic: 清空覆写
+              - button "删除" [ref=e958] [cursor=pointer]:
+                - generic [ref=e959]: 删除
+            - generic [ref=e960]:
+              - generic [ref=e961]:
+                - generic:
+                  - textbox "Profile name": 2K 16:9
+              - generic [ref=e964]:
+                - textbox "请输入" [ref=e966]: "2560"
+                - generic [ref=e967]:
+                  - button [ref=e968] [cursor=pointer]:
+                    - img [ref=e971]
+                  - button [ref=e972] [cursor=pointer]:
+                    - img [ref=e975]
+              - generic [ref=e979]:
+                - textbox "请输入" [ref=e981]: "1440"
+                - generic [ref=e982]:
+                  - button [ref=e983] [cursor=pointer]:
+                    - img [ref=e986]
+                  - button [ref=e987] [cursor=pointer]:
+                    - img [ref=e990]
+              - generic [ref=e994] [cursor=pointer]:
+                - generic "Fit" [ref=e995]:
+                  - generic [ref=e996]: Fit
+                - img "loading" [ref=e997]:
+                  - img [ref=e1002]
+              - generic [ref=e1005]: 覆写 0
+              - button "清空覆写" [ref=e1006] [cursor=pointer]:
+                - generic: 清空覆写
+              - button "删除" [ref=e1007] [cursor=pointer]:
+                - generic [ref=e1008]: 删除
+            - generic [ref=e1009]:
+              - generic [ref=e1010]:
+                - generic:
+                  - textbox "Profile name": Portrait 9:16
+              - generic [ref=e1013]:
+                - textbox "请输入" [ref=e1015]: "1080"
+                - generic [ref=e1016]:
+                  - button [ref=e1017] [cursor=pointer]:
+                    - img [ref=e1020]
+                  - button [ref=e1021] [cursor=pointer]:
+                    - img [ref=e1024]
+              - generic [ref=e1028]:
+                - textbox "请输入" [ref=e1030]: "1920"
+                - generic [ref=e1031]:
+                  - button [ref=e1032] [cursor=pointer]:
+                    - img [ref=e1035]
+                  - button [ref=e1036] [cursor=pointer]:
+                    - img [ref=e1039]
+              - generic [ref=e1043] [cursor=pointer]:
+                - generic "Fit" [ref=e1044]:
+                  - generic [ref=e1045]: Fit
+                - img "loading" [ref=e1046]:
+                  - img [ref=e1051]
+              - generic [ref=e1054]: 覆写 0
+              - button "清空覆写" [ref=e1055] [cursor=pointer]:
+                - generic: 清空覆写
+              - button "删除" [ref=e1056] [cursor=pointer]:
+                - generic [ref=e1057]: 删除
+            - generic [ref=e1058]:
+              - generic [ref=e1059]:
+                - generic:
+                  - textbox "Profile name": Ultrawide 21:9
+              - generic [ref=e1062]:
+                - textbox "请输入" [ref=e1064]: "3440"
+                - generic [ref=e1065]:
+                  - button [ref=e1066] [cursor=pointer]:
+                    - img [ref=e1069]
+                  - button [ref=e1070] [cursor=pointer]:
+                    - img [ref=e1073]
+              - generic [ref=e1077]:
+                - textbox "请输入" [ref=e1079]: "1440"
+                - generic [ref=e1080]:
+                  - button [ref=e1081] [cursor=pointer]:
+                    - img [ref=e1084]
+                  - button [ref=e1085] [cursor=pointer]:
+                    - img [ref=e1088]
+              - generic [ref=e1092] [cursor=pointer]:
+                - generic "Cover" [ref=e1093]:
+                  - generic [ref=e1094]: Cover
+                - img "loading" [ref=e1095]:
+                  - img [ref=e1100]
+              - generic [ref=e1103]: 覆写 0
+              - button "清空覆写" [ref=e1104] [cursor=pointer]:
+                - generic: 清空覆写
+              - button "删除" [ref=e1105] [cursor=pointer]:
+                - generic [ref=e1106]: 删除
+            - button "+ 添加自定义分辨率" [ref=e1107] [cursor=pointer]:
+              - generic [ref=e1108]: + 添加自定义分辨率
+          - generic [ref=e1109]:
+            - text: 页面变量
+            - button "添加变量" [ref=e1110] [cursor=pointer]:
+              - img [ref=e1112]:
+                - img [ref=e1113]
+              - generic [ref=e1114]: 添加变量
+            - text: 页面变量用于事件、请求参数、画布属性和组件值联动。
+            - generic [ref=e1115]: 暂无页面变量，点击上方按钮添加
+          - generic [ref=e1116]:
+            - text: 页面参数
+            - button "添加参数" [ref=e1117] [cursor=pointer]:
+              - img [ref=e1119]:
+                - img [ref=e1120]
+              - generic [ref=e1121]: 添加参数
+            - text: 配置页面参数后，可在事件中使用，运行时从URL的query参数获取值
+            - generic [ref=e1122]: 暂无页面参数，点击上方按钮添加

@@ -1,0 +1,17 @@
+- generic [active] [ref=e1] [cursor=pointer]:
+  - main:
+    - generic:
+      - paragraph: For My Wife
+      - heading "老婆， 生日快乐" [level=1]:
+        - generic: 老婆，
+        - generic: 生日快乐
+      - paragraph: 愿你眼里有光，心里有爱，身边永远有我。
+    - region "祝福控制" [ref=e3]:
+      - button "星河" [ref=e4]
+      - button "爱心" [ref=e5]
+      - button "回忆" [ref=e6]
+      - button "告白" [ref=e7]
+      - generic [ref=e8]:
+        - text: 上传照片
+        - button "上传照片"
+    - paragraph: 点击画面绽放心形烟花，上传多张照片生成星河相册。

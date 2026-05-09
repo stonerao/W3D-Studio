@@ -1,0 +1,90 @@
+{
+  "type": "FeatureCollection",
+  "name": "mock-city-demo",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": {
+        "adcode": "CITY-001",
+        "name": "中心商务区",
+        "value": 92,
+        "businessType": "finance"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [121.4500, 31.2400],
+            [121.4660, 31.2400],
+            [121.4680, 31.2540],
+            [121.4520, 31.2570],
+            [121.4500, 31.2400]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "adcode": "CITY-002",
+        "name": "科创园区",
+        "value": 76,
+        "businessType": "innovation"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [121.4680, 31.2440],
+            [121.4840, 31.2450],
+            [121.4860, 31.2590],
+            [121.4700, 31.2610],
+            [121.4680, 31.2440]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "adcode": "CITY-003",
+        "name": "滨水生活区",
+        "value": 58,
+        "businessType": "residential"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [121.4460, 31.2240],
+            [121.4630, 31.2250],
+            [121.4620, 31.2390],
+            [121.4450, 31.2380],
+            [121.4460, 31.2240]
+          ]
+        ]
+      }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "adcode": "CITY-004",
+        "name": "枢纽服务区",
+        "value": 84,
+        "businessType": "transport"
+      },
+      "geometry": {
+        "type": "Polygon",
+        "coordinates": [
+          [
+            [121.4840, 31.2280],
+            [121.4980, 31.2290],
+            [121.5000, 31.2430],
+            [121.4860, 31.2440],
+            [121.4840, 31.2280]
+          ]
+        ]
+      }
+    }
+  ]
+}

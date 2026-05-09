@@ -1,0 +1,34 @@
+{
+  "$schema": "node_modules/lerna/schemas/lerna-schema.json",
+  "version": "independent",
+  "npmClient": "pnpm",
+  "useWorkspaces": true,
+  "packages": [
+    "packages/core",
+    "packages/components",
+    "packages/utils",
+    "packages/editor-w3d",
+    "packages/site"
+  ],
+  "command": {
+    "publish": {
+      "conventionalCommits": true,
+      "message": "chore(release): publish",
+      "registry": "https://registry.npmjs.org/",
+      "ignoreChanges": [
+        "**/*.md",
+        "**/*.test.js",
+        "**/*.spec.js"
+      ]
+    },
+    "version": {
+      "allowBranch": ["main", "develop"],
+      "conventionalCommits": true,
+      "message": "chore(release): version packages"
+    },
+    "bootstrap": {
+      "npmClientArgs": ["--no-package-lock"]
+    }
+  }
+}
+

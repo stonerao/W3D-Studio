@@ -1,0 +1,242 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]: W3D
+      - generic [ref=e9]:
+        - generic [ref=e10]: W3D Editor
+        - generic [ref=e11]: 三维工作台
+    - generic "历史操作" [ref=e13]:
+      - button "↶" [disabled]:
+        - generic: ↶
+      - button "↷" [disabled]:
+        - generic: ↷
+    - generic [ref=e15]:
+      - button "保存" [ref=e16] [cursor=pointer]:
+        - generic [ref=e17]: 保存
+      - button "关闭" [ref=e18] [cursor=pointer]:
+        - generic [ref=e19]: 关闭
+    - generic [ref=e20]:
+      - generic [ref=e22]: 未命名项目
+      - generic [ref=e23]: 等待保存
+    - generic [ref=e24]:
+      - button "视角" [ref=e25] [cursor=pointer]:
+        - generic [ref=e26]: 视角
+      - button "点位" [ref=e27] [cursor=pointer]:
+        - generic [ref=e28]: 点位
+      - generic "面板显示" [ref=e29]:
+        - button "左栏" [ref=e30] [cursor=pointer]:
+          - generic [ref=e31]: 左栏
+        - button "右栏" [ref=e32] [cursor=pointer]:
+          - generic [ref=e33]: 右栏
+      - button "预览" [ref=e34] [cursor=pointer]:
+        - generic [ref=e35]: 预览
+      - button "⚙" [ref=e36] [cursor=pointer]:
+        - generic [ref=e37]: ⚙
+  - generic [ref=e38]:
+    - generic [ref=e39]:
+      - generic [ref=e42]:
+        - button "组件库" [ref=e43] [cursor=pointer]:
+          - generic [ref=e45]: 
+          - generic [ref=e46]: 组件库
+        - button "结构树" [ref=e47] [cursor=pointer]:
+          - generic [ref=e49]: 
+          - generic [ref=e50]: 结构树
+        - button "变量" [ref=e51] [cursor=pointer]:
+          - generic [ref=e53]: 
+          - generic [ref=e54]: 变量
+      - generic [ref=e56]:
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - textbox "搜索组件..." [ref=e61]
+            - generic [ref=e62]:
+              - button "全部" [ref=e63] [cursor=pointer]
+              - button "加载器" [ref=e64] [cursor=pointer]
+              - button "辅助工具" [ref=e65] [cursor=pointer]
+              - button "光源" [ref=e66] [cursor=pointer]
+              - button "特效" [ref=e67] [cursor=pointer]
+              - button "动画" [ref=e68] [cursor=pointer]
+              - button "相机控制" [ref=e69] [cursor=pointer]
+              - button "标注" [ref=e70] [cursor=pointer]
+              - button "交通" [ref=e71] [cursor=pointer]
+          - generic [ref=e72]:
+            - generic [ref=e74] [cursor=pointer]:
+              - generic [ref=e76]: 模型加载器
+              - generic [ref=e77]: 加载 GLTF/GLB/FBX 格式的 3D 模型
+              - generic [ref=e78]:
+                - generic [ref=e79]: 加载器
+                - generic [ref=e80]: ModelLoader
+            - generic [ref=e82] [cursor=pointer]:
+              - generic [ref=e84]: 数据城市
+              - generic [ref=e85]: 加载 GeoJSON 城市或行政区边界并生成可交互的 3D 数据城市
+              - generic [ref=e86]:
+                - generic [ref=e87]: 加载器
+                - generic [ref=e88]: GeoJSONLoader
+            - generic [ref=e90] [cursor=pointer]:
+              - generic [ref=e92]: 网格辅助
+              - generic [ref=e93]: 显示网格辅助线
+              - generic [ref=e94]:
+                - generic [ref=e95]: 辅助工具
+                - generic [ref=e96]: GridHelper
+            - generic [ref=e98] [cursor=pointer]:
+              - generic [ref=e100]: HDR 环境贴图
+              - generic [ref=e101]: 加载 HDR 环境贴图，可作为 environment/background
+              - generic [ref=e102]:
+                - generic [ref=e103]: 加载器
+                - generic [ref=e104]: HDRLoader
+            - generic [ref=e106] [cursor=pointer]:
+              - generic [ref=e108]: 粒子系统
+              - generic [ref=e109]: 高级粒子系统，支持动态发射、物理效果
+              - generic [ref=e110]:
+                - generic [ref=e111]: 特效
+                - generic [ref=e112]: ParticleSystem
+            - generic [ref=e114] [cursor=pointer]:
+              - generic [ref=e116]: 热力图
+              - generic [ref=e117]: 基于点位数据渲染软边发光热力分布，可配置大小、阈值、混合模式与颜色
+              - generic [ref=e118]:
+                - generic [ref=e119]: 特效
+                - generic [ref=e120]: Heatmap
+            - generic [ref=e122] [cursor=pointer]:
+              - generic [ref=e124]: 区域块
+              - generic [ref=e125]: 在三维空间中展示区域块，支持墙壁、底部和边框渲染，带云雾 Shader 效果
+              - generic [ref=e126]:
+                - generic [ref=e127]: 标注
+                - generic [ref=e128]: AreaBlock
+            - generic [ref=e130] [cursor=pointer]:
+              - generic [ref=e132]: 多轨迹路径动画
+              - generic [ref=e133]: 支持加载模型并在多条路径上进行实例化渲染的动画组件
+              - generic [ref=e134]:
+                - generic [ref=e135]: 动画
+                - generic [ref=e136]: MultiPathAnimation
+            - generic [ref=e138] [cursor=pointer]:
+              - generic [ref=e140]: 定点漫游
+              - generic [ref=e141]: 基于多个视角配置自动巡游相机，支持循环、暂停、恢复与动态更新视角列表
+              - generic [ref=e142]:
+                - generic [ref=e143]: 动画
+                - generic [ref=e144]: CameraTour
+            - generic [ref=e146] [cursor=pointer]:
+              - generic [ref=e148]: 设备爆炸图
+              - generic [ref=e149]: 按设备树结构从中心点向外爆炸，距离中心越远偏移越大
+              - generic [ref=e150]:
+                - generic [ref=e151]: 特效
+                - generic [ref=e152]: DeviceExplodedView
+            - generic [ref=e154] [cursor=pointer]:
+              - generic [ref=e156]: 后期处理
+              - generic [ref=e157]: 统一管理 Bloom、SSR、GTAO、SAO、SSAO、Pixel、DOF、Sobel、FXAA 等后期效果
+              - generic [ref=e158]:
+                - generic [ref=e159]: 特效
+                - generic [ref=e160]: PostProcessing
+            - generic [ref=e162] [cursor=pointer]:
+              - generic [ref=e164]: 天气云层
+              - generic [ref=e165]: 动态天空云层效果，内置后期体积云和多层网格云层两种模式
+              - generic [ref=e166]:
+                - generic [ref=e167]: 特效
+                - generic [ref=e168]: WeatherClouds
+            - generic [ref=e170] [cursor=pointer]:
+              - generic [ref=e172]: 飞行相机
+              - generic [ref=e173]: 自由飞行相机控制模式
+              - generic [ref=e174]:
+                - generic [ref=e175]: 相机控制
+                - generic [ref=e176]: FlyControls
+            - generic [ref=e178] [cursor=pointer]:
+              - generic [ref=e180]: 第一人称
+              - generic [ref=e181]: 第一人称视角控制模式
+              - generic [ref=e182]:
+                - generic [ref=e183]: 相机控制
+                - generic [ref=e184]: FirstPersonControls
+            - generic [ref=e186] [cursor=pointer]:
+              - generic [ref=e188]: 视角跳转
+              - generic [ref=e189]: 视角跳转到指定 Mesh、标签或点位，支持距离、方向、速度与缓动函数
+              - generic [ref=e190]:
+                - generic [ref=e191]: 动画
+                - generic [ref=e192]: CameraJump
+            - generic [ref=e194] [cursor=pointer]:
+              - generic [ref=e196]: 模型动画
+              - generic [ref=e197]: 播放模型自带的动画
+              - generic [ref=e198]:
+                - generic [ref=e199]: 动画
+                - generic [ref=e200]: ModelAnimation
+            - generic [ref=e202] [cursor=pointer]:
+              - generic [ref=e204]: 迁移线
+              - generic [ref=e205]: 在三维空间中展示从一个点到另一个点的动态迁移效果
+              - generic [ref=e206]:
+                - generic [ref=e207]: 动画
+                - generic [ref=e208]: MigrationLine
+            - generic [ref=e210] [cursor=pointer]:
+              - generic [ref=e212]: 3D 标签
+              - generic [ref=e213]: 使用 Canvas 生成文字纹理，通过 Sprite 渲染到三维场景中
+              - generic [ref=e214]:
+                - generic [ref=e215]: 标注
+                - generic [ref=e216]: Label3D
+            - generic [ref=e218] [cursor=pointer]:
+              - generic [ref=e220]: 标注区域
+              - generic [ref=e221]: 在三维空间中显示平面标注区域
+              - generic [ref=e222]:
+                - generic [ref=e223]: 标注
+                - generic [ref=e224]: MarkArea
+            - generic [ref=e226] [cursor=pointer]:
+              - generic [ref=e228]: 标注线
+              - generic [ref=e229]: 在三维空间中显示连接多点的线条
+              - generic [ref=e230]:
+                - generic [ref=e231]: 标注
+                - generic [ref=e232]: MarkLine
+            - generic [ref=e234] [cursor=pointer]:
+              - generic [ref=e236]: 标注点
+              - generic [ref=e237]: 在三维空间中显示点位标记
+              - generic [ref=e238]:
+                - generic [ref=e239]: 标注
+                - generic [ref=e240]: MarkPoint
+            - generic [ref=e242] [cursor=pointer]:
+              - generic [ref=e244]: 多类型点位管理
+              - generic [ref=e245]: 支持模型/静态图类型点位管理，采用实例化渲染优化性能
+              - generic [ref=e246]:
+                - generic [ref=e247]: 标注
+                - generic [ref=e248]: PointTypeMarkerManager
+            - generic [ref=e250] [cursor=pointer]:
+              - generic [ref=e252]: 摄像头点位
+              - generic [ref=e253]: 在场景中管理摄像头点位，点位保存业务字段，样式由 type 外部配置
+              - generic [ref=e254]:
+                - generic [ref=e255]: 标注
+                - generic [ref=e256]: CameraPointManager
+            - generic [ref=e258] [cursor=pointer]:
+              - generic [ref=e260]: 楼层爆炸图
+              - generic [ref=e261]: 楼层爆炸视图效果，支持楼层选中、高亮、动画等功能
+              - generic [ref=e262]:
+                - generic [ref=e263]: 特效
+                - generic [ref=e264]: ExplodedView
+            - generic [ref=e266] [cursor=pointer]:
+              - generic [ref=e268]: 气象与光照
+              - generic [ref=e269]: 在线天气（≤30min）+ 手动天气切换 + 太阳位置光照 + 夜间路灯联动
+              - generic [ref=e270]:
+                - generic [ref=e271]: 特效
+                - generic [ref=e272]: WeatherLighting
+            - generic [ref=e274] [cursor=pointer]:
+              - generic [ref=e276]: 路侧设备管理
+              - generic [ref=e277]: 路网及道路设施、杆件与挂载设备管理（支持资源URL、拾取与拖拽）
+              - generic [ref=e278]:
+                - generic [ref=e279]: 交通
+                - generic [ref=e280]: TrafficRoadsideDeviceManager
+        - text:    
+    - generic [ref=e285]:
+      - generic [ref=e286]: FPS 118
+      - generic [ref=e287]: 组件 0
+    - generic [ref=e288]:
+      - generic [ref=e289]:
+        - generic [ref=e291]:
+          - generic [ref=e292]: 检查器
+          - generic [ref=e293]: 属性
+        - generic [ref=e297]:
+          - img [ref=e299]
+          - generic [ref=e302]: 请选择一个组件以编辑属性
+      - generic [ref=e305]:
+        - button "属性" [ref=e306] [cursor=pointer]:
+          - generic [ref=e308]: 
+          - generic [ref=e309]: 属性
+        - button "事件" [ref=e310] [cursor=pointer]:
+          - generic [ref=e312]: 
+          - generic [ref=e313]: 事件
+        - button "数据" [ref=e314] [cursor=pointer]:
+          - generic [ref=e316]: 
+          - generic [ref=e317]: 数据
+        - button "设置" [ref=e318] [cursor=pointer]:
+          - generic [ref=e320]: 
+          - generic [ref=e321]: 设置

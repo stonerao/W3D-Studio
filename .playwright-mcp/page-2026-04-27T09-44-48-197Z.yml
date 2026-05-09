@@ -1,0 +1,114 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - generic [ref=e7]:
+      - generic [ref=e8]: W3D
+      - generic [ref=e9]:
+        - generic [ref=e10]: W3D Editor
+        - generic [ref=e11]: 三维工作台
+    - generic "历史操作" [ref=e13]:
+      - button "↶" [disabled]:
+        - generic: ↶
+      - button "↷" [disabled]:
+        - generic: ↷
+    - generic [ref=e15]:
+      - button "保存" [ref=e16] [cursor=pointer]:
+        - generic [ref=e17]: 保存
+      - button "关闭" [ref=e18] [cursor=pointer]:
+        - generic [ref=e19]: 关闭
+    - generic [ref=e20]:
+      - generic [ref=e22]: 未命名项目
+      - generic [ref=e23]: 等待保存
+    - generic [ref=e24]:
+      - button "视角" [ref=e25] [cursor=pointer]:
+        - generic [ref=e26]: 视角
+      - button "点位" [ref=e27] [cursor=pointer]:
+        - generic [ref=e28]: 点位
+      - generic "面板显示" [ref=e29]:
+        - button "左栏" [ref=e30] [cursor=pointer]:
+          - generic [ref=e31]: 左栏
+        - button "右栏" [ref=e32] [cursor=pointer]:
+          - generic [ref=e33]: 右栏
+      - button "预览" [ref=e34] [cursor=pointer]:
+        - generic [ref=e35]: 预览
+      - button "⚙" [ref=e36] [cursor=pointer]:
+        - generic [ref=e37]: ⚙
+  - generic [ref=e38]:
+    - generic [ref=e39]:
+      - generic [ref=e42]:
+        - button "组件库" [ref=e43] [cursor=pointer]:
+          - generic [ref=e45]: 
+          - generic [ref=e46]: 组件库
+        - button "结构树" [ref=e47] [cursor=pointer]:
+          - generic [ref=e49]: 
+          - generic [ref=e50]: 结构树
+        - button "资源库" [active] [ref=e51] [cursor=pointer]:
+          - generic [ref=e53]: 
+          - generic [ref=e54]: 资源库
+        - button "变量" [ref=e55] [cursor=pointer]:
+          - generic [ref=e57]: 
+          - generic [ref=e58]: 变量
+        - button "连接" [ref=e59] [cursor=pointer]:
+          - generic [ref=e61]: 
+          - generic [ref=e62]: 连接
+        - button "BIM" [ref=e63] [cursor=pointer]:
+          - generic [ref=e65]: 
+          - generic [ref=e66]: BIM
+        - button "告警" [ref=e67] [cursor=pointer]:
+          - generic [ref=e69]: 
+          - generic [ref=e70]: 告警
+      - generic [ref=e72]:
+        - generic [ref=e339]:
+          - generic [ref=e340]:
+            - generic [ref=e342]:
+              - textbox "搜索资源..." [ref=e345]
+              - button "上传" [ref=e346] [cursor=pointer]
+            - generic [ref=e349]:
+              - button "模型" [ref=e350] [cursor=pointer]:
+                - generic [ref=e351]: 模型
+              - button "纹理" [ref=e352] [cursor=pointer]:
+                - generic [ref=e353]: 纹理
+              - button "HDR" [ref=e354] [cursor=pointer]:
+                - generic [ref=e355]: HDR
+              - button "GeoJSON" [ref=e356] [cursor=pointer]:
+                - generic [ref=e357]: GeoJSON
+            - generic [ref=e360]:
+              - button "当前项目" [ref=e361] [cursor=pointer]:
+                - generic [ref=e362]: 当前项目
+              - button "公共资源" [ref=e363] [cursor=pointer]:
+                - generic [ref=e364]: 公共资源
+              - button "全部" [ref=e365] [cursor=pointer]:
+                - generic [ref=e366]: 全部
+          - generic [ref=e368]:
+            - generic [ref=e369]: 当前未绑定项目，无法加载当前项目资源
+            - button "重试" [ref=e370] [cursor=pointer]
+        - text:    
+    - generic [ref=e293]:
+      - generic [ref=e294]: FPS 60
+      - generic [ref=e295]: 组件 0
+    - generic [ref=e296]:
+      - generic [ref=e297]:
+        - generic [ref=e299]:
+          - generic [ref=e300]: 检查器
+          - generic [ref=e301]: 属性
+        - generic [ref=e305]:
+          - img [ref=e307]
+          - generic [ref=e310]: 请选择一个组件以编辑属性
+      - generic [ref=e313]:
+        - button "属性" [ref=e314] [cursor=pointer]:
+          - generic [ref=e316]: 
+          - generic [ref=e317]: 属性
+        - button "事件" [ref=e318] [cursor=pointer]:
+          - generic [ref=e320]: 
+          - generic [ref=e321]: 事件
+        - button "数据" [ref=e322] [cursor=pointer]:
+          - generic [ref=e324]: 
+          - generic [ref=e325]: 数据
+        - button "BIM" [ref=e326] [cursor=pointer]:
+          - generic [ref=e328]: 
+          - generic [ref=e329]: BIM
+        - button "设置" [ref=e330] [cursor=pointer]:
+          - generic [ref=e332]: 
+          - generic [ref=e333]: 设置
+        - button "AI" [ref=e334] [cursor=pointer]:
+          - generic [ref=e336]: 
+          - generic [ref=e337]: AI

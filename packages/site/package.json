@@ -1,0 +1,20 @@
+{
+  "name": "@w3d/site",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Mogl 可视化平台网站与文档入口",
+  "scripts": {
+    "dev": "vite --host",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "vue": "^3.5.13",
+    "vue-router": "^4.5.1"
+  },
+  "devDependencies": {
+    "@vitejs/plugin-vue": "^5.2.4",
+    "vite": "^5.4.19"
+  }
+}

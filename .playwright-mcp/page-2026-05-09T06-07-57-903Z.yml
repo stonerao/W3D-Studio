@@ -1,0 +1,14 @@
+- generic [ref=e5]:
+  - generic [ref=e6]:
+    - generic [ref=e7]: W3D
+    - generic [ref=e8]:
+      - heading "三维编辑器" [level=1] [ref=e9]
+      - paragraph [ref=e10]: 登录后进入项目管理工作台
+  - generic [ref=e11]:
+    - generic [ref=e12]:
+      - generic [ref=e13]: 用户名
+      - textbox "请输入用户名" [ref=e14]
+    - generic [ref=e15]:
+      - generic [ref=e16]: 密码
+      - textbox "请输入密码" [ref=e17]
+    - button "登录" [disabled]

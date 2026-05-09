@@ -1,0 +1,61 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build outputs
+dist/
+*.tsbuildinfo
+/docs
+/packages/editor
+/packages/editor-backend/public
+/packages/editor-backend/runtime/
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+# Editor directories and files
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Testing
+coverage/
+.nyc_output/
+
+# Temporary files
+*.tmp
+*.temp
+.cache/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Package manager
+package-lock.json
+yarn.lock
+vfd_viewer_java-1
+.cursorrules
+.cursor
+test_vue
+/packages/vfd/vite.config.ts
+/scripts/replace_go_to_vfd.py
+*.md
+!document/zh/lowcode-json-reduction/*.md

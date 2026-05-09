@@ -1,0 +1,741 @@
+/* ========================================
+   W3D Editor - 动画系统
+   基于 W3D UI 规格书设计
+   ======================================== */
+
+/* ====================
+   1. CSS 变量与缓动函数
+   ==================== */
+
+:root {
+    /* 动画时长 */
+    --duration-instant: 100ms;
+    --duration-fast: 150ms;
+    --duration-normal: 200ms;
+    --duration-slow: 300ms;
+    --duration-slower: 400ms;
+    --duration-slowest: 500ms;
+
+    /* 缓动函数 */
+    --ease-linear: linear;
+    --ease-in: cubic-bezier(0.4, 0, 1, 1);
+    --ease-out: cubic-bezier(0, 0, 0.2, 1);
+    --ease-in-out: cubic-bezier(0.4, 0, 0.2, 1);
+    --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-out-back: cubic-bezier(0.34, 1.56, 0.64, 1);
+    --ease-in-back: cubic-bezier(0.36, 0, 0.66, -0.56);
+    --ease-bounce: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    --ease-spring: cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+/* ====================
+   2. 基础过渡类
+   ==================== */
+
+/* 标准过渡 */
+.go-transition {
+    transition: all var(--duration-slow) var(--ease-out);
+}
+
+/* 快速过渡 */
+.go-transition-quick {
+    transition: all var(--duration-fast) var(--ease-out);
+}
+
+/* 平滑过渡 */
+.go-transition-smooth {
+    transition: all var(--duration-normal) var(--ease-in-out);
+}
+
+/* 弹性过渡 */
+.go-transition-bounce {
+    transition: all var(--duration-slow) var(--ease-bounce);
+}
+
+/* ====================
+   3. Vue 过渡动画 - Fade
+   ==================== */
+
+/* 基础淡入淡出 */
+.fade-enter-active,
+.fade-leave-active {
+    transition: opacity var(--duration-normal) var(--ease-out);
+}
+
+.fade-enter-from,
+.fade-leave-to {
+    opacity: 0;
+}
+
+/* 快速淡入淡出 */
+.fade-fast-enter-active,
+.fade-fast-leave-active {
+    transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+.fade-fast-enter-from,
+.fade-fast-leave-to {
+    opacity: 0;
+}
+
+/* 淡入上滑 */
+.fade-up-enter-active,
+.fade-up-leave-active {
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.fade-up-enter-from {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+.fade-up-leave-to {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+/* 淡入下滑 */
+.fade-down-enter-active,
+.fade-down-leave-active {
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.fade-down-enter-from {
+    opacity: 0;
+    transform: translateY(-10px);
+}
+
+.fade-down-leave-to {
+    opacity: 0;
+    transform: translateY(10px);
+}
+
+/* 淡入左滑 */
+.fade-left-enter-active,
+.fade-left-leave-active {
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.fade-left-enter-from {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+.fade-left-leave-to {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+/* 淡入右滑 */
+.fade-right-enter-active,
+.fade-right-leave-active {
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.fade-right-enter-from {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.fade-right-leave-to {
+    opacity: 0;
+    transform: translateX(20px);
+}
+
+/* ====================
+   4. Vue 过渡动画 - Scale (缩放)
+   ==================== */
+
+/* 中心缩放 */
+.scale-enter-active,
+.scale-leave-active {
+    transition: all var(--duration-normal) var(--ease-out-expo);
+}
+
+.scale-enter-from,
+.scale-leave-to {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+/* 弹性缩放 */
+.scale-bounce-enter-active {
+    transition: all var(--duration-slow) var(--ease-spring);
+}
+
+.scale-bounce-leave-active {
+    transition: all var(--duration-fast) var(--ease-in);
+}
+
+.scale-bounce-enter-from,
+.scale-bounce-leave-to {
+    opacity: 0;
+    transform: scale(0.85);
+}
+
+/* 缩放淡入 (模态框专用) */
+.zoom-enter-active,
+.zoom-leave-active {
+    transition: all var(--duration-slow) var(--ease-out-expo);
+}
+
+.zoom-enter-from {
+    opacity: 0;
+    transform: scale(0.95);
+}
+
+.zoom-leave-to {
+    opacity: 0;
+    transform: scale(1.02);
+}
+
+/* ====================
+   5. Vue 过渡动画 - Slide (滑动)
+   ==================== */
+
+/* 从左滑入 */
+.slide-left-enter-active,
+.slide-left-leave-active {
+    transition: all var(--duration-slow) var(--ease-out-expo);
+}
+
+.slide-left-enter-from {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+.slide-left-leave-to {
+    opacity: 0;
+    transform: translateX(-100%);
+}
+
+/* 从右滑入 */
+.slide-right-enter-active,
+.slide-right-leave-active {
+    transition: all var(--duration-slow) var(--ease-out-expo);
+}
+
+.slide-right-enter-from {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+.slide-right-leave-to {
+    opacity: 0;
+    transform: translateX(100%);
+}
+
+/* 从上滑入 */
+.slide-up-enter-active,
+.slide-up-leave-active {
+    transition: all var(--duration-slow) var(--ease-out-expo);
+}
+
+.slide-up-enter-from {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+.slide-up-leave-to {
+    opacity: 0;
+    transform: translateY(-100%);
+}
+
+/* 从下滑入 */
+.slide-down-enter-active,
+.slide-down-leave-active {
+    transition: all var(--duration-slow) var(--ease-out-expo);
+}
+
+.slide-down-enter-from {
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+.slide-down-leave-to {
+    opacity: 0;
+    transform: translateY(100%);
+}
+
+/* ====================
+   6. 列表动画
+   ==================== */
+
+/* 基础列表动画 */
+.list-enter-active,
+.list-leave-active {
+    transition: all var(--duration-slow) var(--ease-out);
+}
+
+.list-enter-from,
+.list-leave-to {
+    opacity: 0;
+    transform: translateX(-20px);
+}
+
+.list-leave-active {
+    position: absolute;
+}
+
+/* 完整列表动画 (带移动效果) */
+.list-complete-item {
+    transition: all var(--duration-slower) var(--ease-out);
+}
+
+.list-complete-enter-from,
+.list-complete-leave-to {
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.list-complete-leave-active {
+    position: absolute;
+}
+
+.list-complete-move {
+    transition: transform var(--duration-slower) var(--ease-out);
+}
+
+/* 网格列表动画 */
+.grid-list-enter-active,
+.grid-list-leave-active {
+    transition: all var(--duration-slow) var(--ease-out);
+}
+
+.grid-list-enter-from,
+.grid-list-leave-to {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.grid-list-leave-active {
+    position: absolute;
+}
+
+/* ====================
+   7. 模态框动画
+   ==================== */
+
+/* 模态框遮罩 */
+.modal-enter-active,
+.modal-leave-active {
+    transition: opacity var(--duration-slow) var(--ease-out);
+}
+
+.modal-enter-from,
+.modal-leave-to {
+    opacity: 0;
+}
+
+/* 模态框内容 */
+.modal-enter-active .modal-container,
+.modal-leave-active .modal-container {
+    transition: all var(--duration-slow) var(--ease-out-expo);
+}
+
+.modal-enter-from .modal-container {
+    opacity: 0;
+    transform: scale(0.9) translateY(-20px);
+}
+
+.modal-leave-to .modal-container {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+}
+
+/* ====================
+   8. 折叠/展开动画
+   ==================== */
+
+/* 高度折叠 */
+.collapse-enter-active,
+.collapse-leave-active {
+    transition: all var(--duration-slow) var(--ease-out);
+    overflow: hidden;
+}
+
+.collapse-enter-from,
+.collapse-leave-to {
+    opacity: 0;
+    max-height: 0;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+/* 手风琴动画 */
+.accordion-content-enter-active {
+    animation: accordion-open var(--duration-slow) var(--ease-out);
+}
+
+.accordion-content-leave-active {
+    animation: accordion-close var(--duration-fast) var(--ease-in);
+}
+
+@keyframes accordion-open {
+    from {
+        opacity: 0;
+        max-height: 0;
+        transform: translateY(-8px);
+    }
+    to {
+        opacity: 1;
+        max-height: 500px;
+        transform: translateY(0);
+    }
+}
+
+@keyframes accordion-close {
+    from {
+        opacity: 1;
+        max-height: 500px;
+    }
+    to {
+        opacity: 0;
+        max-height: 0;
+    }
+}
+
+/* ====================
+   9. Toast/通知动画
+   ==================== */
+
+/* Toast 进入 */
+.toast-enter-active {
+    animation: toast-in var(--duration-slow) var(--ease-out-back);
+}
+
+/* Toast 退出 */
+.toast-leave-active {
+    animation: toast-out var(--duration-fast) var(--ease-in);
+}
+
+@keyframes toast-in {
+    from {
+        opacity: 0;
+        transform: translateX(100%) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+@keyframes toast-out {
+    from {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: translateX(100%) scale(0.9);
+    }
+}
+
+/* Toast 移动 */
+.toast-move {
+    transition: transform var(--duration-slow) var(--ease-out);
+}
+
+/* ====================
+   10. 下拉菜单动画
+   ==================== */
+
+.dropdown-enter-active,
+.dropdown-leave-active {
+    transition: all var(--duration-fast) var(--ease-out);
+    transform-origin: top center;
+}
+
+.dropdown-enter-from,
+.dropdown-leave-to {
+    opacity: 0;
+    transform: scaleY(0.9) translateY(-4px);
+}
+
+/* ====================
+   11. 标签页切换动画
+   ==================== */
+
+.tab-content-enter-active,
+.tab-content-leave-active {
+    transition: all var(--duration-normal) var(--ease-out);
+}
+
+.tab-content-enter-from {
+    opacity: 0;
+    transform: translateX(10px);
+}
+
+.tab-content-leave-to {
+    opacity: 0;
+    transform: translateX(-10px);
+}
+
+/* ====================
+   12. 强调动画 (Keyframes)
+   ==================== */
+
+/* 脉冲 */
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.7;
+    }
+}
+
+.animate-pulse {
+    animation: pulse 2s var(--ease-in-out) infinite;
+}
+
+/* 弹跳 */
+@keyframes bounce {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
+}
+
+.animate-bounce {
+    animation: bounce 1s var(--ease-bounce) infinite;
+}
+
+/* 闪烁 */
+@keyframes twinkle {
+    0%, 100% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.animate-twinkle {
+    animation: twinkle 2s ease infinite;
+}
+
+/* 摇晃 */
+@keyframes shake {
+    0%, 100% {
+        transform: translateX(0);
+    }
+    10%, 30%, 50%, 70%, 90% {
+        transform: translateX(-4px);
+    }
+    20%, 40%, 60%, 80% {
+        transform: translateX(4px);
+    }
+}
+
+.animate-shake {
+    animation: shake 0.6s var(--ease-out);
+}
+
+/* 旋转 */
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+.animate-spin {
+    animation: spin 1s linear infinite;
+}
+
+/* 心跳 */
+@keyframes heartbeat {
+    0%, 100% {
+        transform: scale(1);
+    }
+    14% {
+        transform: scale(1.1);
+    }
+    28% {
+        transform: scale(1);
+    }
+    42% {
+        transform: scale(1.1);
+    }
+    70% {
+        transform: scale(1);
+    }
+}
+
+.animate-heartbeat {
+    animation: heartbeat 1.5s var(--ease-in-out) infinite;
+}
+
+/* 涟漪 */
+@keyframes ripple {
+    0% {
+        transform: scale(0);
+        opacity: 1;
+    }
+    100% {
+        transform: scale(4);
+        opacity: 0;
+    }
+}
+
+/* ====================
+   13. 骨架屏动画
+   ==================== */
+
+@keyframes skeleton-loading {
+    0% {
+        background-position: 200% 0;
+    }
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+.skeleton {
+    background: linear-gradient(
+        90deg,
+        var(--color-bg-tertiary) 0%,
+        var(--color-bg-elevated) 50%,
+        var(--color-bg-tertiary) 100%
+    );
+    background-size: 200% 100%;
+    animation: skeleton-loading 1.5s ease-in-out infinite;
+}
+
+/* ====================
+   14. 进度条动画
+   ==================== */
+
+@keyframes progress-indeterminate {
+    0% {
+        left: -100%;
+    }
+    100% {
+        left: 100%;
+    }
+}
+
+.progress-indeterminate::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, var(--color-primary), transparent);
+    animation: progress-indeterminate 1.5s var(--ease-in-out) infinite;
+}
+
+/* ====================
+   15. 按钮点击涟漪效果
+   ==================== */
+
+.ripple-effect {
+    position: relative;
+    overflow: hidden;
+}
+
+.ripple-effect::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    opacity: 0;
+}
+
+.ripple-effect:active::after {
+    animation: ripple 0.6s var(--ease-out);
+}
+
+/* ====================
+   16. 悬停效果增强
+   ==================== */
+
+/* 悬停上浮 */
+.hover-lift {
+    transition: transform var(--duration-fast) var(--ease-out),
+                box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.hover-lift:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}
+
+/* 悬停发光 */
+.hover-glow {
+    transition: box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.hover-glow:hover {
+    box-shadow: var(--shadow-glow);
+}
+
+/* 悬停缩放 */
+.hover-scale {
+    transition: transform var(--duration-fast) var(--ease-out);
+}
+
+.hover-scale:hover {
+    transform: scale(1.02);
+}
+
+/* ====================
+   17. 焦点动画
+   ==================== */
+
+.focus-ring {
+    transition: box-shadow var(--duration-fast) var(--ease-out);
+}
+
+.focus-ring:focus-visible {
+    box-shadow: 0 0 0 2px var(--color-bg-base), 0 0 0 4px var(--color-primary);
+}
+
+/* ====================
+   18. 状态过渡
+   ==================== */
+
+/* 禁用状态过渡 */
+.state-disabled {
+    transition: opacity var(--duration-fast) var(--ease-out);
+}
+
+/* 激活状态过渡 */
+.state-active {
+    transition: all var(--duration-fast) var(--ease-out);
+}
+
+/* ====================
+   19. 硬件加速
+   ==================== */
+
+.gpu-accelerated {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* ====================
+   20. 减少动画模式 (无障碍)
+   ==================== */
+
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}

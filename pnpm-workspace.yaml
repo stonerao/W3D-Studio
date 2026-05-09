@@ -1,0 +1,6 @@
+packages:
+    - 'packages/core'
+    - 'packages/components'
+    - 'packages/utils'
+    - 'packages/editor-w3d'
+    - 'packages/site'
